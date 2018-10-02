@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": [
+      "esnext", "dom"
+    ],
+    "typeRoots": [
+      "./src/typings",
+      "./node_modules/@types"
+    ],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
