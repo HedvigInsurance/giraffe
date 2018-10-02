@@ -14,4 +14,11 @@ const getUser = (baseUrl: string) => async (token: string) => {
   return data.json()
 }
 
-export { getInsurance, getUser }
+const logoutUser = (baseUrl: string) => async (token: string) => {
+  await fetch(`${baseUrl}/logout`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export { getInsurance, getUser, logoutUser }
