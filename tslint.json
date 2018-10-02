@@ -8,5 +8,10 @@
     "no-submodule-imports": false,
     "no-implicit-dependencies": false,
     "variable-name": [true, "allow-leading-underscore"]
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
   }
 }

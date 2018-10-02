@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server-koa'
 import { getUser } from '../api'
 import * as config from '../config'
 import {
@@ -11,6 +12,9 @@ const cashback: QueryToCashbackResolver<Query, Cashback> = async (
   _args,
   { token },
 ) => {
+  if (!token) {
+    throw new AuthenticationError('Must be logged in')
+  }
   const user = await getUser(config.BASE_URL)(token)
   return {
     name: user.selectedCashback,
