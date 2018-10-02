@@ -1,5 +1,5 @@
 {
-  "name": "proj",
+  "name": "hermes",
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
@@ -13,7 +13,7 @@
     "apollo-server-koa": "^2.1.0",
     "dotenv": "^6.0.0",
     "graphql": "^14.0.2",
-    "graphql-tag": "^2.9.2",
+    "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.0",
     "koa": "^2.5.3",
     "node-fetch": "^2.2.0",
@@ -25,7 +25,7 @@
     "@types/node-fetch": "^2.1.2",
     "nodemon": "^1.18.4",
     "prettier": "^1.14.3",
-    "ts-node": "6.2.0",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-plugin-prettier": "^2.0.0",
