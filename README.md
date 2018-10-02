@@ -1,1 +1,1 @@
-# Hermes, the great GraphQLizer
+# The Great GraphQL Giraffe! 🦒
