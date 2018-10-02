@@ -7,5 +7,9 @@ after_success:
   # - bin/kubernetes_deploy.sh
 script:
   return 0
+addons:
+  apt:
+    packages:
+      - docker-ce
 notifications:
   email: false
