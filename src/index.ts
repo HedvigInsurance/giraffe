@@ -1,4 +1,5 @@
-require('dotenv').config() // tslint:disable-line no-var-requires
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
@@ -11,7 +12,7 @@ import { schema } from './schema'
 const server = new ApolloServer({
   schema,
   context,
-  playground: true,
+  playground: config.PLAYGROUND_ENABLED,
 })
 
 const app = new Koa()
