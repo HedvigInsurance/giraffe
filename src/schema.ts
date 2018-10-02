@@ -8,7 +8,7 @@ import {
 } from 'graphql-tools'
 import fetch from 'node-fetch'
 
-import translationSchema = require('./external-schemas/translations.json') // tslint:disable-line no-var-requires
+import translationSchema = require('./external-schemas/translations.json')
 import { resolvers } from './resolvers'
 import { typeDefs } from './typeDefs'
 
