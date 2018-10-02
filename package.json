@@ -1,8 +1,10 @@
 {
   "name": "proj",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "watch": "nodemon -e ts -w ./src -x yarn start",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "watch": "nodemon -e ts -w ./src -x yarn dev",
     "lint": "tslint **/*.ts"
   },
   "license": "AGPL-3.0-only",
@@ -27,6 +29,6 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-plugin-prettier": "^2.0.0",
-    "typescript": "2.9.2"
+    "typescript": "^3.1.1"
   }
 }

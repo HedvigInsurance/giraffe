@@ -8,7 +8,7 @@ import {
 } from 'graphql-tools'
 import fetch from 'node-fetch'
 
-const translationSchema = require('./external-schemas/translations.json') // tslint:disable-line no-var-requires
+import translationSchema = require('./external-schemas/translations.json') // tslint:disable-line no-var-requires
 import { resolvers } from './resolvers'
 import { typeDefs } from './typeDefs'
 
@@ -18,7 +18,7 @@ const translationsLink = createHttpLink({
 })
 
 const executableTranslationsSchema = makeRemoteExecutableSchema({
-  schema: buildClientSchema(translationSchema),
+  schema: buildClientSchema(translationSchema as any),
   link: translationsLink,
 })
 
