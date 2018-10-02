@@ -1,0 +1,9 @@
+language: node
+sudo: required
+services:
+  - docker
+after_success:
+  - bin/docker_push.sh
+  # - bin/kubernetes_deploy.sh
+notifications:
+  email: false
