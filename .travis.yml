@@ -1,12 +1,13 @@
 language: node_js
+node_js:
+  "10"
 sudo: required
 services:
   - docker
 after_success:
   - bin/docker_push.sh
   # - bin/kubernetes_deploy.sh
-script:
-  return 0
+script: return 0
 addons:
   apt:
     packages:
