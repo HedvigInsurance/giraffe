@@ -1,4 +1,3 @@
-import { AuthenticationError } from 'apollo-server-koa'
 import { getInsurance, getUser } from '../api'
 import * as config from '../config'
 import {
@@ -10,11 +9,9 @@ import {
 const insurance: QueryToInsuranceResolver<Query, Insurance> = async (
   _root,
   _args,
-  { token },
+  { getToken },
 ) => {
-  if (!token) {
-    throw new AuthenticationError('Must be logged in')
-  }
+  const token = getToken()
   const [insuranceObject, user] = await Promise.all([
     getInsurance(config.BASE_URL)(token),
     getUser(config.BASE_URL)(token),

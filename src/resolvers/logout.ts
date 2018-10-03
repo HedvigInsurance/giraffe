@@ -8,8 +8,9 @@ import {
 const logout: MutationToLogoutResolver<Mutation, boolean> = async (
   _root,
   _args,
-  { token },
+  { getToken },
 ) => {
+  const token = getToken()
   await logoutUser(config.BASE_URL)(token)
   return true
 }
