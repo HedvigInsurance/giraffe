@@ -4,5 +4,6 @@ const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
   false
+const DEBUG = (process.env.DEBUG && process.env.DEBUG === 'true') || false
 
-export { BASE_URL, PORT, PLAYGROUND_ENABLED }
+export { BASE_URL, PORT, PLAYGROUND_ENABLED, DEBUG }

@@ -13,6 +13,7 @@ const server = new ApolloServer({
   schema,
   context,
   playground: config.PLAYGROUND_ENABLED,
+  debug: config.DEBUG,
 })
 
 const app = new Koa()
