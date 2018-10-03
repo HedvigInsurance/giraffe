@@ -1,5 +1,10 @@
 import fetch from 'node-fetch'
 
+const register = (baseUrl: string) => async () => {
+  const data = await fetch(`${baseUrl}/helloHedvig`, { method: 'POST' })
+  return data.text()
+}
+
 const getInsurance = (baseUrl: string) => async (token: string) => {
   const data = await fetch(`${baseUrl}/insurance`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -21,4 +26,4 @@ const logoutUser = (baseUrl: string) => async (token: string) => {
   })
 }
 
-export { getInsurance, getUser, logoutUser }
+export { getInsurance, getUser, logoutUser, register }

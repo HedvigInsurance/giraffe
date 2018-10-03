@@ -1,4 +1,27 @@
 const typeDefs = `
+  type Query {
+    insurance: Insurance!
+    cashback: Cashback!
+  }
+
+  type Mutation {
+    logout: Boolean
+    createSession: String
+    createOffer(details: OfferInput!): Insurance!
+  }
+
+  input OfferInput {
+    firstName: String!
+    lastName: String!
+    age: Int!
+    address: String!
+    postalNumber: String!
+    insuranceType: InsuranceType!
+    sqm: Int!
+    personsInHousehold: Int!
+    previouslyInsured: Boolean!
+  }
+
   type Insurance {
     address: String
     monthlyCost: Int
@@ -44,15 +67,6 @@ const typeDefs = `
     id: ID
     name: String
     imageUrl: String
-  }
-
-  type Query {
-    insurance: Insurance!
-    cashback: Cashback!
-  }
-
-  type Mutation {
-    logout: Boolean
   }
 
   scalar LocalDate
