@@ -1,14 +1,16 @@
 import * as Koa from 'koa'
-import * as winston from 'winston'
+import {
+  LFService,
+  LoggerFactoryOptions,
+  LogGroupRule,
+  LogLevel,
+} from 'typescript-logging'
 
-const logger = winston.createLogger({
-  level: 'info',
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-  ],
-})
+const options = new LoggerFactoryOptions().addLogGroupRule(
+  new LogGroupRule(/.+/, LogLevel.fromString('info')),
+)
+const factory = LFService.createLoggerFactory(options)
+const logger = factory.getLogger('koa')
 
 const loggingMiddleware = async (
   ctx: Koa.Context,

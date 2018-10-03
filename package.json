@@ -1,7 +1,8 @@
 {
   "name": "hermes",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node .",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
     "watch": "nodemon -e ts -w ./src -x yarn dev",
@@ -17,7 +18,7 @@
     "graphql-tools": "^4.0.0",
     "koa": "^2.5.3",
     "node-fetch": "^2.2.0",
-    "winston": "^3.1.0"
+    "typescript-logging": "^0.6.3"
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
