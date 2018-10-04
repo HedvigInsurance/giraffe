@@ -1,10 +1,12 @@
 import { createHttpLink } from 'apollo-link-http'
 import gql from 'graphql-tag'
 import {
+  FilterRootFields,
   introspectSchema,
   makeExecutableSchema,
   makeRemoteExecutableSchema,
   mergeSchemas,
+  transformSchema,
 } from 'graphql-tools'
 import fetch from 'node-fetch'
 import { resolvers } from './resolvers'
@@ -23,13 +25,18 @@ const makeSchema = async () => {
     link: translationsLink,
   })
 
+  const transformedTranslationSchema = transformSchema(
+    executableTranslationsSchema,
+    [new FilterRootFields((_, name) => name === 'languages')],
+  )
+
   const localSchema = makeExecutableSchema({
     typeDefs: gql(typeDefs),
     resolvers,
   })
 
   const schema = mergeSchemas({
-    schemas: [executableTranslationsSchema, localSchema],
+    schemas: [transformedTranslationSchema, localSchema],
   })
 
   return schema
