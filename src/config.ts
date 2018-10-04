@@ -4,7 +4,6 @@ const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
   false
-const APOLLO_DEBUG =
-  (process.env.APOLLO_DEBUG && process.env.APOLLO_DEBUG === 'true') || false
+const NODE_ENV = process.env.NODE_ENV || 'development'
 
-export { BASE_URL, PORT, PLAYGROUND_ENABLED, APOLLO_DEBUG }
+export { BASE_URL, PORT, PLAYGROUND_ENABLED, NODE_ENV }
