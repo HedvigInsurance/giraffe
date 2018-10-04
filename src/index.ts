@@ -13,7 +13,6 @@ const server = new ApolloServer({
   schema,
   context,
   playground: config.PLAYGROUND_ENABLED,
-  debug: config.NODE_ENV !== 'production',
 })
 
 const app = new Koa()
