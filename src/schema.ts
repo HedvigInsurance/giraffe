@@ -30,6 +30,7 @@ const makeSchema = async () => {
     [new FilterRootFields((_, name) => name === 'languages')],
   )
 
+  // @ts-ignore
   const localSchema = makeExecutableSchema({
     typeDefs: gql(typeDefs),
     resolvers,

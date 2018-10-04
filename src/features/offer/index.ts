@@ -1,4 +1,5 @@
 import { withFilter } from 'apollo-server-koa'
+import { IFieldResolver } from 'graphql-tools'
 import { createProduct } from '../../api'
 import * as config from '../../config'
 import { pubsub } from '../../pubsub'
@@ -17,7 +18,7 @@ interface CreateOfferInput {
   previousInsurer: string
 }
 
-const createOffer = async (
+const createOffer: IFieldResolver<any, any, any> = async (
   _parent: any,
   { details }: { details: CreateOfferInput },
   { getToken }: { getToken: () => string },
@@ -44,14 +45,10 @@ const offerCreated = {
   subscribe: withFilter(
     () => pubsub.asyncIterator('offerCreated'),
     (payload, variables) => {
-      return payload.id === variables.id
+      console.log('payload, variables: ', payload, variables)
+      return payload.offerCreated.id === variables.id
     },
   ),
 }
-
-setInterval(() => {
-  console.log('publishing on pubsub') // tslint:disable-line no-console
-  pubsub.publish('offerCreated', { address: 'woot', id: 'some-id' })
-}, 1000)
 
 export { createOffer, offerCreated }

@@ -1,8 +1,10 @@
 const BASE_URL = process.env.BASE_URL || 'https://gateway.test.hedvig.com'
-const PORT = process.env.PORT || 4000
+const PORT = Number(process.env.PORT) || 4000
 const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
   false
+const REDIS_HOST_NAME = process.env.REDIS_HOSTNAME || 'localhost'
+const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379
 
-export { BASE_URL, PORT, PLAYGROUND_ENABLED }
+export { BASE_URL, PORT, PLAYGROUND_ENABLED, REDIS_HOST_NAME, REDIS_PORT }
