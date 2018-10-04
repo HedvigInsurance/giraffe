@@ -7,7 +7,7 @@ const typeDefs = `
   type Mutation {
     logout: Boolean
     createSession: String
-    createOffer(details: OfferInput!): Insurance!
+    createOffer(details: OfferInput!): Boolean
   }
 
   input OfferInput {
@@ -16,10 +16,11 @@ const typeDefs = `
     age: Int!
     address: String!
     postalNumber: String!
+    city: String!
     insuranceType: InsuranceType!
     sqm: Int!
     personsInHousehold: Int!
-    previouslyInsured: Boolean!
+    previousInsurer: String
   }
 
   type Insurance {

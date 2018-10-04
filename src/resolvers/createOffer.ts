@@ -1,3 +1,5 @@
+import { createProduct } from '../api'
+import * as config from '../config'
 import { InsuranceType } from '../typings/generated-graphql-types'
 
 interface CreateOfferInput {
@@ -6,10 +8,11 @@ interface CreateOfferInput {
   age: number
   address: string
   postalNumber: string
+  city: string
   insuranceType: InsuranceType
   sqm: number
   personsInHousehold: number
-  previouslyInsured: boolean
+  previousInsurer: string
 }
 
 const createOffer = async (
@@ -17,10 +20,22 @@ const createOffer = async (
   { details }: { details: CreateOfferInput },
   { getToken }: { getToken: () => string },
 ) => {
-  // @ts-ignore
   const token = getToken()
-  console.log(details) // tslint:disable-line no-console
-  return {}
+  await createProduct(config.BASE_URL)(token, {
+    firstName: details.firstName,
+    lastName: details.lastName,
+    age: details.age,
+    address: {
+      street: details.address,
+      city: details.city,
+      zipCode: details.postalNumber,
+    },
+    productType: details.insuranceType,
+    currentInsurer: details.previousInsurer,
+    houseHoldSize: details.personsInHousehold,
+  })
+
+  return true
 }
 
 export { createOffer }
