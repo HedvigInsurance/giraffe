@@ -1,0 +1,5 @@
+BASE_URL="https://gateway.test.hedvig.com"
+PORT=4000
+PLAYGROUND_ENABLED=true
+APOLLO_DEBUG=true
+NODE_ENV=development
