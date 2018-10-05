@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { ApolloServer } from 'apollo-server-koa'
+import { ApolloServer, AuthenticationError } from 'apollo-server-koa'
 import * as Koa from 'koa'
 
 import { execute, subscribe } from 'graphql'
@@ -35,6 +35,17 @@ makeSchema().then((schema) => {
         execute,
         subscribe,
         schema,
+        onConnect: (connectionParams: any) => {
+          const token = connectionParams.Authorization
+          return {
+            getToken: () => {
+              if (!token) {
+                throw new AuthenticationError('Must be logged in')
+              }
+              return token
+            },
+          }
+        },
       },
       { server: ws, path: '/subscriptions' },
     )

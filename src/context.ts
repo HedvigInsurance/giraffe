@@ -1,11 +1,12 @@
-import { AuthenticationError, ContextFunction } from 'apollo-server-core'
+import { AuthenticationError } from 'apollo-server-core'
 import * as Koa from 'koa'
 import { notNullable } from './utils/nullables'
 
-const context: ContextFunction<{
-  ctx?: Koa.Context
-  getToken?: () => string
-}> = async ({ ctx }) => {
+interface Context {
+  getToken: () => string
+}
+
+const context = async ({ ctx }: { ctx: Koa.Context }): Promise<Context> => {
   const checkedCtx = notNullable(ctx)
   const getToken = () => {
     if (!checkedCtx.headers.authorization) {
@@ -16,4 +17,4 @@ const context: ContextFunction<{
   return { getToken }
 }
 
-export { context }
+export { context, Context }

@@ -11,7 +11,17 @@ const typeDefs = `
   }
 
   type Subscription {
-    offerCreated(id: ID!): Insurance!
+    offer(insuranceId: ID!): OfferEvent!
+  }
+
+  union OfferEvent = OfferSuccessEvent | OfferFailedEvent
+
+  type OfferSuccessEvent {
+    insurance: Insurance!
+  }
+
+  type OfferFailedEvent {
+    reason: String
   }
 
   input OfferInput {
@@ -22,11 +32,10 @@ const typeDefs = `
     postalNumber: String!
     city: String!
     insuranceType: InsuranceType!
-    sqm: Int!
+    squareMeters: Int!
     personsInHousehold: Int!
     previousInsurer: String
   }
-
 
   type Insurance {
     address: String

@@ -1,5 +1,9 @@
 import { IResolvers } from 'graphql-tools'
-import { createOffer, offerCreated } from '../features/offer'
+import {
+  createOffer,
+  getInsuranceByOfferSuccessEvent,
+  offer,
+} from '../features/offer'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
 import { insurance } from './insurance'
@@ -10,13 +14,18 @@ const resolvers: IResolvers = {
     insurance,
     cashback,
   },
+  // @ts-ignore
   Mutation: {
     logout,
     createSession,
     createOffer,
   },
   Subscription: {
-    offerCreated,
+    offer,
+  },
+  // @ts-ignore
+  OfferSuccessEvent: {
+    insurance: getInsuranceByOfferSuccessEvent,
   },
 }
 

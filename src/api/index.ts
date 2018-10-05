@@ -52,11 +52,12 @@ const logoutUser = (baseUrl: string) => async (token: string) => {
 }
 
 const createProduct = (baseUrl: string) => async (token: string, body: any) => {
-  await fetch(`${baseUrl}/insurance/createProductWeb`, {
+  const data = await fetch(`${baseUrl}/insurance/createProductWeb`, {
     method: 'POST',
     headers: { ...headers(token), 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
+  return data.json()
 }
 
 export { getInsurance, getUser, logoutUser, register, createProduct }
