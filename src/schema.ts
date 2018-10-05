@@ -1,5 +1,4 @@
 import { createHttpLink } from 'apollo-link-http'
-import gql from 'graphql-tag'
 import {
   FilterRootFields,
   introspectSchema,
@@ -32,7 +31,7 @@ const makeSchema = async () => {
 
   // @ts-ignore
   const localSchema = makeExecutableSchema({
-    typeDefs: gql(typeDefs),
+    typeDefs,
     resolvers,
   })
 
