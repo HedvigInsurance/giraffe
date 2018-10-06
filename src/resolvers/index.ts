@@ -1,20 +1,19 @@
-import { IResolvers } from 'graphql-tools'
 import {
   createOffer,
   getInsuranceByOfferSuccessEvent,
   offer,
 } from '../features/offer'
+import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
 import { insurance } from './insurance'
 import { logout } from './logout'
 
-const resolvers: IResolvers = {
+const resolvers: Resolver = {
   Query: {
     insurance,
     cashback,
   },
-  // @ts-ignore
   Mutation: {
     logout,
     createSession,
@@ -23,7 +22,6 @@ const resolvers: IResolvers = {
   Subscription: {
     offer,
   },
-  // @ts-ignore
   OfferSuccessEvent: {
     insurance: getInsuranceByOfferSuccessEvent,
   },

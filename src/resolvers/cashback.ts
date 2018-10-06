@@ -1,12 +1,8 @@
 import { getUser } from '../api'
 import * as config from '../config'
-import {
-  Cashback,
-  Query,
-  QueryToCashbackResolver,
-} from '../typings/generated-graphql-types'
+import { QueryToCashbackResolver } from '../typings/generated-graphql-types'
 
-const cashback: QueryToCashbackResolver<Query, Cashback> = async (
+const cashback: QueryToCashbackResolver = async (
   _root,
   _args,
   { getToken },

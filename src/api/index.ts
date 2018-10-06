@@ -37,6 +37,8 @@ const getUser = (baseUrl: string) => async (
   token: string,
 ): Promise<{
   safetyIncreasers: string[]
+  selectedCashback: string
+  selectedCashbackImageUrl: string
 }> => {
   const data = await fetch(`${baseUrl}/member/me`, {
     headers: headers(token),

@@ -1,12 +1,8 @@
 import { getInsurance, getUser } from '../api'
 import * as config from '../config'
-import {
-  Insurance,
-  Query,
-  QueryToInsuranceResolver,
-} from '../typings/generated-graphql-types'
+import { QueryToInsuranceResolver } from '../typings/generated-graphql-types'
 
-const insurance: QueryToInsuranceResolver<Query, Insurance> = async (
+const insurance: QueryToInsuranceResolver = async (
   _root,
   _args,
   { getToken },
