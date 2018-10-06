@@ -334,10 +334,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.3.0.tgz#5e932606153da28e1d04f9043f4912cf61fd55dd"
   integrity sha512-RObYTpPMo0IY+ZksPtKHsXlYFRxsYIvUqd68e89Y7otDrXsjBy1VgMd53kxVV0JMsNlkCASjllFOlLlhxEv0iw==
 
-"@types/ioredis@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.0.1.tgz#dfe9de0d5dce54193975c1909f0d082e5574e2f2"
-  integrity sha512-pvGlg7THjfjC6hzhOBVNtD0p+B0ph2FYx0wJjDBW7rpDLe9zazQgAt2WRWm3COW6Z0ZXqmCzPkq7WrOJWJklSQ==
+"@types/ioredis@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-4.0.3.tgz#afe760593c8095cbc31cf0751937c102d937d7a3"
+  integrity sha512-ZujCHXjGZ8oDl/lXTOy6wOZHmxYP5CBM+0b2jk9UFHMSe9ntoxI8/C80ifIgY5z/W3OECVyM+JDxtxx4ZitXDQ==
   dependencies:
     "@types/node" "*"
 
