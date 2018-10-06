@@ -1,5 +1,5 @@
 {
-  "name": "hermes",
+  "name": "giraffe",
   "main": "dist/index.js",
   "scripts": {
     "start": "node .",
