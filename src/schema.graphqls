@@ -4,8 +4,8 @@ type Query {
 }
 
 type Mutation {
-  logout: Boolean
-  createSession: String
+  logout: Boolean!
+  createSession: String!
   createOffer(details: OfferInput!): ID!
 }
 
@@ -13,14 +13,10 @@ type Subscription {
   offer(insuranceId: ID!): OfferEvent!
 }
 
-union OfferEvent = OfferSuccessEvent | OfferFailedEvent
-
-type OfferSuccessEvent {
+type OfferEvent {
+  insuranceId: ID!
+  success: Boolean!
   insurance: Insurance!
-}
-
-type OfferFailedEvent {
-  reason: String
 }
 
 input OfferInput {

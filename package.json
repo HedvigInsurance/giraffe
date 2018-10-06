@@ -5,7 +5,7 @@
     "start": "node .",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "watch": "nodemon -e ts -w ./src -x yarn dev",
+    "watch": "concurrently \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate:schema-types\"",
     "lint": "tslint **/*.ts",
     "generate:schema-types": "ts-node scripts/generate-types.ts"
   },
@@ -26,13 +26,14 @@
     "typescript-logging": "^0.6.3"
   },
   "devDependencies": {
+    "@hedviginsurance/graphql-schema-typescript": "^1.2.7",
     "@types/dotenv": "^4.0.3",
     "@types/graphql": "^14.0.1",
     "@types/ioredis": "^4.0.3",
     "@types/koa": "^2.0.46",
     "@types/node-fetch": "^2.1.2",
     "apollo": "^1.9.2",
-    "@hedviginsurance/graphql-schema-typescript": "^1.2.7",
+    "concurrently": "^4.0.1",
     "nodemon": "^1.18.4",
     "prettier": "^1.14.3",
     "ts-node": "^7.0.1",

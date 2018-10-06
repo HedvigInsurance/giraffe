@@ -4,7 +4,9 @@ import * as config from '../../config'
 import { pubsub } from '../../pubsub'
 import {
   MutationToCreateOfferResolver,
-  OfferSuccessEventToInsuranceResolver,
+  OfferEvent,
+  OfferEventToInsuranceResolver,
+  SubscriptionToOfferArgs,
   SubscriptionToOfferResolver,
 } from '../../typings/generated-graphql-types'
 import { resolveInsurance } from '../insurance'
@@ -33,7 +35,7 @@ const createOffer: MutationToCreateOfferResolver = async (
   return res.id
 }
 
-const getInsuranceByOfferSuccessEvent: OfferSuccessEventToInsuranceResolver = async (
+const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
   _parent,
   _args,
   { getToken },
@@ -44,9 +46,12 @@ const getInsuranceByOfferSuccessEvent: OfferSuccessEventToInsuranceResolver = as
 
 const offer: SubscriptionToOfferResolver = {
   subscribe: withFilter(
-    () => pubsub.asyncIterator('OFFER_CREATED'),
-    (payload, variables) => {
-      return payload.offerCreated.id === variables.id
+    () => pubsub.asyncIterator<OfferEvent>('OFFER_CREATED'),
+    (
+      payload: { offerCreated: OfferEvent },
+      variables: SubscriptionToOfferArgs,
+    ) => {
+      return payload.offerCreated.insuranceId === variables.insuranceId
     },
   ),
 }

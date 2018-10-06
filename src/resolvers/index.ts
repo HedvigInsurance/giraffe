@@ -22,7 +22,7 @@ const resolvers: Resolver = {
   Subscription: {
     offer,
   },
-  OfferSuccessEvent: {
+  OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,
   },
 }
