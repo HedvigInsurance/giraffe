@@ -12,6 +12,7 @@ import {
 } from 'graphql-tools'
 import fetch from 'node-fetch'
 import { resolve } from 'path'
+import { Context } from './context'
 import { resolvers } from './resolvers'
 
 const typeDefs = gql(
@@ -38,7 +39,7 @@ const makeSchema = async () => {
 
   // I'm really not liking this to be honest
   const castedResolvers = resolvers as IResolvers
-  const localSchema = makeExecutableSchema({
+  const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     resolvers: castedResolvers,
   })
