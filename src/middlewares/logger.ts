@@ -1,15 +1,6 @@
 import * as Koa from 'koa'
-import {
-  LFService,
-  LoggerFactoryOptions,
-  LogGroupRule,
-  LogLevel,
-} from 'typescript-logging'
+import { factory } from '../utils/log'
 
-const options = new LoggerFactoryOptions().addLogGroupRule(
-  new LogGroupRule(/.+/, LogLevel.fromString('info')),
-)
-const factory = LFService.createLoggerFactory(options)
 const logger = factory.getLogger('koa')
 
 const loggingMiddleware = async (
@@ -21,4 +12,4 @@ const loggingMiddleware = async (
   logger.info(`${request.method} '${request.url}' ${response.status}`)
 }
 
-export { loggingMiddleware as logger }
+export { loggingMiddleware }
