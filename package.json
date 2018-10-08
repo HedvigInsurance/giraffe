@@ -26,7 +26,7 @@
     "typescript-logging": "^0.6.3"
   },
   "devDependencies": {
-    "@hedviginsurance/graphql-schema-typescript": "^1.2.7",
+    "graphql-schema-typescript": "^1.2.7",
     "@types/dotenv": "^4.0.3",
     "@types/graphql": "^14.0.1",
     "@types/ioredis": "^4.0.3",

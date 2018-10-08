@@ -37,11 +37,9 @@ const makeSchema = async () => {
     [new FilterRootFields((_, name) => name === 'languages')],
   )
 
-  // I'm really not liking this to be honest
-  const castedResolvers = resolvers as IResolvers
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
-    resolvers: castedResolvers,
+    resolvers: resolvers as IResolvers<any, Context>, // Not a big fan of this cast, but it will do for now
   })
 
   const schema = mergeSchemas({
