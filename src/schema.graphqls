@@ -36,10 +36,15 @@ type Insurance {
   address: String
   monthlyCost: Int
   safetyIncreasers: [String!]
+  personsInHousehold: Int
   certificateUrl: String
   status: InsuranceStatus
   type: InsuranceType
   activeFrom: LocalDate
+  insuredAtOtherCompany: Boolean
+  presaleInformationUrl: String
+  policyUrl: String
+  currentInsurerName: String
 
   perilCategories: [PerilCategory]
 }

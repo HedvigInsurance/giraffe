@@ -21,10 +21,15 @@ export interface Insurance {
   address?: string;
   monthlyCost?: number;
   safetyIncreasers?: Array<string>;
+  personsInHousehold?: number;
   certificateUrl?: string;
   status?: InsuranceStatus;
   type?: InsuranceType;
   activeFrom?: LocalDate;
+  insuredAtOtherCompany?: boolean;
+  presaleInformationUrl?: string;
+  policyUrl?: string;
+  currentInsurerName?: string;
   perilCategories?: Array<PerilCategory | null>;
 }
 
@@ -132,10 +137,15 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   address?: InsuranceToAddressResolver<TParent>;
   monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
   safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
+  personsInHousehold?: InsuranceToPersonsInHouseholdResolver<TParent>;
   certificateUrl?: InsuranceToCertificateUrlResolver<TParent>;
   status?: InsuranceToStatusResolver<TParent>;
   type?: InsuranceToTypeResolver<TParent>;
   activeFrom?: InsuranceToActiveFromResolver<TParent>;
+  insuredAtOtherCompany?: InsuranceToInsuredAtOtherCompanyResolver<TParent>;
+  presaleInformationUrl?: InsuranceToPresaleInformationUrlResolver<TParent>;
+  policyUrl?: InsuranceToPolicyUrlResolver<TParent>;
+  currentInsurerName?: InsuranceToCurrentInsurerNameResolver<TParent>;
   perilCategories?: InsuranceToPerilCategoriesResolver<TParent>;
 }
 
@@ -148,6 +158,10 @@ export interface InsuranceToMonthlyCostResolver<TParent = Insurance, TResult = n
 }
 
 export interface InsuranceToSafetyIncreasersResolver<TParent = Insurance, TResult = Array<string> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToPersonsInHouseholdResolver<TParent = Insurance, TResult = number | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -164,6 +178,22 @@ export interface InsuranceToTypeResolver<TParent = Insurance, TResult = Insuranc
 }
 
 export interface InsuranceToActiveFromResolver<TParent = Insurance, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToInsuredAtOtherCompanyResolver<TParent = Insurance, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToPresaleInformationUrlResolver<TParent = Insurance, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToPolicyUrlResolver<TParent = Insurance, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToCurrentInsurerNameResolver<TParent = Insurance, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

@@ -9,7 +9,7 @@ import {
   SubscriptionToOfferArgs,
   SubscriptionToOfferResolver,
 } from '../../typings/generated-graphql-types'
-import { resolveInsurance } from '../insurance'
+import { loadInsurance } from '../insurance'
 
 const createOffer: MutationToCreateOfferResolver = async (
   _parent,
@@ -41,7 +41,7 @@ const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
   { getToken },
 ) => {
   const token = getToken()
-  return resolveInsurance(token)
+  return loadInsurance(token)
 }
 
 const offer: SubscriptionToOfferResolver = {

@@ -13,6 +13,17 @@ interface InsuranceDto {
   insuranceType: InsuranceType
   activeFrom: string
   categories: PerilCategory[]
+  insuredAtOtherCompany: boolean
+  personsInHousehold: number
+  presaleInformationUrl: string
+  currentInsurerName: string
+  policyUrl: string
+}
+
+interface UserDto {
+  safetyIncreasers: string[]
+  selectedCashback: string
+  selectedCashbackImageUrl: string
 }
 
 const headers = (token: string) => ({
@@ -35,11 +46,7 @@ const getInsurance = (baseUrl: string) => async (
 
 const getUser = (baseUrl: string) => async (
   token: string,
-): Promise<{
-  safetyIncreasers: string[]
-  selectedCashback: string
-  selectedCashbackImageUrl: string
-}> => {
+): Promise<UserDto> => {
   const data = await fetch(`${baseUrl}/member/me`, {
     headers: headers(token),
   })

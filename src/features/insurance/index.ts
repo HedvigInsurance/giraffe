@@ -2,12 +2,17 @@ import { getInsurance, getUser } from '../../api'
 import * as config from '../../config'
 import { Insurance } from '../../typings/generated-graphql-types'
 
-const resolveInsurance = async (token: string): Promise<Insurance> => {
+const loadInsurance = async (token: string): Promise<Insurance> => {
   const [insuranceObject, user] = await Promise.all([
     getInsurance(config.BASE_URL)(token),
     getUser(config.BASE_URL)(token),
   ])
   return {
+    insuredAtOtherCompany: insuranceObject.insuredAtOtherCompany,
+    personsInHousehold: insuranceObject.personsInHousehold,
+    currentInsurerName: insuranceObject.currentInsurerName,
+    policyUrl: insuranceObject.policyUrl,
+    presaleInformationUrl: insuranceObject.presaleInformationUrl,
     monthlyCost: insuranceObject.currentTotalPrice,
     address: insuranceObject.addressStreet,
     certificateUrl: insuranceObject.certificateUrl,
@@ -19,4 +24,4 @@ const resolveInsurance = async (token: string): Promise<Insurance> => {
   }
 }
 
-export { resolveInsurance }
+export { loadInsurance }
