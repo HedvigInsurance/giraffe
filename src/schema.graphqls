@@ -10,7 +10,7 @@ type Mutation {
 }
 
 type Subscription {
-  offer(insuranceId: ID!): OfferEvent!
+  offer: OfferEvent!
 }
 
 type OfferEvent {

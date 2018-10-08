@@ -1,4 +1,3 @@
-import { withFilter } from 'apollo-server-koa'
 import { createProduct } from '../../api'
 import * as config from '../../config'
 import { pubsub } from '../../pubsub'
@@ -6,7 +5,6 @@ import {
   MutationToCreateOfferResolver,
   OfferEvent,
   OfferEventToInsuranceResolver,
-  SubscriptionToOfferArgs,
   SubscriptionToOfferResolver,
 } from '../../typings/generated-graphql-types'
 import { loadInsurance } from '../insurance'
@@ -45,15 +43,10 @@ const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
 }
 
 const offer: SubscriptionToOfferResolver = {
-  subscribe: withFilter(
-    () => pubsub.asyncIterator<OfferEvent>('OFFER_CREATED'),
-    (
-      payload: { offerCreated: OfferEvent },
-      variables: SubscriptionToOfferArgs,
-    ) => {
-      return payload.offerCreated.insuranceId === variables.insuranceId
-    },
-  ),
+  subscribe: (_parent, _args, { getToken }) => {
+    const token = getToken()
+    return pubsub.asyncIterator<OfferEvent>(`OFFER_CREATED.${token}`)
+  },
 }
 
 export { createOffer, offer, getInsuranceByOfferSuccessEvent }

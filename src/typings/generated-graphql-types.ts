@@ -290,12 +290,9 @@ export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
 }
 
-export interface SubscriptionToOfferArgs {
-  insuranceId: string;
-}
 export interface SubscriptionToOfferResolver<TParent = undefined, TResult = OfferEvent> {
-  resolve?: (parent: TParent, args: SubscriptionToOfferArgs, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
-  subscribe: (parent: TParent, args: SubscriptionToOfferArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult>;
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult>;
 }
 
 export interface OfferEventTypeResolver<TParent = OfferEvent> {
