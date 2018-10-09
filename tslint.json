@@ -6,7 +6,7 @@
     "object-literal-sort-keys": false,
     "interface-name": false,
     "no-submodule-imports": false,
-    "no-implicit-dependencies": false,
+    "no-implicit-dependencies": true,
     "variable-name": [true, "allow-leading-underscore"]
   },
   "linterOptions": {

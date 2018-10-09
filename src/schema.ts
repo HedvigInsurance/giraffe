@@ -1,16 +1,23 @@
 import { createHttpLink } from 'apollo-link-http'
-import gql from 'graphql-tag'
+import { gql } from 'apollo-server-koa'
+import { readFileSync } from 'fs'
 import {
   FilterRootFields,
   introspectSchema,
+  IResolvers,
   makeExecutableSchema,
   makeRemoteExecutableSchema,
   mergeSchemas,
   transformSchema,
 } from 'graphql-tools'
 import fetch from 'node-fetch'
+import { resolve } from 'path'
+import { Context } from './context'
 import { resolvers } from './resolvers'
-import { typeDefs } from './typeDefs'
+
+const typeDefs = gql(
+  readFileSync(resolve(__dirname, './schema.graphqls'), 'utf8'),
+)
 
 const makeSchema = async () => {
   const translationsLink = createHttpLink({
@@ -30,9 +37,9 @@ const makeSchema = async () => {
     [new FilterRootFields((_, name) => name === 'languages')],
   )
 
-  const localSchema = makeExecutableSchema({
-    typeDefs: gql(typeDefs),
-    resolvers,
+  const localSchema = makeExecutableSchema<Context>({
+    typeDefs,
+    resolvers: resolvers as IResolvers<any, Context>,
   })
 
   const schema = mergeSchemas({

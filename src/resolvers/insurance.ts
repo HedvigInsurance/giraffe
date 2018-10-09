@@ -1,31 +1,13 @@
-import { getInsurance, getUser } from '../api'
-import * as config from '../config'
-import {
-  Insurance,
-  Query,
-  QueryToInsuranceResolver,
-} from '../typings/generated-graphql-types'
+import { loadInsurance } from '../features/insurance'
+import { QueryToInsuranceResolver } from '../typings/generated-graphql-types'
 
-const insurance: QueryToInsuranceResolver<Query, Insurance> = async (
+const insurance: QueryToInsuranceResolver = async (
   _root,
   _args,
-  { getToken },
+  { getToken, headers },
 ) => {
   const token = getToken()
-  const [insuranceObject, user] = await Promise.all([
-    getInsurance(config.BASE_URL)(token),
-    getUser(config.BASE_URL)(token),
-  ])
-  return {
-    monthlyCost: insuranceObject.currentTotalPrice,
-    address: insuranceObject.addressStreet,
-    certificateUrl: insuranceObject.certificateUrl,
-    status: insuranceObject.status,
-    type: insuranceObject.insuranceType,
-    activeFrom: insuranceObject.activeFrom,
-    perilCategories: insuranceObject.categories,
-    safetyIncreasers: user.safetyIncreasers,
-  }
+  return loadInsurance(token, headers)
 }
 
 export { insurance }
