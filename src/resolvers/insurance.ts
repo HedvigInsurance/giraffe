@@ -4,10 +4,10 @@ import { QueryToInsuranceResolver } from '../typings/generated-graphql-types'
 const insurance: QueryToInsuranceResolver = async (
   _root,
   _args,
-  { getToken },
+  { getToken, headers },
 ) => {
   const token = getToken()
-  return loadInsurance(token)
+  return loadInsurance(token, headers)
 }
 
 export { insurance }

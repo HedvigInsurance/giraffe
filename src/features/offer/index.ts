@@ -14,10 +14,10 @@ import { loadInsurance } from '../insurance'
 const createOffer: MutationToCreateOfferResolver = async (
   _parent,
   { details },
-  { getToken },
+  { getToken, headers },
 ) => {
   const token = getToken()
-  const res = await createProduct(config.BASE_URL)(token, {
+  const res = await createProduct(config.BASE_URL, headers)(token, {
     firstName: details.firstName,
     lastName: details.lastName,
     age: details.age,
@@ -38,10 +38,10 @@ const createOffer: MutationToCreateOfferResolver = async (
 const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
   _parent,
   _args,
-  { getToken },
+  { getToken, headers },
 ) => {
   const token = getToken()
-  return loadInsurance(token)
+  return loadInsurance(token, headers)
 }
 
 const offer: SubscriptionToOfferResolver = {

@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { ForwardHeaders } from '../context'
 import {
   InsuranceStatus,
   InsuranceType,
@@ -26,44 +27,57 @@ interface UserDto {
   selectedCashbackImageUrl: string
 }
 
-const headers = (token: string) => ({
+const defaultHeaders = (token: string, forwardedHeaders?: ForwardHeaders) => ({
   Authorization: `Bearer ${token}`,
+  Accept: 'application/json',
+  ...forwardedHeaders,
 })
 
-const register = (baseUrl: string) => async () => {
-  const data = await fetch(`${baseUrl}/helloHedvig`, { method: 'POST' })
+const register = (baseUrl: string, headers: ForwardHeaders) => async () => {
+  const data = await fetch(`${baseUrl}/helloHedvig`, {
+    method: 'POST',
+    headers: headers as any,
+  })
   return data.text()
 }
 
-const getInsurance = (baseUrl: string) => async (
+const getInsurance = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
 ): Promise<InsuranceDto> => {
   const data = await fetch(`${baseUrl}/insurance`, {
-    headers: headers(token),
+    headers: defaultHeaders(token, headers),
   })
   return data.json()
 }
 
-const getUser = (baseUrl: string) => async (
+const getUser = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
 ): Promise<UserDto> => {
   const data = await fetch(`${baseUrl}/member/me`, {
-    headers: headers(token),
+    headers: defaultHeaders(token, headers),
   })
   return data.json()
 }
 
-const logoutUser = (baseUrl: string) => async (token: string) => {
+const logoutUser = (baseUrl: string, headers: ForwardHeaders) => async (
+  token: string,
+) => {
   await fetch(`${baseUrl}/logout`, {
     method: 'POST',
-    headers: headers(token),
+    headers: defaultHeaders(token, headers),
   })
 }
 
-const createProduct = (baseUrl: string) => async (token: string, body: any) => {
+const createProduct = (baseUrl: string, headers: ForwardHeaders) => async (
+  token: string,
+  body: any,
+) => {
   const data = await fetch(`${baseUrl}/insurance/createProductWeb`, {
     method: 'POST',
-    headers: { ...headers(token), 'Content-Type': 'application/json' },
+    headers: {
+      ...defaultHeaders(token, headers),
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   })
   return data.json()
