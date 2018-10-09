@@ -22,6 +22,7 @@ makeSchema().then((schema) => {
     playground: config.PLAYGROUND_ENABLED && {
       subscriptionEndpoint: '/subscriptions',
     },
+    introspection: true,
   })
 
   const app = new Koa()

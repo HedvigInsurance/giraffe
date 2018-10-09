@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node .",
     "dev": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "tsc && cp src/schema.graphqls dist/schema.graphqls",
     "watch": "concurrently -n \"ts-node,graphqls\" \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate:schema-types\"",
     "lint": "tslint **/*.ts",
     "generate:schema-types": "ts-node scripts/generate-types.ts"
