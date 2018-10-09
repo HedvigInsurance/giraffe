@@ -9,8 +9,11 @@ import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import * as config from './config'
 import { context } from './context'
-import { logger } from './middlewares/logger'
+import { loggingMiddleware } from './middlewares/logger'
 import { makeSchema } from './schema'
+import { factory } from './utils/log'
+
+const logger = factory.getLogger('index')
 
 makeSchema().then((schema) => {
   const server = new ApolloServer({
@@ -23,13 +26,13 @@ makeSchema().then((schema) => {
 
   const app = new Koa()
 
-  app.use(logger)
+  app.use(loggingMiddleware)
   server.applyMiddleware({ app })
 
   const ws = createServer(app.callback())
 
   ws.listen(config.PORT, () => {
-    console.log(`Server listening at http://localhost:${config.PORT}`) // tslint:disable-line no-console
+    logger.info(`Server listening at http://localhost:${config.PORT}`)
     new SubscriptionServer( // tslint:disable-line no-unused-expression
       {
         execute,

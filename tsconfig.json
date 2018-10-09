@@ -4,7 +4,6 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "sourceMap": true,
-    "rootDir": "src",
     "outDir": "dist",
     "lib": [
       "esnext", "dom"
@@ -19,5 +18,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

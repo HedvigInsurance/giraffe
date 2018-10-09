@@ -4,6 +4,12 @@ import { notNullable } from './utils/nullables'
 
 interface Context {
   getToken: () => string
+  headers: ForwardHeaders
+}
+
+interface ForwardHeaders {
+  'X-Forwarded-For': string
+  'X-Request-Id': string
 }
 
 const context = async ({ ctx }: { ctx: Koa.Context }): Promise<Context> => {
@@ -14,7 +20,13 @@ const context = async ({ ctx }: { ctx: Koa.Context }): Promise<Context> => {
     }
     return checkedCtx.header.authorization
   }
-  return { getToken }
+  return {
+    getToken,
+    headers: {
+      'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
+      'X-Request-Id': checkedCtx.get('x-request-id'),
+    },
+  }
 }
 
-export { context, Context }
+export { context, Context, ForwardHeaders }

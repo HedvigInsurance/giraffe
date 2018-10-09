@@ -38,7 +38,7 @@ type Insurance {
   safetyIncreasers: [String!]
   personsInHousehold: Int
   certificateUrl: String
-  status: InsuranceStatus
+  status: InsuranceStatus!
   type: InsuranceType
   activeFrom: LocalDate
   insuredAtOtherCompany: Boolean

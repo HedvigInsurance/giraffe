@@ -39,7 +39,7 @@ const makeSchema = async () => {
 
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
-    resolvers: resolvers as IResolvers<any, Context>, // Not a big fan of this cast, but it will do for now
+    resolvers: resolvers as IResolvers<any, Context>,
   })
 
   const schema = mergeSchemas({

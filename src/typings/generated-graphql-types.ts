@@ -23,7 +23,7 @@ export interface Insurance {
   safetyIncreasers?: Array<string>;
   personsInHousehold?: number;
   certificateUrl?: string;
-  status?: InsuranceStatus;
+  status: InsuranceStatus;
   type?: InsuranceType;
   activeFrom?: LocalDate;
   insuredAtOtherCompany?: boolean;
@@ -169,7 +169,7 @@ export interface InsuranceToCertificateUrlResolver<TParent = Insurance, TResult 
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface InsuranceToStatusResolver<TParent = Insurance, TResult = InsuranceStatus | null> {
+export interface InsuranceToStatusResolver<TParent = Insurance, TResult = InsuranceStatus> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
