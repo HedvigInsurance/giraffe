@@ -73,7 +73,8 @@ export interface Cashback {
 export interface Mutation {
   logout: boolean;
   createSession: string;
-  createOffer: string;
+  createOffer?: boolean;
+  signOffer?: boolean;
 }
 
 export interface OfferInput {
@@ -87,6 +88,11 @@ export interface OfferInput {
   squareMeters: number;
   personsInHousehold: number;
   previousInsurer?: string;
+}
+
+export interface SignInput {
+  personalNumber: string;
+  email: string;
 }
 
 export interface Subscription {
@@ -273,6 +279,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   logout?: MutationToLogoutResolver<TParent>;
   createSession?: MutationToCreateSessionResolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
+  signOffer?: MutationToSignOfferResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -286,8 +293,15 @@ export interface MutationToCreateSessionResolver<TParent = undefined, TResult = 
 export interface MutationToCreateOfferArgs {
   details: OfferInput;
 }
-export interface MutationToCreateOfferResolver<TParent = undefined, TResult = string> {
+export interface MutationToCreateOfferResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToCreateOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSignOfferArgs {
+  details: SignInput;
+}
+export interface MutationToSignOfferResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToSignOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {

@@ -1,14 +1,14 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import { ApolloServer, AuthenticationError } from 'apollo-server-koa'
+import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
 
 import { execute, subscribe } from 'graphql'
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import * as config from './config'
-import { context } from './context'
+import { getWebContext, getWebSocketContext } from './context'
 import { loggingMiddleware } from './middlewares/logger'
 import { makeSchema } from './schema'
 import { factory } from './utils/log'
@@ -18,7 +18,7 @@ const logger = factory.getLogger('index')
 makeSchema().then((schema) => {
   const server = new ApolloServer({
     schema,
-    context,
+    context: getWebContext,
     playground: config.PLAYGROUND_ENABLED && {
       subscriptionEndpoint: '/subscriptions',
     },
@@ -40,17 +40,7 @@ makeSchema().then((schema) => {
         execute,
         subscribe,
         schema,
-        onConnect: (connectionParams: any) => {
-          const token = connectionParams.Authorization
-          return {
-            getToken: () => {
-              if (!token) {
-                throw new AuthenticationError('Must be logged in')
-              }
-              return token
-            },
-          }
-        },
+        onConnect: getWebSocketContext,
       },
       { server: ws, path: '/subscriptions' },
     )

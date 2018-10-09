@@ -6,7 +6,8 @@ type Query {
 type Mutation {
   logout: Boolean!
   createSession: String!
-  createOffer(details: OfferInput!): ID!
+  createOffer(details: OfferInput!): Boolean
+  signOffer(details: SignInput!): Boolean
 }
 
 type Subscription {
@@ -34,6 +35,11 @@ input OfferInput {
   squareMeters: Int!
   personsInHousehold: Int!
   previousInsurer: String
+}
+
+input SignInput {
+  personalNumber: String!
+  email: String!
 }
 
 type Insurance {
