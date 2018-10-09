@@ -22,6 +22,7 @@ makeSchema().then((schema) => {
     playground: config.PLAYGROUND_ENABLED && {
       subscriptionEndpoint: '/subscriptions',
     },
+    introspection: true,
   })
 
   const app = new Koa()
@@ -35,6 +36,7 @@ makeSchema().then((schema) => {
     logger.info(`Server listening at http://localhost:${config.PORT}`)
     new SubscriptionServer( // tslint:disable-line no-unused-expression
       {
+        keepAlive: 10_000,
         execute,
         subscribe,
         schema,
