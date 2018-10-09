@@ -18,5 +18,4 @@ COPY --from=0 /usr/src/app/dist dist
 
 RUN yarn install --production
 
-RUN yarn
 ENTRYPOINT ["yarn", "start"]
