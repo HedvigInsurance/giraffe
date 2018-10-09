@@ -36,7 +36,7 @@ makeSchema().then((schema) => {
     logger.info(`Server listening at http://localhost:${config.PORT}`)
     new SubscriptionServer( // tslint:disable-line no-unused-expression
       {
-        keepAlive: 30_000,
+        keepAlive: 10_000,
         execute,
         subscribe,
         schema,
