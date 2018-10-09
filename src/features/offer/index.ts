@@ -1,4 +1,4 @@
-import { createProduct } from '../../api'
+import { createProduct, getUser } from '../../api'
 import * as config from '../../config'
 import { pubsub } from '../../pubsub'
 import {
@@ -43,9 +43,11 @@ const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
 }
 
 const offer: SubscriptionToOfferResolver = {
-  subscribe: (_parent, _args, { getToken }) => {
+  subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
-    return pubsub.asyncIterator<OfferEvent>(`OFFER_CREATED.${token}`)
+    const user = await getUser(config.BASE_URL, headers)(token)
+
+    return pubsub.asyncIterator<OfferEvent>(`OFFER_CREATED.${user.memberId}`)
   },
 }
 
