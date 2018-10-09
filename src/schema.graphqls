@@ -10,13 +10,17 @@ type Mutation {
 }
 
 type Subscription {
-  offer: OfferEvent!
+  offer: OfferEvent
 }
 
 type OfferEvent {
-  insuranceId: ID!
-  success: Boolean!
-  insurance: Insurance!
+  status: OfferStatus!
+  insurance: Insurance
+}
+
+enum OfferStatus {
+  SUCCESS,
+  FAIL
 }
 
 input OfferInput {

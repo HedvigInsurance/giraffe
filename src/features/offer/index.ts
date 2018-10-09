@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-koa'
 import { createProduct, getUser } from '../../api'
 import * as config from '../../config'
 import { pubsub } from '../../pubsub'
@@ -34,10 +35,13 @@ const createOffer: MutationToCreateOfferResolver = async (
 }
 
 const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
-  _parent,
+  parent,
   _args,
   { getToken, headers },
 ) => {
+  if (parent.status === 'FAIL') {
+    throw new ApolloError('Failed to create offer')
+  }
   const token = getToken()
   return loadInsurance(token, headers)
 }
