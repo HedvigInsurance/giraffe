@@ -4,7 +4,7 @@ const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
   false
-const REDIS_HOST_NAME = process.env.REDIS_HOSTNAME || 'localhost'
+const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME || 'localhost'
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379
 
-export { BASE_URL, PORT, PLAYGROUND_ENABLED, REDIS_HOST_NAME, REDIS_PORT }
+export { BASE_URL, PORT, PLAYGROUND_ENABLED, REDIS_HOSTNAME, REDIS_PORT }
