@@ -4,7 +4,11 @@ import {
   signOffer,
   subscribeToOffer,
 } from '../features/offer'
-import { getSignStatus } from '../features/offer/sign'
+import {
+  getSignStatus,
+  getSignStatusFromSignEvent,
+  subscribeToSignStatus,
+} from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
@@ -25,9 +29,13 @@ const resolvers: Resolver = {
   },
   Subscription: {
     offer: subscribeToOffer,
+    signStatus: subscribeToSignStatus,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,
+  },
+  SignEvent: {
+    status: getSignStatusFromSignEvent,
   },
 }
 
