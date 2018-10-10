@@ -1,7 +1,9 @@
-import { ApolloError } from 'apollo-server-koa'
-import { websign } from '../../api'
+import { signStatus, websign } from '../../api'
 import * as config from '../../config'
-import { MutationToSignOfferResolver } from '../../typings/generated-graphql-types'
+import {
+  MutationToSignOfferResolver,
+  QueryToSignStatusResolver,
+} from '../../typings/generated-graphql-types'
 
 const signOffer: MutationToSignOfferResolver = async (
   _parent,
@@ -10,9 +12,6 @@ const signOffer: MutationToSignOfferResolver = async (
 ) => {
   const token = getToken()
   const ipAddress = headers['X-Forwarded-For']
-  if (!ipAddress) {
-    throw new ApolloError('Not permitted to sign without IP :(')
-  }
   await websign(config.BASE_URL, headers)(token, {
     ssn: details.personalNumber,
     email: details.email,
@@ -22,4 +21,19 @@ const signOffer: MutationToSignOfferResolver = async (
   return true
 }
 
-export { signOffer }
+const getSignStatus: QueryToSignStatusResolver = async (
+  _parent,
+  _args,
+  { getToken, headers },
+) => {
+  const token = getToken()
+  const status = await signStatus(config.BASE_URL, headers)(token)
+  return {
+    collectStatus: {
+      status: status.collectData.status,
+      code: status.collectData.hintCode,
+    },
+  }
+}
+
+export { signOffer, getSignStatus }

@@ -1,6 +1,7 @@
 type Query {
   insurance: Insurance!
   cashback: Cashback!
+  signStatus: SignStatus!
 }
 
 type Mutation {
@@ -92,6 +93,29 @@ type Cashback {
   id: ID
   name: String
   imageUrl: String
+}
+
+type SignStatus {
+  collectStatus: CollectStatus
+  signState: SignState
+}
+
+type CollectStatus {
+  status: BankIdStatus
+  code: String
+}
+
+enum BankIdStatus {
+  pending
+  failed
+  complete
+}
+
+enum SignState {
+  INITIATED
+  IN_PROGRESS
+  FAILED
+  COMPLETED
 }
 
 scalar LocalDate
