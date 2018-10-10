@@ -42,6 +42,21 @@ interface SignStatusDto {
   }
 }
 
+interface CreateProductDto {
+  firstName: string
+  lastName: string
+  age: number
+  address: {
+    street: string
+    city: string
+    zipCode: string
+  }
+  productType: InsuranceType
+  currentInsurer?: string
+  houseHoldSize: number
+  livingSpace: number
+}
+
 const checkStatus = (res: Response) => {
   if (res.status > 300) {
     throw new Error(`Failed to fetch, status: ${res.status}`)
@@ -95,7 +110,7 @@ const logoutUser = (baseUrl: string, headers: ForwardHeaders) => async (
 
 const createProduct = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
-  body: any, // TODO type this!
+  body: CreateProductDto,
 ) => {
   const data = await fetch(`${baseUrl}/insurance/createProductWeb`, {
     method: 'POST',
@@ -111,7 +126,7 @@ const createProduct = (baseUrl: string, headers: ForwardHeaders) => async (
 
 const websign = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
-  body: SignDto, // TODO type this!
+  body: SignDto,
 ) => {
   const data = await fetch(`${baseUrl}/v2/member/sign/websign`, {
     method: 'POST',
