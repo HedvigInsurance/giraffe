@@ -22,6 +22,7 @@ interface InsuranceDto {
 }
 
 interface UserDto {
+  memberId: string
   safetyIncreasers: string[]
   selectedCashback: string
   selectedCashbackImageUrl: string

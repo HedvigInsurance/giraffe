@@ -49,6 +49,13 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@hedviginsurance/graphql-schema-typescript@^1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@hedviginsurance/graphql-schema-typescript/-/graphql-schema-typescript-1.2.8.tgz#72cefea38dec2c23f1fe6890e42c9fd4de769a45"
+  integrity sha512-3f1fCe6Eq8r9s3VgzhqxKzDbyerzO2oDf2/Fqy5kYXEBAIhpc4ifKe7A/Ald1p0hIxWDLw7KbUPIWujDY3e54A==
+  dependencies:
+    yargs "^11.0.0"
+
 "@heroku-cli/color@^1.1.3":
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/@heroku-cli/color/-/color-1.1.10.tgz#a9326b25da187fa64f28404f32c0708a37d7fbab"
@@ -2088,13 +2095,6 @@ graphql-redis-subscriptions@^1.5.0:
     iterall "^1.1.3"
   optionalDependencies:
     ioredis "^3.1.2"
-
-graphql-schema-typescript@^1.2.7:
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/graphql-schema-typescript/-/graphql-schema-typescript-1.2.7.tgz#dccd352bd725b393535c9359e567072c34b34c87"
-  integrity sha512-ECp3WcNqqX452m3HZfjGt4pAYfnuKorXLtw40En5VrwcD99C4lPg0eQMd4GYsyboljJrcVySM+pGz5aXcr3Gvw==
-  dependencies:
-    yargs "^11.0.0"
 
 graphql-subscriptions@^0.5.6, graphql-subscriptions@^0.5.8:
   version "0.5.8"

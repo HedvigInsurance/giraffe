@@ -1,6 +1,6 @@
 // tslint:disable no-console
+import { generateTypeScriptTypes } from '@hedviginsurance/graphql-schema-typescript' // tslint:disable-line no-implicit-dependencies
 import { readFileSync } from 'fs'
-import { generateTypeScriptTypes } from 'graphql-schema-typescript' // tslint:disable-line no-implicit-dependencies
 import { resolve } from 'path'
 
 const schemaPath = resolve('./src/schema.graphqls')

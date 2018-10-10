@@ -1,12 +1,11 @@
-import { withFilter } from 'apollo-server-koa'
-import { createProduct } from '../../api'
+import { ApolloError } from 'apollo-server-koa'
+import { createProduct, getUser } from '../../api'
 import * as config from '../../config'
 import { pubsub } from '../../pubsub'
 import {
   MutationToCreateOfferResolver,
   OfferEvent,
   OfferEventToInsuranceResolver,
-  SubscriptionToOfferArgs,
   SubscriptionToOfferResolver,
 } from '../../typings/generated-graphql-types'
 import { loadInsurance } from '../insurance'
@@ -36,24 +35,24 @@ const createOffer: MutationToCreateOfferResolver = async (
 }
 
 const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
-  _parent,
+  parent,
   _args,
   { getToken, headers },
 ) => {
+  if (parent.status === 'FAIL') {
+    throw new ApolloError('Failed to create offer')
+  }
   const token = getToken()
   return loadInsurance(token, headers)
 }
 
 const offer: SubscriptionToOfferResolver = {
-  subscribe: withFilter(
-    () => pubsub.asyncIterator<OfferEvent>('OFFER_CREATED'),
-    (
-      payload: { offerCreated: OfferEvent },
-      variables: SubscriptionToOfferArgs,
-    ) => {
-      return payload.offerCreated.insuranceId === variables.insuranceId
-    },
-  ),
+  subscribe: async (_parent, _args, { getToken, headers }) => {
+    const token = getToken()
+    const user = await getUser(config.BASE_URL, headers)(token)
+
+    return pubsub.asyncIterator<OfferEvent>(`OFFER_CREATED.${user.memberId}`)
+  },
 }
 
 export { createOffer, offer, getInsuranceByOfferSuccessEvent }
