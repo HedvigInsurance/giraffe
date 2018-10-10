@@ -34,13 +34,13 @@ interface SignDto {
   ipAddress: string
 }
 
-const defaultHeaders = (token: string, forwardedHeaders?: ForwardHeaders) => ({
+const defaultHeaders = (token: string, forwardedHeaders: ForwardHeaders) => ({
   Authorization: `Bearer ${token}`,
   Accept: 'application/json',
   ...forwardedHeaders,
 })
 
-const register = (baseUrl: string, headers?: ForwardHeaders) => async () => {
+const register = (baseUrl: string, headers: ForwardHeaders) => async () => {
   const data = await fetch(`${baseUrl}/helloHedvig`, {
     method: 'POST',
     headers: headers as any,
@@ -48,7 +48,7 @@ const register = (baseUrl: string, headers?: ForwardHeaders) => async () => {
   return data.text()
 }
 
-const getInsurance = (baseUrl: string, headers?: ForwardHeaders) => async (
+const getInsurance = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
 ): Promise<InsuranceDto> => {
   const data = await fetch(`${baseUrl}/insurance`, {
@@ -57,7 +57,7 @@ const getInsurance = (baseUrl: string, headers?: ForwardHeaders) => async (
   return data.json()
 }
 
-const getUser = (baseUrl: string, headers?: ForwardHeaders) => async (
+const getUser = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
 ): Promise<UserDto> => {
   const data = await fetch(`${baseUrl}/member/me`, {
@@ -66,7 +66,7 @@ const getUser = (baseUrl: string, headers?: ForwardHeaders) => async (
   return data.json()
 }
 
-const logoutUser = (baseUrl: string, headers?: ForwardHeaders) => async (
+const logoutUser = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
 ) => {
   await fetch(`${baseUrl}/logout`, {
@@ -75,7 +75,7 @@ const logoutUser = (baseUrl: string, headers?: ForwardHeaders) => async (
   })
 }
 
-const createProduct = (baseUrl: string, headers?: ForwardHeaders) => async (
+const createProduct = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
   body: any, // TODO type this!
 ) => {
@@ -90,7 +90,7 @@ const createProduct = (baseUrl: string, headers?: ForwardHeaders) => async (
   return data.json()
 }
 
-const websign = (baseUrl: string, headers?: ForwardHeaders) => async (
+const websign = (baseUrl: string, headers: ForwardHeaders) => async (
   token: string,
   body: SignDto, // TODO type this!
 ) => {

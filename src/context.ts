@@ -45,12 +45,19 @@ const getWebSocketContext = (
     }
     return connectionParams.Authorization
   }
+  const headers: ForwardHeaders = {}
+  const forwardedFor = context.request.headers['x-forwarded-for']
+  if (typeof forwardedFor === 'string') {
+    headers['X-Forwarded-For'] = forwardedFor
+  }
+  const requestId = context.request.headers['x-request-id']
+  if (typeof requestId === 'string') {
+    headers['X-Request-Id'] = requestId
+  }
+
   return {
     getToken,
-    headers: {
-      'X-Forwarded-For': context.request.headers['x-forwarded-for'] as string, // How do I even deal with this?
-      'X-Request-Id': context.request.headers['x-request-id'] as string,
-    },
+    headers,
   }
 }
 
