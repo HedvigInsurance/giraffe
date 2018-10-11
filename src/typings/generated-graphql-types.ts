@@ -121,6 +121,7 @@ export interface SignInput {
 
 export interface Subscription {
   offer?: OfferEvent;
+  signStatus?: SignEvent;
 }
 
 export interface OfferEvent {
@@ -131,6 +132,10 @@ export interface OfferEvent {
 export enum OfferStatus {
   SUCCESS = 'SUCCESS',
   FAIL = 'FAIL'
+}
+
+export interface SignEvent {
+  status?: SignStatus;
 }
 
 /*********************************
@@ -155,6 +160,7 @@ export interface Resolver {
   Mutation?: MutationTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
+  SignEvent?: SignEventTypeResolver;
 }
 export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
@@ -363,9 +369,15 @@ export interface MutationToSignOfferResolver<TParent = undefined, TResult = bool
 
 export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
+  signStatus?: SubscriptionToSignStatusResolver<TParent>;
 }
 
 export interface SubscriptionToOfferResolver<TParent = undefined, TResult = OfferEvent | null> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+}
+
+export interface SubscriptionToSignStatusResolver<TParent = undefined, TResult = SignEvent | null> {
   resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
@@ -380,5 +392,13 @@ export interface OfferEventToStatusResolver<TParent = OfferEvent, TResult = Offe
 }
 
 export interface OfferEventToInsuranceResolver<TParent = OfferEvent, TResult = Insurance | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SignEventTypeResolver<TParent = SignEvent> {
+  status?: SignEventToStatusResolver<TParent>;
+}
+
+export interface SignEventToStatusResolver<TParent = SignEvent, TResult = SignStatus | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }

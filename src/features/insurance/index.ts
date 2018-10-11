@@ -1,5 +1,4 @@
 import { getInsurance, getUser } from '../../api'
-import * as config from '../../config'
 import { ForwardHeaders } from '../../context'
 import { Insurance } from '../../typings/generated-graphql-types'
 
@@ -8,8 +7,8 @@ const loadInsurance = async (
   headers: ForwardHeaders,
 ): Promise<Insurance> => {
   const [insuranceObject, user] = await Promise.all([
-    getInsurance(config.BASE_URL, headers)(token),
-    getUser(config.BASE_URL, headers)(token),
+    getInsurance(token, headers),
+    getUser(token, headers),
   ])
   return {
     insuredAtOtherCompany: insuranceObject.insuredAtOtherCompany,

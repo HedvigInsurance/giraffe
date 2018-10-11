@@ -1,4 +1,5 @@
-import fetch, { Response } from 'node-fetch'
+import fetch, { RequestInit, Response } from 'node-fetch'
+import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
   BankIdStatus,
@@ -57,92 +58,131 @@ interface CreateProductDto {
   livingSpace: number
 }
 
+type CallApi = (
+  url: string,
+  options?: {
+    mergeOptions?: RequestInit
+    validateStatus?: (response: Response) => void
+    token?: string
+  },
+) => Promise<Response>
+
+const callApi: CallApi = async (url, options = {}) => {
+  const { mergeOptions, token, validateStatus = checkStatus } = options
+  const headers: { [key: string]: string } = {
+    Accept: 'application/json',
+  }
+  if (mergeOptions!.method === 'POST') {
+    headers['Content-Type'] = 'application/json'
+  }
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
+  const requestOptions: RequestInit = {
+    ...mergeOptions,
+    headers: { ...headers, ...mergeOptions!.headers },
+  }
+
+  const res = await fetch(`${config.BASE_URL}${url}`, requestOptions)
+  validateStatus(res)
+  return res
+}
+
 const checkStatus = (res: Response) => {
   if (res.status > 300) {
     throw new Error(`Failed to fetch, status: ${res.status}`)
   }
 }
 
-const defaultHeaders = (token: string, forwardedHeaders: ForwardHeaders) => ({
-  Authorization: `Bearer ${token}`,
-  Accept: 'application/json',
-  ...forwardedHeaders,
-})
-
-const register = (baseUrl: string, headers: ForwardHeaders) => async () => {
-  const data = await fetch(`${baseUrl}/helloHedvig`, {
-    method: 'POST',
-    headers: headers as any,
+const register = async (headers: ForwardHeaders) => {
+  const data = await callApi('/helloHedvig', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+    },
   })
-  checkStatus(data)
   return data.text()
 }
 
-const getInsurance = (baseUrl: string, headers: ForwardHeaders) => async (
+const getInsurance = async (
   token: string,
+  headers: ForwardHeaders,
 ): Promise<InsuranceDto> => {
-  const data = await fetch(`${baseUrl}/insurance`, {
-    headers: defaultHeaders(token, headers),
+  const data = await callApi('/insurance', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
   })
-  checkStatus(data)
   return data.json()
 }
 
-const getUser = (baseUrl: string, headers: ForwardHeaders) => async (
+const getUser = async (
   token: string,
+  headers: ForwardHeaders,
 ): Promise<UserDto> => {
-  const data = await fetch(`${baseUrl}/member/me`, {
-    headers: defaultHeaders(token, headers),
+  const data = await callApi('/member/me', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
   })
   checkStatus(data)
   return data.json()
 }
 
-const logoutUser = (baseUrl: string, headers: ForwardHeaders) => async (
-  token: string,
-) => {
-  const data = await fetch(`${baseUrl}/logout`, {
-    method: 'POST',
-    headers: defaultHeaders(token, headers),
+const logoutUser = async (token: string, headers: ForwardHeaders) => {
+  await callApi('/logout', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
   })
-  checkStatus(data)
 }
 
-const createProduct = (baseUrl: string, headers: ForwardHeaders) => async (
+const createProduct = async (
   token: string,
+  headers: ForwardHeaders,
   body: CreateProductDto,
 ) => {
-  const data = await fetch(`${baseUrl}/insurance/createProductWeb`, {
-    method: 'POST',
-    headers: {
-      ...defaultHeaders(token, headers),
-      'Content-Type': 'application/json',
+  const data = await callApi('/insurance/createProductWeb', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+      body: JSON.stringify(body),
     },
-    body: JSON.stringify(body),
+    token,
   })
-  checkStatus(data)
   return data.json()
 }
 
-const websign = (baseUrl: string, headers: ForwardHeaders) => async (
+const websign = async (
   token: string,
+  headers: ForwardHeaders,
   body: SignDto,
 ) => {
-  const data = await fetch(`${baseUrl}/v2/member/sign/websign`, {
-    method: 'POST',
-    headers: { ...defaultHeaders(token, headers) },
-    body: JSON.stringify(body),
+  await callApi('/v2/member/sign/websign', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+      body: JSON.stringify(body),
+    },
+    token,
   })
-  checkStatus(data)
 }
 
-const signStatus = (baseUrl: string, headers: ForwardHeaders) => async (
+const signStatus = async (
   token: string,
+  headers: ForwardHeaders,
 ): Promise<SignStatusDto> => {
-  const data = await fetch(`${baseUrl}/v2/member/sign/signStatus`, {
-    headers: { ...defaultHeaders(token, headers) },
+  const data = await callApi('/v2/member/sign/signStatus', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
   })
-  checkStatus(data)
   return data.json()
 }
 

@@ -13,11 +13,16 @@ type Mutation {
 
 type Subscription {
   offer: OfferEvent
+  signStatus: SignEvent
 }
 
 type OfferEvent {
   status: OfferStatus!
   insurance: Insurance
+}
+
+type SignEvent {
+  status: SignStatus
 }
 
 enum OfferStatus {
