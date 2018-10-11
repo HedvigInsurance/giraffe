@@ -51,8 +51,8 @@ const loadSignStatus = async (
   const status = await signStatus(token, headers)
   return {
     collectStatus: {
-      status: status.collectData.status,
-      code: status.collectData.hintCode,
+      status: status.collectData!.status,
+      code: status.collectData!.hintCode,
     },
   }
 }
