@@ -1,8 +1,10 @@
 import {
   createOffer,
   getInsuranceByOfferSuccessEvent,
-  offer,
+  signOffer,
+  subscribeToOffer,
 } from '../features/offer'
+import { getSignStatus } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
@@ -13,14 +15,16 @@ const resolvers: Resolver = {
   Query: {
     insurance,
     cashback,
+    signStatus: getSignStatus,
   },
   Mutation: {
     logout,
     createSession,
     createOffer,
+    signOffer,
   },
   Subscription: {
-    offer,
+    offer: subscribeToOffer,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,

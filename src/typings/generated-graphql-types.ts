@@ -15,6 +15,7 @@ import { GraphQLResolveInfo, GraphQLScalarType } from 'graphql';
 export interface Query {
   insurance: Insurance;
   cashback: Cashback;
+  signStatus: SignStatus;
 }
 
 export interface Insurance {
@@ -70,10 +71,34 @@ export interface Cashback {
   imageUrl?: string;
 }
 
+export interface SignStatus {
+  collectStatus?: CollectStatus;
+  signState?: SignState;
+}
+
+export interface CollectStatus {
+  status?: BankIdStatus;
+  code?: string;
+}
+
+export enum BankIdStatus {
+  pending = 'pending',
+  failed = 'failed',
+  complete = 'complete'
+}
+
+export enum SignState {
+  INITIATED = 'INITIATED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  FAILED = 'FAILED',
+  COMPLETED = 'COMPLETED'
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
-  createOffer: string;
+  createOffer?: boolean;
+  signOffer?: boolean;
 }
 
 export interface OfferInput {
@@ -87,6 +112,11 @@ export interface OfferInput {
   squareMeters: number;
   personsInHousehold: number;
   previousInsurer?: string;
+}
+
+export interface SignInput {
+  personalNumber: string;
+  email: string;
 }
 
 export interface Subscription {
@@ -120,6 +150,8 @@ export interface Resolver {
   PerilCategory?: PerilCategoryTypeResolver;
   Peril?: PerilTypeResolver;
   Cashback?: CashbackTypeResolver;
+  SignStatus?: SignStatusTypeResolver;
+  CollectStatus?: CollectStatusTypeResolver;
   Mutation?: MutationTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
@@ -127,6 +159,7 @@ export interface Resolver {
 export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
   cashback?: QueryToCashbackResolver<TParent>;
+  signStatus?: QueryToSignStatusResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -134,6 +167,10 @@ export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insuran
 }
 
 export interface QueryToCashbackResolver<TParent = undefined, TResult = Cashback> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToSignStatusResolver<TParent = undefined, TResult = SignStatus> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -269,10 +306,37 @@ export interface CashbackToImageUrlResolver<TParent = Cashback, TResult = string
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface SignStatusTypeResolver<TParent = SignStatus> {
+  collectStatus?: SignStatusToCollectStatusResolver<TParent>;
+  signState?: SignStatusToSignStateResolver<TParent>;
+}
+
+export interface SignStatusToCollectStatusResolver<TParent = SignStatus, TResult = CollectStatus | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SignStatusToSignStateResolver<TParent = SignStatus, TResult = SignState | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CollectStatusTypeResolver<TParent = CollectStatus> {
+  status?: CollectStatusToStatusResolver<TParent>;
+  code?: CollectStatusToCodeResolver<TParent>;
+}
+
+export interface CollectStatusToStatusResolver<TParent = CollectStatus, TResult = BankIdStatus | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CollectStatusToCodeResolver<TParent = CollectStatus, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MutationTypeResolver<TParent = undefined> {
   logout?: MutationToLogoutResolver<TParent>;
   createSession?: MutationToCreateSessionResolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
+  signOffer?: MutationToSignOfferResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -286,8 +350,15 @@ export interface MutationToCreateSessionResolver<TParent = undefined, TResult = 
 export interface MutationToCreateOfferArgs {
   details: OfferInput;
 }
-export interface MutationToCreateOfferResolver<TParent = undefined, TResult = string> {
+export interface MutationToCreateOfferResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToCreateOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSignOfferArgs {
+  details: SignInput;
+}
+export interface MutationToSignOfferResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToSignOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {

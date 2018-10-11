@@ -1,12 +1,14 @@
 type Query {
   insurance: Insurance!
   cashback: Cashback!
+  signStatus: SignStatus!
 }
 
 type Mutation {
   logout: Boolean!
   createSession: String!
-  createOffer(details: OfferInput!): ID!
+  createOffer(details: OfferInput!): Boolean
+  signOffer(details: SignInput!): Boolean
 }
 
 type Subscription {
@@ -34,6 +36,11 @@ input OfferInput {
   squareMeters: Int!
   personsInHousehold: Int!
   previousInsurer: String
+}
+
+input SignInput {
+  personalNumber: String!
+  email: String!
 }
 
 type Insurance {
@@ -86,6 +93,29 @@ type Cashback {
   id: ID
   name: String
   imageUrl: String
+}
+
+type SignStatus {
+  collectStatus: CollectStatus
+  signState: SignState
+}
+
+type CollectStatus {
+  status: BankIdStatus
+  code: String
+}
+
+enum BankIdStatus {
+  pending
+  failed
+  complete
+}
+
+enum SignState {
+  INITIATED
+  IN_PROGRESS
+  FAILED
+  COMPLETED
 }
 
 scalar LocalDate

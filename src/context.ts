@@ -1,5 +1,7 @@
 import { AuthenticationError } from 'apollo-server-core'
 import * as Koa from 'koa'
+import { ConnectionContext } from 'subscriptions-transport-ws'
+import * as uuidv4 from 'uuid/v4'
 import { notNullable } from './utils/nullables'
 
 interface Context {
@@ -12,7 +14,11 @@ interface ForwardHeaders {
   'X-Request-Id': string
 }
 
-const context = async ({ ctx }: { ctx: Koa.Context }): Promise<Context> => {
+const getWebContext = async ({
+  ctx,
+}: {
+  ctx: Koa.Context
+}): Promise<Context> => {
   const checkedCtx = notNullable(ctx)
   const getToken = () => {
     if (!checkedCtx.headers.authorization) {
@@ -29,4 +35,29 @@ const context = async ({ ctx }: { ctx: Koa.Context }): Promise<Context> => {
   }
 }
 
-export { context, Context, ForwardHeaders }
+const getWebSocketContext = (
+  connectionParams: { Authorization: string },
+  _webSocket: any,
+  context: ConnectionContext,
+): Context => {
+  const getToken = () => {
+    if (!connectionParams.Authorization) {
+      throw new AuthenticationError('Must be logged in')
+    }
+    return connectionParams.Authorization
+  }
+  const headers: ForwardHeaders = {
+    'X-Forwarded-For': context.request.headers['x-forwarded-for'] as string,
+    'X-Request-Id':
+      typeof context.request.headers['x-request-id'] === 'string'
+        ? (context.request.headers['x-request-id'] as string)
+        : uuidv4(),
+  }
+
+  return {
+    getToken,
+    headers,
+  }
+}
+
+export { getWebContext, getWebSocketContext, Context, ForwardHeaders }
