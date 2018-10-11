@@ -99,7 +99,7 @@ const register = async (headers: ForwardHeaders) => {
   const data = await callApi('/helloHedvig', {
     mergeOptions: {
       method: 'POST',
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
     },
   })
   return data.text()
@@ -111,7 +111,7 @@ const getInsurance = async (
 ): Promise<InsuranceDto> => {
   const data = await callApi('/insurance', {
     mergeOptions: {
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -124,7 +124,7 @@ const getUser = async (
 ): Promise<UserDto> => {
   const data = await callApi('/member/me', {
     mergeOptions: {
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -136,7 +136,7 @@ const logoutUser = async (token: string, headers: ForwardHeaders) => {
   await callApi('/logout', {
     mergeOptions: {
       method: 'POST',
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -150,7 +150,7 @@ const createProduct = async (
   const data = await callApi('/insurance/createProductWeb', {
     mergeOptions: {
       method: 'POST',
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
       body: JSON.stringify(body),
     },
     token,
@@ -166,7 +166,7 @@ const websign = async (
   await callApi('/v2/member/sign/websign', {
     mergeOptions: {
       method: 'POST',
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
       body: JSON.stringify(body),
     },
     token,
@@ -179,7 +179,7 @@ const signStatus = async (
 ): Promise<SignStatusDto> => {
   const data = await callApi('/v2/member/sign/signStatus', {
     mergeOptions: {
-      headers: headers as any,
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
