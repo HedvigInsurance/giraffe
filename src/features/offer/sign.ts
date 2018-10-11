@@ -1,5 +1,4 @@
 import { getUser, signStatus, websign } from '../../api'
-import * as config from '../../config'
 import { ForwardHeaders } from '../../context'
 import { pubsub } from '../../pubsub'
 import {
@@ -18,7 +17,7 @@ const signOffer: MutationToSignOfferResolver = async (
 ) => {
   const token = getToken()
   const ipAddress = headers['X-Forwarded-For']
-  await websign(config.BASE_URL, headers)(token, {
+  await websign(token, headers, {
     ssn: details.personalNumber,
     email: details.email,
     ipAddress,
@@ -49,7 +48,7 @@ const loadSignStatus = async (
   token: string,
   headers: ForwardHeaders,
 ): Promise<SignStatus> => {
-  const status = await signStatus(config.BASE_URL, headers)(token)
+  const status = await signStatus(token, headers)
   return {
     collectStatus: {
       status: status.collectData.status,
@@ -61,7 +60,7 @@ const loadSignStatus = async (
 const subscribeToSignStatus: SubscriptionToSignStatusResolver = {
   subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
-    const user = await getUser(config.BASE_URL, headers)(token)
+    const user = await getUser(token, headers)
 
     return pubsub.asyncIterator<SignEvent>(`SIGN_EVENTS.${user.memberId}`)
   },

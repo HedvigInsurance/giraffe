@@ -1,5 +1,4 @@
 import { createProduct, getUser } from '../../api'
-import * as config from '../../config'
 import { pubsub } from '../../pubsub'
 import {
   MutationToCreateOfferResolver,
@@ -13,7 +12,7 @@ const createOffer: MutationToCreateOfferResolver = async (
   { getToken, headers },
 ) => {
   const token = getToken()
-  await createProduct(config.BASE_URL, headers)(token, {
+  await createProduct(token, headers, {
     firstName: details.firstName,
     lastName: details.lastName,
     age: details.age,
@@ -34,7 +33,7 @@ const createOffer: MutationToCreateOfferResolver = async (
 const subscribeToOffer: SubscriptionToOfferResolver = {
   subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
-    const user = await getUser(config.BASE_URL, headers)(token)
+    const user = await getUser(token, headers)
 
     return pubsub.asyncIterator<OfferEvent>(`OFFER_CREATED.${user.memberId}`)
   },

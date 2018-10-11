@@ -1,5 +1,4 @@
 import { getUser } from '../api'
-import * as config from '../config'
 import { QueryToCashbackResolver } from '../typings/generated-graphql-types'
 
 const cashback: QueryToCashbackResolver = async (
@@ -8,7 +7,7 @@ const cashback: QueryToCashbackResolver = async (
   { getToken, headers },
 ) => {
   const token = getToken()
-  const user = await getUser(config.BASE_URL, headers)(token)
+  const user = await getUser(token, headers)
   return {
     name: user.selectedCashback,
     imageUrl: user.selectedCashbackImageUrl,
