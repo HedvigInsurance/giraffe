@@ -4,7 +4,7 @@ dotenv.config()
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
 
-import { execute, subscribe } from 'graphql'
+import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import * as config from './config'
@@ -23,6 +23,10 @@ makeSchema().then((schema) => {
       subscriptionEndpoint: '/subscriptions',
     },
     introspection: true,
+    formatError: (error: GraphQLError) => {
+      logger.error(error.extensions!.exception)
+      return error
+    },
   })
 
   const app = new Koa()
