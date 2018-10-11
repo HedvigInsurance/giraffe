@@ -17,6 +17,9 @@ const signOffer: MutationToSignOfferResolver = async (
 ) => {
   const token = getToken()
   const ipAddress = headers['X-Forwarded-For']
+  if (!ipAddress) {
+    throw new Error(`Must have an ip. X-Forwarded-For is: ${ipAddress}`)
+  }
   await websign(token, headers, {
     ssn: details.personalNumber,
     email: details.email,

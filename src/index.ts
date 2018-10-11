@@ -24,7 +24,7 @@ makeSchema().then((schema) => {
     },
     introspection: true,
     formatError: (error: GraphQLError) => {
-      logger.error(error.extensions!.exception)
+      logger.error(JSON.stringify(error))
       return error
     },
   })
