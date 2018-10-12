@@ -36,7 +36,7 @@ input OfferInput {
   age: Int!
   address: String!
   postalNumber: String!
-  city: String!
+  city: String
   insuranceType: InsuranceType!
   squareMeters: Int!
   personsInHousehold: Int!
