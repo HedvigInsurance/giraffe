@@ -24,7 +24,20 @@ makeSchema().then((schema) => {
     },
     introspection: true,
     formatError: (error: GraphQLError) => {
-      logger.error(error.extensions!.extensions)
+      logger.error(
+        'Uncaught error in GraphQL. Original error: ',
+        error.originalError,
+      )
+      const unsafelyCastedError = error.originalError as any
+      if (
+        unsafelyCastedError &&
+        unsafelyCastedError.errors &&
+        Array.isArray(unsafelyCastedError.errors)
+      ) {
+        unsafelyCastedError.errors.forEach((err: Error) =>
+          logger.error('Inner error: ', err),
+        )
+      }
       return error
     },
   })
