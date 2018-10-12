@@ -37,7 +37,7 @@ interface SignDto {
 }
 
 interface SignStatusDto {
-  collectData: {
+  collectData?: {
     status: BankIdStatus
     hintCode: string
   }
