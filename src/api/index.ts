@@ -49,7 +49,7 @@ interface CreateProductDto {
   age: number
   address: {
     street: string
-    city: string
+    city?: string
     zipCode: string
   }
   productType: InsuranceType

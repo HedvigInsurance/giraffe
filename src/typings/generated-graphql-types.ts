@@ -107,7 +107,7 @@ export interface OfferInput {
   age: number;
   address: string;
   postalNumber: string;
-  city: string;
+  city?: string;
   insuranceType: InsuranceType;
   squareMeters: number;
   personsInHousehold: number;
