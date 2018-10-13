@@ -9,6 +9,7 @@ type Mutation {
   createSession: String!
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
+  uploadFile(file: Upload!): File!
 }
 
 type Subscription {
@@ -124,3 +125,8 @@ enum SignState {
 }
 
 scalar LocalDate
+scalar Upload
+
+type File {
+  url: String!
+}

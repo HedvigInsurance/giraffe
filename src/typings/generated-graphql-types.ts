@@ -99,6 +99,7 @@ export interface Mutation {
   createSession: string;
   createOffer?: boolean;
   signOffer?: boolean;
+  uploadFile: File;
 }
 
 export interface OfferInput {
@@ -117,6 +118,12 @@ export interface OfferInput {
 export interface SignInput {
   personalNumber: string;
   email: string;
+}
+
+export type Upload = any;
+
+export interface File {
+  url: string;
 }
 
 export interface Subscription {
@@ -158,6 +165,8 @@ export interface Resolver {
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
   Mutation?: MutationTypeResolver;
+  Upload?: GraphQLScalarType;
+  File?: FileTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -343,6 +352,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   createSession?: MutationToCreateSessionResolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
+  uploadFile?: MutationToUploadFileResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -365,6 +375,21 @@ export interface MutationToSignOfferArgs {
 }
 export interface MutationToSignOfferResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToSignOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUploadFileArgs {
+  file: Upload;
+}
+export interface MutationToUploadFileResolver<TParent = undefined, TResult = File> {
+  (parent: TParent, args: MutationToUploadFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface FileTypeResolver<TParent = File> {
+  url?: FileToUrlResolver<TParent>;
+}
+
+export interface FileToUrlResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {

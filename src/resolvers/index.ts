@@ -14,6 +14,7 @@ import { cashback } from './cashback'
 import { createSession } from './createSession'
 import { insurance } from './insurance'
 import { logout } from './logout'
+import { uploadFile } from './uploadFile'
 
 const resolvers: Resolver = {
   Query: {
@@ -26,6 +27,7 @@ const resolvers: Resolver = {
     createSession,
     createOffer,
     signOffer,
+    uploadFile,
   },
   Subscription: {
     offer: subscribeToOffer,
