@@ -1,44 +1,58 @@
 /// <reference path="../typings/cloudinary.d.ts" />
 import { UserInputError } from 'apollo-server-koa'
-import * as cloudinary from 'cloudinary'
+import * as AWS from 'aws-sdk'
+import * as uuid from 'uuid/v1'
 
-import {
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET,
-  CLOUDINARY_CLOUD_NAME,
-} from '../config'
+import { getUser } from '../api'
+import { AWS_KEY, AWS_S3_BUCKET, AWS_SECRET } from '../config'
 import {
   File,
   MutationToUploadFileResolver,
 } from '../typings/generated-graphql-types'
 
-cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_API_SECRET,
-})
+AWS.config.accessKeyId = AWS_KEY
+AWS.config.secretAccessKey = AWS_SECRET
+AWS.config.region = 'eu-central-1'
+
+const s3 = new AWS.S3()
+
+const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
 
 export const uploadFile: MutationToUploadFileResolver = async (
   _root,
   { file },
+  { getToken, headers },
 ) => {
-  const { stream } = await file
+  const token = getToken()
+  const user = await getUser(token, headers)
+
+  const { stream, filename, mimetype } = await file
 
   const finalFile = (await new Promise((resolve) => {
-    const uploadStream = cloudinary.v2.uploader.upload_stream(function(
-      error,
-      result,
-    ) {
-      if (error) {
-        return resolve({ url: null })
-      }
+    const params = {
+      Bucket: AWS_S3_BUCKET,
+      Key: `${uuid()}-${filename}`,
+      Body: stream,
+      ContentType: mimetype,
+      Metadata: {
+        MemberId: user.memberId,
+      },
+    }
 
-      resolve({ url: result.secure_url })
+    s3.upload(params, UPLOAD_OPTIONS, (err, data) => {
+      if (err) {
+        resolve({
+          url: null,
+        })
+      } else {
+        resolve({
+          url: data.Location,
+        })
+      }
     })
-    stream.pipe(uploadStream)
   })) as File
 
-  if (!finalFile.url) {
+  if (finalFile.url === null) {
     throw new UserInputError("Couldn't upload file")
   }
 

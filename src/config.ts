@@ -7,9 +7,9 @@ const PLAYGROUND_ENABLED =
 const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME || 'localhost'
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379
 
-const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || ''
-const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || ''
-const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET || ''
+const AWS_KEY = process.env.AWS_KEY || ''
+const AWS_SECRET = process.env.AWS_SECRET || ''
+const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || ''
 
 export {
   BASE_URL,
@@ -17,7 +17,7 @@ export {
   PLAYGROUND_ENABLED,
   REDIS_HOSTNAME,
   REDIS_PORT,
-  CLOUDINARY_CLOUD_NAME,
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET,
+  AWS_KEY,
+  AWS_SECRET,
+  AWS_S3_BUCKET,
 }
