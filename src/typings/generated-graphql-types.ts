@@ -16,10 +16,12 @@ export interface Query {
   insurance: Insurance;
   cashback: Cashback;
   signStatus: SignStatus;
+  member: Member;
 }
 
 export interface Insurance {
   address?: string;
+  postalNumber?: string;
   monthlyCost?: number;
   safetyIncreasers?: Array<string>;
   personsInHousehold?: number;
@@ -94,6 +96,11 @@ export enum SignState {
   COMPLETE = 'COMPLETE'
 }
 
+export interface Member {
+  firstName?: string;
+  lastName?: string;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -157,6 +164,7 @@ export interface Resolver {
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
+  Member?: MemberTypeResolver;
   Mutation?: MutationTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
@@ -166,6 +174,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
   cashback?: QueryToCashbackResolver<TParent>;
   signStatus?: QueryToSignStatusResolver<TParent>;
+  member?: QueryToMemberResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -180,8 +189,13 @@ export interface QueryToSignStatusResolver<TParent = undefined, TResult = SignSt
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface QueryToMemberResolver<TParent = undefined, TResult = Member> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface InsuranceTypeResolver<TParent = Insurance> {
   address?: InsuranceToAddressResolver<TParent>;
+  postalNumber?: InsuranceToPostalNumberResolver<TParent>;
   monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
   safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
   personsInHousehold?: InsuranceToPersonsInHouseholdResolver<TParent>;
@@ -197,6 +211,10 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToPostalNumberResolver<TParent = Insurance, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -335,6 +353,19 @@ export interface CollectStatusToStatusResolver<TParent = CollectStatus, TResult 
 }
 
 export interface CollectStatusToCodeResolver<TParent = CollectStatus, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberTypeResolver<TParent = Member> {
+  firstName?: MemberToFirstNameResolver<TParent>;
+  lastName?: MemberToLastNameResolver<TParent>;
+}
+
+export interface MemberToFirstNameResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToLastNameResolver<TParent = Member, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

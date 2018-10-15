@@ -14,10 +14,12 @@ import { cashback } from './cashback'
 import { createSession } from './createSession'
 import { insurance } from './insurance'
 import { logout } from './logout'
+import { member } from './member'
 
 const resolvers: Resolver = {
   Query: {
     insurance,
+    member,
     cashback,
     signStatus: getSignStatus,
   },

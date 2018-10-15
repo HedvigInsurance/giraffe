@@ -2,6 +2,7 @@ type Query {
   insurance: Insurance!
   cashback: Cashback!
   signStatus: SignStatus!
+  member: Member!
 }
 
 type Mutation {
@@ -50,6 +51,7 @@ input SignInput {
 
 type Insurance {
   address: String
+  postalNumber: String
   monthlyCost: Int
   safetyIncreasers: [String!]
   personsInHousehold: Int
@@ -63,6 +65,11 @@ type Insurance {
   currentInsurerName: String
 
   perilCategories: [PerilCategory]
+}
+
+type Member {
+  firstName: String
+  lastName: String
 }
 
 type PerilCategory {

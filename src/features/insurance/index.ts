@@ -18,6 +18,7 @@ const loadInsurance = async (
     presaleInformationUrl: insuranceObject.presaleInformationUrl,
     monthlyCost: insuranceObject.currentTotalPrice,
     address: insuranceObject.addressStreet,
+    postalNumber: insuranceObject.zipCode,
     certificateUrl: insuranceObject.certificateUrl,
     status: insuranceObject.status,
     type: insuranceObject.insuranceType,
