@@ -57,6 +57,7 @@ const loadSignStatus = async (
       status: status.collectData.status,
       code: status.collectData.hintCode,
     },
+    signState: status.status,
   }
 }
 

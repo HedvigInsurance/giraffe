@@ -6,6 +6,7 @@ import {
   InsuranceStatus,
   InsuranceType,
   PerilCategory,
+  SignState,
 } from '../typings/generated-graphql-types'
 
 interface InsuranceDto {
@@ -41,6 +42,7 @@ interface SignStatusDto {
     status: BankIdStatus
     hintCode: string
   }
+  status: SignState
 }
 
 interface CreateProductDto {
@@ -128,7 +130,6 @@ const getUser = async (
     },
     token,
   })
-  checkStatus(data)
   return data.json()
 }
 
