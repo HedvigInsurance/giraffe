@@ -91,7 +91,7 @@ export enum SignState {
   INITIATED = 'INITIATED',
   IN_PROGRESS = 'IN_PROGRESS',
   FAILED = 'FAILED',
-  COMPLETED = 'COMPLETED'
+  COMPLETE = 'COMPLETE'
 }
 
 export interface Mutation {
@@ -108,7 +108,7 @@ export interface OfferInput {
   age: number;
   address: string;
   postalNumber: string;
-  city: string;
+  city?: string;
   insuranceType: InsuranceType;
   squareMeters: number;
   personsInHousehold: number;

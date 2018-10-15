@@ -53,10 +53,11 @@ const loadSignStatus = async (
 ): Promise<SignStatus> => {
   const status = await signStatus(token, headers)
   return {
-    collectStatus: {
-      status: status.collectData!.status,
-      code: status.collectData!.hintCode,
+    collectStatus: status.collectData && {
+      status: status.collectData.status,
+      code: status.collectData.hintCode,
     },
+    signState: status.status,
   }
 }
 
