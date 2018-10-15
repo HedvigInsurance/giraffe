@@ -16,6 +16,7 @@ export interface Query {
   insurance: Insurance;
   cashback: Cashback;
   signStatus: SignStatus;
+  gifs: Array<Gif | null>;
 }
 
 export interface Insurance {
@@ -94,6 +95,10 @@ export enum SignState {
   COMPLETE = 'COMPLETE'
 }
 
+export interface Gif {
+  url?: string;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -157,6 +162,7 @@ export interface Resolver {
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
+  Gif?: GifTypeResolver;
   Mutation?: MutationTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
@@ -166,6 +172,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
   cashback?: QueryToCashbackResolver<TParent>;
   signStatus?: QueryToSignStatusResolver<TParent>;
+  gifs?: QueryToGifsResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -178,6 +185,13 @@ export interface QueryToCashbackResolver<TParent = undefined, TResult = Cashback
 
 export interface QueryToSignStatusResolver<TParent = undefined, TResult = SignStatus> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToGifsArgs {
+  query?: string;
+}
+export interface QueryToGifsResolver<TParent = undefined, TResult = Array<Gif | null>> {
+  (parent: TParent, args: QueryToGifsArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {
@@ -335,6 +349,14 @@ export interface CollectStatusToStatusResolver<TParent = CollectStatus, TResult 
 }
 
 export interface CollectStatusToCodeResolver<TParent = CollectStatus, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface GifTypeResolver<TParent = Gif> {
+  url?: GifToUrlResolver<TParent>;
+}
+
+export interface GifToUrlResolver<TParent = Gif, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

@@ -6,5 +6,13 @@ const PLAYGROUND_ENABLED =
   false
 const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME || 'localhost'
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379
+const GIPHY_API_KEY = process.env.GIPHY_API_KEY || ''
 
-export { BASE_URL, PORT, PLAYGROUND_ENABLED, REDIS_HOSTNAME, REDIS_PORT }
+export {
+  BASE_URL,
+  PORT,
+  PLAYGROUND_ENABLED,
+  REDIS_HOSTNAME,
+  REDIS_PORT,
+  GIPHY_API_KEY,
+}
