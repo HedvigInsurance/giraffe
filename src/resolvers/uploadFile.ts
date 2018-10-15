@@ -1,4 +1,3 @@
-/// <reference path="../typings/cloudinary.d.ts" />
 import { UserInputError } from 'apollo-server-koa'
 import * as AWS from 'aws-sdk'
 import * as uuid from 'uuid/v1'
