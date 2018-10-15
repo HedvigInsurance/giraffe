@@ -120,7 +120,7 @@ enum SignState {
   INITIATED
   IN_PROGRESS
   FAILED
-  COMPLETED
+  COMPLETE
 }
 
 scalar LocalDate

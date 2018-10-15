@@ -91,7 +91,7 @@ export enum SignState {
   INITIATED = 'INITIATED',
   IN_PROGRESS = 'IN_PROGRESS',
   FAILED = 'FAILED',
-  COMPLETED = 'COMPLETED'
+  COMPLETE = 'COMPLETE'
 }
 
 export interface Mutation {
