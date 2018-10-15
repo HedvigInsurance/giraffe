@@ -128,5 +128,8 @@ scalar LocalDate
 scalar Upload
 
 type File {
-  url: String!
+  """signedUrl is valid for 30 minutes after upload, don't hang on to this."""
+  signedUrl: String!
+  """S3 key that can be used to retreive new signed urls in the future."""
+  key: String!
 }

@@ -123,7 +123,16 @@ export interface SignInput {
 export type Upload = any;
 
 export interface File {
-  url: string;
+  
+  /**
+   * signedUrl is valid for 30 minutes after upload, don't hang on to this.
+   */
+  signedUrl: string;
+  
+  /**
+   * S3 key that can be used to retreive new signed urls in the future.
+   */
+  key: string;
 }
 
 export interface Subscription {
@@ -385,10 +394,15 @@ export interface MutationToUploadFileResolver<TParent = undefined, TResult = Fil
 }
 
 export interface FileTypeResolver<TParent = File> {
-  url?: FileToUrlResolver<TParent>;
+  signedUrl?: FileToSignedUrlResolver<TParent>;
+  key?: FileToKeyResolver<TParent>;
 }
 
-export interface FileToUrlResolver<TParent = File, TResult = string> {
+export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface FileToKeyResolver<TParent = File, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

@@ -16,6 +16,7 @@ AWS.config.region = 'eu-central-1'
 const s3 = new AWS.S3()
 
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
+const THIRTY_SECONDS = 60 * 30
 
 export const uploadFile: MutationToUploadFileResolver = async (
   _root,
@@ -28,9 +29,10 @@ export const uploadFile: MutationToUploadFileResolver = async (
   const { stream, filename, mimetype } = await file
 
   const finalFile = (await new Promise((resolve) => {
+    const key = `${uuid()}-${filename}`
     const params = {
       Bucket: AWS_S3_BUCKET,
-      Key: `${uuid()}-${filename}`,
+      Key: key,
       Body: stream,
       ContentType: mimetype,
       Metadata: {
@@ -38,20 +40,25 @@ export const uploadFile: MutationToUploadFileResolver = async (
       },
     }
 
-    s3.upload(params, UPLOAD_OPTIONS, (err, data) => {
+    s3.upload(params, UPLOAD_OPTIONS, (err) => {
       if (err) {
-        resolve({
-          url: null,
-        })
+        resolve(undefined)
       } else {
+        const signedUrl = s3.getSignedUrl('getObject', {
+          Bucket: AWS_S3_BUCKET,
+          Key: key,
+          Expires: THIRTY_SECONDS,
+        })
+
         resolve({
-          url: data.Location,
+          signedUrl,
+          key,
         })
       }
     })
   })) as File
 
-  if (finalFile.url === null) {
+  if (!finalFile) {
     throw new UserInputError("Couldn't upload file")
   }
 
