@@ -15,10 +15,12 @@ import { createSession } from './createSession'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
+import { member } from './member'
 
 const resolvers: Resolver = {
   Query: {
     insurance,
+    member,
     cashback,
     signStatus: getSignStatus,
     gifs,

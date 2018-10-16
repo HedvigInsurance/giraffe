@@ -6,23 +6,24 @@ const loadInsurance = async (
   token: string,
   headers: ForwardHeaders,
 ): Promise<Insurance> => {
-  const [insuranceObject, user] = await Promise.all([
+  const [insuranceResponse, user] = await Promise.all([
     getInsurance(token, headers),
     getUser(token, headers),
   ])
   return {
-    insuredAtOtherCompany: insuranceObject.insuredAtOtherCompany,
-    personsInHousehold: insuranceObject.personsInHousehold,
-    currentInsurerName: insuranceObject.currentInsurerName,
-    policyUrl: insuranceObject.policyUrl,
-    presaleInformationUrl: insuranceObject.presaleInformationUrl,
-    monthlyCost: insuranceObject.currentTotalPrice,
-    address: insuranceObject.addressStreet,
-    certificateUrl: insuranceObject.certificateUrl,
-    status: insuranceObject.status,
-    type: insuranceObject.insuranceType,
-    activeFrom: insuranceObject.activeFrom,
-    perilCategories: insuranceObject.categories,
+    insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
+    personsInHousehold: insuranceResponse.personsInHousehold,
+    currentInsurerName: insuranceResponse.currentInsurerName,
+    policyUrl: insuranceResponse.policyUrl,
+    presaleInformationUrl: insuranceResponse.presaleInformationUrl,
+    monthlyCost: insuranceResponse.currentTotalPrice,
+    address: insuranceResponse.addressStreet,
+    postalNumber: insuranceResponse.zipCode,
+    certificateUrl: insuranceResponse.certificateUrl,
+    status: insuranceResponse.status,
+    type: insuranceResponse.insuranceType,
+    activeFrom: insuranceResponse.activeFrom,
+    perilCategories: insuranceResponse.categories,
     safetyIncreasers: user.safetyIncreasers,
   }
 }
