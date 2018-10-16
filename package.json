@@ -30,7 +30,7 @@
   "devDependencies": {
     "@hedviginsurance/graphql-schema-typescript": "^1.2.8",
     "@types/dotenv": "^4.0.3",
-    "@types/graphql": "^14.0.2",
+    "@types/graphql": "^14.0.3",
     "@types/ioredis": "^4.0.3",
     "@types/koa": "^2.0.46",
     "@types/node-fetch": "^2.1.2",
