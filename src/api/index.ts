@@ -12,6 +12,7 @@ import {
 interface InsuranceDto {
   currentTotalPrice: number
   addressStreet: string
+  zipCode: string
   certificateUrl: string
   status: InsuranceStatus
   insuranceType: InsuranceType
@@ -25,6 +26,8 @@ interface InsuranceDto {
 }
 
 interface UserDto {
+  firstName: string
+  lastName: string
   memberId: string
   safetyIncreasers: string[]
   selectedCashback: string
