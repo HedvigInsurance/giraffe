@@ -12,6 +12,7 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
+import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
 import { member } from './member'
@@ -22,6 +23,7 @@ const resolvers: Resolver = {
     member,
     cashback,
     signStatus: getSignStatus,
+    gifs,
   },
   Mutation: {
     logout,
