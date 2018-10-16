@@ -11,7 +11,7 @@
     eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
 
     # Build and push
-    docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${TRAVIS_COMMIT} .
+    docker build -t ${REMOTE_IMAGE_URL}:latest -t ${REMOTE_IMAGE_URL}:${TRAVIS_COMMIT} .
     echo "Pushing ${IMAGE_NAME}:${TRAVIS_COMMIT}"
     docker push ${REMOTE_IMAGE_URL}:${TRAVIS_COMMIT}
     echo "Pushed $IMAGE_NAME:${TRAVIS_COMMIT}"
