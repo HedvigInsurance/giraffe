@@ -15,6 +15,7 @@ import { createSession } from './createSession'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
+import { uploadFile } from './uploadFile'
 import { member } from './member'
 
 const resolvers: Resolver = {
@@ -30,6 +31,7 @@ const resolvers: Resolver = {
     createSession,
     createOffer,
     signOffer,
+    uploadFile,
   },
   Subscription: {
     offer: subscribeToOffer,

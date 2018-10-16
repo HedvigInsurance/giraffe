@@ -1,5 +1,5 @@
 import { createHttpLink } from 'apollo-link-http'
-import { gql } from 'apollo-server-koa'
+import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
 import {
   FilterRootFields,
@@ -39,7 +39,10 @@ const makeSchema = async () => {
 
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
-    resolvers: resolvers as IResolvers<any, Context>,
+    resolvers: {
+      Upload: GraphQLUpload,
+      ...(resolvers as IResolvers<any, Context>),
+    },
   })
 
   const schema = mergeSchemas({

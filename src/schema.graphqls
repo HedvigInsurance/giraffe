@@ -11,6 +11,7 @@ type Mutation {
   createSession: String!
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
+  uploadFile(file: Upload!): File!
 }
 
 type Subscription {
@@ -136,3 +137,11 @@ enum SignState {
 }
 
 scalar LocalDate
+scalar Upload
+
+type File {
+  """signedUrl is valid for 30 minutes after upload, don't hang on to this."""
+  signedUrl: String!
+  """S3 key that can be used to retreive new signed urls in the future."""
+  key: String!
+}

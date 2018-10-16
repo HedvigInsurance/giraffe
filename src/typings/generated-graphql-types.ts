@@ -111,6 +111,7 @@ export interface Mutation {
   createSession: string;
   createOffer?: boolean;
   signOffer?: boolean;
+  uploadFile: File;
 }
 
 export interface OfferInput {
@@ -129,6 +130,21 @@ export interface OfferInput {
 export interface SignInput {
   personalNumber: string;
   email: string;
+}
+
+export type Upload = any;
+
+export interface File {
+  
+  /**
+   * signedUrl is valid for 30 minutes after upload, don't hang on to this.
+   */
+  signedUrl: string;
+  
+  /**
+   * S3 key that can be used to retreive new signed urls in the future.
+   */
+  key: string;
 }
 
 export interface Subscription {
@@ -172,6 +188,8 @@ export interface Resolver {
   Member?: MemberTypeResolver;
   Gif?: GifTypeResolver;
   Mutation?: MutationTypeResolver;
+  Upload?: GraphQLScalarType;
+  File?: FileTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -396,6 +414,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   createSession?: MutationToCreateSessionResolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
+  uploadFile?: MutationToUploadFileResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -418,6 +437,26 @@ export interface MutationToSignOfferArgs {
 }
 export interface MutationToSignOfferResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToSignOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUploadFileArgs {
+  file: Upload;
+}
+export interface MutationToUploadFileResolver<TParent = undefined, TResult = File> {
+  (parent: TParent, args: MutationToUploadFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface FileTypeResolver<TParent = File> {
+  signedUrl?: FileToSignedUrlResolver<TParent>;
+  key?: FileToKeyResolver<TParent>;
+}
+
+export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface FileToKeyResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {

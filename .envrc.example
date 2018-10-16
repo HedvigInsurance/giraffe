@@ -3,3 +3,6 @@ PORT=4000
 PLAYGROUND_ENABLED=true
 APOLLO_DEBUG=true
 NODE_ENV=development
+AWS_KEY=your_key
+AWS_SECRET=your_secret
+AWS_S3_BUCKET=your_bucket
