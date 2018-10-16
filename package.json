@@ -29,7 +29,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@hedviginsurance/graphql-schema-typescript": "^1.2.8",
+    "graphql-schema-typescript": "^1.2.8",
     "@types/dotenv": "^4.0.3",
     "@types/graphql": "^14.0.3",
     "@types/ioredis": "^4.0.3",
