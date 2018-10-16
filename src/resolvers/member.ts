@@ -7,11 +7,11 @@ const member: QueryToMemberResolver = async (
   { getToken, headers },
 ) => {
   const token = await getToken()
-  const memberObj = await getUser(token, headers)
+  const memberResponse = await getUser(token, headers)
 
   return {
-    firstName: memberObj.firstName,
-    lastName: memberObj.lastName,
+    firstName: memberResponse.firstName,
+    lastName: memberResponse.lastName,
   }
 }
 
