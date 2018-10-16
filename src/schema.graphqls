@@ -2,6 +2,7 @@ type Query {
   insurance: Insurance!
   cashback: Cashback!
   signStatus: SignStatus!
+  gifs(query: String): [Gif]!
 }
 
 type Mutation {
@@ -15,6 +16,10 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
+}
+
+type Gif {
+  url: String
 }
 
 type OfferEvent {
