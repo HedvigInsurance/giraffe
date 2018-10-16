@@ -12,7 +12,7 @@ const gifs: QueryToGifsResolver = async (
   await getUser(token, headers)
 
   const giphyResponse = await fetch(
-    `http://api.giphy.com/v1/gifs/search?q=${query}&api_key=${GIPHY_API_KEY}&limit=20`,
+    `https://api.giphy.com/v1/gifs/search?q=${query}&api_key=${GIPHY_API_KEY}&limit=20`,
   ).then((response) => response.json())
 
   return giphyResponse.data.map((gif: any) => gif.images.downsized_large)
