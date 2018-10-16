@@ -13,7 +13,7 @@
     # Build and push
     docker build -t ${REMOTE_IMAGE_URL}:latest -t ${REMOTE_IMAGE_URL}:${TRAVIS_COMMIT} .
     echo "Pushing ${IMAGE_NAME}:${TRAVIS_COMMIT}"
-    docker push ${REMOTE_IMAGE_URL}:${TRAVIS_COMMIT}
+    docker push ${REMOTE_IMAGE_URL}:${TRAVIS_COMMIT} ${REMOTE_IMAGE_URL}:latest
     echo "Pushed $IMAGE_NAME:${TRAVIS_COMMIT}"
 #   else
 #     echo "Skipping deploy because branch is not 'master'"
