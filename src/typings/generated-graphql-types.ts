@@ -18,7 +18,7 @@ export interface Query {
   signStatus: SignStatus;
   member: Member;
   gifs: Array<Gif | null>;
-  fileUrl: File;
+  file: File;
 }
 
 export interface Insurance {
@@ -201,7 +201,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   signStatus?: QueryToSignStatusResolver<TParent>;
   member?: QueryToMemberResolver<TParent>;
   gifs?: QueryToGifsResolver<TParent>;
-  fileUrl?: QueryToFileUrlResolver<TParent>;
+  file?: QueryToFileResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -227,11 +227,11 @@ export interface QueryToGifsResolver<TParent = undefined, TResult = Array<Gif | 
   (parent: TParent, args: QueryToGifsArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToFileUrlArgs {
+export interface QueryToFileArgs {
   key: string;
 }
-export interface QueryToFileUrlResolver<TParent = undefined, TResult = File> {
-  (parent: TParent, args: QueryToFileUrlArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+export interface QueryToFileResolver<TParent = undefined, TResult = File> {
+  (parent: TParent, args: QueryToFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {

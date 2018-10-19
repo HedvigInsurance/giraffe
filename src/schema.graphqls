@@ -4,7 +4,7 @@ type Query {
   signStatus: SignStatus!
   member: Member!
   gifs(query: String!): [Gif]!
-  fileUrl(key: String!): File!
+  file(key: String!): File!
 }
 
 type Mutation {

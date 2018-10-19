@@ -1,11 +1,11 @@
 import { getUser } from '../api'
 import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
-import { QueryToFileUrlResolver } from '../typings/generated-graphql-types'
+import { QueryToFileResolver } from '../typings/generated-graphql-types'
 
 const THIRTY_SECONDS = 60 * 30
 
-export const fileUrl: QueryToFileUrlResolver = async (
+export const file: QueryToFileResolver = async (
   _root,
   { key },
   { getToken, headers },
