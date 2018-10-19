@@ -3,7 +3,7 @@ import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
 import { QueryToFileResolver } from '../typings/generated-graphql-types'
 
-const THIRTY_SECONDS = 60 * 30
+const THIRTY_MINUTES = 60 * 30
 
 export const file: QueryToFileResolver = async (
   _root,
@@ -24,7 +24,7 @@ export const file: QueryToFileResolver = async (
     const signedUrl = s3.getSignedUrl('getObject', {
       Bucket: AWS_S3_BUCKET,
       Key: key,
-      Expires: THIRTY_SECONDS,
+      Expires: THIRTY_MINUTES,
     })
 
     return {

@@ -11,7 +11,7 @@ import {
 } from '../typings/generated-graphql-types'
 
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
-const THIRTY_SECONDS = 60 * 30
+const THIRTY_MINUTES = 60 * 30
 
 export const uploadFile: MutationToUploadFileResolver = async (
   _root,
@@ -42,7 +42,7 @@ export const uploadFile: MutationToUploadFileResolver = async (
         const signedUrl = s3.getSignedUrl('getObject', {
           Bucket: AWS_S3_BUCKET,
           Key: key,
-          Expires: THIRTY_SECONDS,
+          Expires: THIRTY_MINUTES,
         })
 
         resolve({
