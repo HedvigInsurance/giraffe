@@ -20,7 +20,7 @@ export const file: QueryToFileResolver = async (
     })
     .promise()
 
-  if (headObject.Metadata && headObject.Metadata.memberId === user.memberId) {
+  if (headObject.Metadata && headObject.Metadata.memberid === user.memberId) {
     const signedUrl = s3.getSignedUrl('getObject', {
       Bucket: AWS_S3_BUCKET,
       Key: key,
