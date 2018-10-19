@@ -1,22 +1,17 @@
 import { UserInputError } from 'apollo-server-koa'
-import * as AWS from 'aws-sdk'
+
 import * as uuid from 'uuid/v1'
 
 import { getUser } from '../api'
-import { AWS_KEY, AWS_S3_BUCKET, AWS_SECRET } from '../config'
+import { s3 } from '../api/s3'
+import { AWS_S3_BUCKET } from '../config'
 import {
   File,
   MutationToUploadFileResolver,
 } from '../typings/generated-graphql-types'
 
-AWS.config.accessKeyId = AWS_KEY
-AWS.config.secretAccessKey = AWS_SECRET
-AWS.config.region = 'eu-central-1'
-
-const s3 = new AWS.S3()
-
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
-const THIRTY_SECONDS = 60 * 30
+const THIRTY_MINUTES = 60 * 30
 
 export const uploadFile: MutationToUploadFileResolver = async (
   _root,
@@ -47,7 +42,7 @@ export const uploadFile: MutationToUploadFileResolver = async (
         const signedUrl = s3.getSignedUrl('getObject', {
           Bucket: AWS_S3_BUCKET,
           Key: key,
-          Expires: THIRTY_SECONDS,
+          Expires: THIRTY_MINUTES,
         })
 
         resolve({

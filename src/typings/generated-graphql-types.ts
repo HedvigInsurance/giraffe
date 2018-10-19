@@ -18,6 +18,7 @@ export interface Query {
   signStatus: SignStatus;
   member: Member;
   gifs: Array<Gif | null>;
+  file: File;
 }
 
 export interface Insurance {
@@ -106,6 +107,19 @@ export interface Gif {
   url?: string;
 }
 
+export interface File {
+  
+  /**
+   * signedUrl is valid for 30 minutes after upload, don't hang on to this.
+   */
+  signedUrl: string;
+  
+  /**
+   * S3 key that can be used to retreive new signed urls in the future.
+   */
+  key: string;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -133,19 +147,6 @@ export interface SignInput {
 }
 
 export type Upload = any;
-
-export interface File {
-  
-  /**
-   * signedUrl is valid for 30 minutes after upload, don't hang on to this.
-   */
-  signedUrl: string;
-  
-  /**
-   * S3 key that can be used to retreive new signed urls in the future.
-   */
-  key: string;
-}
 
 export interface Subscription {
   offer?: OfferEvent;
@@ -187,9 +188,9 @@ export interface Resolver {
   CollectStatus?: CollectStatusTypeResolver;
   Member?: MemberTypeResolver;
   Gif?: GifTypeResolver;
+  File?: FileTypeResolver;
   Mutation?: MutationTypeResolver;
   Upload?: GraphQLScalarType;
-  File?: FileTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -200,6 +201,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   signStatus?: QueryToSignStatusResolver<TParent>;
   member?: QueryToMemberResolver<TParent>;
   gifs?: QueryToGifsResolver<TParent>;
+  file?: QueryToFileResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -219,10 +221,17 @@ export interface QueryToMemberResolver<TParent = undefined, TResult = Member> {
 }
 
 export interface QueryToGifsArgs {
-  query?: string;
+  query: string;
 }
 export interface QueryToGifsResolver<TParent = undefined, TResult = Array<Gif | null>> {
   (parent: TParent, args: QueryToGifsArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToFileArgs {
+  key: string;
+}
+export interface QueryToFileResolver<TParent = undefined, TResult = File> {
+  (parent: TParent, args: QueryToFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {
@@ -409,6 +418,19 @@ export interface GifToUrlResolver<TParent = Gif, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface FileTypeResolver<TParent = File> {
+  signedUrl?: FileToSignedUrlResolver<TParent>;
+  key?: FileToKeyResolver<TParent>;
+}
+
+export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface FileToKeyResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MutationTypeResolver<TParent = undefined> {
   logout?: MutationToLogoutResolver<TParent>;
   createSession?: MutationToCreateSessionResolver<TParent>;
@@ -444,19 +466,6 @@ export interface MutationToUploadFileArgs {
 }
 export interface MutationToUploadFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: MutationToUploadFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface FileTypeResolver<TParent = File> {
-  signedUrl?: FileToSignedUrlResolver<TParent>;
-  key?: FileToKeyResolver<TParent>;
-}
-
-export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface FileToKeyResolver<TParent = File, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {
