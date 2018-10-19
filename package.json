@@ -21,7 +21,7 @@
     "graphql-subscriptions": "1.0.0",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.2",
-    "ioredis": "^4.1.0",
+    "ioredis": "^4.2.0",
     "koa": "^2.5.3",
     "node-fetch": "^2.2.0",
     "subscriptions-transport-ws": "^0.9.15",
