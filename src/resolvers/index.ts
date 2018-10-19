@@ -12,11 +12,12 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
+import { fileUrl } from './fileUrl'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
-import { uploadFile } from './uploadFile'
 import { member } from './member'
+import { uploadFile } from './uploadFile'
 
 const resolvers: Resolver = {
   Query: {
@@ -25,6 +26,7 @@ const resolvers: Resolver = {
     cashback,
     signStatus: getSignStatus,
     gifs,
+    fileUrl,
   },
   Mutation: {
     logout,

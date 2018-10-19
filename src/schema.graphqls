@@ -3,7 +3,8 @@ type Query {
   cashback: Cashback!
   signStatus: SignStatus!
   member: Member!
-  gifs(query: String): [Gif]!
+  gifs(query: String!): [Gif]!
+  fileUrl(key: String!): File!
 }
 
 type Mutation {
