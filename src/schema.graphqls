@@ -5,6 +5,7 @@ type Query {
   member: Member!
   gifs(query: String!): [Gif]!
   file(key: String!): File!
+  directDebitStatus: DirectDebitStatus!
 }
 
 type Mutation {
@@ -36,6 +37,11 @@ type SignEvent {
 enum OfferStatus {
   SUCCESS,
   FAIL
+}
+
+enum DirectDebitStatus {
+  NEEDS_SETUP
+  ACTIVE
 }
 
 input OfferInput {

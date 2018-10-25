@@ -190,6 +190,20 @@ const signStatus = async (
   return data.json()
 }
 
+const getDirectDebitStatus = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<number> => {
+  const data = await callApi('/directDebit/status', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
+    validateStatus: () => true,
+  })
+  return data.status
+}
+
 export {
   getInsurance,
   getUser,
@@ -198,4 +212,5 @@ export {
   createProduct,
   websign,
   signStatus,
+  getDirectDebitStatus,
 }

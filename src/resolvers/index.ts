@@ -12,6 +12,7 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { createSession } from './createSession'
+import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
@@ -27,6 +28,7 @@ const resolvers: Resolver = {
     signStatus: getSignStatus,
     gifs,
     file,
+    directDebitStatus,
   },
   Mutation: {
     logout,
