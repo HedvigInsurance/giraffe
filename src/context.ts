@@ -7,6 +7,7 @@ import { notNullable } from './utils/nullables'
 interface Context {
   getToken: () => string
   headers: ForwardHeaders
+  remoteIp: string
 }
 
 interface ForwardHeaders {
@@ -32,6 +33,7 @@ const getWebContext = async ({
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
       'X-Request-Id': checkedCtx.get('x-request-id'),
     },
+    remoteIp: checkedCtx.request.ip,
   }
 }
 
@@ -57,6 +59,9 @@ const getWebSocketContext = (
   return {
     getToken,
     headers,
+    remoteIp:
+      headers['X-Forwarded-For'] ||
+      (context.request.connection.address() as string),
   }
 }
 

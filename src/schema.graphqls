@@ -2,7 +2,7 @@ type Query {
   insurance: Insurance!
   cashback: Cashback!
   cashbackOptions: [Cashback]!
-  signStatus: SignStatus!
+  signStatus: SignStatus
   member: Member!
   gifs(query: String!): [Gif]!
   file(key: String!): File!
