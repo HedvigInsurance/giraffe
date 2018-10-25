@@ -19,6 +19,7 @@ export interface Query {
   member: Member;
   gifs: Array<Gif | null>;
   file: File;
+  directDebitStatus: DirectDebitStatus;
 }
 
 export interface Insurance {
@@ -120,6 +121,11 @@ export interface File {
   key: string;
 }
 
+export enum DirectDebitStatus {
+  NEEDS_SETUP = 'NEEDS_SETUP',
+  ACTIVE = 'ACTIVE'
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -202,6 +208,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   member?: QueryToMemberResolver<TParent>;
   gifs?: QueryToGifsResolver<TParent>;
   file?: QueryToFileResolver<TParent>;
+  directDebitStatus?: QueryToDirectDebitStatusResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -232,6 +239,10 @@ export interface QueryToFileArgs {
 }
 export interface QueryToFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: QueryToFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToDirectDebitStatusResolver<TParent = undefined, TResult = DirectDebitStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {
