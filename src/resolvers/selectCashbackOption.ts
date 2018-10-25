@@ -9,7 +9,7 @@ const selectCashbackOption: MutationToSelectCashbackOptionResolver = async (
   const token = getToken()
   const result = await setSelectedCashbackOption(token, headers, id)
 
-  if (result === 200) {
+  if (result === 204) {
     const user = await getUser(token, headers)
 
     return {
