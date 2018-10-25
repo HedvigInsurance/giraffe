@@ -15,6 +15,7 @@ import { GraphQLResolveInfo, GraphQLScalarType } from 'graphql';
 export interface Query {
   insurance: Insurance;
   cashback: Cashback;
+  cashbackOptions: Array<Cashback | null>;
   signStatus: SignStatus;
   member: Member;
   gifs: Array<Gif | null>;
@@ -74,6 +75,10 @@ export interface Cashback {
   id?: string;
   name?: string;
   imageUrl?: string;
+  selectedUrl?: string;
+  description?: string;
+  title?: string;
+  paragraph?: string;
 }
 
 export interface SignStatus {
@@ -132,6 +137,7 @@ export interface Mutation {
   createOffer?: boolean;
   signOffer?: boolean;
   uploadFile: File;
+  selectCashbackOption: Cashback;
 }
 
 export interface OfferInput {
@@ -204,6 +210,7 @@ export interface Resolver {
 export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
   cashback?: QueryToCashbackResolver<TParent>;
+  cashbackOptions?: QueryToCashbackOptionsResolver<TParent>;
   signStatus?: QueryToSignStatusResolver<TParent>;
   member?: QueryToMemberResolver<TParent>;
   gifs?: QueryToGifsResolver<TParent>;
@@ -216,6 +223,10 @@ export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insuran
 }
 
 export interface QueryToCashbackResolver<TParent = undefined, TResult = Cashback> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToCashbackOptionsResolver<TParent = undefined, TResult = Array<Cashback | null>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -368,6 +379,10 @@ export interface CashbackTypeResolver<TParent = Cashback> {
   id?: CashbackToIdResolver<TParent>;
   name?: CashbackToNameResolver<TParent>;
   imageUrl?: CashbackToImageUrlResolver<TParent>;
+  selectedUrl?: CashbackToSelectedUrlResolver<TParent>;
+  description?: CashbackToDescriptionResolver<TParent>;
+  title?: CashbackToTitleResolver<TParent>;
+  paragraph?: CashbackToParagraphResolver<TParent>;
 }
 
 export interface CashbackToIdResolver<TParent = Cashback, TResult = string | null> {
@@ -379,6 +394,22 @@ export interface CashbackToNameResolver<TParent = Cashback, TResult = string | n
 }
 
 export interface CashbackToImageUrlResolver<TParent = Cashback, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CashbackToSelectedUrlResolver<TParent = Cashback, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CashbackToDescriptionResolver<TParent = Cashback, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CashbackToTitleResolver<TParent = Cashback, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CashbackToParagraphResolver<TParent = Cashback, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -448,6 +479,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
+  selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -477,6 +509,13 @@ export interface MutationToUploadFileArgs {
 }
 export interface MutationToUploadFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: MutationToUploadFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSelectCashbackOptionArgs {
+  id: string;
+}
+export interface MutationToSelectCashbackOptionResolver<TParent = undefined, TResult = Cashback> {
+  (parent: TParent, args: MutationToSelectCashbackOptionArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {

@@ -63,6 +63,16 @@ interface CreateProductDto {
   livingSpace: number
 }
 
+interface CashbackDto {
+  id: string
+  name: string
+  title: string
+  description: string
+  imageUrl: string
+  selectedUrl: string
+  paragraph: string
+}
+
 type CallApi = (
   url: string,
   options?: {
@@ -204,6 +214,36 @@ const getDirectDebitStatus = async (
   return data.status
 }
 
+const setSelectedCashbackOption = async (
+  token: string,
+  headers: ForwardHeaders,
+  cashbackOptionId: string,
+): Promise<number> => {
+  const data = await callApi(`/cashback?optionId=${cashbackOptionId}`, {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+    validateStatus: () => true,
+  })
+  return data.status
+}
+
+const getCashbackOptions = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<CashbackDto[]> => {
+  const data = await callApi('/cashback/options', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
+    validateStatus: () => true,
+  })
+  return data.json()
+}
+
 export {
   getInsurance,
   getUser,
@@ -213,4 +253,6 @@ export {
   websign,
   signStatus,
   getDirectDebitStatus,
+  setSelectedCashbackOption,
+  getCashbackOptions,
 }

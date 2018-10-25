@@ -11,6 +11,7 @@ import {
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
+import { cashbackOptions } from './cashbackOptions'
 import { createSession } from './createSession'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
@@ -18,6 +19,7 @@ import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
 import { member } from './member'
+import { selectCashbackOption } from './selectCashbackOption'
 import { uploadFile } from './uploadFile'
 
 const resolvers: Resolver = {
@@ -29,6 +31,7 @@ const resolvers: Resolver = {
     gifs,
     file,
     directDebitStatus,
+    cashbackOptions,
   },
   Mutation: {
     logout,
@@ -36,6 +39,7 @@ const resolvers: Resolver = {
     createOffer,
     signOffer,
     uploadFile,
+    selectCashbackOption,
   },
   Subscription: {
     offer: subscribeToOffer,
