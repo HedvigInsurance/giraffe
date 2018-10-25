@@ -7,6 +7,5 @@ export const cashbackOptions: QueryToCashbackOptionsResolver = async (
   { getToken, headers },
 ) => {
   const token = getToken()
-  const result = await getCashbackOptions(token, headers)
-  return result
+  return getCashbackOptions(token, headers)
 }
