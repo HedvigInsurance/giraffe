@@ -239,7 +239,6 @@ const getCashbackOptions = async (
       headers: (headers as any) as RequestInit['headers'],
     },
     token,
-    validateStatus: () => true,
   })
   return data.json()
 }
