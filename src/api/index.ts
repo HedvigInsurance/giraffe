@@ -190,13 +190,20 @@ const websign = async (
 const signStatus = async (
   token: string,
   headers: ForwardHeaders,
-): Promise<SignStatusDto> => {
+): Promise<SignStatusDto | null> => {
   const data = await callApi('/v2/member/sign/signStatus', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
     },
     token,
+    validateStatus: (response) =>
+      response.status <= 400 || response.status === 404,
   })
+
+  if (data.status === 404) {
+    return null
+  }
+
   return data.json()
 }
 

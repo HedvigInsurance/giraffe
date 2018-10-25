@@ -16,7 +16,7 @@ export interface Query {
   insurance: Insurance;
   cashback: Cashback;
   cashbackOptions: Array<Cashback | null>;
-  signStatus: SignStatus;
+  signStatus?: SignStatus;
   member: Member;
   gifs: Array<Gif | null>;
   file: File;
@@ -230,7 +230,7 @@ export interface QueryToCashbackOptionsResolver<TParent = undefined, TResult = A
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToSignStatusResolver<TParent = undefined, TResult = SignStatus> {
+export interface QueryToSignStatusResolver<TParent = undefined, TResult = SignStatus | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

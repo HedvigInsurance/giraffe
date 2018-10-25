@@ -13,17 +13,16 @@ import {
 const signOffer: MutationToSignOfferResolver = async (
   _parent,
   { details },
-  { getToken, headers },
+  { getToken, headers, remoteIp },
 ) => {
   const token = getToken()
-  const ipAddress = headers['X-Forwarded-For']
-  if (!ipAddress) {
-    throw new Error(`Must have an ip. X-Forwarded-For is: ${ipAddress}`)
+  if (!remoteIp) {
+    throw new Error(`Must have an ip. X-Forwarded-For is: ${remoteIp}`)
   }
   await websign(token, headers, {
     ssn: details.personalNumber,
     email: details.email,
-    ipAddress,
+    ipAddress: remoteIp,
   })
 
   return true
@@ -50,8 +49,13 @@ const getSignStatusFromSignEvent: SignEventToStatusResolver = async (
 const loadSignStatus = async (
   token: string,
   headers: ForwardHeaders,
-): Promise<SignStatus> => {
+): Promise<SignStatus | null> => {
   const status = await signStatus(token, headers)
+
+  if (!status) {
+    return null
+  }
+
   return {
     collectStatus: status.collectData && {
       status: status.collectData.status,
