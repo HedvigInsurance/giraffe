@@ -250,6 +250,17 @@ const getCashbackOptions = async (
   return data.json()
 }
 
+const setOfferClosed = async (token: string, headers: ForwardHeaders) => {
+  const data = await callApi('/hedvig/onboarding/offerClosed', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+  return data.json()
+}
+
 export {
   getInsurance,
   getUser,
@@ -261,4 +272,5 @@ export {
   getDirectDebitStatus,
   setSelectedCashbackOption,
   getCashbackOptions,
+  setOfferClosed,
 }

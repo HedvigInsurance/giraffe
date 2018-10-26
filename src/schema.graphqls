@@ -16,6 +16,7 @@ type Mutation {
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
   selectCashbackOption(id: ID!): Cashback!
+  offerClosed: Boolean!
 }
 
 type Subscription {
