@@ -9,6 +9,9 @@ import {
   File,
   MutationToUploadFileResolver,
 } from '../typings/generated-graphql-types'
+import { factory } from '../utils/log'
+
+const logger = factory.getLogger('resolvers/uploadFile')
 
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
 const THIRTY_MINUTES = 60 * 30
@@ -37,6 +40,7 @@ export const uploadFile: MutationToUploadFileResolver = async (
 
     s3.upload(params, UPLOAD_OPTIONS, (err) => {
       if (err) {
+        logger.error('Got error when attempting to upload error: ', err)
         resolve(undefined)
       } else {
         const signedUrl = s3.getSignedUrl('getObject', {
