@@ -40,6 +40,11 @@ makeSchema().then((schema) => {
       }
       return error
     },
+    engine: config.APOLLO_ENGINE_KEY
+      ? {
+          apiKey: config.APOLLO_ENGINE_KEY,
+        }
+      : undefined,
   })
 
   const app = new Koa()
