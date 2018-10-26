@@ -138,6 +138,7 @@ export interface Mutation {
   signOffer?: boolean;
   uploadFile: File;
   selectCashbackOption: Cashback;
+  offerClosed: boolean;
 }
 
 export interface OfferInput {
@@ -480,6 +481,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   signOffer?: MutationToSignOfferResolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
+  offerClosed?: MutationToOfferClosedResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -516,6 +518,10 @@ export interface MutationToSelectCashbackOptionArgs {
 }
 export interface MutationToSelectCashbackOptionResolver<TParent = undefined, TResult = Cashback> {
   (parent: TParent, args: MutationToSelectCashbackOptionArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToOfferClosedResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SubscriptionTypeResolver<TParent = undefined> {

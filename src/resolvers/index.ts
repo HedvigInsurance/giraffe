@@ -19,6 +19,7 @@ import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
 import { member } from './member'
+import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
 import { uploadFile } from './uploadFile'
 
@@ -40,6 +41,7 @@ const resolvers: Resolver = {
     signOffer,
     uploadFile,
     selectCashbackOption,
+    offerClosed,
   },
   Subscription: {
     offer: subscribeToOffer,
