@@ -21,7 +21,7 @@ import { logout } from './logout'
 import { member } from './member'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
-import { startTrustly } from './trustly'
+import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
 
 const resolvers: Resolver = {
@@ -43,7 +43,7 @@ const resolvers: Resolver = {
     uploadFile,
     selectCashbackOption,
     offerClosed,
-    startTrustly,
+    startDirectDebitRegistration,
   },
   Subscription: {
     offer: subscribeToOffer,
