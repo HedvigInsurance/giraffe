@@ -21,6 +21,7 @@ import { logout } from './logout'
 import { member } from './member'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
+import { startTrustly } from './trustly'
 import { uploadFile } from './uploadFile'
 
 const resolvers: Resolver = {
@@ -42,6 +43,7 @@ const resolvers: Resolver = {
     uploadFile,
     selectCashbackOption,
     offerClosed,
+    startTrustly,
   },
   Subscription: {
     offer: subscribeToOffer,

@@ -17,6 +17,7 @@ type Mutation {
   uploadFile(file: Upload!): File!
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
+  startTrustly: URL!
 }
 
 type Subscription {
@@ -152,6 +153,8 @@ enum SignState {
 
 scalar LocalDate
 scalar Upload
+# String-represented URL.
+scalar URL
 
 type File {
   """signedUrl is valid for 30 minutes after upload, don't hang on to this."""
