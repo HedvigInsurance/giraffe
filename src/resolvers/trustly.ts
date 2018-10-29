@@ -1,7 +1,7 @@
 import { getUser, registerDirectDebit } from '../api'
-import { MutationToStartTrustlyResolver } from '../typings/generated-graphql-types'
+import { MutationToStartDirectDebitRegistrationResolver } from '../typings/generated-graphql-types'
 
-const startTrustly: MutationToStartTrustlyResolver = async (
+const startDirectDebitRegistration: MutationToStartDirectDebitRegistrationResolver = async (
   _parent,
   _args,
   { getToken, headers },
@@ -13,9 +13,7 @@ const startTrustly: MutationToStartTrustlyResolver = async (
     lastName: user.lastName,
     personalNumber: user.ssn,
   })
-  return `${
-    directDebitResponse.url
-  }&gui=native&color=%23651EFF&bordercolor=%230F007A`
+  return `${directDebitResponse.url}&gui=native`
 }
 
-export { startTrustly }
+export { startDirectDebitRegistration }

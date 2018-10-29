@@ -139,7 +139,7 @@ export interface Mutation {
   uploadFile: File;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
-  startTrustly: URL;
+  startDirectDebitRegistration: URL;
 }
 
 export interface OfferInput {
@@ -486,7 +486,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   uploadFile?: MutationToUploadFileResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
-  startTrustly?: MutationToStartTrustlyResolver<TParent>;
+  startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -529,7 +529,7 @@ export interface MutationToOfferClosedResolver<TParent = undefined, TResult = bo
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToStartTrustlyResolver<TParent = undefined, TResult = URL> {
+export interface MutationToStartDirectDebitRegistrationResolver<TParent = undefined, TResult = URL> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

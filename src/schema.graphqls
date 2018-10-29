@@ -17,7 +17,7 @@ type Mutation {
   uploadFile(file: Upload!): File!
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
-  startTrustly: URL!
+  startDirectDebitRegistration: URL!
 }
 
 type Subscription {
