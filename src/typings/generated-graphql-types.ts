@@ -139,6 +139,7 @@ export interface Mutation {
   uploadFile: File;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
+  startTrustly: URL;
 }
 
 export interface OfferInput {
@@ -160,6 +161,8 @@ export interface SignInput {
 }
 
 export type Upload = any;
+
+export type URL = any;
 
 export interface Subscription {
   offer?: OfferEvent;
@@ -204,6 +207,7 @@ export interface Resolver {
   File?: FileTypeResolver;
   Mutation?: MutationTypeResolver;
   Upload?: GraphQLScalarType;
+  URL?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -482,6 +486,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   uploadFile?: MutationToUploadFileResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
+  startTrustly?: MutationToStartTrustlyResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -521,6 +526,10 @@ export interface MutationToSelectCashbackOptionResolver<TParent = undefined, TRe
 }
 
 export interface MutationToOfferClosedResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToStartTrustlyResolver<TParent = undefined, TResult = URL> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

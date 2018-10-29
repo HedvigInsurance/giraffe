@@ -32,6 +32,7 @@ interface UserDto {
   safetyIncreasers: string[]
   selectedCashback: string
   selectedCashbackImageUrl: string
+  ssn: string
 }
 
 interface SignDto {
@@ -71,6 +72,17 @@ interface CashbackDto {
   imageUrl: string
   selectedUrl: string
   paragraph: string
+}
+
+interface RegisterDirectDebitDto {
+  firstName: string
+  lastName: string
+  personalNumber: string
+}
+
+interface DirectDebitOrderInfoDto {
+  url: string
+  orderId: string
 }
 
 type CallApi = (
@@ -259,6 +271,22 @@ const setOfferClosed = async (token: string, headers: ForwardHeaders) =>
     token,
   })
 
+const registerDirectDebit = async (
+  token: string,
+  headers: ForwardHeaders,
+  body: RegisterDirectDebitDto,
+): Promise<DirectDebitOrderInfoDto> => {
+  const data = await callApi('/directDebit/register', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+  return data.json()
+}
+
 export {
   getInsurance,
   getUser,
@@ -271,4 +299,5 @@ export {
   setSelectedCashbackOption,
   getCashbackOptions,
   setOfferClosed,
+  registerDirectDebit,
 }
