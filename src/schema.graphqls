@@ -11,7 +11,7 @@ type Query {
 
 type Mutation {
   logout: Boolean!
-  createSession: String!
+  createSession(campaign: CampaignInput): String!
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
@@ -23,6 +23,14 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
+}
+
+input CampaignInput {
+  source: String
+  medium: String
+  term: String
+  content: String
+  name: String
 }
 
 type Gif {

@@ -142,6 +142,14 @@ export interface Mutation {
   startDirectDebitRegistration: URL;
 }
 
+export interface CampaignInput {
+  source?: string;
+  medium?: string;
+  term?: string;
+  content?: string;
+  name?: string;
+}
+
 export interface OfferInput {
   firstName: string;
   lastName: string;
@@ -493,8 +501,11 @@ export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToCreateSessionArgs {
+  campaign?: CampaignInput;
+}
 export interface MutationToCreateSessionResolver<TParent = undefined, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+  (parent: TParent, args: MutationToCreateSessionArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToCreateOfferArgs {

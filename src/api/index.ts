@@ -85,6 +85,14 @@ interface DirectDebitOrderInfoDto {
   orderId: string
 }
 
+interface TrackingDto {
+  utmSource?: string
+  utmMedium?: string
+  utmContent?: string[]
+  utmCampaign?: string
+  utmTerm?: string[]
+}
+
 type CallApi = (
   url: string,
   options?: {
@@ -287,6 +295,35 @@ const registerDirectDebit = async (
   return data.json()
 }
 
+const registerCampaign = async (
+  token: string,
+  headers: ForwardHeaders,
+  body: TrackingDto,
+) =>
+  callApi('/hedvig/register_campaign', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
+const assignTrackingId = async (
+  token: string,
+  headers: ForwardHeaders,
+  body: { trackingId: string },
+) => {
+  callApi('/member/trackingId', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+}
+
 export {
   getInsurance,
   getUser,
@@ -300,4 +337,6 @@ export {
   getCashbackOptions,
   setOfferClosed,
   registerDirectDebit,
+  registerCampaign,
+  assignTrackingId,
 }
