@@ -1,13 +1,13 @@
-import * as uuid from 'uuid/v4'
 import { assignTrackingId, register, registerCampaign } from '../api'
 import { MutationToCreateSessionResolver } from '../typings/generated-graphql-types'
 
 const createSession: MutationToCreateSessionResolver = async (
   _parent,
-  { campaign },
+  { campaign, trackingId },
   { headers },
 ) => {
   const token = await register(headers)
+
   let campaignPromise
   if (campaign) {
     campaignPromise = registerCampaign(token, headers, {
@@ -18,11 +18,18 @@ const createSession: MutationToCreateSessionResolver = async (
       utmTerm: campaign.term ? [campaign.term] : undefined,
     })
   }
-  const trackingId = uuid()
-  await assignTrackingId(token, headers, { trackingId })
+
+  let trackingIdPromise
+  if (trackingId) {
+    trackingIdPromise = assignTrackingId(token, headers, { trackingId })
+  }
   if (campaignPromise) {
     await campaignPromise
   }
+  if (trackingIdPromise) {
+    await trackingIdPromise
+  }
+
   return token
 }
 

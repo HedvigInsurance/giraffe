@@ -150,6 +150,8 @@ export interface CampaignInput {
   name?: string;
 }
 
+export type UUID = any;
+
 export interface OfferInput {
   firstName: string;
   lastName: string;
@@ -214,6 +216,7 @@ export interface Resolver {
   Gif?: GifTypeResolver;
   File?: FileTypeResolver;
   Mutation?: MutationTypeResolver;
+  UUID?: GraphQLScalarType;
   Upload?: GraphQLScalarType;
   URL?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
@@ -503,6 +506,7 @@ export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean
 
 export interface MutationToCreateSessionArgs {
   campaign?: CampaignInput;
+  trackingId?: UUID;
 }
 export interface MutationToCreateSessionResolver<TParent = undefined, TResult = string> {
   (parent: TParent, args: MutationToCreateSessionArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;

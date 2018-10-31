@@ -11,7 +11,7 @@ type Query {
 
 type Mutation {
   logout: Boolean!
-  createSession(campaign: CampaignInput): String!
+  createSession(campaign: CampaignInput, trackingId: UUID): String!
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
@@ -163,6 +163,8 @@ scalar LocalDate
 scalar Upload
 # String-represented URL.
 scalar URL
+# String-represented UUID.
+scalar UUID
 
 type File {
   """signedUrl is valid for 30 minutes after upload, don't hang on to this."""
