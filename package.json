@@ -20,7 +20,7 @@
     "graphql-redis-subscriptions": "^2.0.0",
     "graphql-subscriptions": "1.0.0",
     "graphql-tag": "^2.10.0",
-    "graphql-tools": "^4.0.2",
+    "graphql-tools": "^4.0.3",
     "ioredis": "^4.2.0",
     "koa": "^2.6.1",
     "node-fetch": "^2.2.0",
