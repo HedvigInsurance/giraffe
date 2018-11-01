@@ -17,7 +17,7 @@ import * as Sentry from '@sentry/node'
 Sentry.init({
   dsn: config.SENTRY_DSN,
   enabled: Boolean(config.SENTRY_DSN),
-  environment: process.env.NODE_ENV,
+  environment: config.SENTRY_ENV,
 })
 
 const logger = factory.getLogger('index')
