@@ -309,7 +309,7 @@ const registerCampaign = (
     token,
   })
 
-const assignTrackingId = async (
+const assignTrackingId = (
   token: string,
   headers: ForwardHeaders,
   body: { trackingId: string },
