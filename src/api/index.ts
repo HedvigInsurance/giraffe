@@ -295,7 +295,7 @@ const registerDirectDebit = async (
   return data.json()
 }
 
-const registerCampaign = async (
+const registerCampaign = (
   token: string,
   headers: ForwardHeaders,
   body: TrackingDto,
