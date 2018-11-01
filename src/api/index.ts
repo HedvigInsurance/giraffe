@@ -313,7 +313,7 @@ const assignTrackingId = async (
   token: string,
   headers: ForwardHeaders,
   body: { trackingId: string },
-) => {
+) =>
   callApi('/member/trackingId', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
@@ -322,7 +322,6 @@ const assignTrackingId = async (
     },
     token,
   })
-}
 
 export {
   getInsurance,
