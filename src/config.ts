@@ -14,6 +14,8 @@ const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || ''
 
 const APOLLO_ENGINE_KEY = process.env.APOLLO_ENGINE_KEY || ''
 
+const SENTRY_DSN = process.env.SENTRY_DSN || ''
+
 export {
   BASE_URL,
   PORT,
@@ -25,4 +27,5 @@ export {
   AWS_S3_BUCKET,
   GIPHY_API_KEY,
   APOLLO_ENGINE_KEY,
+  SENTRY_DSN,
 }

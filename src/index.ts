@@ -13,7 +13,32 @@ import { loggingMiddleware } from './middlewares/logger'
 import { makeSchema } from './schema'
 import { factory } from './utils/log'
 
+import * as Sentry from '@sentry/node'
+Sentry.init({
+  dsn: config.SENTRY_DSN,
+  enabled: Boolean(config.SENTRY_DSN),
+  environment: process.env.NODE_ENV,
+})
+
 const logger = factory.getLogger('index')
+
+const handleError = (error: GraphQLError): void => {
+  logger.error(
+    'Uncaught error in GraphQL. Original error: ',
+    error.originalError,
+  )
+  Sentry.captureException(error)
+  const unsafelyCastedError = error.originalError as any
+  if (
+    unsafelyCastedError &&
+    unsafelyCastedError.errors &&
+    Array.isArray(unsafelyCastedError.errors)
+  ) {
+    unsafelyCastedError.errors.forEach((err: Error) =>
+      logger.error('Inner error: ', err),
+    )
+  }
+}
 
 makeSchema().then((schema) => {
   const server = new ApolloServer({
@@ -24,20 +49,7 @@ makeSchema().then((schema) => {
     },
     introspection: true,
     formatError: (error: GraphQLError) => {
-      logger.error(
-        'Uncaught error in GraphQL. Original error: ',
-        error.originalError,
-      )
-      const unsafelyCastedError = error.originalError as any
-      if (
-        unsafelyCastedError &&
-        unsafelyCastedError.errors &&
-        Array.isArray(unsafelyCastedError.errors)
-      ) {
-        unsafelyCastedError.errors.forEach((err: Error) =>
-          logger.error('Inner error: ', err),
-        )
-      }
+      handleError(error)
       return error
     },
     engine: config.APOLLO_ENGINE_KEY
@@ -63,6 +75,14 @@ makeSchema().then((schema) => {
         subscribe,
         schema,
         onConnect: getWebSocketContext,
+        onOperation: (_msg: any, params: any) => {
+          params.formatResponse = (response: any) => {
+            if (response.errors) {
+              response.errors.forEach(handleError)
+            }
+          }
+          return params
+        },
       },
       { server: ws, path: '/subscriptions' },
     )
