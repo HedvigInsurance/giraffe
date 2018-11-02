@@ -31,7 +31,7 @@ const getWebContext = async ({
     getToken,
     headers: {
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
-      'X-Request-Id': checkedCtx.get('x-request-id'),
+      'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
     },
     remoteIp: checkedCtx.request.ip,
   }

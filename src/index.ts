@@ -14,6 +14,7 @@ import { makeSchema } from './schema'
 import { factory } from './utils/log'
 
 import * as Sentry from '@sentry/node'
+import { getInnerErrorsFromCombinedError } from './utils/graphql-error'
 Sentry.init({
   dsn: config.SENTRY_DSN,
   enabled: Boolean(config.SENTRY_DSN),
@@ -27,17 +28,10 @@ const handleError = (error: GraphQLError): void => {
     'Uncaught error in GraphQL. Original error: ',
     error.originalError,
   )
-  Sentry.captureException(error)
-  const unsafelyCastedError = error.originalError as any
-  if (
-    unsafelyCastedError &&
-    unsafelyCastedError.errors &&
-    Array.isArray(unsafelyCastedError.errors)
-  ) {
-    unsafelyCastedError.errors.forEach((err: Error) =>
-      logger.error('Inner error: ', err),
-    )
-  }
+
+  getInnerErrorsFromCombinedError(error).forEach((err) =>
+    logger.error('Inner error: ', err),
+  )
 }
 
 makeSchema().then((schema) => {
