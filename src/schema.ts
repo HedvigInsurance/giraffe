@@ -51,7 +51,6 @@ const makeSchema = async () => {
     schemas: [transformedTranslationSchema, localSchema],
   })
 
-  // return schema
   return applyMiddleware(schema, sentryMiddleware)
 }
 
