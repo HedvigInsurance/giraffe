@@ -74,6 +74,7 @@ makeSchema().then((schema) => {
             if (response.errors) {
               response.errors.forEach(handleError)
             }
+            return response
           }
           return params
         },
