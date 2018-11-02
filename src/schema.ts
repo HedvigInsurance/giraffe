@@ -1,6 +1,7 @@
 import { createHttpLink } from 'apollo-link-http'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
+import { applyMiddleware } from 'graphql-middleware'
 import {
   FilterRootFields,
   introspectSchema,
@@ -13,6 +14,7 @@ import {
 import fetch from 'node-fetch'
 import { resolve } from 'path'
 import { Context } from './context'
+import { sentryMiddleware } from './middlewares/sentry'
 import { resolvers } from './resolvers'
 
 const typeDefs = gql(
@@ -49,7 +51,7 @@ const makeSchema = async () => {
     schemas: [transformedTranslationSchema, localSchema],
   })
 
-  return schema
+  return applyMiddleware(schema, sentryMiddleware)
 }
 
 export { makeSchema }
