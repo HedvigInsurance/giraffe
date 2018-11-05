@@ -25,7 +25,7 @@
     "graphql-tools": "^4.0.3",
     "ioredis": "^4.2.0",
     "koa": "^2.6.1",
-    "node-fetch": "^2.2.0",
+    "node-fetch": "^2.2.1",
     "subscriptions-transport-ws": "^0.9.15",
     "typescript-logging": "^0.6.3",
     "uuid": "^3.3.2"
