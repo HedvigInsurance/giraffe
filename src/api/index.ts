@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-errors'
 import fetch, { RequestInit, Response } from 'node-fetch'
 import * as config from '../config'
 import { ForwardHeaders } from '../context'
@@ -91,6 +92,13 @@ interface TrackingDto {
   utmContent?: string[]
   utmCampaign?: string
   utmTerm?: string[]
+}
+
+class ClientError extends ApolloError {
+  constructor(message: string, code: string) {
+    super(message, code)
+    Object.defineProperty(this, 'name', { value: 'ClientError' })
+  }
 }
 
 type CallApi = (
@@ -202,6 +210,13 @@ const websign = async (
       method: 'POST',
       headers: (headers as any) as RequestInit['headers'],
       body: JSON.stringify(body),
+    },
+    validateStatus: (res) => {
+      if (res.status === 403) {
+        throw new ClientError('Already a member', 'ALREADY_MEMBER')
+      }
+
+      checkStatus(res)
     },
     token,
   })
