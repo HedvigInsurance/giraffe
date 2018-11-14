@@ -74,7 +74,7 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
     let intervalId: NodeJS.Timer | null = null
 
     getChat(token, headers).then(({ messages }) => {
-      let originalMessages = transformMessages(messages)
+      let previousMessages = transformMessages(messages)
 
       intervalId = setInterval(async () => {
         const { messages: newMessages } = await getChat(token, headers)
@@ -82,13 +82,13 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
 
         const messageDiff = transformedNewMessages.filter(
           (message) =>
-            !originalMessages.find(
-              (originalMessage) =>
-                originalMessage.globalId === message.globalId,
+            !previousMessages.find(
+              (previousMessage) =>
+                previousMessage.globalId === message.globalId,
             ),
         )
 
-        originalMessages = transformedNewMessages
+        previousMessages = transformedNewMessages
 
         if (messageDiff.length !== 0) {
           messageDiff.forEach((message) => {
