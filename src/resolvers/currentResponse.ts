@@ -30,7 +30,7 @@ export const currentResponse: QueryToCurrentResponseResolver = async (
   const messageHeader: MessageHeader = {
     messageId: firstMessage.header.messageId,
     timeStamp: '',
-    fromMyself: firstMessage.header.fromId === 1,
+    fromMyself: firstMessage.header.fromMyself,
     richTextChatCompatible: false,
     editAllowed: false,
     shouldRequestPushNotifications: false,

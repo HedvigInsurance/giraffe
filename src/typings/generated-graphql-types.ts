@@ -236,11 +236,15 @@ export interface MessageBodyChoicesNameMap {
 export interface MessageBodyChoicesUndefined extends MessageBodyChoicesCore {
   type: string;
   value: string;
+  text: string;
+  selected: boolean;
 }
 
 export interface MessageBodyChoicesCore {
   type: string;
   value: string;
+  text: string;
+  selected: boolean;
 }
 
 /** Use this to resolve interface type MessageBodyChoicesCore */
@@ -259,12 +263,19 @@ export interface MessageBodyChoicesCoreNameMap {
 export interface MessageBodyChoicesSelection extends MessageBodyChoicesCore {
   type: string;
   value: string;
+  text: string;
+  selected: boolean;
+  clearable?: boolean;
 }
 
 export interface MessageBodyChoicesLink extends MessageBodyChoicesCore {
   type: string;
   value: string;
+  text: string;
+  selected: boolean;
   view?: MessageBodyChoicesLinkView;
+  appUrl?: string;
+  webUrl?: string;
 }
 
 export enum MessageBodyChoicesLinkView {
@@ -309,7 +320,8 @@ export interface MessageBodyFile extends MessageBodyCore {
   type: string;
   id: string;
   text: string;
-  file?: string;
+  key?: string;
+  mimeType?: string;
 }
 
 export interface MessageBodyParagraph extends MessageBodyCore {
@@ -798,6 +810,8 @@ export interface MessageBodyChoicesTypeResolver<TParent = MessageBodyChoices> {
 export interface MessageBodyChoicesUndefinedTypeResolver<TParent = MessageBodyChoicesUndefined> {
   type?: MessageBodyChoicesUndefinedToTypeResolver<TParent>;
   value?: MessageBodyChoicesUndefinedToValueResolver<TParent>;
+  text?: MessageBodyChoicesUndefinedToTextResolver<TParent>;
+  selected?: MessageBodyChoicesUndefinedToSelectedResolver<TParent>;
 }
 
 export interface MessageBodyChoicesUndefinedToTypeResolver<TParent = MessageBodyChoicesUndefined, TResult = string> {
@@ -808,12 +822,23 @@ export interface MessageBodyChoicesUndefinedToValueResolver<TParent = MessageBod
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MessageBodyChoicesUndefinedToTextResolver<TParent = MessageBodyChoicesUndefined, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesUndefinedToSelectedResolver<TParent = MessageBodyChoicesUndefined, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MessageBodyChoicesCoreTypeResolver<TParent = MessageBodyChoicesCore> {
   (parent: TParent, context: Context, info: GraphQLResolveInfo): 'MessageBodyChoicesUndefined' | 'MessageBodyChoicesSelection' | 'MessageBodyChoicesLink';
 }
 export interface MessageBodyChoicesSelectionTypeResolver<TParent = MessageBodyChoicesSelection> {
   type?: MessageBodyChoicesSelectionToTypeResolver<TParent>;
   value?: MessageBodyChoicesSelectionToValueResolver<TParent>;
+  text?: MessageBodyChoicesSelectionToTextResolver<TParent>;
+  selected?: MessageBodyChoicesSelectionToSelectedResolver<TParent>;
+  clearable?: MessageBodyChoicesSelectionToClearableResolver<TParent>;
 }
 
 export interface MessageBodyChoicesSelectionToTypeResolver<TParent = MessageBodyChoicesSelection, TResult = string> {
@@ -824,10 +849,26 @@ export interface MessageBodyChoicesSelectionToValueResolver<TParent = MessageBod
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MessageBodyChoicesSelectionToTextResolver<TParent = MessageBodyChoicesSelection, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesSelectionToSelectedResolver<TParent = MessageBodyChoicesSelection, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesSelectionToClearableResolver<TParent = MessageBodyChoicesSelection, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MessageBodyChoicesLinkTypeResolver<TParent = MessageBodyChoicesLink> {
   type?: MessageBodyChoicesLinkToTypeResolver<TParent>;
   value?: MessageBodyChoicesLinkToValueResolver<TParent>;
+  text?: MessageBodyChoicesLinkToTextResolver<TParent>;
+  selected?: MessageBodyChoicesLinkToSelectedResolver<TParent>;
   view?: MessageBodyChoicesLinkToViewResolver<TParent>;
+  appUrl?: MessageBodyChoicesLinkToAppUrlResolver<TParent>;
+  webUrl?: MessageBodyChoicesLinkToWebUrlResolver<TParent>;
 }
 
 export interface MessageBodyChoicesLinkToTypeResolver<TParent = MessageBodyChoicesLink, TResult = string> {
@@ -838,7 +879,23 @@ export interface MessageBodyChoicesLinkToValueResolver<TParent = MessageBodyChoi
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MessageBodyChoicesLinkToTextResolver<TParent = MessageBodyChoicesLink, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesLinkToSelectedResolver<TParent = MessageBodyChoicesLink, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MessageBodyChoicesLinkToViewResolver<TParent = MessageBodyChoicesLink, TResult = MessageBodyChoicesLinkView | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesLinkToAppUrlResolver<TParent = MessageBodyChoicesLink, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesLinkToWebUrlResolver<TParent = MessageBodyChoicesLink, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -951,7 +1008,8 @@ export interface MessageBodyFileTypeResolver<TParent = MessageBodyFile> {
   type?: MessageBodyFileToTypeResolver<TParent>;
   id?: MessageBodyFileToIdResolver<TParent>;
   text?: MessageBodyFileToTextResolver<TParent>;
-  file?: MessageBodyFileToFileResolver<TParent>;
+  key?: MessageBodyFileToKeyResolver<TParent>;
+  mimeType?: MessageBodyFileToMimeTypeResolver<TParent>;
 }
 
 export interface MessageBodyFileToTypeResolver<TParent = MessageBodyFile, TResult = string> {
@@ -966,7 +1024,11 @@ export interface MessageBodyFileToTextResolver<TParent = MessageBodyFile, TResul
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MessageBodyFileToFileResolver<TParent = MessageBodyFile, TResult = string | null> {
+export interface MessageBodyFileToKeyResolver<TParent = MessageBodyFile, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyFileToMimeTypeResolver<TParent = MessageBodyFile, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

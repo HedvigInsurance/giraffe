@@ -111,7 +111,8 @@ type MessageBodyFile implements MessageBodyCore {
   type: String!
   id: ID!
   text: String!
-  file: String
+  key: String
+  mimeType: String
 }
 
 type MessageBodyUndefined implements MessageBodyCore {
@@ -120,24 +121,31 @@ type MessageBodyUndefined implements MessageBodyCore {
   text: String!
 }
 
-interface MessageBodyChoicesCore {
-  type: String!
-  value: String!
-}
-
 union MessageBodyChoices =
     MessageBodyChoicesUndefined
   | MessageBodyChoicesSelection
   | MessageBodyChoicesLink
 
+interface MessageBodyChoicesCore {
+  type: String!
+  value: String!
+  text: String!
+  selected: Boolean!
+}
+
 type MessageBodyChoicesUndefined implements MessageBodyChoicesCore {
   type: String!
   value: String!
+  text: String!
+  selected: Boolean!
 }
 
 type MessageBodyChoicesSelection implements MessageBodyChoicesCore {
   type: String!
   value: String!
+  text: String!
+  selected: Boolean!
+  clearable: Boolean
 }
 
 enum MessageBodyChoicesLinkView {
@@ -148,7 +156,11 @@ enum MessageBodyChoicesLinkView {
 type MessageBodyChoicesLink implements MessageBodyChoicesCore {
   type: String!
   value: String!
+  text: String!
+  selected: Boolean!
   view: MessageBodyChoicesLinkView
+  appUrl: String
+  webUrl: String
 }
 
 type ChatState {
