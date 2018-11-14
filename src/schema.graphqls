@@ -12,6 +12,7 @@ type Query {
 type Mutation {
   logout: Boolean!
   createSession(campaign: CampaignInput, trackingId: UUID): String!
+  createSessionV2: SessionInformation
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
@@ -35,6 +36,11 @@ input CampaignInput {
 
 type Gif {
   url: String
+}
+
+type SessionInformation {
+  token: String!
+  memberId: String!
 }
 
 type OfferEvent {
