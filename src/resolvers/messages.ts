@@ -1,60 +1,17 @@
-import { getChat, getUser, MessageDto } from '../api'
+import { ChatDto, getChat, getUser } from '../api'
 import { pubsub } from '../pubsub'
 import {
   Message,
   MessageBody,
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
-  MessageBodyCore,
-  MessageBodySingleSelect,
   QueryToMessagesResolver,
   SubscriptionToMessageResolver,
 } from '../typings/generated-graphql-types'
 import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
-const transformChoices = (choices: any) => {
-  if (!choices) {
-    return choices
-  }
-
-  return choices.map((choice: any) => {
-    if (choice.view) {
-      return {
-        ...choice,
-        view: choice.view.toUpperCase(),
-      }
-    }
-
-    return choice
-  })
-}
-
-const transformMessages = (messages: MessageDto[]) =>
-  messages.map((message) => {
-    const messageBodyCore = message.body as MessageBodyCore
-    const messageBodySingleSelect = message.body as MessageBodySingleSelect
-
-    const messageBody: MessageBody = {
-      type: messageBodyCore.type,
-      id: messageBodyCore.id,
-      text: messageBodyCore.text,
-      choices: transformChoices(messageBodySingleSelect.choices),
-    }
-
-    return {
-      globalId: message.globalId,
-      header: {
-        fromMyself: message.header.fromId != 1,
-        messageId: message.header.messageId,
-        timeStamp: message.header.timestamp,
-        richTextChatCompatible: message.header.richTextChatCompatible,
-        editAllowed: message.header.editAllowed,
-        shouldRequestPushNotifications:
-          message.header.shouldRequestPushNotifications,
-      },
-      body: messageBody,
-    }
-  })
+import { subscribeToChat } from '../features/chat/chatSubscription'
+import { transformMessages } from '../features/chat/transform'
 
 export const messages: QueryToMessagesResolver = async (
   _root,
@@ -70,50 +27,43 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
   subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
     const user = await getUser(token, headers)
-    const notifiedMessages = new Map()
-    let intervalId: NodeJS.Timer | null = null
 
-    getChat(token, headers).then(({ messages }) => {
-      let previousMessages = transformMessages(messages)
-
-      intervalId = setInterval(async () => {
-        const { messages: newMessages } = await getChat(token, headers)
-        const transformedNewMessages = transformMessages(newMessages)
+    const unsubscribe = subscribeToChat(
+      {
+        token,
+        memberId: user.memberId,
+        headers,
+      },
+      (chat: ChatDto, previousChat: ChatDto) => {
+        const transformedPreviousMessages = transformMessages(
+          previousChat.messages,
+        )
+        const transformedNewMessages = transformMessages(chat.messages)
 
         const messageDiff = transformedNewMessages.filter(
           (message) =>
-            !previousMessages.find(
+            !transformedPreviousMessages.find(
               (previousMessage) =>
-                previousMessage.globalId === message.globalId,
+                previousMessage!.globalId === message!.globalId,
             ),
         )
 
-        previousMessages = transformedNewMessages
-
         if (messageDiff.length !== 0) {
           messageDiff.forEach((message) => {
-            if (notifiedMessages.get(message.globalId)) {
-              return
-            }
-
-            notifiedMessages.set(message.globalId, true)
-
             pubsub.publish(`MESSAGE.${user.memberId}`, {
               message,
             })
           })
         }
-      }, 500)
-    })
+      },
+    )
 
     const asyncIterator = pubsub.asyncIterator<Message>(
       `MESSAGE.${user.memberId}`,
     )
 
     asyncIterator.return = (value) => {
-      if (intervalId) {
-        clearInterval(intervalId)
-      }
+      unsubscribe()
 
       return Promise.resolve({
         done: true,

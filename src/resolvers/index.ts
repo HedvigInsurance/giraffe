@@ -12,9 +12,9 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
-import { chatState } from './chatState'
+import { chatState, subscribeToChatState } from './chatState'
 import { createSession } from './createSession'
-import { currentResponse } from './currentResponse'
+import { currentResponse, subscribeToCurrentResponse } from './currentResponse'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
@@ -60,6 +60,8 @@ const resolvers: Resolver = {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
     message: subscribeToMessage,
+    currentResponse: subscribeToCurrentResponse,
+    chatState: subscribeToChatState,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,

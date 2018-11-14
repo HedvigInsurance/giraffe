@@ -102,7 +102,7 @@ export interface MessageDto {
   body: MessageBody
 }
 
-interface ChatDto {
+export interface ChatDto {
   state: ChatState
   messages: MessageDto[]
 }
