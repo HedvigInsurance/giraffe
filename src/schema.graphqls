@@ -14,7 +14,8 @@ type Query {
 
 type Mutation {
   logout: Boolean!
-  createSession: String!
+  createSession(campaign: CampaignInput, trackingId: UUID): String!
+  createSessionV2: SessionInformation
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
@@ -28,6 +29,7 @@ type Subscription {
   signStatus: SignEvent
 }
 
+<<<<<<< HEAD
 type Message {
   globalId: ID!
   id: ID!
@@ -174,10 +176,23 @@ type CurrentResponse {
   id: ID!
   body: MessageBody
   header: MessageHeader
+=======
+input CampaignInput {
+  source: String
+  medium: String
+  term: String
+  content: String
+  name: String
+>>>>>>> master
 }
 
 type Gif {
   url: String
+}
+
+type SessionInformation {
+  token: String!
+  memberId: String!
 }
 
 type OfferEvent {
@@ -306,6 +321,8 @@ scalar LocalDate
 scalar Upload
 # String-represented URL.
 scalar URL
+# String-represented UUID.
+scalar UUID
 
 type File {
   """

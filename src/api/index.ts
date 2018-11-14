@@ -107,6 +107,14 @@ interface ChatDto {
   messages: MessageDto[]
 }
 
+interface TrackingDto {
+  utmSource?: string
+  utmMedium?: string
+  utmContent?: string[]
+  utmCampaign?: string
+  utmTerm?: string[]
+}
+
 type CallApi = (
   url: string,
   options?: {
@@ -322,6 +330,33 @@ const getChat = async (
   })
   return data.json()
 }
+const registerCampaign = (
+  token: string,
+  headers: ForwardHeaders,
+  body: TrackingDto,
+) =>
+  callApi('/hedvig/register_campaign', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
+const assignTrackingId = (
+  token: string,
+  headers: ForwardHeaders,
+  body: { trackingId: string },
+) =>
+  callApi('/member/trackingId', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
 
 export {
   getInsurance,
@@ -337,4 +372,6 @@ export {
   setOfferClosed,
   registerDirectDebit,
   getChat,
+  registerCampaign,
+  assignTrackingId,
 }

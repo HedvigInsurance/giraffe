@@ -13,7 +13,7 @@ import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
 import { chatState } from './chatState'
-import { createSession } from './createSession'
+import { createSession, createSessionV2 } from './createSession'
 import { currentResponse } from './currentResponse'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
@@ -48,6 +48,7 @@ const resolvers: Resolver = {
   Mutation: {
     logout,
     createSession,
+    createSessionV2,
     createOffer,
     signOffer,
     uploadFile,
