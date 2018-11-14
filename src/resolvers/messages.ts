@@ -1,30 +1,17 @@
-import { getChat } from '../api'
+import { ChatDto, getChat, getUser } from '../api'
+import { pubsub } from '../pubsub'
 import {
+  Message,
   MessageBody,
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
-  MessageBodyCore,
-  MessageBodySingleSelect,
   QueryToMessagesResolver,
+  SubscriptionToMessageResolver,
 } from '../typings/generated-graphql-types'
 import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
-const transformChoices = (choices: any) => {
-  if (!choices) {
-    return choices
-  }
-
-  return choices.map((choice: any) => {
-    if (choice.view) {
-      return {
-        ...choice,
-        view: choice.view.toUpperCase(),
-      }
-    }
-
-    return choice
-  })
-}
+import { subscribeToChat } from '../features/chat/chatSubscription'
+import { transformMessages } from '../features/chat/transform'
 
 export const messages: QueryToMessagesResolver = async (
   _root,
@@ -33,23 +20,58 @@ export const messages: QueryToMessagesResolver = async (
 ) => {
   const token = getToken()
   const chat = await getChat(token, headers)
+  return transformMessages(chat.messages) as Message[]
+}
 
-  return chat.messages.map((message) => {
-    const messageBodyCore = message.body as MessageBodyCore
-    const messageBodySingleSelect = message.body as MessageBodySingleSelect
+export const subscribeToMessage: SubscriptionToMessageResolver = {
+  subscribe: async (_parent, _args, { getToken, headers }) => {
+    const token = getToken()
+    const user = await getUser(token, headers)
 
-    const messageBody: MessageBody = {
-      type: messageBodyCore.type,
-      id: messageBodyCore.id,
-      text: messageBodyCore.text,
-      choices: transformChoices(messageBodySingleSelect.choices),
+    const unsubscribe = subscribeToChat(
+      {
+        token,
+        memberId: user.memberId,
+        headers,
+      },
+      (chat: ChatDto, previousChat: ChatDto) => {
+        const transformedPreviousMessages = transformMessages(
+          previousChat.messages,
+        )
+        const transformedNewMessages = transformMessages(chat.messages)
+
+        const messageDiff = transformedNewMessages.filter(
+          (message) =>
+            !transformedPreviousMessages.find(
+              (previousMessage) =>
+                previousMessage!.globalId === message!.globalId,
+            ),
+        )
+
+        if (messageDiff.length !== 0) {
+          messageDiff.forEach((message) => {
+            pubsub.publish(`MESSAGE.${user.memberId}`, {
+              message,
+            })
+          })
+        }
+      },
+    )
+
+    const asyncIterator = pubsub.asyncIterator<Message>(
+      `MESSAGE.${user.memberId}`,
+    )
+
+    asyncIterator.return = (value) => {
+      unsubscribe()
+
+      return Promise.resolve({
+        done: true,
+        value,
+      })
     }
-
-    return {
-      ...message,
-      body: messageBody,
-    }
-  })
+    return asyncIterator
+  },
 }
 
 export const __resolveType: MessageBodyTypeResolver = (obj: MessageBody) => {

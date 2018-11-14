@@ -12,6 +12,7 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "@sentry/node": "^4.2.4",
+    "@types/ramda": "^0.25.41",
     "apollo-link-http": "^1.5.5",
     "apollo-server-core": "^2.1.0",
     "apollo-server-koa": "^2.1.0",
@@ -26,6 +27,7 @@
     "ioredis": "^4.2.0",
     "koa": "^2.6.1",
     "node-fetch": "^2.2.1",
+    "ramda": "^0.25.0",
     "subscriptions-transport-ws": "^0.9.15",
     "typescript-logging": "^0.6.3",
     "uuid": "^3.3.2"

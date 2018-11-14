@@ -12,9 +12,9 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
-import { chatState } from './chatState'
+import { chatState, subscribeToChatState } from './chatState'
 import { createSession, createSessionV2 } from './createSession'
-import { currentResponse } from './currentResponse'
+import { currentResponse, subscribeToCurrentResponse } from './currentResponse'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
@@ -25,6 +25,7 @@ import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
   messages,
+  subscribeToMessage,
 } from './messages'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
@@ -59,6 +60,9 @@ const resolvers: Resolver = {
   Subscription: {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
+    message: subscribeToMessage,
+    currentResponse: subscribeToCurrentResponse,
+    chatState: subscribeToChatState,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,
