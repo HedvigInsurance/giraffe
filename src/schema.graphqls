@@ -44,7 +44,16 @@ type MessageHeader {
   shouldRequestPushNotifications: Boolean!
 }
 
-union MessageBody = MessageBodySingleSelect | MessageBodyFile | MessageBodyParagraph | MessageBodyUndefined
+union MessageBody =
+    MessageBodySingleSelect
+  | MessageBodyMultipleSelect
+  | MessageBodyText
+  | MessageBodyNumber
+  | MessageBodyAudio
+  | MessageBodyBankIdCollect
+  | MessageBodyFile
+  | MessageBodyParagraph
+  | MessageBodyUndefined
 
 interface MessageBodyCore {
   type: String!
@@ -57,6 +66,39 @@ type MessageBodySingleSelect implements MessageBodyCore {
   id: ID!
   text: String!
   choices: [MessageBodyChoices]
+}
+
+type MessageBodyMultipleSelect implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  choices: [MessageBodyChoices]
+}
+
+type MessageBodyText implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodyNumber implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodyAudio implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  url: String
+}
+
+type MessageBodyBankIdCollect implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  referenceId: String
 }
 
 type MessageBodyParagraph implements MessageBodyCore {
@@ -83,7 +125,10 @@ interface MessageBodyChoicesCore {
   value: String!
 }
 
-union MessageBodyChoices = MessageBodyChoicesUndefined | MessageBodyChoicesSelection | MessageBodyChoicesLink
+union MessageBodyChoices =
+    MessageBodyChoicesUndefined
+  | MessageBodyChoicesSelection
+  | MessageBodyChoicesLink
 
 type MessageBodyChoicesUndefined implements MessageBodyChoicesCore {
   type: String!
@@ -133,7 +178,7 @@ type SignEvent {
 }
 
 enum OfferStatus {
-  SUCCESS,
+  SUCCESS
   FAIL
 }
 
@@ -251,8 +296,12 @@ scalar Upload
 scalar URL
 
 type File {
-  """signedUrl is valid for 30 minutes after upload, don't hang on to this."""
+  """
+  signedUrl is valid for 30 minutes after upload, don't hang on to this.
+  """
   signedUrl: String!
-  """S3 key that can be used to retreive new signed urls in the future."""
+  """
+  S3 key that can be used to retreive new signed urls in the future.
+  """
   key: String!
 }
