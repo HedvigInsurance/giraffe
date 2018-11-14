@@ -7,6 +7,9 @@ type Query {
   gifs(query: String!): [Gif]!
   file(key: String!): File!
   directDebitStatus: DirectDebitStatus!
+  messages: [Message]!
+  currentResponse: CurrentResponse
+  chatState: ChatState!
 }
 
 type Mutation {
@@ -23,6 +26,97 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
+}
+
+type Message {
+  globalId: ID!
+  id: ID!
+  body: MessageBody!
+  header: MessageHeader!
+}
+
+type MessageHeader {
+  messageId: ID!
+  fromMyself: Boolean!
+  timeStamp: String!
+  richTextChatCompatible: Boolean!
+  editAllowed: Boolean!
+  shouldRequestPushNotifications: Boolean!
+}
+
+union MessageBody = MessageBodySingleSelect | MessageBodyFile | MessageBodyParagraph | MessageBodyUndefined
+
+interface MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodySingleSelect implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  choices: [MessageBodyChoices]
+}
+
+type MessageBodyParagraph implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodyFile implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  file: String
+}
+
+type MessageBodyUndefined implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+interface MessageBodyChoicesCore {
+  type: String!
+  value: String!
+}
+
+union MessageBodyChoices = MessageBodyChoicesUndefined | MessageBodyChoicesSelection | MessageBodyChoicesLink
+
+type MessageBodyChoicesUndefined implements MessageBodyChoicesCore {
+  type: String!
+  value: String!
+}
+
+type MessageBodyChoicesSelection implements MessageBodyChoicesCore {
+  type: String!
+  value: String!
+}
+
+enum MessageBodyChoicesLinkView {
+  OFFER
+  DASHBOARD
+}
+
+type MessageBodyChoicesLink implements MessageBodyChoicesCore {
+  type: String!
+  value: String!
+  view: MessageBodyChoicesLinkView
+}
+
+type ChatState {
+  ongoingClaim: Boolean!
+  showOfferScreen: Boolean!
+  onboardingDone: Boolean!
+}
+
+type CurrentResponse {
+  globalId: ID!
+  id: ID!
+  body: MessageBody
+  header: MessageHeader
 }
 
 type Gif {

@@ -8,6 +8,7 @@ import {
   PerilCategory,
   SignState,
 } from '../typings/generated-graphql-types'
+import { ChatState, MessageBody } from './../typings/generated-graphql-types'
 
 interface InsuranceDto {
   currentTotalPrice: number
@@ -83,6 +84,23 @@ interface RegisterDirectDebitDto {
 interface DirectDebitOrderInfoDto {
   url: string
   orderId: string
+}
+
+interface MessageHeaderDto {
+  fromId: number
+  messageId: string
+}
+
+interface MessageDto {
+  id: string
+  globalId: string
+  header: MessageHeaderDto
+  body: MessageBody
+}
+
+interface ChatDto {
+  state: ChatState
+  messages: MessageDto[]
 }
 
 type CallApi = (
@@ -287,6 +305,20 @@ const registerDirectDebit = async (
   return data.json()
 }
 
+const getChat = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<ChatDto> => {
+  const data = await callApi('/v2/app', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'GET',
+    },
+    token,
+  })
+  return data.json()
+}
+
 export {
   getInsurance,
   getUser,
@@ -300,4 +332,5 @@ export {
   getCashbackOptions,
   setOfferClosed,
   registerDirectDebit,
+  getChat,
 }

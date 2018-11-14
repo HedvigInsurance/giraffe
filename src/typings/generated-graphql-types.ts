@@ -21,6 +21,9 @@ export interface Query {
   gifs: Array<Gif | null>;
   file: File;
   directDebitStatus: DirectDebitStatus;
+  messages: Array<Message | null>;
+  currentResponse?: CurrentResponse;
+  chatState: ChatState;
 }
 
 export interface Insurance {
@@ -131,6 +134,160 @@ export enum DirectDebitStatus {
   ACTIVE = 'ACTIVE'
 }
 
+export interface Message {
+  globalId: string;
+  id: string;
+  body: MessageBody;
+  header: MessageHeader;
+}
+
+export type MessageBody =
+MessageBodySingleSelect |
+MessageBodyFile |
+MessageBodyParagraph |
+MessageBodyUndefined;
+
+/** Use this to resolve union type MessageBody */
+export type PossibleMessageBodyTypeNames =
+'MessageBodySingleSelect' |
+'MessageBodyFile' |
+'MessageBodyParagraph' |
+'MessageBodyUndefined';
+
+export interface MessageBodyNameMap {
+  MessageBody: MessageBody;
+  MessageBodySingleSelect: MessageBodySingleSelect;
+  MessageBodyFile: MessageBodyFile;
+  MessageBodyParagraph: MessageBodyParagraph;
+  MessageBodyUndefined: MessageBodyUndefined;
+}
+
+export interface MessageBodySingleSelect extends MessageBodyCore {
+  type: string;
+  id: string;
+  text: string;
+  choices?: Array<MessageBodyChoices | null>;
+}
+
+export interface MessageBodyCore {
+  type: string;
+  id: string;
+  text: string;
+}
+
+/** Use this to resolve interface type MessageBodyCore */
+export type PossibleMessageBodyCoreTypeNames =
+'MessageBodySingleSelect' |
+'MessageBodyFile' |
+'MessageBodyParagraph' |
+'MessageBodyUndefined';
+
+export interface MessageBodyCoreNameMap {
+  MessageBodyCore: MessageBodyCore;
+  MessageBodySingleSelect: MessageBodySingleSelect;
+  MessageBodyFile: MessageBodyFile;
+  MessageBodyParagraph: MessageBodyParagraph;
+  MessageBodyUndefined: MessageBodyUndefined;
+}
+
+export type MessageBodyChoices =
+MessageBodyChoicesUndefined |
+MessageBodyChoicesSelection |
+MessageBodyChoicesLink;
+
+/** Use this to resolve union type MessageBodyChoices */
+export type PossibleMessageBodyChoicesTypeNames =
+'MessageBodyChoicesUndefined' |
+'MessageBodyChoicesSelection' |
+'MessageBodyChoicesLink';
+
+export interface MessageBodyChoicesNameMap {
+  MessageBodyChoices: MessageBodyChoices;
+  MessageBodyChoicesUndefined: MessageBodyChoicesUndefined;
+  MessageBodyChoicesSelection: MessageBodyChoicesSelection;
+  MessageBodyChoicesLink: MessageBodyChoicesLink;
+}
+
+export interface MessageBodyChoicesUndefined extends MessageBodyChoicesCore {
+  type: string;
+  value: string;
+}
+
+export interface MessageBodyChoicesCore {
+  type: string;
+  value: string;
+}
+
+/** Use this to resolve interface type MessageBodyChoicesCore */
+export type PossibleMessageBodyChoicesCoreTypeNames =
+'MessageBodyChoicesUndefined' |
+'MessageBodyChoicesSelection' |
+'MessageBodyChoicesLink';
+
+export interface MessageBodyChoicesCoreNameMap {
+  MessageBodyChoicesCore: MessageBodyChoicesCore;
+  MessageBodyChoicesUndefined: MessageBodyChoicesUndefined;
+  MessageBodyChoicesSelection: MessageBodyChoicesSelection;
+  MessageBodyChoicesLink: MessageBodyChoicesLink;
+}
+
+export interface MessageBodyChoicesSelection extends MessageBodyChoicesCore {
+  type: string;
+  value: string;
+}
+
+export interface MessageBodyChoicesLink extends MessageBodyChoicesCore {
+  type: string;
+  value: string;
+  view?: MessageBodyChoicesLinkView;
+}
+
+export enum MessageBodyChoicesLinkView {
+  OFFER = 'OFFER',
+  DASHBOARD = 'DASHBOARD'
+}
+
+export interface MessageBodyFile extends MessageBodyCore {
+  type: string;
+  id: string;
+  text: string;
+  file?: string;
+}
+
+export interface MessageBodyParagraph extends MessageBodyCore {
+  type: string;
+  id: string;
+  text: string;
+}
+
+export interface MessageBodyUndefined extends MessageBodyCore {
+  type: string;
+  id: string;
+  text: string;
+}
+
+export interface MessageHeader {
+  messageId: string;
+  fromMyself: boolean;
+  timeStamp: string;
+  richTextChatCompatible: boolean;
+  editAllowed: boolean;
+  shouldRequestPushNotifications: boolean;
+}
+
+export interface CurrentResponse {
+  globalId: string;
+  id: string;
+  body?: MessageBody;
+  header?: MessageHeader;
+}
+
+export interface ChatState {
+  ongoingClaim: boolean;
+  showOfferScreen: boolean;
+  onboardingDone: boolean;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -205,6 +362,33 @@ export interface Resolver {
   Member?: MemberTypeResolver;
   Gif?: GifTypeResolver;
   File?: FileTypeResolver;
+  Message?: MessageTypeResolver;
+  MessageBody?: {
+    __resolveType: MessageBodyTypeResolver
+  };
+  
+  MessageBodySingleSelect?: MessageBodySingleSelectTypeResolver;
+  MessageBodyCore?: {
+    __resolveType: MessageBodyCoreTypeResolver
+  };
+  
+  MessageBodyChoices?: {
+    __resolveType: MessageBodyChoicesTypeResolver
+  };
+  
+  MessageBodyChoicesUndefined?: MessageBodyChoicesUndefinedTypeResolver;
+  MessageBodyChoicesCore?: {
+    __resolveType: MessageBodyChoicesCoreTypeResolver
+  };
+  
+  MessageBodyChoicesSelection?: MessageBodyChoicesSelectionTypeResolver;
+  MessageBodyChoicesLink?: MessageBodyChoicesLinkTypeResolver;
+  MessageBodyFile?: MessageBodyFileTypeResolver;
+  MessageBodyParagraph?: MessageBodyParagraphTypeResolver;
+  MessageBodyUndefined?: MessageBodyUndefinedTypeResolver;
+  MessageHeader?: MessageHeaderTypeResolver;
+  CurrentResponse?: CurrentResponseTypeResolver;
+  ChatState?: ChatStateTypeResolver;
   Mutation?: MutationTypeResolver;
   Upload?: GraphQLScalarType;
   URL?: GraphQLScalarType;
@@ -221,6 +405,9 @@ export interface QueryTypeResolver<TParent = undefined> {
   gifs?: QueryToGifsResolver<TParent>;
   file?: QueryToFileResolver<TParent>;
   directDebitStatus?: QueryToDirectDebitStatusResolver<TParent>;
+  messages?: QueryToMessagesResolver<TParent>;
+  currentResponse?: QueryToCurrentResponseResolver<TParent>;
+  chatState?: QueryToChatStateResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -258,6 +445,18 @@ export interface QueryToFileResolver<TParent = undefined, TResult = File> {
 }
 
 export interface QueryToDirectDebitStatusResolver<TParent = undefined, TResult = DirectDebitStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToMessagesResolver<TParent = undefined, TResult = Array<Message | null>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToCurrentResponseResolver<TParent = undefined, TResult = CurrentResponse | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToChatStateResolver<TParent = undefined, TResult = ChatState> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -475,6 +674,241 @@ export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
 }
 
 export interface FileToKeyResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageTypeResolver<TParent = Message> {
+  globalId?: MessageToGlobalIdResolver<TParent>;
+  id?: MessageToIdResolver<TParent>;
+  body?: MessageToBodyResolver<TParent>;
+  header?: MessageToHeaderResolver<TParent>;
+}
+
+export interface MessageToGlobalIdResolver<TParent = Message, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageToIdResolver<TParent = Message, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageToBodyResolver<TParent = Message, TResult = MessageBody> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageToHeaderResolver<TParent = Message, TResult = MessageHeader> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyTypeResolver<TParent = MessageBody> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'MessageBodySingleSelect' | 'MessageBodyFile' | 'MessageBodyParagraph' | 'MessageBodyUndefined';
+}
+export interface MessageBodySingleSelectTypeResolver<TParent = MessageBodySingleSelect> {
+  type?: MessageBodySingleSelectToTypeResolver<TParent>;
+  id?: MessageBodySingleSelectToIdResolver<TParent>;
+  text?: MessageBodySingleSelectToTextResolver<TParent>;
+  choices?: MessageBodySingleSelectToChoicesResolver<TParent>;
+}
+
+export interface MessageBodySingleSelectToTypeResolver<TParent = MessageBodySingleSelect, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodySingleSelectToIdResolver<TParent = MessageBodySingleSelect, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodySingleSelectToTextResolver<TParent = MessageBodySingleSelect, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodySingleSelectToChoicesResolver<TParent = MessageBodySingleSelect, TResult = Array<MessageBodyChoices | null> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyCoreTypeResolver<TParent = MessageBodyCore> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'MessageBodySingleSelect' | 'MessageBodyFile' | 'MessageBodyParagraph' | 'MessageBodyUndefined';
+}
+export interface MessageBodyChoicesTypeResolver<TParent = MessageBodyChoices> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'MessageBodyChoicesUndefined' | 'MessageBodyChoicesSelection' | 'MessageBodyChoicesLink';
+}
+export interface MessageBodyChoicesUndefinedTypeResolver<TParent = MessageBodyChoicesUndefined> {
+  type?: MessageBodyChoicesUndefinedToTypeResolver<TParent>;
+  value?: MessageBodyChoicesUndefinedToValueResolver<TParent>;
+}
+
+export interface MessageBodyChoicesUndefinedToTypeResolver<TParent = MessageBodyChoicesUndefined, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesUndefinedToValueResolver<TParent = MessageBodyChoicesUndefined, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesCoreTypeResolver<TParent = MessageBodyChoicesCore> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'MessageBodyChoicesUndefined' | 'MessageBodyChoicesSelection' | 'MessageBodyChoicesLink';
+}
+export interface MessageBodyChoicesSelectionTypeResolver<TParent = MessageBodyChoicesSelection> {
+  type?: MessageBodyChoicesSelectionToTypeResolver<TParent>;
+  value?: MessageBodyChoicesSelectionToValueResolver<TParent>;
+}
+
+export interface MessageBodyChoicesSelectionToTypeResolver<TParent = MessageBodyChoicesSelection, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesSelectionToValueResolver<TParent = MessageBodyChoicesSelection, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesLinkTypeResolver<TParent = MessageBodyChoicesLink> {
+  type?: MessageBodyChoicesLinkToTypeResolver<TParent>;
+  value?: MessageBodyChoicesLinkToValueResolver<TParent>;
+  view?: MessageBodyChoicesLinkToViewResolver<TParent>;
+}
+
+export interface MessageBodyChoicesLinkToTypeResolver<TParent = MessageBodyChoicesLink, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesLinkToValueResolver<TParent = MessageBodyChoicesLink, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyChoicesLinkToViewResolver<TParent = MessageBodyChoicesLink, TResult = MessageBodyChoicesLinkView | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyFileTypeResolver<TParent = MessageBodyFile> {
+  type?: MessageBodyFileToTypeResolver<TParent>;
+  id?: MessageBodyFileToIdResolver<TParent>;
+  text?: MessageBodyFileToTextResolver<TParent>;
+  file?: MessageBodyFileToFileResolver<TParent>;
+}
+
+export interface MessageBodyFileToTypeResolver<TParent = MessageBodyFile, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyFileToIdResolver<TParent = MessageBodyFile, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyFileToTextResolver<TParent = MessageBodyFile, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyFileToFileResolver<TParent = MessageBodyFile, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyParagraphTypeResolver<TParent = MessageBodyParagraph> {
+  type?: MessageBodyParagraphToTypeResolver<TParent>;
+  id?: MessageBodyParagraphToIdResolver<TParent>;
+  text?: MessageBodyParagraphToTextResolver<TParent>;
+}
+
+export interface MessageBodyParagraphToTypeResolver<TParent = MessageBodyParagraph, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyParagraphToIdResolver<TParent = MessageBodyParagraph, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyParagraphToTextResolver<TParent = MessageBodyParagraph, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyUndefinedTypeResolver<TParent = MessageBodyUndefined> {
+  type?: MessageBodyUndefinedToTypeResolver<TParent>;
+  id?: MessageBodyUndefinedToIdResolver<TParent>;
+  text?: MessageBodyUndefinedToTextResolver<TParent>;
+}
+
+export interface MessageBodyUndefinedToTypeResolver<TParent = MessageBodyUndefined, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyUndefinedToIdResolver<TParent = MessageBodyUndefined, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyUndefinedToTextResolver<TParent = MessageBodyUndefined, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderTypeResolver<TParent = MessageHeader> {
+  messageId?: MessageHeaderToMessageIdResolver<TParent>;
+  fromMyself?: MessageHeaderToFromMyselfResolver<TParent>;
+  timeStamp?: MessageHeaderToTimeStampResolver<TParent>;
+  richTextChatCompatible?: MessageHeaderToRichTextChatCompatibleResolver<TParent>;
+  editAllowed?: MessageHeaderToEditAllowedResolver<TParent>;
+  shouldRequestPushNotifications?: MessageHeaderToShouldRequestPushNotificationsResolver<TParent>;
+}
+
+export interface MessageHeaderToMessageIdResolver<TParent = MessageHeader, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToFromMyselfResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToTimeStampResolver<TParent = MessageHeader, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToRichTextChatCompatibleResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToEditAllowedResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToShouldRequestPushNotificationsResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CurrentResponseTypeResolver<TParent = CurrentResponse> {
+  globalId?: CurrentResponseToGlobalIdResolver<TParent>;
+  id?: CurrentResponseToIdResolver<TParent>;
+  body?: CurrentResponseToBodyResolver<TParent>;
+  header?: CurrentResponseToHeaderResolver<TParent>;
+}
+
+export interface CurrentResponseToGlobalIdResolver<TParent = CurrentResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CurrentResponseToIdResolver<TParent = CurrentResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CurrentResponseToBodyResolver<TParent = CurrentResponse, TResult = MessageBody | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface CurrentResponseToHeaderResolver<TParent = CurrentResponse, TResult = MessageHeader | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ChatStateTypeResolver<TParent = ChatState> {
+  ongoingClaim?: ChatStateToOngoingClaimResolver<TParent>;
+  showOfferScreen?: ChatStateToShowOfferScreenResolver<TParent>;
+  onboardingDone?: ChatStateToOnboardingDoneResolver<TParent>;
+}
+
+export interface ChatStateToOngoingClaimResolver<TParent = ChatState, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ChatStateToShowOfferScreenResolver<TParent = ChatState, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ChatStateToOnboardingDoneResolver<TParent = ChatState, TResult = boolean> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

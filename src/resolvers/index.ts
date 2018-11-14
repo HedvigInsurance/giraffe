@@ -12,13 +12,20 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
+import { chatState } from './chatState'
 import { createSession } from './createSession'
+import { currentResponse } from './currentResponse'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
 import { member } from './member'
+import {
+  __resolveMessageBodyChoicesType,
+  __resolveType as __resolveMessageBodyType,
+  messages,
+} from './messages'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
@@ -34,6 +41,9 @@ const resolvers: Resolver = {
     file,
     directDebitStatus,
     cashbackOptions,
+    messages,
+    chatState,
+    currentResponse,
   },
   Mutation: {
     logout,
@@ -54,6 +64,12 @@ const resolvers: Resolver = {
   },
   SignEvent: {
     status: getSignStatusFromSignEvent,
+  },
+  MessageBody: {
+    __resolveType: __resolveMessageBodyType,
+  },
+  MessageBodyChoices: {
+    __resolveType: __resolveMessageBodyChoicesType,
   },
 }
 
