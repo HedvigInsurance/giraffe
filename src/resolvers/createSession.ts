@@ -1,5 +1,8 @@
-import { assignTrackingId, register, registerCampaign } from '../api'
-import { MutationToCreateSessionResolver } from '../typings/generated-graphql-types'
+import { assignTrackingId, getUser, register, registerCampaign } from '../api'
+import {
+  MutationToCreateSessionResolver,
+  MutationToCreateSessionV2Resolver,
+} from '../typings/generated-graphql-types'
 import { awaitAll } from '../utils/async'
 
 const createSession: MutationToCreateSessionResolver = async (
@@ -25,4 +28,17 @@ const createSession: MutationToCreateSessionResolver = async (
   return token
 }
 
-export { createSession }
+const createSessionV2: MutationToCreateSessionV2Resolver = async (
+  _parent,
+  _args,
+  { headers },
+) => {
+  const token = await register(headers)
+  const user = await getUser(token, headers)
+  return {
+    token,
+    memberId: user.memberId,
+  }
+}
+
+export { createSession, createSessionV2 }

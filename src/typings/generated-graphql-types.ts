@@ -134,6 +134,7 @@ export enum DirectDebitStatus {
 export interface Mutation {
   logout: boolean;
   createSession: string;
+  createSessionV2?: SessionInformation;
   createOffer?: boolean;
   signOffer?: boolean;
   uploadFile: File;
@@ -151,6 +152,11 @@ export interface CampaignInput {
 }
 
 export type UUID = any;
+
+export interface SessionInformation {
+  token: string;
+  memberId: string;
+}
 
 export interface OfferInput {
   firstName: string;
@@ -217,6 +223,7 @@ export interface Resolver {
   File?: FileTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
+  SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
   URL?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
@@ -492,6 +499,7 @@ export interface FileToKeyResolver<TParent = File, TResult = string> {
 export interface MutationTypeResolver<TParent = undefined> {
   logout?: MutationToLogoutResolver<TParent>;
   createSession?: MutationToCreateSessionResolver<TParent>;
+  createSessionV2?: MutationToCreateSessionV2Resolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
@@ -510,6 +518,10 @@ export interface MutationToCreateSessionArgs {
 }
 export interface MutationToCreateSessionResolver<TParent = undefined, TResult = string> {
   (parent: TParent, args: MutationToCreateSessionArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToCreateSessionV2Resolver<TParent = undefined, TResult = SessionInformation | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToCreateOfferArgs {
@@ -545,6 +557,19 @@ export interface MutationToOfferClosedResolver<TParent = undefined, TResult = bo
 }
 
 export interface MutationToStartDirectDebitRegistrationResolver<TParent = undefined, TResult = URL> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SessionInformationTypeResolver<TParent = SessionInformation> {
+  token?: SessionInformationToTokenResolver<TParent>;
+  memberId?: SessionInformationToMemberIdResolver<TParent>;
+}
+
+export interface SessionInformationToTokenResolver<TParent = SessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SessionInformationToMemberIdResolver<TParent = SessionInformation, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
