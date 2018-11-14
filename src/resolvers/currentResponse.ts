@@ -2,7 +2,7 @@ import { equals } from 'ramda'
 import { ChatDto, getChat, getUser } from '../api'
 import { pubsub } from '../pubsub'
 import {
-  Message,
+  CurrentResponse,
   QueryToCurrentResponseResolver,
   SubscriptionToCurrentResponseResolver,
 } from '../typings/generated-graphql-types'
@@ -41,7 +41,7 @@ export const subscribeToCurrentResponse: SubscriptionToCurrentResponseResolver =
       },
     )
 
-    const asyncIterator = pubsub.asyncIterator<Message>(iteratorId)
+    const asyncIterator = pubsub.asyncIterator<CurrentResponse>(iteratorId)
 
     asyncIterator.return = (value) => {
       unsubscribe()

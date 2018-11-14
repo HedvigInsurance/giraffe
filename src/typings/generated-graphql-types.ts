@@ -411,7 +411,7 @@ export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
   message?: Message;
-  currentResponse?: Message;
+  currentResponse?: CurrentResponse;
   chatState: ChatState;
 }
 
@@ -1263,7 +1263,7 @@ export interface SubscriptionToMessageResolver<TParent = undefined, TResult = Me
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
-export interface SubscriptionToCurrentResponseResolver<TParent = undefined, TResult = Message | null> {
+export interface SubscriptionToCurrentResponseResolver<TParent = undefined, TResult = CurrentResponse | null> {
   resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }

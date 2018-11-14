@@ -28,7 +28,7 @@ type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
   message: Message
-  currentResponse: Message
+  currentResponse: CurrentResponse
   chatState: ChatState!
 }
 
