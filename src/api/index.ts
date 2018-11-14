@@ -88,7 +88,7 @@ interface DirectDebitOrderInfoDto {
 
 interface MessageHeaderDto {
   messageId: string
-  fromId: string
+  fromId: number
   timestamp: string
   richTextChatCompatible: boolean
   editAllowed: boolean

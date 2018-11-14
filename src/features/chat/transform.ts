@@ -42,7 +42,7 @@ export const transformMessage = (message: MessageDto) => {
     id: message.id,
     globalId: message.globalId,
     header: {
-      fromMyself: message.header.fromId != 1,
+      fromMyself: message.header.fromId !== 1,
       messageId: message.header.messageId,
       timeStamp: message.header.timestamp,
       richTextChatCompatible: message.header.richTextChatCompatible,
