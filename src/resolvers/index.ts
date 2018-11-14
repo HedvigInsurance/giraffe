@@ -25,6 +25,7 @@ import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
   messages,
+  subscribeToMessage,
 } from './messages'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
@@ -58,6 +59,7 @@ const resolvers: Resolver = {
   Subscription: {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
+    message: subscribeToMessage,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,

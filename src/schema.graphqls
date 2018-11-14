@@ -26,6 +26,9 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
+  message: Message
+  currentResponse: Message
+  chatState: ChatState!
 }
 
 type Message {

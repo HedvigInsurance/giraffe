@@ -324,6 +324,9 @@ export type URL = any;
 export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
+  message?: Message;
+  currentResponse?: Message;
+  chatState: ChatState;
 }
 
 export interface OfferEvent {
@@ -970,6 +973,9 @@ export interface MutationToStartDirectDebitRegistrationResolver<TParent = undefi
 export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
   signStatus?: SubscriptionToSignStatusResolver<TParent>;
+  message?: SubscriptionToMessageResolver<TParent>;
+  currentResponse?: SubscriptionToCurrentResponseResolver<TParent>;
+  chatState?: SubscriptionToChatStateResolver<TParent>;
 }
 
 export interface SubscriptionToOfferResolver<TParent = undefined, TResult = OfferEvent | null> {
@@ -978,6 +984,21 @@ export interface SubscriptionToOfferResolver<TParent = undefined, TResult = Offe
 }
 
 export interface SubscriptionToSignStatusResolver<TParent = undefined, TResult = SignEvent | null> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+}
+
+export interface SubscriptionToMessageResolver<TParent = undefined, TResult = Message | null> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+}
+
+export interface SubscriptionToCurrentResponseResolver<TParent = undefined, TResult = Message | null> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+}
+
+export interface SubscriptionToChatStateResolver<TParent = undefined, TResult = ChatState> {
   resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
