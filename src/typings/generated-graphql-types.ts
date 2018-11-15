@@ -22,7 +22,7 @@ export interface Query {
   file: File;
   directDebitStatus: DirectDebitStatus;
   messages: Array<Message | null>;
-  currentResponse?: CurrentResponse;
+  currentChatResponse?: ChatResponse;
   chatState: ChatState;
 }
 
@@ -345,7 +345,7 @@ export interface MessageHeader {
   shouldRequestPushNotifications: boolean;
 }
 
-export interface CurrentResponse {
+export interface ChatResponse {
   globalId: string;
   id: string;
   body?: MessageBody;
@@ -368,6 +368,7 @@ export interface Mutation {
   selectCashbackOption: Cashback;
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
+  sendChatTextResponse: boolean;
 }
 
 export interface CampaignInput {
@@ -407,11 +408,20 @@ export type Upload = any;
 
 export type URL = any;
 
+export interface ChatResponseTextInput {
+  globalId: string;
+  body: ChatResponseBodyTextInput;
+}
+
+export interface ChatResponseBodyTextInput {
+  text: string;
+}
+
 export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
   message?: Message;
-  currentResponse?: CurrentResponse;
+  currentChatResponse?: ChatResponse;
   chatState: ChatState;
 }
 
@@ -481,7 +491,7 @@ export interface Resolver {
   MessageBodyParagraph?: MessageBodyParagraphTypeResolver;
   MessageBodyUndefined?: MessageBodyUndefinedTypeResolver;
   MessageHeader?: MessageHeaderTypeResolver;
-  CurrentResponse?: CurrentResponseTypeResolver;
+  ChatResponse?: ChatResponseTypeResolver;
   ChatState?: ChatStateTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
@@ -502,7 +512,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   file?: QueryToFileResolver<TParent>;
   directDebitStatus?: QueryToDirectDebitStatusResolver<TParent>;
   messages?: QueryToMessagesResolver<TParent>;
-  currentResponse?: QueryToCurrentResponseResolver<TParent>;
+  currentChatResponse?: QueryToCurrentChatResponseResolver<TParent>;
   chatState?: QueryToChatStateResolver<TParent>;
 }
 
@@ -548,7 +558,7 @@ export interface QueryToMessagesResolver<TParent = undefined, TResult = Array<Me
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToCurrentResponseResolver<TParent = undefined, TResult = CurrentResponse | null> {
+export interface QueryToCurrentChatResponseResolver<TParent = undefined, TResult = ChatResponse | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1122,26 +1132,26 @@ export interface MessageHeaderToShouldRequestPushNotificationsResolver<TParent =
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface CurrentResponseTypeResolver<TParent = CurrentResponse> {
-  globalId?: CurrentResponseToGlobalIdResolver<TParent>;
-  id?: CurrentResponseToIdResolver<TParent>;
-  body?: CurrentResponseToBodyResolver<TParent>;
-  header?: CurrentResponseToHeaderResolver<TParent>;
+export interface ChatResponseTypeResolver<TParent = ChatResponse> {
+  globalId?: ChatResponseToGlobalIdResolver<TParent>;
+  id?: ChatResponseToIdResolver<TParent>;
+  body?: ChatResponseToBodyResolver<TParent>;
+  header?: ChatResponseToHeaderResolver<TParent>;
 }
 
-export interface CurrentResponseToGlobalIdResolver<TParent = CurrentResponse, TResult = string> {
+export interface ChatResponseToGlobalIdResolver<TParent = ChatResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface CurrentResponseToIdResolver<TParent = CurrentResponse, TResult = string> {
+export interface ChatResponseToIdResolver<TParent = ChatResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface CurrentResponseToBodyResolver<TParent = CurrentResponse, TResult = MessageBody | null> {
+export interface ChatResponseToBodyResolver<TParent = ChatResponse, TResult = MessageBody | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface CurrentResponseToHeaderResolver<TParent = CurrentResponse, TResult = MessageHeader | null> {
+export interface ChatResponseToHeaderResolver<TParent = ChatResponse, TResult = MessageHeader | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1173,6 +1183,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
+  sendChatTextResponse?: MutationToSendChatTextResponseResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1227,6 +1238,13 @@ export interface MutationToStartDirectDebitRegistrationResolver<TParent = undefi
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToSendChatTextResponseArgs {
+  input: ChatResponseTextInput;
+}
+export interface MutationToSendChatTextResponseResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToSendChatTextResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
   token?: SessionInformationToTokenResolver<TParent>;
   memberId?: SessionInformationToMemberIdResolver<TParent>;
@@ -1244,7 +1262,7 @@ export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
   signStatus?: SubscriptionToSignStatusResolver<TParent>;
   message?: SubscriptionToMessageResolver<TParent>;
-  currentResponse?: SubscriptionToCurrentResponseResolver<TParent>;
+  currentChatResponse?: SubscriptionToCurrentChatResponseResolver<TParent>;
   chatState?: SubscriptionToChatStateResolver<TParent>;
 }
 
@@ -1263,7 +1281,7 @@ export interface SubscriptionToMessageResolver<TParent = undefined, TResult = Me
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
-export interface SubscriptionToCurrentResponseResolver<TParent = undefined, TResult = CurrentResponse | null> {
+export interface SubscriptionToCurrentChatResponseResolver<TParent = undefined, TResult = ChatResponse | null> {
   resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }

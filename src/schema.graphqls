@@ -8,7 +8,7 @@ type Query {
   file(key: String!): File!
   directDebitStatus: DirectDebitStatus!
   messages: [Message]!
-  currentResponse: CurrentResponse
+  currentChatResponse: ChatResponse
   chatState: ChatState!
 }
 
@@ -22,13 +22,14 @@ type Mutation {
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
+  sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
 }
 
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
   message: Message
-  currentResponse: CurrentResponse
+  currentChatResponse: ChatResponse
   chatState: ChatState!
 }
 
@@ -173,11 +174,20 @@ type ChatState {
   onboardingDone: Boolean!
 }
 
-type CurrentResponse {
+type ChatResponse {
   globalId: ID!
   id: ID!
   body: MessageBody
   header: MessageHeader
+}
+
+input ChatResponseBodyTextInput {
+  text: String!
+}
+
+input ChatResponseTextInput {
+  globalId: ID!
+  body: ChatResponseBodyTextInput!
 }
 
 input CampaignInput {

@@ -12,9 +12,13 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
+import { sendChatTextResponse } from './chatResponse'
 import { chatState, subscribeToChatState } from './chatState'
 import { createSession, createSessionV2 } from './createSession'
-import { currentResponse, subscribeToCurrentResponse } from './currentResponse'
+import {
+  currentChatResponse,
+  subscribeToCurrentChatResponse,
+} from './currentChatResponse'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
@@ -44,7 +48,7 @@ const resolvers: Resolver = {
     cashbackOptions,
     messages,
     chatState,
-    currentResponse,
+    currentChatResponse,
   },
   Mutation: {
     logout,
@@ -56,12 +60,13 @@ const resolvers: Resolver = {
     selectCashbackOption,
     offerClosed,
     startDirectDebitRegistration,
+    sendChatTextResponse,
   },
   Subscription: {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
     message: subscribeToMessage,
-    currentResponse: subscribeToCurrentResponse,
+    currentChatResponse: subscribeToCurrentChatResponse,
     chatState: subscribeToChatState,
   },
   OfferEvent: {

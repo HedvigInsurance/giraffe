@@ -2,15 +2,15 @@ import { equals } from 'ramda'
 import { ChatDto, getChat, getUser } from '../api'
 import { pubsub } from '../pubsub'
 import {
-  CurrentResponse,
-  QueryToCurrentResponseResolver,
-  SubscriptionToCurrentResponseResolver,
+  ChatResponse,
+  QueryToCurrentChatResponseResolver,
+  SubscriptionToCurrentChatResponseResolver,
 } from '../typings/generated-graphql-types'
 
 import { subscribeToChat } from '../features/chat/chatSubscription'
 import { transformMessage } from '../features/chat/transform'
 
-export const currentResponse: QueryToCurrentResponseResolver = async (
+export const currentChatResponse: QueryToCurrentChatResponseResolver = async (
   _root,
   _args,
   { getToken, headers },
@@ -20,7 +20,7 @@ export const currentResponse: QueryToCurrentResponseResolver = async (
   return transformMessage(chat.messages[0])
 }
 
-export const subscribeToCurrentResponse: SubscriptionToCurrentResponseResolver = {
+export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseResolver = {
   subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
     const user = await getUser(token, headers)
@@ -41,7 +41,7 @@ export const subscribeToCurrentResponse: SubscriptionToCurrentResponseResolver =
       },
     )
 
-    const asyncIterator = pubsub.asyncIterator<CurrentResponse>(iteratorId)
+    const asyncIterator = pubsub.asyncIterator<ChatResponse>(iteratorId)
 
     asyncIterator.return = (value) => {
       unsubscribe()

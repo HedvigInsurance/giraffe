@@ -8,7 +8,11 @@ import {
   PerilCategory,
   SignState,
 } from '../typings/generated-graphql-types'
-import { ChatState, MessageBody } from './../typings/generated-graphql-types'
+import {
+  ChatResponseTextInput,
+  ChatState,
+  MessageBody,
+} from './../typings/generated-graphql-types'
 
 interface InsuranceDto {
   currentTotalPrice: number
@@ -330,6 +334,42 @@ const getChat = async (
   })
   return data.json()
 }
+
+const setChatResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseTextInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseMessageWithText = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      text: responseInput.body.text,
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithText, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
+}
+
 const registerCampaign = (
   token: string,
   headers: ForwardHeaders,
@@ -359,6 +399,7 @@ const assignTrackingId = (
   })
 
 export {
+  setChatResponse,
   getInsurance,
   getUser,
   logoutUser,
