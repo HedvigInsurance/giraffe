@@ -20,7 +20,7 @@ export const messages: QueryToMessagesResolver = async (
 ) => {
   const token = getToken()
   const chat = await getChat(token, headers)
-  return transformMessages(chat.messages) as Message[]
+  return transformMessages(chat.messages)
 }
 
 export const subscribeToMessage: SubscriptionToMessageResolver = {

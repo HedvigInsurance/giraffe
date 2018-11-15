@@ -1,6 +1,7 @@
 import { MessageDto } from '../../api'
 
 import {
+  Message,
   MessageBody,
   MessageBodyCore,
   MessageBodySingleSelect,
@@ -23,7 +24,9 @@ const transformChoices = (choices: any) => {
   })
 }
 
-export const transformMessage = (message: MessageDto) => {
+export const transformMessage: (message: MessageDto) => Message | null = (
+  message: MessageDto,
+) => {
   if (!message) {
     return null
   }
@@ -44,15 +47,16 @@ export const transformMessage = (message: MessageDto) => {
     header: {
       fromMyself: message.header.fromId !== 1,
       messageId: message.header.messageId,
-      timeStamp: message.header.timestamp,
+      timeStamp: message.header.timeStamp,
       richTextChatCompatible: message.header.richTextChatCompatible,
       editAllowed: message.header.editAllowed,
       shouldRequestPushNotifications:
-        message.header.shouldRequestPushNotifications,
+        message.header.shouldRequestPushNotifications || false,
     },
     body: messageBody,
   }
 }
 
-export const transformMessages = (messages: MessageDto[]) =>
-  messages.map(transformMessage)
+export const transformMessages: (messages: MessageDto[]) => Message[] = (
+  messages: MessageDto[],
+) => messages.map(transformMessage).filter((message) => !!message) as Message[]
