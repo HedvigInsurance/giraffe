@@ -32,6 +32,11 @@ export const transformMessage: (message: MessageDto) => Message | null = (
   }
 
   const messageBodyCore = message.body as MessageBodyCore
+
+  if (!messageBodyCore.text) {
+    return null
+  }
+
   const messageBodySingleSelect = message.body as MessageBodySingleSelect
 
   const messageBody: MessageBody = {

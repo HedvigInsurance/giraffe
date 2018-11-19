@@ -369,6 +369,7 @@ export interface Mutation {
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
   sendChatTextResponse: boolean;
+  sendChatSingleSelectResponse: boolean;
 }
 
 export interface CampaignInput {
@@ -415,6 +416,15 @@ export interface ChatResponseTextInput {
 
 export interface ChatResponseBodyTextInput {
   text: string;
+}
+
+export interface ChatResponseSingleSelectInput {
+  globalId: string;
+  body: ChatResponseBodySingleSelectInput;
+}
+
+export interface ChatResponseBodySingleSelectInput {
+  selectedValue: string;
 }
 
 export interface Subscription {
@@ -1184,6 +1194,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
   sendChatTextResponse?: MutationToSendChatTextResponseResolver<TParent>;
+  sendChatSingleSelectResponse?: MutationToSendChatSingleSelectResponseResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1243,6 +1254,13 @@ export interface MutationToSendChatTextResponseArgs {
 }
 export interface MutationToSendChatTextResponseResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToSendChatTextResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSendChatSingleSelectResponseArgs {
+  input: ChatResponseSingleSelectInput;
+}
+export interface MutationToSendChatSingleSelectResponseResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToSendChatSingleSelectResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

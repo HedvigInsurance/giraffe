@@ -23,6 +23,7 @@ type Mutation {
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
   sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
+  sendChatSingleSelectResponse(input: ChatResponseSingleSelectInput!): Boolean!
 }
 
 type Subscription {
@@ -188,6 +189,15 @@ input ChatResponseBodyTextInput {
 input ChatResponseTextInput {
   globalId: ID!
   body: ChatResponseBodyTextInput!
+}
+
+input ChatResponseBodySingleSelectInput {
+  selectedValue: ID!
+}
+
+input ChatResponseSingleSelectInput {
+  globalId: ID!
+  body: ChatResponseBodySingleSelectInput!
 }
 
 input CampaignInput {

@@ -12,7 +12,10 @@ import {
 import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
-import { sendChatTextResponse } from './chatResponse'
+import {
+  sendChatSingleSelectResponse,
+  sendChatTextResponse,
+} from './chatResponse'
 import { chatState, subscribeToChatState } from './chatState'
 import { createSession, createSessionV2 } from './createSession'
 import {
@@ -61,6 +64,7 @@ const resolvers: Resolver = {
     offerClosed,
     startDirectDebitRegistration,
     sendChatTextResponse,
+    sendChatSingleSelectResponse,
   },
   Subscription: {
     offer: subscribeToOffer,

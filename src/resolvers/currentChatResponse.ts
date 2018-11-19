@@ -35,7 +35,7 @@ export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseRe
       (chat: ChatDto, previousChat: ChatDto) => {
         if (!equals(chat.messages[0], previousChat.messages[0])) {
           pubsub.publish(iteratorId, {
-            currentResponse: chat.messages[0],
+            currentChatResponse: transformMessage(chat.messages[0]),
           })
         }
       },

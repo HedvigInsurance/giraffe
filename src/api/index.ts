@@ -5,10 +5,13 @@ import {
   BankIdStatus,
   InsuranceStatus,
   InsuranceType,
+  MessageBodyChoicesCore,
+  MessageBodySingleSelect,
   PerilCategory,
   SignState,
 } from '../typings/generated-graphql-types'
 import {
+  ChatResponseSingleSelectInput,
   ChatResponseTextInput,
   ChatState,
   MessageBody,
@@ -363,6 +366,52 @@ const setChatResponse = async (
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(responseMessageWithText, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
+}
+
+export const setChatSingleSelectResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseSingleSelectInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseBody = responseMessage.body as MessageBodySingleSelect
+  const selectedChoice = responseBody.choices!.find(
+    (choice) => choice!.value === responseInput.body.selectedValue,
+  ) as MessageBodyChoicesCore
+
+  selectedChoice.selected = true
+
+  const otherChoices = responseBody.choices!.filter(
+    (choice) => choice!.value === responseInput.body.selectedValue,
+  )
+
+  const responseMessageWithSelectedChoice = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      choices: [selectedChoice, ...otherChoices],
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithSelectedChoice, null, 4),
     },
     token,
   })

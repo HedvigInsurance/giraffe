@@ -40,13 +40,18 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
         )
         const transformedNewMessages = transformMessages(chat.messages)
 
-        const messageDiff = transformedNewMessages.filter(
-          (message) =>
-            !transformedPreviousMessages.find(
-              (previousMessage) =>
-                previousMessage!.globalId === message!.globalId,
-            ),
-        )
+        console.log('previousMessages', transformedPreviousMessages)
+        console.log('newMessages', transformedNewMessages)
+
+        const messageDiff = transformedNewMessages
+          .filter(
+            (message) =>
+              !transformedPreviousMessages.find(
+                (previousMessage) =>
+                  previousMessage!.globalId === message!.globalId,
+              ),
+          )
+          .reverse()
 
         if (messageDiff.length !== 0) {
           messageDiff.forEach((message) => {
