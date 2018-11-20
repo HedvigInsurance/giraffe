@@ -100,7 +100,7 @@ interface MessageBodyDto {
 
 interface MessageHeaderDto {
   messageId: string
-  fromId: number
+  fromId: string
   timeStamp: string
   richTextChatCompatible: boolean
   editAllowed: boolean
@@ -359,9 +359,8 @@ export const setChatFileResponse = async (
     ...responseMessage,
     body: {
       ...responseMessage.body,
+      ...responseInput.body,
       type: 'file_upload',
-      key: responseInput.body.key,
-      mimeType: responseInput.body.mimeType,
     },
   }
 
