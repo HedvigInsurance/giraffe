@@ -24,6 +24,7 @@ type Mutation {
   startDirectDebitRegistration: URL!
   sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
   sendChatSingleSelectResponse(input: ChatResponseSingleSelectInput!): Boolean!
+  sendChatFileResponse(input: ChatResponseFileInput!): Boolean!
 }
 
 type Subscription {
@@ -198,6 +199,16 @@ input ChatResponseBodySingleSelectInput {
 input ChatResponseSingleSelectInput {
   globalId: ID!
   body: ChatResponseBodySingleSelectInput!
+}
+
+input ChatResponseBodyFileInput {
+  key: String!
+  mimeType: String!
+}
+
+input ChatResponseFileInput {
+  globalId: ID!
+  body: ChatResponseBodyFileInput!
 }
 
 input CampaignInput {

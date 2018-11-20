@@ -13,6 +13,7 @@ import { Resolver } from '../typings/generated-graphql-types'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
 import {
+  sendChatFileResponse,
   sendChatSingleSelectResponse,
   sendChatTextResponse,
 } from './chatResponse'
@@ -65,6 +66,7 @@ const resolvers: Resolver = {
     startDirectDebitRegistration,
     sendChatTextResponse,
     sendChatSingleSelectResponse,
+    sendChatFileResponse,
   },
   Subscription: {
     offer: subscribeToOffer,

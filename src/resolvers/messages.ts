@@ -40,9 +40,6 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
         )
         const transformedNewMessages = transformMessages(chat.messages)
 
-        console.log('previousMessages', transformedPreviousMessages)
-        console.log('newMessages', transformedNewMessages)
-
         const messageDiff = transformedNewMessages
           .filter(
             (message) =>

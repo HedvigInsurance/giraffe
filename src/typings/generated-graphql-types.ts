@@ -370,6 +370,7 @@ export interface Mutation {
   startDirectDebitRegistration: URL;
   sendChatTextResponse: boolean;
   sendChatSingleSelectResponse: boolean;
+  sendChatFileResponse: boolean;
 }
 
 export interface CampaignInput {
@@ -425,6 +426,16 @@ export interface ChatResponseSingleSelectInput {
 
 export interface ChatResponseBodySingleSelectInput {
   selectedValue: string;
+}
+
+export interface ChatResponseFileInput {
+  globalId: string;
+  body: ChatResponseBodyFileInput;
+}
+
+export interface ChatResponseBodyFileInput {
+  key: string;
+  mimeType: string;
 }
 
 export interface Subscription {
@@ -1195,6 +1206,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
   sendChatTextResponse?: MutationToSendChatTextResponseResolver<TParent>;
   sendChatSingleSelectResponse?: MutationToSendChatSingleSelectResponseResolver<TParent>;
+  sendChatFileResponse?: MutationToSendChatFileResponseResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1261,6 +1273,13 @@ export interface MutationToSendChatSingleSelectResponseArgs {
 }
 export interface MutationToSendChatSingleSelectResponseResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToSendChatSingleSelectResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSendChatFileResponseArgs {
+  input: ChatResponseFileInput;
+}
+export interface MutationToSendChatFileResponseResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToSendChatFileResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
