@@ -145,19 +145,13 @@ const callApi: CallApi = async (url, options = {}) => {
   }
 
   const res = await fetch(`${config.BASE_URL}${url}`, requestOptions)
-  await validateStatus(res)
+  validateStatus(res)
   return res
 }
 
-const checkStatus = async (res: Response) => {
+const checkStatus = (res: Response) => {
   if (res.status > 300) {
-    throw new Error(
-      `Failed to fetch, status: ${res.status} ${JSON.stringify(
-        await res.text(),
-        null,
-        4,
-      )}`,
-    )
+    throw new Error(`Failed to fetch, status: ${res.status}`)
   }
 }
 
