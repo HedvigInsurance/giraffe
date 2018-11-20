@@ -94,6 +94,30 @@ interface TrackingDto {
   utmTerm?: string[]
 }
 
+interface MessageBodyDto {
+  text: string
+}
+
+interface MessageHeaderDto {
+  messageId: string
+  fromId: number
+  timeStamp: string
+  richTextChatCompatible: boolean
+  editAllowed: boolean
+  shouldRequestPushNotifications: boolean
+}
+
+export interface MessageDto {
+  id: string
+  globalId: string
+  header: MessageHeaderDto
+  body: MessageBodyDto
+}
+
+export interface ChatDto {
+  messages: MessageDto[]
+}
+
 type CallApi = (
   url: string,
   options?: {
@@ -296,6 +320,20 @@ const registerDirectDebit = async (
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(body),
+    },
+    token,
+  })
+  return data.json()
+}
+
+const getChat = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<ChatDto> => {
+  const data = await callApi('/v2/app', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'GET',
     },
     token,
   })
