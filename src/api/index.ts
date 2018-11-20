@@ -3,6 +3,7 @@ import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
   BankIdStatus,
+  ChatResponseFileInput,
   InsuranceStatus,
   InsuranceType,
   PerilCategory,
@@ -120,13 +121,19 @@ const callApi: CallApi = async (url, options = {}) => {
   }
 
   const res = await fetch(`${config.BASE_URL}${url}`, requestOptions)
-  validateStatus(res)
+  await validateStatus(res)
   return res
 }
 
-const checkStatus = (res: Response) => {
+const checkStatus = async (res: Response) => {
   if (res.status > 300) {
-    throw new Error(`Failed to fetch, status: ${res.status}`)
+    throw new Error(
+      `Failed to fetch, status: ${res.status} ${JSON.stringify(
+        await res.text(),
+        null,
+        4,
+      )}`,
+    )
   }
 }
 
@@ -293,6 +300,43 @@ const registerDirectDebit = async (
     token,
   })
   return data.json()
+}
+
+export const setChatFileResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseFileInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseMessageWithFile = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      type: 'file_upload',
+      key: responseInput.body.key,
+      mimeType: responseInput.body.mimeType,
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithFile, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
 }
 
 const registerCampaign = (
