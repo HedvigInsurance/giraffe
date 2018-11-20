@@ -3,6 +3,7 @@ import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
   BankIdStatus,
+  ChatResponseFileInput,
   InsuranceStatus,
   InsuranceType,
   PerilCategory,
@@ -91,6 +92,30 @@ interface TrackingDto {
   utmContent?: string[]
   utmCampaign?: string
   utmTerm?: string[]
+}
+
+interface MessageBodyDto {
+  text: string
+}
+
+interface MessageHeaderDto {
+  messageId: string
+  fromId: string
+  timeStamp: string
+  richTextChatCompatible: boolean
+  editAllowed: boolean
+  shouldRequestPushNotifications: boolean
+}
+
+export interface MessageDto {
+  id: string
+  globalId: string
+  header: MessageHeaderDto
+  body: MessageBodyDto
+}
+
+export interface ChatDto {
+  messages: MessageDto[]
 }
 
 type CallApi = (
@@ -293,6 +318,56 @@ const registerDirectDebit = async (
     token,
   })
   return data.json()
+}
+
+const getChat = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<ChatDto> => {
+  const data = await callApi('/v2/app', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'GET',
+    },
+    token,
+  })
+  return data.json()
+}
+
+export const setChatFileResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseFileInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseMessageWithFile = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      ...responseInput.body,
+      type: 'file_upload',
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithFile, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
 }
 
 const registerCampaign = (

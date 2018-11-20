@@ -141,6 +141,7 @@ export interface Mutation {
   selectCashbackOption: Cashback;
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
+  sendChatFileResponse: boolean;
 }
 
 export interface CampaignInput {
@@ -179,6 +180,16 @@ export interface SignInput {
 export type Upload = any;
 
 export type URL = any;
+
+export interface ChatResponseFileInput {
+  globalId: string;
+  body: ChatResponseBodyFileInput;
+}
+
+export interface ChatResponseBodyFileInput {
+  key: string;
+  mimeType: string;
+}
 
 export interface Subscription {
   offer?: OfferEvent;
@@ -506,6 +517,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
+  sendChatFileResponse?: MutationToSendChatFileResponseResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -558,6 +570,13 @@ export interface MutationToOfferClosedResolver<TParent = undefined, TResult = bo
 
 export interface MutationToStartDirectDebitRegistrationResolver<TParent = undefined, TResult = URL> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSendChatFileResponseArgs {
+  input: ChatResponseFileInput;
+}
+export interface MutationToSendChatFileResponseResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToSendChatFileResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

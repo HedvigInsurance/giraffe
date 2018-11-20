@@ -19,11 +19,22 @@ type Mutation {
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
+  sendChatFileResponse(input: ChatResponseFileInput!): Boolean!
 }
 
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
+}
+
+input ChatResponseBodyFileInput {
+  key: String!
+  mimeType: String!
+}
+
+input ChatResponseFileInput {
+  globalId: ID!
+  body: ChatResponseBodyFileInput!
 }
 
 input CampaignInput {
