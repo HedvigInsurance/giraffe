@@ -11,7 +11,7 @@
   },
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@sentry/node": "^4.2.4",
+    "@sentry/node": "^4.3.3",
     "apollo-link-http": "^1.5.5",
     "apollo-server-core": "^2.1.0",
     "apollo-server-koa": "^2.1.0",
