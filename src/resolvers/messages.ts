@@ -81,6 +81,34 @@ export const __resolveType: MessageBodyTypeResolver = (obj: MessageBody) => {
     return 'MessageBodySingleSelect'
   }
 
+  if (obj.type === 'multiple_select') {
+    return 'MessageBodyMultipleSelect'
+  }
+
+  if (obj.type === 'paragraph') {
+    return 'MessageBodyParagraph'
+  }
+
+  if (obj.type === 'text') {
+    return 'MessageBodyText'
+  }
+
+  if (obj.type === 'number') {
+    return 'MessageBodyNumber'
+  }
+
+  if (obj.type === 'audio') {
+    return 'MessageBodyAudio'
+  }
+
+  if (obj.type === 'bankid_collcet') {
+    return 'MessageBodyBankIdCollect'
+  }
+
+  if (obj.type === 'file_upload') {
+    return 'MessageBodyFile'
+  }
+
   if (obj.type === 'paragraph') {
     return 'MessageBodyParagraph'
   }

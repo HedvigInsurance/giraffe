@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import * as fetch from 'node-fetch'
 import { getUser } from '../api'
 import { GIPHY_API_KEY } from '../config'
 import { QueryToGifsResolver } from '../typings/generated-graphql-types'

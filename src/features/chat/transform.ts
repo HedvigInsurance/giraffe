@@ -3,8 +3,16 @@ import { MessageDto } from '../../api'
 import {
   Message,
   MessageBody,
+  MessageBodyAudio,
+  MessageBodyBankIdCollect,
   MessageBodyCore,
+  MessageBodyFile,
+  MessageBodyMultipleSelect,
+  MessageBodyNumber,
+  MessageBodyParagraph,
   MessageBodySingleSelect,
+  MessageBodyText,
+  MessageBodyUndefined,
 } from '../../typings/generated-graphql-types'
 
 const transformChoices = (choices: any) => {
@@ -37,14 +45,47 @@ export const transformMessage: (message: MessageDto) => Message | null = (
     return null
   }
 
-  const messageBodySingleSelect = message.body as MessageBodySingleSelect
+  const getBody: (bodyInput: MessageBody) => MessageBody = (bodyInput) => {
+    if (bodyInput.type === 'single_select') {
+      const body = bodyInput as MessageBodySingleSelect
+      body.choices = transformChoices(body.choices)
+      return body
+    }
 
-  const messageBody: MessageBody = {
-    type: messageBodyCore.type,
-    id: messageBodyCore.id,
-    text: messageBodyCore.text,
-    choices: transformChoices(messageBodySingleSelect.choices),
+    if (bodyInput.type === 'multiple_select') {
+      const body = bodyInput as MessageBodyMultipleSelect
+      body.choices = transformChoices(body.choices)
+      return body
+    }
+
+    if (bodyInput.type === 'text') {
+      return bodyInput as MessageBodyText
+    }
+
+    if (bodyInput.type === 'number') {
+      return bodyInput as MessageBodyNumber
+    }
+
+    if (bodyInput.type === 'audio') {
+      return bodyInput as MessageBodyAudio
+    }
+
+    if (bodyInput.type === 'bankid_collect') {
+      return bodyInput as MessageBodyBankIdCollect
+    }
+
+    if (bodyInput.type === 'file_upload') {
+      return bodyInput as MessageBodyFile
+    }
+
+    if (bodyInput.type === 'paragraph') {
+      return bodyInput as MessageBodyParagraph
+    }
+
+    return bodyInput as MessageBodyUndefined
   }
+
+  const messageBody = getBody(message.body as MessageBody)
 
   return {
     id: message.id,
