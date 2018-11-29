@@ -34,9 +34,16 @@ const makeSchema = async () => {
     link: translationsLink,
   })
 
+  const allowedRootFields = ['languages', 'marketingStories']
+
   const transformedTranslationSchema = transformSchema(
     executableTranslationsSchema,
-    [new FilterRootFields((_, name) => name === 'languages')],
+    [
+      new FilterRootFields(
+        (_, name) =>
+          !!allowedRootFields.find((allowedName) => name === allowedName),
+      ),
+    ],
   )
 
   const localSchema = makeExecutableSchema<Context>({
