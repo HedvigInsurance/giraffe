@@ -11,7 +11,7 @@ import {
   mergeSchemas,
   transformSchema,
 } from 'graphql-tools'
-import fetch from 'node-fetch'
+import * as fetch from 'node-fetch'
 import { resolve } from 'path'
 import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'

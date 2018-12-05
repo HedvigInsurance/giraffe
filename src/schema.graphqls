@@ -49,6 +49,7 @@ type MessageHeader {
   richTextChatCompatible: Boolean!
   editAllowed: Boolean!
   shouldRequestPushNotifications: Boolean!
+  pollingInterval: Int!
 }
 
 union MessageBody =

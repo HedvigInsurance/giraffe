@@ -343,6 +343,7 @@ export interface MessageHeader {
   richTextChatCompatible: boolean;
   editAllowed: boolean;
   shouldRequestPushNotifications: boolean;
+  pollingInterval: number;
 }
 
 export interface ChatResponse {
@@ -1127,6 +1128,7 @@ export interface MessageHeaderTypeResolver<TParent = MessageHeader> {
   richTextChatCompatible?: MessageHeaderToRichTextChatCompatibleResolver<TParent>;
   editAllowed?: MessageHeaderToEditAllowedResolver<TParent>;
   shouldRequestPushNotifications?: MessageHeaderToShouldRequestPushNotificationsResolver<TParent>;
+  pollingInterval?: MessageHeaderToPollingIntervalResolver<TParent>;
 }
 
 export interface MessageHeaderToMessageIdResolver<TParent = MessageHeader, TResult = string> {
@@ -1150,6 +1152,10 @@ export interface MessageHeaderToEditAllowedResolver<TParent = MessageHeader, TRe
 }
 
 export interface MessageHeaderToShouldRequestPushNotificationsResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToPollingIntervalResolver<TParent = MessageHeader, TResult = number> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
