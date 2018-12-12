@@ -367,7 +367,10 @@ export interface Avatar {
   width: number;
   height: number;
   duration: number;
+  data?: Object;
 }
+
+export type Object = any;
 
 export interface Mutation {
   logout: boolean;
@@ -526,6 +529,7 @@ export interface Resolver {
   ChatResponse?: ChatResponseTypeResolver;
   ChatState?: ChatStateTypeResolver;
   Avatar?: AvatarTypeResolver;
+  Object?: GraphQLScalarType;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
@@ -1227,6 +1231,7 @@ export interface AvatarTypeResolver<TParent = Avatar> {
   width?: AvatarToWidthResolver<TParent>;
   height?: AvatarToHeightResolver<TParent>;
   duration?: AvatarToDurationResolver<TParent>;
+  data?: AvatarToDataResolver<TParent>;
 }
 
 export interface AvatarToNameResolver<TParent = Avatar, TResult = string> {
@@ -1246,6 +1251,10 @@ export interface AvatarToHeightResolver<TParent = Avatar, TResult = number> {
 }
 
 export interface AvatarToDurationResolver<TParent = Avatar, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AvatarToDataResolver<TParent = Avatar, TResult = Object | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

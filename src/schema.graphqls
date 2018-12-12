@@ -228,6 +228,7 @@ type Avatar {
   width: Int!
   height: Int!
   duration: Int!
+  data: Object
 }
 
 type Gif {
@@ -367,6 +368,7 @@ scalar Upload
 scalar URL
 # String-represented UUID.
 scalar UUID
+scalar Object
 
 type File {
   """
