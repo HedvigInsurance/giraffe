@@ -10,6 +10,7 @@ import {
   subscribeToSignStatus,
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
+import { avatars } from './avatars'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
 import {
@@ -53,6 +54,7 @@ const resolvers: Resolver = {
     messages,
     chatState,
     currentChatResponse,
+    avatars,
   },
   Mutation: {
     logout,

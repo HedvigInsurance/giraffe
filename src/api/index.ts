@@ -105,6 +105,14 @@ interface MessageHeaderDto {
   loadingIndicator: string
 }
 
+interface AvatarDto {
+  name: string
+  URL: string
+  width: number
+  height: number
+  duration: number
+}
+
 export interface MessageDto {
   id: string
   globalId: string
@@ -465,6 +473,20 @@ export const setChatFileResponse = async (
   return data.status === 204
 }
 
+const getAvatars = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<AvatarDto[]> => {
+  const res = await callApi('/avatars', {
+    mergeOptions: {
+      method: 'GET',
+      headers: (headers as any) as fetch.RequestInit['headers'],
+    },
+    token,
+  })
+  return res.json()
+}
+
 const registerCampaign = (
   token: string,
   headers: ForwardHeaders,
@@ -508,6 +530,7 @@ export {
   setOfferClosed,
   registerDirectDebit,
   getChat,
+  getAvatars,
   registerCampaign,
   assignTrackingId,
 }

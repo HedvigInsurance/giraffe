@@ -10,6 +10,7 @@ type Query {
   messages: [Message]!
   currentChatResponse: ChatResponse
   chatState: ChatState!
+  avatars: [Avatar]
 }
 
 type Mutation {
@@ -219,6 +220,14 @@ input CampaignInput {
   term: String
   content: String
   name: String
+}
+
+type Avatar {
+  name: String!
+  URL: String!
+  width: Int!
+  height: Int!
+  duration: Int!
 }
 
 type Gif {

@@ -24,6 +24,7 @@ export interface Query {
   messages: Array<Message | null>;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
+  avatars?: Array<Avatar | null>;
 }
 
 export interface Insurance {
@@ -360,6 +361,14 @@ export interface ChatState {
   onboardingDone: boolean;
 }
 
+export interface Avatar {
+  name: string;
+  URL: string;
+  width: number;
+  height: number;
+  duration: number;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -516,6 +525,7 @@ export interface Resolver {
   MessageHeader?: MessageHeaderTypeResolver;
   ChatResponse?: ChatResponseTypeResolver;
   ChatState?: ChatStateTypeResolver;
+  Avatar?: AvatarTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
@@ -537,6 +547,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   messages?: QueryToMessagesResolver<TParent>;
   currentChatResponse?: QueryToCurrentChatResponseResolver<TParent>;
   chatState?: QueryToChatStateResolver<TParent>;
+  avatars?: QueryToAvatarsResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -586,6 +597,10 @@ export interface QueryToCurrentChatResponseResolver<TParent = undefined, TResult
 }
 
 export interface QueryToChatStateResolver<TParent = undefined, TResult = ChatState> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToAvatarsResolver<TParent = undefined, TResult = Array<Avatar | null> | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1203,6 +1218,34 @@ export interface ChatStateToShowOfferScreenResolver<TParent = ChatState, TResult
 }
 
 export interface ChatStateToOnboardingDoneResolver<TParent = ChatState, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AvatarTypeResolver<TParent = Avatar> {
+  name?: AvatarToNameResolver<TParent>;
+  URL?: AvatarToURLResolver<TParent>;
+  width?: AvatarToWidthResolver<TParent>;
+  height?: AvatarToHeightResolver<TParent>;
+  duration?: AvatarToDurationResolver<TParent>;
+}
+
+export interface AvatarToNameResolver<TParent = Avatar, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AvatarToURLResolver<TParent = Avatar, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AvatarToWidthResolver<TParent = Avatar, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AvatarToHeightResolver<TParent = Avatar, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AvatarToDurationResolver<TParent = Avatar, TResult = number> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
