@@ -50,6 +50,7 @@ type MessageHeader {
   editAllowed: Boolean!
   shouldRequestPushNotifications: Boolean!
   pollingInterval: Int!
+  loadingIndicator: String
 }
 
 union MessageBody =

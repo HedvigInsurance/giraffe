@@ -344,6 +344,7 @@ export interface MessageHeader {
   editAllowed: boolean;
   shouldRequestPushNotifications: boolean;
   pollingInterval: number;
+  loadingIndicator?: string;
 }
 
 export interface ChatResponse {
@@ -1129,6 +1130,7 @@ export interface MessageHeaderTypeResolver<TParent = MessageHeader> {
   editAllowed?: MessageHeaderToEditAllowedResolver<TParent>;
   shouldRequestPushNotifications?: MessageHeaderToShouldRequestPushNotificationsResolver<TParent>;
   pollingInterval?: MessageHeaderToPollingIntervalResolver<TParent>;
+  loadingIndicator?: MessageHeaderToLoadingIndicatorResolver<TParent>;
 }
 
 export interface MessageHeaderToMessageIdResolver<TParent = MessageHeader, TResult = string> {
@@ -1156,6 +1158,10 @@ export interface MessageHeaderToShouldRequestPushNotificationsResolver<TParent =
 }
 
 export interface MessageHeaderToPollingIntervalResolver<TParent = MessageHeader, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToLoadingIndicatorResolver<TParent = MessageHeader, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

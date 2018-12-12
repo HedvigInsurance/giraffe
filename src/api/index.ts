@@ -102,6 +102,7 @@ interface MessageHeaderDto {
   editAllowed: boolean
   shouldRequestPushNotifications: boolean
   pollingInterval: number
+  loadingIndicator: string
 }
 
 export interface MessageDto {

@@ -100,6 +100,7 @@ export const transformMessage: (message: MessageDto) => Message | null = (
       shouldRequestPushNotifications:
         message.header.shouldRequestPushNotifications || false,
       pollingInterval: message.header.pollingInterval,
+      loadingIndicator: message.header.loadingIndicator,
     },
     body: messageBody,
   }
