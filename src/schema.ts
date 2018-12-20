@@ -1,4 +1,6 @@
+import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
+import { createCacheLink } from 'apollo-link-redis-cache'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
 import { applyMiddleware } from 'graphql-middleware'
@@ -11,8 +13,10 @@ import {
   mergeSchemas,
   transformSchema,
 } from 'graphql-tools'
+import * as Redis from 'ioredis'
 import fetch from 'node-fetch'
 import { resolve } from 'path'
+import * as config from './config'
 import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'
 import { resolvers } from './resolvers'
@@ -20,6 +24,11 @@ import { resolvers } from './resolvers'
 const typeDefs = gql(
   readFileSync(resolve(__dirname, './schema.graphqls'), 'utf8'),
 )
+
+const redis = new Redis({
+  host: config.REDIS_HOSTNAME,
+  port: config.REDIS_PORT,
+})
 
 const makeSchema = async () => {
   const translationsLink = createHttpLink({
@@ -29,9 +38,14 @@ const makeSchema = async () => {
 
   const translationSchema = await introspectSchema(translationsLink)
 
+  const cachedTranslationsLink = ApolloLink.from([
+    createCacheLink(redis),
+    translationsLink,
+  ])
+
   const executableTranslationsSchema = makeRemoteExecutableSchema({
     schema: translationSchema,
-    link: translationsLink,
+    link: cachedTranslationsLink,
   })
 
   const allowedRootFields = ['languages', 'marketingStories']
