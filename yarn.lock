@@ -712,6 +712,11 @@ apollo-engine-reporting@^0.0.6:
     graphql-extensions "^0.2.1"
     lodash "^4.17.10"
 
+apollo-link-cache@0.0.1:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/apollo-link-cache/-/apollo-link-cache-0.1.0.tgz#a1fd711f4ecd8baea0558a34c88a7b411e01bb84"
+  integrity sha512-lpRi4xaKP9GurBvNgo95a4UMFwrIwKHyah1fXfGKsZDGBpOnwI1Fq9DPo9G58DJV42rnPOM12LqN/pCakhRuWw==
+
 apollo-link-http-common@^0.2.5:
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.2.5.tgz#d094beb7971523203359bf830bfbfa7b4e7c30ed"
@@ -734,6 +739,14 @@ apollo-link@^1.2.2, apollo-link@^1.2.3:
   dependencies:
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.10"
+
+apollo-link@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.6.tgz#d9b5676d79c01eb4e424b95c7171697f6ad2b8da"
+  integrity sha512-sUNlA20nqIF3gG3F8eyMD+mO80fmf3dPZX+GUOs3MI9oZR8ug09H3F0UsWJMcpEg6h55Yy5wZ+BMmAjrbenF/Q==
+  dependencies:
+    apollo-utilities "^1.0.0"
+    zen-observable-ts "^0.8.13"
 
 apollo-server-caching@0.1.2, apollo-server-caching@^0.1.2:
   version "0.1.2"
@@ -2553,10 +2566,10 @@ ioredis@^3.1.2:
     redis-commands "^1.2.0"
     redis-parser "^2.4.0"
 
-ioredis@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.2.0.tgz#f0f76fa5067a51c365ef1411f6572478a825971d"
-  integrity sha512-PdxZGNJBfPiR2RI6DkqmiacL1+ML3gaqEiaC5QXWQt9eSTlGj+BwDCct0s8irn1ed8GyzAHTzcjvU9fmnl6D7A==
+ioredis@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.3.0.tgz#a92850dd8794eaee4f38a265c830ca823a09d345"
+  integrity sha512-TwTp93UDKlKVQeg9ThuavNh4Vs31JTlqn+cI/J6z21OtfghyJm5I349ZlsKobOeEyS4INITMLQ1fhR7xwf9Fxg==
   dependencies:
     cluster-key-slot "^1.0.6"
     debug "^3.1.0"
@@ -5248,6 +5261,13 @@ zen-observable-ts@^0.8.10:
   version "0.8.10"
   resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.10.tgz#18e2ce1c89fe026e9621fd83cc05168228fce829"
   integrity sha512-5vqMtRggU/2GhePC9OU4sYEWOdvmayp2k3gjPf4F0mXwB3CSbbNznfDUvDJx9O2ZTa1EIXdJhPchQveFKwNXPQ==
+  dependencies:
+    zen-observable "^0.8.0"
+
+zen-observable-ts@^0.8.13:
+  version "0.8.13"
+  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.13.tgz#ae1fd77c84ef95510188b1f8bca579d7a5448fc2"
+  integrity sha512-WDb8SM0tHCb6c0l1k60qXWlm1ok3zN9U4VkLdnBKQwIYwUoB9psH7LIFgR+JVCCMmBxUgOjskIid8/N02k/2Bg==
   dependencies:
     zen-observable "^0.8.0"
 
