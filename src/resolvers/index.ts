@@ -33,6 +33,7 @@ import { member } from './member'
 import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
+  editLastResponse,
   messages,
   resetConversation,
   subscribeToMessage,
@@ -71,6 +72,7 @@ const resolvers: Resolver = {
     sendChatSingleSelectResponse,
     sendChatFileResponse,
     resetConversation,
+    editLastResponse,
   },
   Subscription: {
     offer: subscribeToOffer,

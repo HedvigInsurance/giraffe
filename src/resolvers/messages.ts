@@ -1,5 +1,6 @@
 import {
   ChatDto,
+  editLastResponse as editLastMessage,
   getChat,
   getUser,
   resetConversation as resetMessages,
@@ -10,6 +11,7 @@ import {
   MessageBody,
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
+  MutationToEditLastResponseResolver,
   MutationToResetConversationResolver,
   QueryToMessagesResolver,
   SubscriptionToMessageResolver,
@@ -39,6 +41,16 @@ export const resetConversation: MutationToResetConversationResolver = async (
   return true
 }
 
+export const editLastResponse: MutationToEditLastResponseResolver = async (
+  _root,
+  _args,
+  { getToken, headers },
+) => {
+  const token = getToken()
+  await editLastMessage(token, headers)
+  return true
+}
+
 export const subscribeToMessage: SubscriptionToMessageResolver = {
   subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
@@ -56,15 +68,27 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
         )
         const transformedNewMessages = transformMessages(chat.messages)
 
-        const messageDiff = transformedNewMessages
-          .filter(
-            (message) =>
-              !transformedPreviousMessages.find(
-                (previousMessage) =>
-                  previousMessage!.globalId === message!.globalId,
-              ),
-          )
-          .reverse()
+        const deletedMessages =
+          transformedNewMessages.length < transformedPreviousMessages.length
+
+        const messageDiff = deletedMessages
+          ? transformedPreviousMessages
+              .filter(
+                (message) =>
+                  !transformedNewMessages.find(
+                    (newMessage) => newMessage!.globalId === message!.globalId,
+                  ),
+              )
+              .reverse()
+          : transformedNewMessages
+              .filter(
+                (message) =>
+                  !transformedPreviousMessages.find(
+                    (previousMessage) =>
+                      previousMessage!.globalId === message!.globalId,
+                  ),
+              )
+              .reverse()
 
         if (messageDiff.length !== 0) {
           messageDiff.forEach((message) => {

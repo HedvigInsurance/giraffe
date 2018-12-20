@@ -482,6 +482,16 @@ const resetConversation = async (token: string, headers: ForwardHeaders) => {
   })
 }
 
+const editLastResponse = async (token: string, headers: ForwardHeaders) => {
+  await callApi('/chat/edit', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as fetch.RequestInit['headers'],
+    },
+    token,
+  })
+}
+
 const getAvatars = async (
   token: string,
   headers: ForwardHeaders,
@@ -541,6 +551,7 @@ export {
   getChat,
   getAvatars,
   resetConversation,
+  editLastResponse,
   registerCampaign,
   assignTrackingId,
 }
