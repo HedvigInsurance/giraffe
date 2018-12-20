@@ -472,6 +472,15 @@ export const setChatFileResponse = async (
 
   return data.status === 204
 }
+const resetConversation = async (token: string, headers: ForwardHeaders) => {
+  await callApi('/chat/reset', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as fetch.RequestInit['headers'],
+    },
+    token,
+  })
+}
 
 const getAvatars = async (
   token: string,
@@ -531,6 +540,7 @@ export {
   registerDirectDebit,
   getChat,
   getAvatars,
+  resetConversation,
   registerCampaign,
   assignTrackingId,
 }

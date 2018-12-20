@@ -385,6 +385,7 @@ export interface Mutation {
   sendChatTextResponse: boolean;
   sendChatSingleSelectResponse: boolean;
   sendChatFileResponse: boolean;
+  resetConversation: boolean;
 }
 
 export interface CampaignInput {
@@ -1271,6 +1272,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   sendChatTextResponse?: MutationToSendChatTextResponseResolver<TParent>;
   sendChatSingleSelectResponse?: MutationToSendChatSingleSelectResponseResolver<TParent>;
   sendChatFileResponse?: MutationToSendChatFileResponseResolver<TParent>;
+  resetConversation?: MutationToResetConversationResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1344,6 +1346,10 @@ export interface MutationToSendChatFileResponseArgs {
 }
 export interface MutationToSendChatFileResponseResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToSendChatFileResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToResetConversationResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

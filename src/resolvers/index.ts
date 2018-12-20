@@ -34,6 +34,7 @@ import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
   messages,
+  resetConversation,
   subscribeToMessage,
 } from './messages'
 import { offerClosed } from './offerClosed'
@@ -69,6 +70,7 @@ const resolvers: Resolver = {
     sendChatTextResponse,
     sendChatSingleSelectResponse,
     sendChatFileResponse,
+    resetConversation,
   },
   Subscription: {
     offer: subscribeToOffer,

@@ -26,6 +26,7 @@ type Mutation {
   sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
   sendChatSingleSelectResponse(input: ChatResponseSingleSelectInput!): Boolean!
   sendChatFileResponse(input: ChatResponseFileInput!): Boolean!
+  resetConversation: Boolean!
 }
 
 type Subscription {

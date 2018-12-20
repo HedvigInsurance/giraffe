@@ -1,10 +1,16 @@
-import { ChatDto, getChat, getUser } from '../api'
+import {
+  ChatDto,
+  getChat,
+  getUser,
+  resetConversation as resetMessages,
+} from '../api'
 import { pubsub } from '../pubsub'
 import {
   Message,
   MessageBody,
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
+  MutationToResetConversationResolver,
   QueryToMessagesResolver,
   SubscriptionToMessageResolver,
 } from '../typings/generated-graphql-types'
@@ -21,6 +27,16 @@ export const messages: QueryToMessagesResolver = async (
   const token = getToken()
   const chat = await getChat(token, headers)
   return transformMessages(chat.messages)
+}
+
+export const resetConversation: MutationToResetConversationResolver = async (
+  _root,
+  _args,
+  { getToken, headers },
+) => {
+  const token = getToken()
+  await resetMessages(token, headers)
+  return true
 }
 
 export const subscribeToMessage: SubscriptionToMessageResolver = {
