@@ -25,10 +25,14 @@ const typeDefs = gql(
   readFileSync(resolve(__dirname, './schema.graphqls'), 'utf8'),
 )
 
-const redis = new Redis({
-  host: config.REDIS_HOSTNAME,
-  port: config.REDIS_PORT,
-})
+const redis = config.REDIS_CLUSTER_MODE
+  ? new Redis.Cluster([
+      {
+        host: config.REDIS_HOSTNAME,
+        port: config.REDIS_PORT,
+      },
+    ])
+  : new Redis({ host: config.REDIS_HOSTNAME, port: config.REDIS_PORT })
 
 const makeSchema = async () => {
   const translationsLink = createHttpLink({
