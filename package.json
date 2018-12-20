@@ -13,8 +13,8 @@
   "dependencies": {
     "@sentry/node": "^4.2.4",
     "apollo-link": "^1.2.6",
-    "apollo-link-redis-cache": "0.0.1",
     "apollo-link-http": "^1.5.5",
+    "apollo-link-redis-cache": "0.0.1",
     "apollo-server-core": "^2.1.0",
     "apollo-server-koa": "^2.1.0",
     "aws-sdk": "^2.356.0",
