@@ -727,10 +727,10 @@ apollo-link-http@^1.5.4, apollo-link-http@^1.5.5:
     apollo-link "^1.2.3"
     apollo-link-http-common "^0.2.5"
 
-apollo-link-redis-cache@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/apollo-link-redis-cache/-/apollo-link-redis-cache-0.0.1.tgz#704ee9cb26acf1b3c976af9b65d1899a3dceb77f"
-  integrity sha512-MZhvl1CtUzAQLqOA7BfYk3EGCPXi/Vtf7UCwoXfgAVNGKz1F9/Jx14NIznI8gG5iYC97qZSXOKoZTej1Iv+evQ==
+apollo-link-redis-cache@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/apollo-link-redis-cache/-/apollo-link-redis-cache-0.0.2.tgz#4fda82f6f91a41fa4bd163ff468993b5a67343bb"
+  integrity sha512-9dFjGVBdZ+6bFvu8k+0975hPrXZfquhnnJWt6LL3/4fuxGuo/8vf71YcNGJBhMZwpKvv8/DlNEUdSJpJjEcjAA==
   dependencies:
     apollo-link "^1.2.6"
     rambda "^1.2.2"
