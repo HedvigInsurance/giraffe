@@ -1,6 +1,5 @@
 import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
-// @ts-ignore
 import { createCacheLink } from 'apollo-link-redis-cache'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
