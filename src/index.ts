@@ -3,6 +3,7 @@ dotenv.config()
 
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
+import * as compress from 'koa-compress'
 
 import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
@@ -55,6 +56,7 @@ makeSchema().then((schema) => {
 
   const app = new Koa()
 
+  app.use(compress())
   app.use(loggingMiddleware)
   server.applyMiddleware({ app })
 
