@@ -12,6 +12,7 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "@sentry/node": "^4.2.4",
+    "@types/koa-compress": "^2.0.8",
     "apollo-link": "^1.2.6",
     "apollo-link-http": "^1.5.5",
     "apollo-link-redis-cache": "0.0.2",
@@ -27,6 +28,7 @@
     "graphql-tools": "^4.0.3",
     "ioredis": "^4.3.0",
     "koa": "^2.6.2",
+    "koa-compress": "^3.0.0",
     "node-fetch": "^2.3.0",
     "subscriptions-transport-ws": "^0.9.15",
     "typescript-logging": "^0.6.3",
