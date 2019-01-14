@@ -107,6 +107,7 @@ export enum SignState {
 export interface Member {
   firstName?: string;
   lastName?: string;
+  email?: string;
 }
 
 export interface Gif {
@@ -476,6 +477,7 @@ export interface CollectStatusToCodeResolver<TParent = CollectStatus, TResult = 
 export interface MemberTypeResolver<TParent = Member> {
   firstName?: MemberToFirstNameResolver<TParent>;
   lastName?: MemberToLastNameResolver<TParent>;
+  email?: MemberToEmailResolver<TParent>;
 }
 
 export interface MemberToFirstNameResolver<TParent = Member, TResult = string | null> {
@@ -483,6 +485,10 @@ export interface MemberToFirstNameResolver<TParent = Member, TResult = string | 
 }
 
 export interface MemberToLastNameResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToEmailResolver<TParent = Member, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
