@@ -112,6 +112,7 @@ type Insurance {
 type Member {
   firstName: String
   lastName: String
+  email: String
 }
 
 type PerilCategory {

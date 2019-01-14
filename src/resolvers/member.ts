@@ -12,6 +12,7 @@ const member: QueryToMemberResolver = async (
   return {
     firstName: memberResponse.firstName,
     lastName: memberResponse.lastName,
+    email: memberResponse.email,
   }
 }
 
