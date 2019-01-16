@@ -14,7 +14,7 @@ import {
   MutationToEditLastResponseResolver,
   MutationToResetConversationResolver,
   QueryToMessagesResolver,
-  SubscriptionToMessageResolver,
+  SubscriptionToMessagesResolver,
 } from '../typings/generated-graphql-types'
 import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
@@ -51,7 +51,7 @@ export const editLastResponse: MutationToEditLastResponseResolver = async (
   return true
 }
 
-export const subscribeToMessage: SubscriptionToMessageResolver = {
+export const subscribeToMessage: SubscriptionToMessagesResolver = {
   subscribe: async (_parent, _args, { getToken, headers }) => {
     const token = getToken()
     const user = await getUser(token, headers)
@@ -70,6 +70,8 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
 
         const deletedMessages =
           transformedNewMessages.length < transformedPreviousMessages.length
+
+        console.log('Hit, new messages length: ', transformedNewMessages.length)
 
         const messageDiff = deletedMessages
           ? transformedPreviousMessages
@@ -91,16 +93,22 @@ export const subscribeToMessage: SubscriptionToMessageResolver = {
               .reverse()
 
         if (messageDiff.length !== 0) {
-          messageDiff.forEach((message) => {
-            pubsub.publish(`MESSAGE.${user.memberId}`, {
-              message,
+          if (!deletedMessages) {
+            messageDiff.forEach((message) => {
+              pubsub.publish(`MESSAGE.${user.memberId}`, {
+                messages: [message],
+              })
             })
-          })
+          } else {
+            pubsub.publish(`MESSAGE.${user.memberId}`, {
+              messages: messageDiff,
+            })
+          }
         }
       },
     )
 
-    const asyncIterator = pubsub.asyncIterator<Message>(
+    const asyncIterator = pubsub.asyncIterator<Message[]>(
       `MESSAGE.${user.memberId}`,
     )
 

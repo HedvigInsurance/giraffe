@@ -33,7 +33,7 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
-  message: Message
+  messages: [Message]
   currentChatResponse: ChatResponse
   chatState: ChatState!
 }

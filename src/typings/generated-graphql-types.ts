@@ -457,7 +457,7 @@ export interface ChatResponseBodyFileInput {
 export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
-  message?: Message;
+  messages?: Array<Message | null>;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
 }
@@ -1374,7 +1374,7 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
 export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
   signStatus?: SubscriptionToSignStatusResolver<TParent>;
-  message?: SubscriptionToMessageResolver<TParent>;
+  messages?: SubscriptionToMessagesResolver<TParent>;
   currentChatResponse?: SubscriptionToCurrentChatResponseResolver<TParent>;
   chatState?: SubscriptionToChatStateResolver<TParent>;
 }
@@ -1389,7 +1389,7 @@ export interface SubscriptionToSignStatusResolver<TParent = undefined, TResult =
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
-export interface SubscriptionToMessageResolver<TParent = undefined, TResult = Message | null> {
+export interface SubscriptionToMessagesResolver<TParent = undefined, TResult = Array<Message | null> | null> {
   resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
