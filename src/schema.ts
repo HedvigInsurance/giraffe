@@ -3,6 +3,7 @@ import { createHttpLink } from 'apollo-link-http'
 import { createCacheLink } from 'apollo-link-redis-cache'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
+import { GraphQLSchema } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import {
   FilterRootFields,
@@ -64,6 +65,20 @@ const makeSchema = async () => {
     ],
   )
 
+  const dontPanicLink = createHttpLink({
+    uri: process.env.DONT_PANIC_ENDPOINT,
+    fetch: fetch as any,
+  })
+  let dontPanicSchema: GraphQLSchema | undefined
+  try {
+    dontPanicSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(dontPanicLink),
+      link: dontPanicLink,
+    })
+  } catch (e) {
+    /* noop */
+  }
+
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     resolvers: {
@@ -73,7 +88,11 @@ const makeSchema = async () => {
   })
 
   const schema = mergeSchemas({
-    schemas: [transformedTranslationSchema, localSchema],
+    schemas: [
+      transformedTranslationSchema,
+      localSchema,
+      dontPanicSchema,
+    ].filter(Boolean) as GraphQLSchema[],
   })
 
   return applyMiddleware(schema, sentryMiddleware)
