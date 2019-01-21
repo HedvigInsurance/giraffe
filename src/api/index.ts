@@ -31,6 +31,7 @@ interface UserDto {
   lastName: string
   memberId: string
   email: string
+  phoneNumber: string
   safetyIncreasers: string[]
   selectedCashback: string
   selectedCashbackImageUrl: string
