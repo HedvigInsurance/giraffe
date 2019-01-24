@@ -26,6 +26,7 @@ type Mutation {
   sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
   sendChatSingleSelectResponse(input: ChatResponseSingleSelectInput!): Boolean!
   sendChatFileResponse(input: ChatResponseFileInput!): Boolean!
+  sendChatAudioResponse(input: ChatResponseAudioInput!): Boolean!
   resetConversation: Boolean!
   editLastResponse: Boolean!
 }
@@ -214,6 +215,15 @@ input ChatResponseBodyFileInput {
 input ChatResponseFileInput {
   globalId: ID!
   body: ChatResponseBodyFileInput!
+}
+
+input ChatResponseBodyAudioInput {
+  url: String!
+}
+
+input ChatResponseAudioInput {
+  globalId: ID!
+  body: ChatResponseBodyAudioInput!
 }
 
 input CampaignInput {

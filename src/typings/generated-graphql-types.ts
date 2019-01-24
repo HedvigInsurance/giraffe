@@ -385,6 +385,7 @@ export interface Mutation {
   sendChatTextResponse: boolean;
   sendChatSingleSelectResponse: boolean;
   sendChatFileResponse: boolean;
+  sendChatAudioResponse: boolean;
   resetConversation: boolean;
   editLastResponse: boolean;
 }
@@ -452,6 +453,15 @@ export interface ChatResponseFileInput {
 export interface ChatResponseBodyFileInput {
   key: string;
   mimeType: string;
+}
+
+export interface ChatResponseAudioInput {
+  globalId: string;
+  body: ChatResponseBodyAudioInput;
+}
+
+export interface ChatResponseBodyAudioInput {
+  url: string;
 }
 
 export interface Subscription {
@@ -1273,6 +1283,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   sendChatTextResponse?: MutationToSendChatTextResponseResolver<TParent>;
   sendChatSingleSelectResponse?: MutationToSendChatSingleSelectResponseResolver<TParent>;
   sendChatFileResponse?: MutationToSendChatFileResponseResolver<TParent>;
+  sendChatAudioResponse?: MutationToSendChatAudioResponseResolver<TParent>;
   resetConversation?: MutationToResetConversationResolver<TParent>;
   editLastResponse?: MutationToEditLastResponseResolver<TParent>;
 }
@@ -1348,6 +1359,13 @@ export interface MutationToSendChatFileResponseArgs {
 }
 export interface MutationToSendChatFileResponseResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToSendChatFileResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSendChatAudioResponseArgs {
+  input: ChatResponseAudioInput;
+}
+export interface MutationToSendChatAudioResponseResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToSendChatAudioResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToResetConversationResolver<TParent = undefined, TResult = boolean> {

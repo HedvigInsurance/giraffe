@@ -10,6 +10,7 @@ import {
   MessageBodySingleSelect,
   PerilCategory,
   SignState,
+  ChatResponseAudioInput,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -472,6 +473,43 @@ export const setChatFileResponse = async (
 
   return data.status === 204
 }
+
+export const setChatAudioResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseAudioInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseMessageWithAudio = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      type: 'audio',
+      url: responseInput.body.url,
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as fetch.RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithAudio, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
+}
+
 const resetConversation = async (token: string, headers: ForwardHeaders) => {
   await callApi('/chat/reset', {
     mergeOptions: {

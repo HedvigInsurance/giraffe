@@ -14,6 +14,7 @@ import { avatars } from './avatars'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
 import {
+  sendChatAudioResponse,
   sendChatFileResponse,
   sendChatSingleSelectResponse,
   sendChatTextResponse,
@@ -71,6 +72,7 @@ const resolvers: Resolver = {
     sendChatTextResponse,
     sendChatSingleSelectResponse,
     sendChatFileResponse,
+    sendChatAudioResponse,
     resetConversation,
     editLastResponse,
   },

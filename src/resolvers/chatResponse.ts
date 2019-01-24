@@ -1,6 +1,7 @@
 import { setChatResponse, setChatSingleSelectResponse } from '../api'
-import { setChatFileResponse } from './../api/index'
+import { setChatAudioResponse, setChatFileResponse } from './../api/index'
 import {
+  MutationToSendChatAudioResponseResolver,
   MutationToSendChatFileResponseResolver,
   MutationToSendChatSingleSelectResponseResolver,
   MutationToSendChatTextResponseResolver,
@@ -31,4 +32,13 @@ export const sendChatFileResponse: MutationToSendChatFileResponseResolver = asyn
 ) => {
   const token = getToken()
   return setChatFileResponse(token, headers, input)
+}
+
+export const sendChatAudioResponse: MutationToSendChatAudioResponseResolver = async (
+  _root,
+  { input },
+  { getToken, headers },
+) => {
+  const token = getToken()
+  return setChatAudioResponse(token, headers, input)
 }

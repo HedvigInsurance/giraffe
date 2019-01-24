@@ -66,12 +66,11 @@ export const subscribeToMessage: SubscriptionToMessagesResolver = {
         const transformedPreviousMessages = transformMessages(
           previousChat.messages,
         )
+
         const transformedNewMessages = transformMessages(chat.messages)
 
         const deletedMessages =
           transformedNewMessages.length < transformedPreviousMessages.length
-
-        console.log('Hit, new messages length: ', transformedNewMessages.length)
 
         const messageDiff = deletedMessages
           ? transformedPreviousMessages
@@ -95,6 +94,7 @@ export const subscribeToMessage: SubscriptionToMessagesResolver = {
         if (messageDiff.length !== 0) {
           if (!deletedMessages) {
             messageDiff.forEach((message) => {
+              console.log('New message: ', message.body.text)
               pubsub.publish(`MESSAGE.${user.memberId}`, {
                 messages: [message],
               })
