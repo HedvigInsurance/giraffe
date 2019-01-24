@@ -10,6 +10,7 @@ interface SubscribeInterface {
   token: string
   headers: ForwardHeaders
   memberId: string
+  mostRecentTimestamp: string
 }
 
 const unsubscribe = (memberId: string, listenerId: string) => () => {
@@ -22,7 +23,7 @@ const unsubscribe = (memberId: string, listenerId: string) => () => {
 }
 
 export const subscribeToChat = (
-  { token, headers, memberId }: SubscribeInterface,
+  { token, headers, memberId, mostRecentTimestamp }: SubscribeInterface,
   callback: (chat: ChatDto, previousChat: ChatDto) => void,
 ) => {
   const listenerId = uuid()
@@ -37,6 +38,11 @@ export const subscribeToChat = (
 
   getChat(token, headers).then((chat) => {
     let previousChat = chat
+
+    previousChat.messages = previousChat.messages = previousChat.messages.filter(
+      (message: any) =>
+        Number(message.header.timeStamp) <= Number(mostRecentTimestamp),
+    )
 
     const intervalId = setInterval(async () => {
       const newChat = await getChat(token, headers)

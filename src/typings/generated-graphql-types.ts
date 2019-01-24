@@ -1407,9 +1407,12 @@ export interface SubscriptionToSignStatusResolver<TParent = undefined, TResult =
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
+export interface SubscriptionToMessagesArgs {
+  mostRecentTimestamp: string;
+}
 export interface SubscriptionToMessagesResolver<TParent = undefined, TResult = Array<Message | null> | null> {
-  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
-  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+  resolve?: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
 export interface SubscriptionToCurrentChatResponseResolver<TParent = undefined, TResult = ChatResponse | null> {

@@ -52,7 +52,11 @@ export const editLastResponse: MutationToEditLastResponseResolver = async (
 }
 
 export const subscribeToMessage: SubscriptionToMessagesResolver = {
-  subscribe: async (_parent, _args, { getToken, headers }) => {
+  subscribe: async (
+    _parent,
+    { mostRecentTimestamp },
+    { getToken, headers },
+  ) => {
     const token = getToken()
     const user = await getUser(token, headers)
 
@@ -61,6 +65,7 @@ export const subscribeToMessage: SubscriptionToMessagesResolver = {
         token,
         memberId: user.memberId,
         headers,
+        mostRecentTimestamp,
       },
       (chat: ChatDto, previousChat: ChatDto) => {
         const transformedPreviousMessages = transformMessages(
@@ -94,7 +99,6 @@ export const subscribeToMessage: SubscriptionToMessagesResolver = {
         if (messageDiff.length !== 0) {
           if (!deletedMessages) {
             messageDiff.forEach((message) => {
-              console.log('New message: ', message.body.text)
               pubsub.publish(`MESSAGE.${user.memberId}`, {
                 messages: [message],
               })
