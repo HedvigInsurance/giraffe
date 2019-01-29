@@ -20,6 +20,8 @@ type Mutation {
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
   sendChatFileResponse(input: ChatResponseFileInput!): Boolean!
+  updateEmail(input: String!): Boolean!
+  updatePhoneNumber(input: String!): Boolean!
 }
 
 type Subscription {

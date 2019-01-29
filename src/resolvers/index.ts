@@ -19,7 +19,7 @@ import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
-import { member } from './member'
+import { member, updateEmail, updatePhoneNumber } from './member'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
@@ -47,6 +47,8 @@ const resolvers: Resolver = {
     offerClosed,
     startDirectDebitRegistration,
     sendChatFileResponse,
+    updateEmail,
+    updatePhoneNumber
   },
   Subscription: {
     offer: subscribeToOffer,
