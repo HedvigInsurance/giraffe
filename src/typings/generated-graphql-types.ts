@@ -108,6 +108,7 @@ export interface Member {
   firstName?: string;
   lastName?: string;
   email?: string;
+  phoneNumber?: string;
 }
 
 export interface Gif {
@@ -143,6 +144,8 @@ export interface Mutation {
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
   sendChatFileResponse: boolean;
+  updateEmail: boolean;
+  updatePhoneNumber: boolean;
 }
 
 export interface CampaignInput {
@@ -478,6 +481,7 @@ export interface MemberTypeResolver<TParent = Member> {
   firstName?: MemberToFirstNameResolver<TParent>;
   lastName?: MemberToLastNameResolver<TParent>;
   email?: MemberToEmailResolver<TParent>;
+  phoneNumber?: MemberToPhoneNumberResolver<TParent>;
 }
 
 export interface MemberToFirstNameResolver<TParent = Member, TResult = string | null> {
@@ -489,6 +493,10 @@ export interface MemberToLastNameResolver<TParent = Member, TResult = string | n
 }
 
 export interface MemberToEmailResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToPhoneNumberResolver<TParent = Member, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -524,6 +532,8 @@ export interface MutationTypeResolver<TParent = undefined> {
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
   sendChatFileResponse?: MutationToSendChatFileResponseResolver<TParent>;
+  updateEmail?: MutationToUpdateEmailResolver<TParent>;
+  updatePhoneNumber?: MutationToUpdatePhoneNumberResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -583,6 +593,20 @@ export interface MutationToSendChatFileResponseArgs {
 }
 export interface MutationToSendChatFileResponseResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToSendChatFileResponseArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdateEmailArgs {
+  input: string;
+}
+export interface MutationToUpdateEmailResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdateEmailArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdatePhoneNumberArgs {
+  input: string;
+}
+export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdatePhoneNumberArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

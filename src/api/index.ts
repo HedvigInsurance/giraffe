@@ -400,6 +400,34 @@ const assignTrackingId = (
     token,
   })
 
+const postEmail = (
+  token: string,
+  headers: ForwardHeaders,
+  body: { newEmail: string },
+) =>
+  callApi('/member/updateEmail', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
+const postPhoneNumber = (
+  token: string,
+  headers: ForwardHeaders,
+  body: { newPhoneNumber: string },
+) =>
+  callApi('/member/updatePhoneNumber', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
 export {
   getInsurance,
   getUser,
@@ -415,4 +443,6 @@ export {
   registerDirectDebit,
   registerCampaign,
   assignTrackingId,
+  postEmail,
+  postPhoneNumber
 }
