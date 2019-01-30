@@ -3,6 +3,7 @@ import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
   BankIdStatus,
+  ChatResponseAudioInput,
   ChatResponseFileInput,
   InsuranceStatus,
   InsuranceType,
@@ -10,7 +11,6 @@ import {
   MessageBodySingleSelect,
   PerilCategory,
   SignState,
-  ChatResponseAudioInput,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,

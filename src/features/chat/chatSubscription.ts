@@ -15,10 +15,10 @@ interface SubscribeInterface {
 
 const unsubscribe = (memberId: string, listenerId: string) => () => {
   listeners.get(memberId).delete(listenerId)
-
-  if (listeners.get(memberId).values().length === 0) {
-    intervals.delete(memberId)
+  if (listeners.get(memberId).size === 0) {
     clearInterval(intervals.get(memberId))
+    intervals.delete(memberId)
+    listeners.delete(memberId)
   }
 }
 

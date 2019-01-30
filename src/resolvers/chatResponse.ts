@@ -13,6 +13,8 @@ export const sendChatTextResponse: MutationToSendChatTextResponseResolver = asyn
   { getToken, headers },
 ) => {
   const token = getToken()
+  console.log(input)
+  console.log('hit')
   return setChatResponse(token, headers, input)
 }
 
