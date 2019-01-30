@@ -1415,14 +1415,20 @@ export interface SubscriptionToMessagesResolver<TParent = undefined, TResult = A
   subscribe: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
+export interface SubscriptionToCurrentChatResponseArgs {
+  mostRecentTimestamp: string;
+}
 export interface SubscriptionToCurrentChatResponseResolver<TParent = undefined, TResult = ChatResponse | null> {
-  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
-  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+  resolve?: (parent: TParent, args: SubscriptionToCurrentChatResponseArgs, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: SubscriptionToCurrentChatResponseArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
+export interface SubscriptionToChatStateArgs {
+  mostRecentTimestamp: string;
+}
 export interface SubscriptionToChatStateResolver<TParent = undefined, TResult = ChatState> {
-  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
-  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+  resolve?: (parent: TParent, args: SubscriptionToChatStateArgs, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: SubscriptionToChatStateArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
 export interface OfferEventTypeResolver<TParent = OfferEvent> {

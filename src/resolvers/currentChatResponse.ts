@@ -21,7 +21,11 @@ export const currentChatResponse: QueryToCurrentChatResponseResolver = async (
 }
 
 export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseResolver = {
-  subscribe: async (_parent, _args, { getToken, headers }) => {
+  subscribe: async (
+    _parent,
+    { mostRecentTimestamp },
+    { getToken, headers },
+  ) => {
     const token = getToken()
     const user = await getUser(token, headers)
     const iteratorId = `CURRENT_RESPONSE.${user.memberId}`
@@ -31,6 +35,7 @@ export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseRe
         token,
         memberId: user.memberId,
         headers,
+        mostRecentTimestamp,
       },
       (chat: ChatDto, previousChat: ChatDto) => {
         if (!equals(chat.messages[0], previousChat.messages[0])) {
