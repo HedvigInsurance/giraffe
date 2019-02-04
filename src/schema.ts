@@ -86,7 +86,7 @@ const makeSchema = async () => {
   let paymentServiceSchema: GraphQLSchema | undefined
   try {
     paymentServiceSchema = makeRemoteExecutableSchema({
-      scheam: await introspectSchema(paymentServiceLink),
+      schema: await introspectSchema(paymentServiceLink),
       link: paymentServiceLink
     })
   } catch (e) {
