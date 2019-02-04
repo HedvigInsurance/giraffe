@@ -79,6 +79,20 @@ const makeSchema = async () => {
     /* noop */
   }
 
+  const paymentServiceLink = createHttpLink({
+    uri: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
+    fetch: fetch as any,
+  })
+  let paymentServiceSchema: GraphQLSchema | undefined
+  try {
+    paymentServiceSchema = makeRemoteExecutableSchema({
+      scheam: await introspectSchema(paymentServiceLink),
+      link: paymentServiceLink
+    })
+  } catch (e) {
+    /* ¯\_(ツ)_/¯ */
+  }
+
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     resolvers: {
@@ -92,6 +106,7 @@ const makeSchema = async () => {
       transformedTranslationSchema,
       localSchema,
       dontPanicSchema,
+      paymentServiceSchema
     ].filter(Boolean) as GraphQLSchema[],
   })
 
