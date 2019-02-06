@@ -29,6 +29,8 @@ type Mutation {
   sendChatAudioResponse(input: ChatResponseAudioInput!): Boolean!
   resetConversation: Boolean!
   editLastResponse: Boolean!
+  updateEmail(input: String!): Boolean!
+  updatePhoneNumber(input: String!): Boolean!
 }
 
 type Subscription {
@@ -310,6 +312,8 @@ type Insurance {
 type Member {
   firstName: String
   lastName: String
+  email: String
+  phoneNumber: String
 }
 
 type PerilCategory {

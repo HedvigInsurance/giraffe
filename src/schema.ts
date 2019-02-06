@@ -1,6 +1,9 @@
+import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
+import { createCacheLink } from 'apollo-link-redis-cache'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
+import { GraphQLSchema } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import {
   FilterRootFields,
@@ -11,8 +14,10 @@ import {
   mergeSchemas,
   transformSchema,
 } from 'graphql-tools'
-import * as fetch from 'node-fetch'
+import * as Redis from 'ioredis'
+import fetch from 'node-fetch'
 import { resolve } from 'path'
+import * as config from './config'
 import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'
 import { resolvers } from './resolvers'
@@ -20,6 +25,15 @@ import { resolvers } from './resolvers'
 const typeDefs = gql(
   readFileSync(resolve(__dirname, './schema.graphqls'), 'utf8'),
 )
+
+const redis = config.REDIS_CLUSTER_MODE
+  ? new Redis.Cluster([
+      {
+        host: config.REDIS_HOSTNAME,
+        port: config.REDIS_PORT,
+      },
+    ])
+  : new Redis({ host: config.REDIS_HOSTNAME, port: config.REDIS_PORT })
 
 const makeSchema = async () => {
   const translationsLink = createHttpLink({
@@ -29,15 +43,41 @@ const makeSchema = async () => {
 
   const translationSchema = await introspectSchema(translationsLink)
 
+  const cachedTranslationsLink = ApolloLink.from([
+    createCacheLink(redis),
+    translationsLink,
+  ])
+
   const executableTranslationsSchema = makeRemoteExecutableSchema({
     schema: translationSchema,
-    link: translationsLink,
+    link: cachedTranslationsLink,
   })
+
+  const allowedRootFields = ['languages', 'marketingStories']
 
   const transformedTranslationSchema = transformSchema(
     executableTranslationsSchema,
-    [new FilterRootFields((_, name) => name === 'languages')],
+    [
+      new FilterRootFields(
+        (_, name) =>
+          !!allowedRootFields.find((allowedName) => name === allowedName),
+      ),
+    ],
   )
+
+  const dontPanicLink = createHttpLink({
+    uri: process.env.DONT_PANIC_ENDPOINT,
+    fetch: fetch as any,
+  })
+  let dontPanicSchema: GraphQLSchema | undefined
+  try {
+    dontPanicSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(dontPanicLink),
+      link: dontPanicLink,
+    })
+  } catch (e) {
+    /* noop */
+  }
 
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
@@ -48,7 +88,11 @@ const makeSchema = async () => {
   })
 
   const schema = mergeSchemas({
-    schemas: [transformedTranslationSchema, localSchema],
+    schemas: [
+      transformedTranslationSchema,
+      localSchema,
+      dontPanicSchema,
+    ].filter(Boolean) as GraphQLSchema[],
   })
 
   return applyMiddleware(schema, sentryMiddleware)

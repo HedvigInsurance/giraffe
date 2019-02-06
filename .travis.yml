@@ -7,8 +7,7 @@ services:
 after_success:
   - bin/docker_push.sh
   - bin/kubernetes_deploy.sh
-install: false
-script: return 0
+script: yarn build
 addons:
   apt:
     packages:

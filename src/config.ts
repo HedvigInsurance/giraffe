@@ -6,6 +6,10 @@ const PLAYGROUND_ENABLED =
   false
 const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME || 'localhost'
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379
+const REDIS_CLUSTER_MODE =
+  (process.env.REDIS_CLUSTER_MODE &&
+    process.env.REDIS_CLUSTER_MODE === 'true') ||
+  false
 const GIPHY_API_KEY = process.env.GIPHY_API_KEY || ''
 
 const AWS_KEY = process.env.AWS_KEY || ''
@@ -23,6 +27,7 @@ export {
   PLAYGROUND_ENABLED,
   REDIS_HOSTNAME,
   REDIS_PORT,
+  REDIS_CLUSTER_MODE,
   AWS_KEY,
   AWS_SECRET,
   AWS_S3_BUCKET,

@@ -111,6 +111,8 @@ export enum SignState {
 export interface Member {
   firstName?: string;
   lastName?: string;
+  email?: string;
+  phoneNumber?: string;
 }
 
 export interface Gif {
@@ -388,6 +390,8 @@ export interface Mutation {
   sendChatAudioResponse: boolean;
   resetConversation: boolean;
   editLastResponse: boolean;
+  updateEmail: boolean;
+  updatePhoneNumber: boolean;
 }
 
 export interface CampaignInput {
@@ -806,6 +810,8 @@ export interface CollectStatusToCodeResolver<TParent = CollectStatus, TResult = 
 export interface MemberTypeResolver<TParent = Member> {
   firstName?: MemberToFirstNameResolver<TParent>;
   lastName?: MemberToLastNameResolver<TParent>;
+  email?: MemberToEmailResolver<TParent>;
+  phoneNumber?: MemberToPhoneNumberResolver<TParent>;
 }
 
 export interface MemberToFirstNameResolver<TParent = Member, TResult = string | null> {
@@ -813,6 +819,14 @@ export interface MemberToFirstNameResolver<TParent = Member, TResult = string | 
 }
 
 export interface MemberToLastNameResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToEmailResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToPhoneNumberResolver<TParent = Member, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1286,6 +1300,8 @@ export interface MutationTypeResolver<TParent = undefined> {
   sendChatAudioResponse?: MutationToSendChatAudioResponseResolver<TParent>;
   resetConversation?: MutationToResetConversationResolver<TParent>;
   editLastResponse?: MutationToEditLastResponseResolver<TParent>;
+  updateEmail?: MutationToUpdateEmailResolver<TParent>;
+  updatePhoneNumber?: MutationToUpdatePhoneNumberResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1374,6 +1390,20 @@ export interface MutationToResetConversationResolver<TParent = undefined, TResul
 
 export interface MutationToEditLastResponseResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdateEmailArgs {
+  input: string;
+}
+export interface MutationToUpdateEmailResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdateEmailArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdatePhoneNumberArgs {
+  input: string;
+}
+export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdatePhoneNumberArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

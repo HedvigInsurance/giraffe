@@ -1,4 +1,4 @@
-import * as fetch from 'node-fetch'
+import fetch, { RequestInit, Response } from 'node-fetch'
 import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
@@ -39,6 +39,8 @@ interface UserDto {
   firstName: string
   lastName: string
   memberId: string
+  email: string
+  phoneNumber: string
   safetyIncreasers: string[]
   selectedCashback: string
   selectedCashbackImageUrl: string
@@ -137,11 +139,11 @@ interface TrackingDto {
 type CallApi = (
   url: string,
   options?: {
-    mergeOptions?: fetch.RequestInit
-    validateStatus?: (response: fetch.Response) => void
+    mergeOptions?: RequestInit
+    validateStatus?: (response: Response) => void
     token?: string
   },
-) => Promise<fetch.Response>
+) => Promise<Response>
 
 const callApi: CallApi = async (url, options = {}) => {
   const { mergeOptions, token, validateStatus = checkStatus } = options
@@ -155,7 +157,7 @@ const callApi: CallApi = async (url, options = {}) => {
     headers.Authorization = `Bearer ${token}`
   }
 
-  const requestOptions: fetch.RequestInit = {
+  const requestOptions: RequestInit = {
     ...mergeOptions,
     headers: { ...headers, ...mergeOptions!.headers },
   }
@@ -165,7 +167,7 @@ const callApi: CallApi = async (url, options = {}) => {
   return res
 }
 
-const checkStatus = async (res: fetch.Response) => {
+const checkStatus = async (res: Response) => {
   if (res.status > 300) {
     throw new Error(
       `Failed to fetch, status: ${res.status} ${JSON.stringify(
@@ -181,7 +183,7 @@ const register = async (headers: ForwardHeaders) => {
   const data = await callApi('/helloHedvig', {
     mergeOptions: {
       method: 'POST',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
   })
   return data.text()
@@ -193,7 +195,7 @@ const getInsurance = async (
 ): Promise<InsuranceDto> => {
   const data = await callApi('/insurance', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -206,7 +208,7 @@ const getUser = async (
 ): Promise<UserDto> => {
   const data = await callApi('/member/me', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -217,7 +219,7 @@ const logoutUser = async (token: string, headers: ForwardHeaders) => {
   await callApi('/logout', {
     mergeOptions: {
       method: 'POST',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -231,7 +233,7 @@ const createProduct = async (
   const data = await callApi('/insurance/createProductWeb', {
     mergeOptions: {
       method: 'POST',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       body: JSON.stringify(body),
     },
     token,
@@ -247,7 +249,7 @@ const websign = async (
   await callApi('/v2/member/sign/websign', {
     mergeOptions: {
       method: 'POST',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       body: JSON.stringify(body),
     },
     token,
@@ -260,7 +262,7 @@ const signStatus = async (
 ): Promise<SignStatusDto | null> => {
   const data = await callApi('/v2/member/sign/signStatus', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
     validateStatus: (response) =>
@@ -280,7 +282,7 @@ const getDirectDebitStatus = async (
 ): Promise<number> => {
   const data = await callApi('/directDebit/status', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
     validateStatus: () => true,
@@ -295,7 +297,7 @@ const setSelectedCashbackOption = async (
 ): Promise<number> => {
   const data = await callApi(`/cashback?optionId=${cashbackOptionId}`, {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
     },
     token,
@@ -310,7 +312,7 @@ const getCashbackOptions = async (
 ): Promise<CashbackDto[]> => {
   const data = await callApi('/cashback/options', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -320,7 +322,7 @@ const getCashbackOptions = async (
 const setOfferClosed = async (token: string, headers: ForwardHeaders) =>
   callApi('/hedvig/onboarding/offerClosed', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
     },
     token,
@@ -333,7 +335,7 @@ const registerDirectDebit = async (
 ): Promise<DirectDebitOrderInfoDto> => {
   const data = await callApi('/directDebit/register', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(body),
     },
@@ -348,7 +350,7 @@ const getChat = async (
 ): Promise<ChatDto> => {
   const data = await callApi('/v2/app', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'GET',
     },
     token,
@@ -381,7 +383,7 @@ const setChatResponse = async (
 
   const data = await callApi('/response', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(responseMessageWithText, null, 4),
     },
@@ -427,7 +429,7 @@ export const setChatSingleSelectResponse = async (
 
   const data = await callApi('/response', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(responseMessageWithSelectedChoice, null, 4),
     },
@@ -456,15 +458,14 @@ export const setChatFileResponse = async (
     ...responseMessage,
     body: {
       ...responseMessage.body,
+      ...responseInput.body,
       type: 'file_upload',
-      key: responseInput.body.key,
-      mimeType: responseInput.body.mimeType,
     },
   }
 
   const data = await callApi('/response', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(responseMessageWithFile, null, 4),
     },
@@ -500,7 +501,7 @@ export const setChatAudioResponse = async (
 
   const data = await callApi('/response', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(responseMessageWithAudio, null, 4),
     },
@@ -514,7 +515,7 @@ const resetConversation = async (token: string, headers: ForwardHeaders) => {
   await callApi('/chat/reset', {
     mergeOptions: {
       method: 'POST',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -524,7 +525,7 @@ const editLastResponse = async (token: string, headers: ForwardHeaders) => {
   await callApi('/chat/edit', {
     mergeOptions: {
       method: 'POST',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -537,7 +538,7 @@ const getAvatars = async (
   const res = await callApi('/avatars', {
     mergeOptions: {
       method: 'GET',
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
     },
     token,
   })
@@ -551,7 +552,7 @@ const registerCampaign = (
 ) =>
   callApi('/hedvig/register_campaign', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(body),
     },
@@ -565,7 +566,35 @@ const assignTrackingId = (
 ) =>
   callApi('/member/trackingId', {
     mergeOptions: {
-      headers: (headers as any) as fetch.RequestInit['headers'],
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
+const postEmail = (
+  token: string,
+  headers: ForwardHeaders,
+  body: { newEmail: string },
+) =>
+  callApi('/member/updateEmail', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
+const postPhoneNumber = (
+  token: string,
+  headers: ForwardHeaders,
+  body: { newPhoneNumber: string },
+) =>
+  callApi('/member/updatePhoneNumber', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(body),
     },
@@ -592,4 +621,6 @@ export {
   editLastResponse,
   registerCampaign,
   assignTrackingId,
+  postEmail,
+  postPhoneNumber,
 }

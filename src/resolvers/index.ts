@@ -30,7 +30,7 @@ import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
-import { member } from './member'
+import { member, updateEmail, updatePhoneNumber } from './member'
 import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
@@ -75,6 +75,8 @@ const resolvers: Resolver = {
     sendChatAudioResponse,
     resetConversation,
     editLastResponse,
+    updateEmail,
+    updatePhoneNumber,
   },
   Subscription: {
     offer: subscribeToOffer,
