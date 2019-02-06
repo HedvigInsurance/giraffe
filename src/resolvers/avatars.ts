@@ -1,4 +1,4 @@
-import * as fetch from 'node-fetch'
+import fetch from 'node-fetch'
 import { getAvatars, getUser } from '../api'
 import { QueryToAvatarsResolver } from '../typings/generated-graphql-types'
 
