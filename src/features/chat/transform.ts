@@ -38,14 +38,6 @@ export const transformMessage: (message: MessageDto) => Message | null = (
     return null
   }
 
-  // const messageBodyCore = message.body as MessageBodyCore
-
-  /*
-  if (!messageBodyCore.text) {
-    return null
-  }
-
-  */
   const getBody: (bodyInput: MessageBody) => MessageBody = (bodyInput) => {
     if (bodyInput.type === 'single_select') {
       const body = bodyInput as MessageBodySingleSelect
