@@ -1,5 +1,9 @@
 import { getUser, postEmail, postPhoneNumber } from '../api'
-import { MutationToUpdateEmailResolver, MutationToUpdatePhoneNumberResolver, QueryToMemberResolver } from '../typings/generated-graphql-types'
+import {
+  MutationToUpdateEmailResolver,
+  MutationToUpdatePhoneNumberResolver,
+  QueryToMemberResolver,
+} from '../typings/generated-graphql-types'
 
 const member: QueryToMemberResolver = async (
   _parent,
@@ -19,24 +23,24 @@ const member: QueryToMemberResolver = async (
 
 const updateEmail: MutationToUpdateEmailResolver = async (
   _root,
-  {input},
+  { input },
   { getToken, headers },
 ) => {
   const token = getToken()
   await postEmail(token, headers, {
-    newEmail: input
+    newEmail: input,
   })
   return true
 }
 
 const updatePhoneNumber: MutationToUpdatePhoneNumberResolver = async (
   _root,
-  {input},
+  { input },
   { getToken, headers },
 ) => {
   const token = getToken()
   await postPhoneNumber(token, headers, {
-    newPhoneNumber: input
+    newPhoneNumber: input,
   })
   return true
 }

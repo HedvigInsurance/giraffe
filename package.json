@@ -12,6 +12,7 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "@sentry/node": "^4.2.4",
+    "@types/ramda": "^0.25.41",
     "@types/koa-compress": "^2.0.8",
     "apollo-link": "^1.2.6",
     "apollo-link-http": "^1.5.5",
@@ -30,6 +31,7 @@
     "koa": "^2.6.2",
     "koa-compress": "^3.0.0",
     "node-fetch": "^2.3.0",
+    "ramda": "^0.25.0",
     "subscriptions-transport-ws": "^0.9.15",
     "typescript-logging": "^0.6.3",
     "uuid": "^3.3.2"

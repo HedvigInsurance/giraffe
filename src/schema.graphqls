@@ -7,6 +7,10 @@ type Query {
   gifs(query: String!): [Gif]!
   file(key: String!): File!
   directDebitStatus: DirectDebitStatus!
+  messages: [Message]!
+  currentChatResponse: ChatResponse
+  chatState: ChatState!
+  avatars: [Avatar]
 }
 
 type Mutation {
@@ -19,7 +23,12 @@ type Mutation {
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
+  sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
+  sendChatSingleSelectResponse(input: ChatResponseSingleSelectInput!): Boolean!
   sendChatFileResponse(input: ChatResponseFileInput!): Boolean!
+  sendChatAudioResponse(input: ChatResponseAudioInput!): Boolean!
+  resetConversation: Boolean!
+  editLastResponse: Boolean!
   updateEmail(input: String!): Boolean!
   updatePhoneNumber(input: String!): Boolean!
 }
@@ -27,6 +36,177 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
+  messages(mostRecentTimestamp: String!): [Message]
+  currentChatResponse(mostRecentTimestamp: String!): ChatResponse
+  chatState(mostRecentTimestamp: String!): ChatState!
+}
+
+type Message {
+  globalId: ID!
+  id: ID!
+  body: MessageBody!
+  header: MessageHeader!
+}
+
+type MessageHeader {
+  messageId: ID!
+  fromMyself: Boolean!
+  timeStamp: String!
+  richTextChatCompatible: Boolean!
+  editAllowed: Boolean!
+  shouldRequestPushNotifications: Boolean!
+  pollingInterval: Int!
+  loadingIndicator: String
+}
+
+union MessageBody =
+    MessageBodySingleSelect
+  | MessageBodyMultipleSelect
+  | MessageBodyText
+  | MessageBodyNumber
+  | MessageBodyAudio
+  | MessageBodyBankIdCollect
+  | MessageBodyFile
+  | MessageBodyParagraph
+  | MessageBodyUndefined
+
+interface MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodySingleSelect implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  choices: [MessageBodyChoices]
+}
+
+type MessageBodyMultipleSelect implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  choices: [MessageBodyChoices]
+}
+
+type MessageBodyText implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodyNumber implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodyAudio implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  url: String
+}
+
+type MessageBodyBankIdCollect implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  referenceId: String
+}
+
+type MessageBodyParagraph implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+type MessageBodyFile implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+  key: String
+  mimeType: String
+}
+
+type MessageBodyUndefined implements MessageBodyCore {
+  type: String!
+  id: ID!
+  text: String!
+}
+
+union MessageBodyChoices =
+    MessageBodyChoicesUndefined
+  | MessageBodyChoicesSelection
+  | MessageBodyChoicesLink
+
+interface MessageBodyChoicesCore {
+  type: String!
+  value: String!
+  text: String!
+  selected: Boolean!
+}
+
+type MessageBodyChoicesUndefined implements MessageBodyChoicesCore {
+  type: String!
+  value: String!
+  text: String!
+  selected: Boolean!
+}
+
+type MessageBodyChoicesSelection implements MessageBodyChoicesCore {
+  type: String!
+  value: String!
+  text: String!
+  selected: Boolean!
+  clearable: Boolean
+}
+
+enum MessageBodyChoicesLinkView {
+  OFFER
+  DASHBOARD
+}
+
+type MessageBodyChoicesLink implements MessageBodyChoicesCore {
+  type: String!
+  value: String!
+  text: String!
+  selected: Boolean!
+  view: MessageBodyChoicesLinkView
+  appUrl: String
+  webUrl: String
+}
+
+type ChatState {
+  ongoingClaim: Boolean!
+  showOfferScreen: Boolean!
+  onboardingDone: Boolean!
+}
+
+type ChatResponse {
+  globalId: ID!
+  id: ID!
+  body: MessageBody
+  header: MessageHeader
+}
+
+input ChatResponseBodyTextInput {
+  text: String!
+}
+
+input ChatResponseTextInput {
+  globalId: ID!
+  body: ChatResponseBodyTextInput!
+}
+
+input ChatResponseBodySingleSelectInput {
+  selectedValue: ID!
+}
+
+input ChatResponseSingleSelectInput {
+  globalId: ID!
+  body: ChatResponseBodySingleSelectInput!
 }
 
 input ChatResponseBodyFileInput {
@@ -39,12 +219,30 @@ input ChatResponseFileInput {
   body: ChatResponseBodyFileInput!
 }
 
+input ChatResponseBodyAudioInput {
+  url: String!
+}
+
+input ChatResponseAudioInput {
+  globalId: ID!
+  body: ChatResponseBodyAudioInput!
+}
+
 input CampaignInput {
   source: String
   medium: String
   term: String
   content: String
   name: String
+}
+
+type Avatar {
+  name: String!
+  URL: String!
+  width: Int!
+  height: Int!
+  duration: Int!
+  data: Object
 }
 
 type Gif {
@@ -66,7 +264,7 @@ type SignEvent {
 }
 
 enum OfferStatus {
-  SUCCESS,
+  SUCCESS
   FAIL
 }
 
@@ -186,10 +384,15 @@ scalar Upload
 scalar URL
 # String-represented UUID.
 scalar UUID
+scalar Object
 
 type File {
-  """signedUrl is valid for 30 minutes after upload, don't hang on to this."""
+  """
+  signedUrl is valid for 30 minutes after upload, don't hang on to this.
+  """
   signedUrl: String!
-  """S3 key that can be used to retreive new signed urls in the future."""
+  """
+  S3 key that can be used to retreive new signed urls in the future.
+  """
   key: String!
 }

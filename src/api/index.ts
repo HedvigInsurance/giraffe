@@ -3,12 +3,21 @@ import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
   BankIdStatus,
+  ChatResponseAudioInput,
   ChatResponseFileInput,
   InsuranceStatus,
   InsuranceType,
+  MessageBodyChoicesCore,
+  MessageBodySingleSelect,
   PerilCategory,
   SignState,
 } from '../typings/generated-graphql-types'
+import {
+  ChatResponseSingleSelectInput,
+  ChatResponseTextInput,
+  ChatState,
+  MessageBody,
+} from './../typings/generated-graphql-types'
 
 interface InsuranceDto {
   currentTotalPrice: number
@@ -88,36 +97,43 @@ interface DirectDebitOrderInfoDto {
   orderId: string
 }
 
-interface TrackingDto {
-  utmSource?: string
-  utmMedium?: string
-  utmContent?: string[]
-  utmCampaign?: string
-  utmTerm?: string[]
-}
-
-interface MessageBodyDto {
-  text: string
-}
-
 interface MessageHeaderDto {
   messageId: string
-  fromId: string
+  fromId: number
   timeStamp: string
   richTextChatCompatible: boolean
   editAllowed: boolean
   shouldRequestPushNotifications: boolean
+  pollingInterval: number
+  loadingIndicator: string
+}
+
+interface AvatarDto {
+  name: string
+  URL: string
+  width: number
+  height: number
+  duration: number
 }
 
 export interface MessageDto {
   id: string
   globalId: string
   header: MessageHeaderDto
-  body: MessageBodyDto
+  body: MessageBody
 }
 
 export interface ChatDto {
+  state: ChatState
   messages: MessageDto[]
+}
+
+interface TrackingDto {
+  utmSource?: string
+  utmMedium?: string
+  utmContent?: string[]
+  utmCampaign?: string
+  utmTerm?: string[]
 }
 
 type CallApi = (
@@ -147,13 +163,19 @@ const callApi: CallApi = async (url, options = {}) => {
   }
 
   const res = await fetch(`${config.BASE_URL}${url}`, requestOptions)
-  validateStatus(res)
+  await validateStatus(res)
   return res
 }
 
-const checkStatus = (res: Response) => {
+const checkStatus = async (res: Response) => {
   if (res.status > 300) {
-    throw new Error(`Failed to fetch, status: ${res.status}`)
+    throw new Error(
+      `Failed to fetch, status: ${res.status} ${JSON.stringify(
+        await res.text(),
+        null,
+        4,
+      )}`,
+    )
   }
 }
 
@@ -336,6 +358,87 @@ const getChat = async (
   return data.json()
 }
 
+const setChatResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseTextInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseMessageWithText = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      text: responseInput.body.text,
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithText, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
+}
+
+export const setChatSingleSelectResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseSingleSelectInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseBody = responseMessage.body as MessageBodySingleSelect
+  const selectedChoice = responseBody.choices!.find(
+    (choice) => choice!.value === responseInput.body.selectedValue,
+  ) as MessageBodyChoicesCore
+
+  selectedChoice.selected = true
+
+  const otherChoices = responseBody.choices!.filter(
+    (choice) => choice!.value === responseInput.body.selectedValue,
+  )
+
+  const responseMessageWithSelectedChoice = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      choices: [selectedChoice, ...otherChoices],
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithSelectedChoice, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
+}
+
 export const setChatFileResponse = async (
   token: string,
   headers: ForwardHeaders,
@@ -370,6 +473,76 @@ export const setChatFileResponse = async (
   })
 
   return data.status === 204
+}
+
+export const setChatAudioResponse = async (
+  token: string,
+  headers: ForwardHeaders,
+  responseInput: ChatResponseAudioInput,
+): Promise<boolean> => {
+  const { messages } = await getChat(token, headers)
+
+  const responseMessage = messages.find(
+    (message) => String(message.globalId) === String(responseInput.globalId),
+  )
+
+  if (!responseMessage) {
+    throw new Error("Tried to respond to a message that doesn't exist")
+  }
+
+  const responseMessageWithAudio = {
+    ...responseMessage,
+    body: {
+      ...responseMessage.body,
+      type: 'audio',
+      url: responseInput.body.url,
+    },
+  }
+
+  const data = await callApi('/response', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(responseMessageWithAudio, null, 4),
+    },
+    token,
+  })
+
+  return data.status === 204
+}
+
+const resetConversation = async (token: string, headers: ForwardHeaders) => {
+  await callApi('/chat/reset', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
+  })
+}
+
+const editLastResponse = async (token: string, headers: ForwardHeaders) => {
+  await callApi('/chat/edit', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
+  })
+}
+
+const getAvatars = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<AvatarDto[]> => {
+  const res = await callApi('/avatars', {
+    mergeOptions: {
+      method: 'GET',
+      headers: (headers as any) as RequestInit['headers'],
+    },
+    token,
+  })
+  return res.json()
 }
 
 const registerCampaign = (
@@ -429,6 +602,7 @@ const postPhoneNumber = (
   })
 
 export {
+  setChatResponse,
   getInsurance,
   getUser,
   logoutUser,
@@ -441,8 +615,12 @@ export {
   getCashbackOptions,
   setOfferClosed,
   registerDirectDebit,
+  getChat,
+  getAvatars,
+  resetConversation,
+  editLastResponse,
   registerCampaign,
   assignTrackingId,
   postEmail,
-  postPhoneNumber
+  postPhoneNumber,
 }

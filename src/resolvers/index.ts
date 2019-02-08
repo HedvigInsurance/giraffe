@@ -10,16 +10,35 @@ import {
   subscribeToSignStatus,
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
+import { avatars } from './avatars'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
-import { sendChatFileResponse } from './chatResponse'
+import {
+  sendChatAudioResponse,
+  sendChatFileResponse,
+  sendChatSingleSelectResponse,
+  sendChatTextResponse,
+} from './chatResponse'
+import { chatState, subscribeToChatState } from './chatState'
 import { createSession, createSessionV2 } from './createSession'
+import {
+  currentChatResponse,
+  subscribeToCurrentChatResponse,
+} from './currentChatResponse'
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { logout } from './logout'
 import { member, updateEmail, updatePhoneNumber } from './member'
+import {
+  __resolveMessageBodyChoicesType,
+  __resolveType as __resolveMessageBodyType,
+  editLastResponse,
+  messages,
+  resetConversation,
+  subscribeToMessage,
+} from './messages'
 import { offerClosed } from './offerClosed'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
@@ -35,6 +54,10 @@ const resolvers: Resolver = {
     file,
     directDebitStatus,
     cashbackOptions,
+    messages,
+    chatState,
+    currentChatResponse,
+    avatars,
   },
   Mutation: {
     logout,
@@ -46,19 +69,33 @@ const resolvers: Resolver = {
     selectCashbackOption,
     offerClosed,
     startDirectDebitRegistration,
+    sendChatTextResponse,
+    sendChatSingleSelectResponse,
     sendChatFileResponse,
+    sendChatAudioResponse,
+    resetConversation,
+    editLastResponse,
     updateEmail,
-    updatePhoneNumber
+    updatePhoneNumber,
   },
   Subscription: {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
+    messages: subscribeToMessage,
+    currentChatResponse: subscribeToCurrentChatResponse,
+    chatState: subscribeToChatState,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,
   },
   SignEvent: {
     status: getSignStatusFromSignEvent,
+  },
+  MessageBody: {
+    __resolveType: __resolveMessageBodyType,
+  },
+  MessageBodyChoices: {
+    __resolveType: __resolveMessageBodyChoicesType,
   },
 }
 

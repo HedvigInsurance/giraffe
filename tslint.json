@@ -6,12 +6,10 @@
     "object-literal-sort-keys": false,
     "interface-name": false,
     "no-submodule-imports": false,
-    "no-implicit-dependencies": true,
+    "no-implicit-dependencies": [true, "dev"],
     "variable-name": [true, "allow-leading-underscore"]
   },
   "linterOptions": {
-    "exclude": [
-      "node_modules/**"
-    ]
+    "exclude": ["node_modules/**"]
   }
 }
