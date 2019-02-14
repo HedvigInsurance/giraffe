@@ -199,6 +199,7 @@ const getInsurance = async (
     },
     token,
   })
+
   return data.json()
 }
 
@@ -576,9 +577,9 @@ const assignTrackingId = (
 const postEmail = (
   token: string,
   headers: ForwardHeaders,
-  body: { newEmail: string },
+  body: { email: string },
 ) =>
-  callApi('/member/updateEmail', {
+  callApi('/member/email', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
@@ -590,9 +591,9 @@ const postEmail = (
 const postPhoneNumber = (
   token: string,
   headers: ForwardHeaders,
-  body: { newPhoneNumber: string },
+  body: { phoneNumber: string },
 ) =>
-  callApi('/member/updatePhoneNumber', {
+  callApi('/member/phonenumber', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',

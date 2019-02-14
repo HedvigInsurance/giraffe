@@ -390,8 +390,8 @@ export interface Mutation {
   sendChatAudioResponse: boolean;
   resetConversation: boolean;
   editLastResponse: boolean;
-  updateEmail: boolean;
-  updatePhoneNumber: boolean;
+  updateEmail: Member;
+  updatePhoneNumber: Member;
 }
 
 export interface CampaignInput {
@@ -1395,14 +1395,14 @@ export interface MutationToEditLastResponseResolver<TParent = undefined, TResult
 export interface MutationToUpdateEmailArgs {
   input: string;
 }
-export interface MutationToUpdateEmailResolver<TParent = undefined, TResult = boolean> {
+export interface MutationToUpdateEmailResolver<TParent = undefined, TResult = Member> {
   (parent: TParent, args: MutationToUpdateEmailArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToUpdatePhoneNumberArgs {
   input: string;
 }
-export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResult = boolean> {
+export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResult = Member> {
   (parent: TParent, args: MutationToUpdatePhoneNumberArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

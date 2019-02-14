@@ -24,25 +24,27 @@ const member: QueryToMemberResolver = async (
 const updateEmail: MutationToUpdateEmailResolver = async (
   _root,
   { input },
-  { getToken, headers },
+  { getToken, headers, ...rest },
+  info,
 ) => {
   const token = getToken()
   await postEmail(token, headers, {
-    newEmail: input,
+    email: input,
   })
-  return true
+  return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
 const updatePhoneNumber: MutationToUpdatePhoneNumberResolver = async (
   _root,
   { input },
-  { getToken, headers },
+  { getToken, headers, ...rest },
+  info,
 ) => {
   const token = getToken()
   await postPhoneNumber(token, headers, {
-    newPhoneNumber: input,
+    phoneNumber: input,
   })
-  return true
+  return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
 export { member, updateEmail, updatePhoneNumber }
