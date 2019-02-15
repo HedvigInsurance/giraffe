@@ -14,6 +14,7 @@ const member: QueryToMemberResolver = async (
   const memberResponse = await getUser(token, headers)
 
   return {
+    id: memberResponse.memberId,
     firstName: memberResponse.firstName,
     lastName: memberResponse.lastName,
     email: memberResponse.email,

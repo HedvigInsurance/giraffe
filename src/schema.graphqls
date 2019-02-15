@@ -310,6 +310,7 @@ type Insurance {
 }
 
 type Member {
+  id: ID
   firstName: String
   lastName: String
   email: String
