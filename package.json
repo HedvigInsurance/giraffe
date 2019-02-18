@@ -12,9 +12,10 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "@sentry/node": "^4.2.4",
-    "@types/ramda": "^0.25.41",
     "@types/koa-compress": "^2.0.8",
+    "@types/ramda": "^0.25.41",
     "apollo-link": "^1.2.6",
+    "apollo-link-context": "^1.0.14",
     "apollo-link-http": "^1.5.5",
     "apollo-link-redis-cache": "0.0.2",
     "apollo-server-core": "^2.1.0",
