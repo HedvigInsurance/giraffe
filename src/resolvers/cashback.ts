@@ -1,4 +1,4 @@
-import { getUser } from '../api'
+import { getCashbackOptions, getUser } from '../api'
 import { QueryToCashbackResolver } from '../typings/generated-graphql-types'
 
 const cashback: QueryToCashbackResolver = async (
@@ -8,10 +8,19 @@ const cashback: QueryToCashbackResolver = async (
 ) => {
   const token = getToken()
   const user = await getUser(token, headers)
-  return {
-    name: user.selectedCashback,
-    imageUrl: user.selectedCashbackImageUrl,
+  const options = await getCashbackOptions(token, headers)
+
+  const cashback = options.find(
+    (cashback) => cashback.name === user.selectedCashback,
+  )
+
+  if (!cashback) {
+    throw new Error(
+      `Couldn't find cashback for user with name: ${user.selectedCashback}`,
+    )
   }
+
+  return cashback
 }
 
 export { cashback }
