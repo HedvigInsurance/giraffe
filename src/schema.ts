@@ -1,6 +1,7 @@
 import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { createCacheLink } from 'apollo-link-redis-cache'
+import { setContext } from 'apollo-link-context'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
 import { GraphQLSchema } from 'graphql'
@@ -79,20 +80,26 @@ const makeSchema = async () => {
     /* noop */
   }
 
-  const paymentServiceLink = createHttpLink({
-    uri: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
-    fetch: fetch as any,
-  })
-  let paymentServiceSchema: GraphQLSchema | undefined
-  try {
-    paymentServiceSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(paymentServiceLink),
-      link: paymentServiceLink
-    })
-  } catch (e) {
-    /* ¯\_(ツ)_/¯ */
-  }
+  const authorizationContextLink = setContext((_, previousContext) => ({
+    headers: {
+      authorization: `Bearer ${previousContext.graphqlContext &&
+        previousContext.graphqlContext.getToken &&
+        previousContext.graphqlContext.getToken()}`,
+    },
+  }))
 
+  const paymentServiceLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let paymentServiceSchema: GraphQLSchema | undefined
+  paymentServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(paymentServiceLink),
+    link: paymentServiceLink,
+  })
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     resolvers: {
@@ -106,7 +113,7 @@ const makeSchema = async () => {
       transformedTranslationSchema,
       localSchema,
       dontPanicSchema,
-      paymentServiceSchema
+      paymentServiceSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
 
