@@ -15,7 +15,9 @@ const cashback: QueryToCashbackResolver = async (
   )
 
   if (!cashback) {
-    return null
+    throw new Error(
+      `Couldn't find cashback for user with name: ${user.selectedCashback}`,
+    )
   }
 
   return cashback
