@@ -15,9 +15,10 @@ const cashback: QueryToCashbackResolver = async (
   )
 
   if (!cashback) {
-    throw new Error(
-      `Couldn't find cashback for user with name: ${user.selectedCashback}`,
-    )
+    return {
+      name: null,
+      imageUrl: null
+    }
   }
 
   return cashback
