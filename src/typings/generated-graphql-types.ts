@@ -14,12 +14,17 @@ import { GraphQLResolveInfo, GraphQLScalarType } from 'graphql';
  *******************************/
 export interface Query {
   insurance: Insurance;
-  cashback: Cashback;
+  cashback?: Cashback;
   cashbackOptions: Array<Cashback | null>;
   signStatus?: SignStatus;
   member: Member;
   gifs: Array<Gif | null>;
   file: File;
+  
+  /**
+   * 
+   * @deprecated Replaced with BankAccount.directDebitStatus
+   */
   directDebitStatus: DirectDebitStatus;
   messages: Array<Message | null>;
   currentChatResponse?: ChatResponse;
@@ -109,6 +114,7 @@ export enum SignState {
 }
 
 export interface Member {
+  id?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -574,7 +580,7 @@ export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insuran
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToCashbackResolver<TParent = undefined, TResult = Cashback> {
+export interface QueryToCashbackResolver<TParent = undefined, TResult = Cashback | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -808,10 +814,15 @@ export interface CollectStatusToCodeResolver<TParent = CollectStatus, TResult = 
 }
 
 export interface MemberTypeResolver<TParent = Member> {
+  id?: MemberToIdResolver<TParent>;
   firstName?: MemberToFirstNameResolver<TParent>;
   lastName?: MemberToLastNameResolver<TParent>;
   email?: MemberToEmailResolver<TParent>;
   phoneNumber?: MemberToPhoneNumberResolver<TParent>;
+}
+
+export interface MemberToIdResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MemberToFirstNameResolver<TParent = Member, TResult = string | null> {
