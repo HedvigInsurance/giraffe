@@ -1,6 +1,6 @@
 type Query {
   insurance: Insurance!
-  cashback: Cashback!
+  cashback: Cashback
   cashbackOptions: [Cashback]!
   signStatus: SignStatus
   member: Member!
