@@ -31,6 +31,7 @@ type Mutation {
   editLastResponse: Boolean!
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
+  activateAtDate(id: UUID!, activationDate: String! ): Boolean!
 }
 
 type Subscription {

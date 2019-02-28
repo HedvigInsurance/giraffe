@@ -11,6 +11,7 @@ import {
   MessageBodySingleSelect,
   PerilCategory,
   SignState,
+  UUID,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -74,6 +75,11 @@ interface CreateProductDto {
   currentInsurer?: string
   houseHoldSize: number
   livingSpace: number
+}
+
+interface ActivateInsuranceRequestDto {
+  insuranceId: UUID
+  activationDate: string
 }
 
 interface CashbackDto {
@@ -240,6 +246,21 @@ const createProduct = async (
     token,
   })
   return data.json()
+}
+
+const activateInsuranceAtDate = async (
+  token: string,
+  headers: ForwardHeaders,
+  body: ActivateInsuranceRequestDto,
+) => {
+  await callApi('/insurance/activateAtDate', {
+    mergeOptions: {
+      method: 'POST',
+      headers: (headers as any) as RequestInit['headers'],
+      body: JSON.stringify(body),
+    },
+    token,
+  })
 }
 
 const websign = async (
@@ -624,4 +645,5 @@ export {
   assignTrackingId,
   postEmail,
   postPhoneNumber,
+  activateInsuranceAtDate,
 }

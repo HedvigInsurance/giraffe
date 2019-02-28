@@ -1,7 +1,7 @@
 import { ApolloLink } from 'apollo-link'
+import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
 import { createCacheLink } from 'apollo-link-redis-cache'
-import { setContext } from 'apollo-link-context'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
 import { GraphQLSchema } from 'graphql'
