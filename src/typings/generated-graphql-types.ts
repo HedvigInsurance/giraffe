@@ -33,6 +33,7 @@ export interface Query {
 }
 
 export interface Insurance {
+  id?: UUID;
   address?: string;
   postalNumber?: string;
   monthlyCost?: number;
@@ -48,6 +49,8 @@ export interface Insurance {
   currentInsurerName?: string;
   perilCategories?: Array<PerilCategory | null>;
 }
+
+export type UUID = any;
 
 export enum InsuranceStatus {
   PENDING = 'PENDING',
@@ -409,8 +412,6 @@ export interface CampaignInput {
   name?: string;
 }
 
-export type UUID = any;
-
 export interface SessionInformation {
   token: string;
   memberId: string;
@@ -510,6 +511,7 @@ export interface SignEvent {
 export interface Resolver {
   Query?: QueryTypeResolver;
   Insurance?: InsuranceTypeResolver;
+  UUID?: GraphQLScalarType;
   LocalDate?: GraphQLScalarType;
   PerilCategory?: PerilCategoryTypeResolver;
   Peril?: PerilTypeResolver;
@@ -554,7 +556,6 @@ export interface Resolver {
   Avatar?: AvatarTypeResolver;
   Object?: GraphQLScalarType;
   Mutation?: MutationTypeResolver;
-  UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
   URL?: GraphQLScalarType;
@@ -632,6 +633,7 @@ export interface QueryToAvatarsResolver<TParent = undefined, TResult = Array<Ava
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {
+  id?: InsuranceToIdResolver<TParent>;
   address?: InsuranceToAddressResolver<TParent>;
   postalNumber?: InsuranceToPostalNumberResolver<TParent>;
   monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
@@ -646,6 +648,10 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   policyUrl?: InsuranceToPolicyUrlResolver<TParent>;
   currentInsurerName?: InsuranceToCurrentInsurerNameResolver<TParent>;
   perilCategories?: InsuranceToPerilCategoriesResolver<TParent>;
+}
+
+export interface InsuranceToIdResolver<TParent = Insurance, TResult = UUID | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {

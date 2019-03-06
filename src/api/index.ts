@@ -21,6 +21,7 @@ import {
 } from './../typings/generated-graphql-types'
 
 interface InsuranceDto {
+  id: UUID
   currentTotalPrice: number
   addressStreet: string
   zipCode: string

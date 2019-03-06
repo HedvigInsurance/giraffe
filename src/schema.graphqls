@@ -294,6 +294,7 @@ input SignInput {
 }
 
 type Insurance {
+  id: UUID
   address: String
   postalNumber: String
   monthlyCost: Int

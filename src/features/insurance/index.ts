@@ -11,6 +11,7 @@ const loadInsurance = async (
     getUser(token, headers),
   ])
   return {
+    id: insuranceResponse.id,
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
     currentInsurerName: insuranceResponse.currentInsurerName,
