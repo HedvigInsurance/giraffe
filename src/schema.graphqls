@@ -6,7 +6,8 @@ type Query {
   member: Member!
   gifs(query: String!): [Gif]!
   file(key: String!): File!
-  directDebitStatus: DirectDebitStatus! @deprecated(reason: "Replaced with BankAccount.directDebitStatus")
+  directDebitStatus: DirectDebitStatus!
+    @deprecated(reason: "Replaced with BankAccount.directDebitStatus")
   messages: [Message]!
   currentChatResponse: ChatResponse
   chatState: ChatState!
@@ -31,7 +32,7 @@ type Mutation {
   editLastResponse: Boolean!
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
-  activateAtDate(id: UUID!, activationDate: String! ): Boolean!
+  activateOn(date: Date!, insuranceId: UUID!): Boolean!
 }
 
 type Subscription {
