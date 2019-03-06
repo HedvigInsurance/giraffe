@@ -28,7 +28,7 @@ import {
 import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
-import { activateAtDate, insurance } from './insurance'
+import { activateOn, insurance } from './insurance'
 import { logout } from './logout'
 import { member, updateEmail, updatePhoneNumber } from './member'
 import {
@@ -77,7 +77,7 @@ const resolvers: Resolver = {
     editLastResponse,
     updateEmail,
     updatePhoneNumber,
-    activateAtDate,
+    activateOn,
   },
   Subscription: {
     offer: subscribeToOffer,

@@ -78,8 +78,8 @@ interface CreateProductDto {
 }
 
 interface ActivateInsuranceRequestDto {
+  date: string
   insuranceId: UUID
-  activationDate: string
 }
 
 interface CashbackDto {
