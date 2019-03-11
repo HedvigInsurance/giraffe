@@ -25,7 +25,6 @@ import {
   currentChatResponse,
   subscribeToCurrentChatResponse,
 } from './currentChatResponse'
-import { directDebitStatus } from './directDebitStatus'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
@@ -52,7 +51,6 @@ const resolvers: Resolver = {
     signStatus: getSignStatus,
     gifs,
     file,
-    directDebitStatus,
     cashbackOptions,
     messages,
     chatState,
