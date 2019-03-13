@@ -25,6 +25,7 @@ const loadInsurance = async (
     type: insuranceResponse.insuranceType,
     activeFrom: insuranceResponse.activeFrom,
     perilCategories: insuranceResponse.categories,
+    requestedStartDate: insuranceResponse.requestedStartDate,
     safetyIncreasers: user.safetyIncreasers,
   }
 }

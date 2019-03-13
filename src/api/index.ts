@@ -35,6 +35,7 @@ interface InsuranceDto {
   presaleInformationUrl: string
   currentInsurerName: string
   policyUrl: string
+  requestedStartDate: string
 }
 
 interface UserDto {
@@ -79,8 +80,7 @@ interface CreateProductDto {
 }
 
 interface ActivateInsuranceRequestDto {
-  date: string
-  insuranceId: UUID
+  requestedStartDate: string
 }
 
 interface CashbackDto {
@@ -249,12 +249,13 @@ const createProduct = async (
   return data.json()
 }
 
-const activateInsuranceAtDate = async (
+const requestInsuranceStartDate = async (
   token: string,
   headers: ForwardHeaders,
   body: ActivateInsuranceRequestDto,
 ) => {
-  await callApi('/insurance/activateAtDate', {
+  const user = await getUser(token, headers)
+  await callApi(`/insurance/${user.memberId}/requestStartDate`, {
     mergeOptions: {
       method: 'POST',
       headers: (headers as any) as RequestInit['headers'],
@@ -646,5 +647,5 @@ export {
   assignTrackingId,
   postEmail,
   postPhoneNumber,
-  activateInsuranceAtDate,
+  requestInsuranceStartDate,
 }

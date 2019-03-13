@@ -32,7 +32,7 @@ type Mutation {
   editLastResponse: Boolean!
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
-  activateOn(date: LocalDate!, insuranceId: UUID!): Boolean!
+  requestStartDate(requestedStartDate: LocalDate!): Boolean!
 }
 
 type Subscription {
@@ -308,6 +308,7 @@ type Insurance {
   presaleInformationUrl: String
   policyUrl: String
   currentInsurerName: String
+  requestedStartDate: LocalDate
 
   perilCategories: [PerilCategory]
 }

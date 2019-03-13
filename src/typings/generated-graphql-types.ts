@@ -47,6 +47,7 @@ export interface Insurance {
   presaleInformationUrl?: string;
   policyUrl?: string;
   currentInsurerName?: string;
+  requestedStartDate?: LocalDate;
   perilCategories?: Array<PerilCategory | null>;
 }
 
@@ -401,7 +402,7 @@ export interface Mutation {
   editLastResponse: boolean;
   updateEmail: Member;
   updatePhoneNumber: Member;
-  activateOn: boolean;
+  requestStartDate: boolean;
 }
 
 export interface CampaignInput {
@@ -647,6 +648,7 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   presaleInformationUrl?: InsuranceToPresaleInformationUrlResolver<TParent>;
   policyUrl?: InsuranceToPolicyUrlResolver<TParent>;
   currentInsurerName?: InsuranceToCurrentInsurerNameResolver<TParent>;
+  requestedStartDate?: InsuranceToRequestedStartDateResolver<TParent>;
   perilCategories?: InsuranceToPerilCategoriesResolver<TParent>;
 }
 
@@ -703,6 +705,10 @@ export interface InsuranceToPolicyUrlResolver<TParent = Insurance, TResult = str
 }
 
 export interface InsuranceToCurrentInsurerNameResolver<TParent = Insurance, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToRequestedStartDateResolver<TParent = Insurance, TResult = LocalDate | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1320,7 +1326,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   editLastResponse?: MutationToEditLastResponseResolver<TParent>;
   updateEmail?: MutationToUpdateEmailResolver<TParent>;
   updatePhoneNumber?: MutationToUpdatePhoneNumberResolver<TParent>;
-  activateOn?: MutationToActivateOnResolver<TParent>;
+  requestStartDate?: MutationToRequestStartDateResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1425,12 +1431,11 @@ export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResul
   (parent: TParent, args: MutationToUpdatePhoneNumberArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToActivateOnArgs {
-  date: LocalDate;
-  insuranceId: UUID;
+export interface MutationToRequestStartDateArgs {
+  requestedStartDate: LocalDate;
 }
-export interface MutationToActivateOnResolver<TParent = undefined, TResult = boolean> {
-  (parent: TParent, args: MutationToActivateOnArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+export interface MutationToRequestStartDateResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToRequestStartDateArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

@@ -1,7 +1,7 @@
-import { activateInsuranceAtDate } from '../api'
+import { requestInsuranceStartDate } from '../api'
 import { loadInsurance } from '../features/insurance'
 import {
-  MutationToActivateOnResolver,
+  MutationToRequestStartDateResolver,
   QueryToInsuranceResolver,
 } from '../typings/generated-graphql-types'
 
@@ -14,17 +14,16 @@ const insurance: QueryToInsuranceResolver = async (
   return loadInsurance(token, headers)
 }
 
-const activateOn: MutationToActivateOnResolver = async (
+const requestStartDate: MutationToRequestStartDateResolver = async (
   _root,
-  { date, insuranceId },
+  { requestedStartDate },
   { getToken, headers },
 ) => {
   const token = getToken()
-  await activateInsuranceAtDate(token, headers, {
-    date,
-    insuranceId,
+  await requestInsuranceStartDate(token, headers, {
+    requestedStartDate,
   })
   return true
 }
 
-export { insurance, activateOn }
+export { insurance, requestStartDate }
