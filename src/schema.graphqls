@@ -6,8 +6,6 @@ type Query {
   member: Member!
   gifs(query: String!): [Gif]!
   file(key: String!): File!
-  directDebitStatus: DirectDebitStatus!
-    @deprecated(reason: "Replaced with BankAccount.directDebitStatus")
   messages: [Message]!
   currentChatResponse: ChatResponse
   chatState: ChatState!
@@ -268,11 +266,6 @@ type SignEvent {
 enum OfferStatus {
   SUCCESS
   FAIL
-}
-
-enum DirectDebitStatus {
-  NEEDS_SETUP
-  ACTIVE
 }
 
 input OfferInput {
