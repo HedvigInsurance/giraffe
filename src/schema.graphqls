@@ -30,7 +30,7 @@ type Mutation {
   editLastResponse: Boolean!
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
-  requestStartDate(requestedStartDate: LocalDate!): Boolean!
+  requestStartDate(requestedStartDate: LocalDate): Boolean!
 }
 
 type Subscription {

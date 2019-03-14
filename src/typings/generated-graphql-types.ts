@@ -20,12 +20,6 @@ export interface Query {
   member: Member;
   gifs: Array<Gif | null>;
   file: File;
-  
-  /**
-   * 
-   * @deprecated Replaced with BankAccount.directDebitStatus
-   */
-  directDebitStatus: DirectDebitStatus;
   messages: Array<Message | null>;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
@@ -140,11 +134,6 @@ export interface File {
    * S3 key that can be used to retreive new signed urls in the future.
    */
   key: string;
-}
-
-export enum DirectDebitStatus {
-  NEEDS_SETUP = 'NEEDS_SETUP',
-  ACTIVE = 'ACTIVE'
 }
 
 export interface Message {
@@ -572,7 +561,6 @@ export interface QueryTypeResolver<TParent = undefined> {
   member?: QueryToMemberResolver<TParent>;
   gifs?: QueryToGifsResolver<TParent>;
   file?: QueryToFileResolver<TParent>;
-  directDebitStatus?: QueryToDirectDebitStatusResolver<TParent>;
   messages?: QueryToMessagesResolver<TParent>;
   currentChatResponse?: QueryToCurrentChatResponseResolver<TParent>;
   chatState?: QueryToChatStateResolver<TParent>;
@@ -611,10 +599,6 @@ export interface QueryToFileArgs {
 }
 export interface QueryToFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: QueryToFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface QueryToDirectDebitStatusResolver<TParent = undefined, TResult = DirectDebitStatus> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface QueryToMessagesResolver<TParent = undefined, TResult = Array<Message | null>> {
@@ -1432,7 +1416,7 @@ export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResul
 }
 
 export interface MutationToRequestStartDateArgs {
-  requestedStartDate: LocalDate;
+  requestedStartDate?: LocalDate;
 }
 export interface MutationToRequestStartDateResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToRequestStartDateArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
