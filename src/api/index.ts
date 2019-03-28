@@ -33,6 +33,7 @@ interface InsuranceDto {
   presaleInformationUrl: string
   currentInsurerName: string
   policyUrl: string
+  livingSpace: number
 }
 
 interface UserDto {

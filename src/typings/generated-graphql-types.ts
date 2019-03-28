@@ -20,12 +20,6 @@ export interface Query {
   member: Member;
   gifs: Array<Gif | null>;
   file: File;
-  
-  /**
-   * 
-   * @deprecated Replaced with BankAccount.directDebitStatus
-   */
-  directDebitStatus: DirectDebitStatus;
   messages: Array<Message | null>;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
@@ -46,6 +40,7 @@ export interface Insurance {
   presaleInformationUrl?: string;
   policyUrl?: string;
   currentInsurerName?: string;
+  livingSpace?: number;
   perilCategories?: Array<PerilCategory | null>;
 }
 
@@ -136,11 +131,6 @@ export interface File {
    * S3 key that can be used to retreive new signed urls in the future.
    */
   key: string;
-}
-
-export enum DirectDebitStatus {
-  NEEDS_SETUP = 'NEEDS_SETUP',
-  ACTIVE = 'ACTIVE'
 }
 
 export interface Message {
@@ -569,7 +559,6 @@ export interface QueryTypeResolver<TParent = undefined> {
   member?: QueryToMemberResolver<TParent>;
   gifs?: QueryToGifsResolver<TParent>;
   file?: QueryToFileResolver<TParent>;
-  directDebitStatus?: QueryToDirectDebitStatusResolver<TParent>;
   messages?: QueryToMessagesResolver<TParent>;
   currentChatResponse?: QueryToCurrentChatResponseResolver<TParent>;
   chatState?: QueryToChatStateResolver<TParent>;
@@ -610,10 +599,6 @@ export interface QueryToFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: QueryToFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToDirectDebitStatusResolver<TParent = undefined, TResult = DirectDebitStatus> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface QueryToMessagesResolver<TParent = undefined, TResult = Array<Message | null>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
@@ -644,6 +629,7 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   presaleInformationUrl?: InsuranceToPresaleInformationUrlResolver<TParent>;
   policyUrl?: InsuranceToPolicyUrlResolver<TParent>;
   currentInsurerName?: InsuranceToCurrentInsurerNameResolver<TParent>;
+  livingSpace?: InsuranceToLivingSpaceResolver<TParent>;
   perilCategories?: InsuranceToPerilCategoriesResolver<TParent>;
 }
 
@@ -696,6 +682,10 @@ export interface InsuranceToPolicyUrlResolver<TParent = Insurance, TResult = str
 }
 
 export interface InsuranceToCurrentInsurerNameResolver<TParent = Insurance, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToLivingSpaceResolver<TParent = Insurance, TResult = number | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

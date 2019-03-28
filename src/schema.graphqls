@@ -299,6 +299,7 @@ type Insurance {
   presaleInformationUrl: String
   policyUrl: String
   currentInsurerName: String
+  livingSpace: Int
 
   perilCategories: [PerilCategory]
 }

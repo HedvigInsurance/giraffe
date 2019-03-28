@@ -24,6 +24,7 @@ const loadInsurance = async (
     type: insuranceResponse.insuranceType,
     activeFrom: insuranceResponse.activeFrom,
     perilCategories: insuranceResponse.categories,
+    livingSpace: insuranceResponse.livingSpace,
     safetyIncreasers: user.safetyIncreasers,
   }
 }
