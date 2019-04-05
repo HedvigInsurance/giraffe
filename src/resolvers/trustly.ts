@@ -13,7 +13,7 @@ const startDirectDebitRegistration: MutationToStartDirectDebitRegistrationResolv
     lastName: user.lastName,
     personalNumber: user.ssn,
   })
-  return directDebitResponse.url
+  return `${directDebitResponse.url}&gui=native`
 }
 
 export { startDirectDebitRegistration }
