@@ -11,7 +11,7 @@
   },
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@sentry/node": "^4.2.4",
+    "@sentry/node": "^5.0.6",
     "@types/koa-compress": "^2.0.8",
     "@types/ramda": "^0.25.41",
     "apollo-link": "^1.2.6",
