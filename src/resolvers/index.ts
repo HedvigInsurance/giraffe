@@ -13,6 +13,7 @@ import { Resolver } from '../typings/generated-graphql-types'
 import { avatars } from './avatars'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
+import { chatActions } from './chatActions'
 import {
   sendChatAudioResponse,
   sendChatFileResponse,
@@ -56,6 +57,7 @@ const resolvers: Resolver = {
     chatState,
     currentChatResponse,
     avatars,
+    chatActions,
   },
   Mutation: {
     logout,

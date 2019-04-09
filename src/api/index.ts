@@ -127,6 +127,13 @@ export interface MessageDto {
 export interface ChatDto {
   state: ChatState
   messages: MessageDto[]
+  fabOptions: FABOption[]
+}
+
+interface FABOption {
+  text: string
+  triggerUrl: string
+  enabled: boolean
 }
 
 interface TrackingDto {
