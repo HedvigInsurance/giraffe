@@ -10,6 +10,7 @@ const loadInsurance = async (
     getInsurance(token, headers),
     getUser(token, headers),
   ])
+  console.log(insuranceResponse)
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
