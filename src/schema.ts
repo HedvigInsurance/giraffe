@@ -100,6 +100,21 @@ const makeSchema = async () => {
     schema: await introspectSchema(paymentServiceLink),
     link: paymentServiceLink,
   })
+
+  const appContentServiceLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+
+  let appContentServiceSchema: GraphQLSchema | undefined
+  appContentServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(appContentServiceLink),
+    link: appContentServiceLink,
+  })
+
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     resolvers: {
@@ -114,6 +129,7 @@ const makeSchema = async () => {
       localSchema,
       dontPanicSchema,
       paymentServiceSchema,
+      appContentServiceSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
 
