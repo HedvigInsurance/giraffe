@@ -10,6 +10,7 @@ type Query {
   currentChatResponse: ChatResponse
   chatState: ChatState!
   avatars: [Avatar]
+  chatActions: [ChatAction]
 }
 
 type Mutation {
@@ -359,6 +360,12 @@ type SignStatus {
 type CollectStatus {
   status: BankIdStatus
   code: String
+}
+
+type ChatAction {
+  text: String
+  triggerUrl: URL
+  enabled: Boolean
 }
 
 enum BankIdStatus {
