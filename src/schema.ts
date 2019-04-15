@@ -46,7 +46,7 @@ const makeSchema = async () => {
     fetch: fetch as any,
   })
 
-  logger.info('Introspecting graphcsm schema')
+  logger.info('Introspecting graphcms schema')
   const translationSchema = await introspectSchema(translationsLink)
   logger.info('Graphcms schema introspected')
 
