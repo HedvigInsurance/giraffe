@@ -24,6 +24,7 @@ export interface Query {
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
   avatars?: Array<Avatar | null>;
+  chatActions?: Array<ChatAction | null>;
 }
 
 export interface Insurance {
@@ -370,6 +371,14 @@ export interface Avatar {
 
 export type Object = any;
 
+export interface ChatAction {
+  text?: string;
+  triggerUrl?: URL;
+  enabled?: boolean;
+}
+
+export type URL = any;
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -424,8 +433,6 @@ export interface SignInput {
 }
 
 export type Upload = any;
-
-export type URL = any;
 
 export interface ChatResponseTextInput {
   globalId: string;
@@ -542,11 +549,12 @@ export interface Resolver {
   ChatState?: ChatStateTypeResolver;
   Avatar?: AvatarTypeResolver;
   Object?: GraphQLScalarType;
+  ChatAction?: ChatActionTypeResolver;
+  URL?: GraphQLScalarType;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
-  URL?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -563,6 +571,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   currentChatResponse?: QueryToCurrentChatResponseResolver<TParent>;
   chatState?: QueryToChatStateResolver<TParent>;
   avatars?: QueryToAvatarsResolver<TParent>;
+  chatActions?: QueryToChatActionsResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -612,6 +621,10 @@ export interface QueryToChatStateResolver<TParent = undefined, TResult = ChatSta
 }
 
 export interface QueryToAvatarsResolver<TParent = undefined, TResult = Array<Avatar | null> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToChatActionsResolver<TParent = undefined, TResult = Array<ChatAction | null> | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1282,6 +1295,24 @@ export interface AvatarToDurationResolver<TParent = Avatar, TResult = number> {
 }
 
 export interface AvatarToDataResolver<TParent = Avatar, TResult = Object | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ChatActionTypeResolver<TParent = ChatAction> {
+  text?: ChatActionToTextResolver<TParent>;
+  triggerUrl?: ChatActionToTriggerUrlResolver<TParent>;
+  enabled?: ChatActionToEnabledResolver<TParent>;
+}
+
+export interface ChatActionToTextResolver<TParent = ChatAction, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ChatActionToTriggerUrlResolver<TParent = ChatAction, TResult = URL | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ChatActionToEnabledResolver<TParent = ChatAction, TResult = boolean | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

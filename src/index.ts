@@ -3,7 +3,9 @@ dotenv.config()
 
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
+import * as proxy from 'koa-better-http-proxy'
 import * as compress from 'koa-compress'
+import * as route from 'koa-route'
 
 import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
@@ -61,6 +63,13 @@ makeSchema().then((schema) => {
   app.use(loggingMiddleware)
   server.applyMiddleware({ app })
 
+  app.use(
+    route.get(
+      '/app-content-service/*',
+      proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT || '', {}),
+    ),
+  )
+  
   logger.info('Creating server')
   const ws = createServer(app.callback())
 
