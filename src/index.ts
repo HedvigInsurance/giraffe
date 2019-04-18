@@ -38,6 +38,7 @@ const handleError = (error: GraphQLError): void => {
 }
 
 makeSchema().then((schema) => {
+  logger.info('Schema initialized')
   const server = new ApolloServer({
     schema,
     context: getWebContext,
@@ -68,7 +69,8 @@ makeSchema().then((schema) => {
       proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT || '', {}),
     ),
   )
-
+  
+  logger.info('Creating server')
   const ws = createServer(app.callback())
 
   ws.listen(config.PORT, () => {
