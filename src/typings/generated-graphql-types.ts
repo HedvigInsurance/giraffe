@@ -397,6 +397,7 @@ export interface Mutation {
   editLastResponse: boolean;
   updateEmail: Member;
   updatePhoneNumber: Member;
+  registerPushToken?: boolean;
 }
 
 export interface CampaignInput {
@@ -1334,6 +1335,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   editLastResponse?: MutationToEditLastResponseResolver<TParent>;
   updateEmail?: MutationToUpdateEmailResolver<TParent>;
   updatePhoneNumber?: MutationToUpdatePhoneNumberResolver<TParent>;
+  registerPushToken?: MutationToRegisterPushTokenResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1436,6 +1438,13 @@ export interface MutationToUpdatePhoneNumberArgs {
 }
 export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResult = Member> {
   (parent: TParent, args: MutationToUpdatePhoneNumberArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToRegisterPushTokenArgs {
+  pushToken: string;
+}
+export interface MutationToRegisterPushTokenResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToRegisterPushTokenArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

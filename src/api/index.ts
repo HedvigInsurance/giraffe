@@ -144,6 +144,10 @@ interface TrackingDto {
   utmTerm?: string[]
 }
 
+interface PushTokenDto {
+  token: string
+}
+
 type CallApi = (
   url: string,
   options?: {
@@ -610,6 +614,20 @@ const postPhoneNumber = (
     token,
   })
 
+const registerPushToken = (
+  token: string,
+  headers: ForwardHeaders,
+  body: PushTokenDto,
+) =>
+  callApi('/v2/app/push-token', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
 export {
   setChatResponse,
   getInsurance,
@@ -632,4 +650,5 @@ export {
   assignTrackingId,
   postEmail,
   postPhoneNumber,
+  registerPushToken,
 }
