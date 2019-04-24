@@ -17,7 +17,6 @@ import { makeSchema } from './schema'
 import { factory } from './utils/log'
 
 import * as Sentry from '@sentry/node'
-import { throwIfProd } from './error'
 import { getInnerErrorsFromCombinedError } from './utils/graphql-error'
 Sentry.init({
   dsn: config.SENTRY_DSN,
@@ -58,29 +57,19 @@ makeSchema().then((schema) => {
       : undefined,
   })
 
-  logger.info('Created ApolloServer')
   const app = new Koa()
-  logger.info('Created Koa App')
 
   app.use(compress())
   app.use(loggingMiddleware)
   server.applyMiddleware({ app })
-  logger.info('Applied Compress, logging and Apollo Middleware')
 
-  try {
-    app.use(
-      route.get(
-        '/app-content-service/*',
-        proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT || '', {}),
-      ),
-    )
-  } catch (e) {
-    logger.error('Failed to proxy app-content-service (Ignoring)')
-    throwIfProd(e)
-  }
-
-  logger.info('Proxied app-content-service')
-
+  app.use(
+    route.get(
+      '/app-content-service/*',
+      proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT || '', {}),
+    ),
+  )
+  
   logger.info('Creating server')
   const ws = createServer(app.callback())
 
