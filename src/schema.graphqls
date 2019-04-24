@@ -31,6 +31,7 @@ type Mutation {
   editLastResponse: Boolean!
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
+  registerPushToken(pushToken: String!): Boolean
 }
 
 type Subscription {
