@@ -628,6 +628,24 @@ const registerPushToken = (
     token,
   })
 
+const triggerFreeTextChat = (token: string, headers: ForwardHeaders) =>
+  callApi('/v2/app/fabTrigger/CHAT', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
+const triggerClaimChat = (token: string, headers: ForwardHeaders) =>
+  callApi('/v2/app/fabTrigger/REPORT_CLAIM', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
 export {
   setChatResponse,
   getInsurance,
@@ -651,4 +669,6 @@ export {
   postEmail,
   postPhoneNumber,
   registerPushToken,
+  triggerFreeTextChat,
+  triggerClaimChat,
 }

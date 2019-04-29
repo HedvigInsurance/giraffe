@@ -398,6 +398,8 @@ export interface Mutation {
   updateEmail: Member;
   updatePhoneNumber: Member;
   registerPushToken?: boolean;
+  triggerFreeTextChat?: boolean;
+  triggerClaimChat?: boolean;
 }
 
 export interface CampaignInput {
@@ -470,6 +472,10 @@ export interface ChatResponseAudioInput {
 
 export interface ChatResponseBodyAudioInput {
   url: string;
+}
+
+export interface TriggerClaimChatInput {
+  claimTypeId?: string;
 }
 
 export interface Subscription {
@@ -1336,6 +1342,8 @@ export interface MutationTypeResolver<TParent = undefined> {
   updateEmail?: MutationToUpdateEmailResolver<TParent>;
   updatePhoneNumber?: MutationToUpdatePhoneNumberResolver<TParent>;
   registerPushToken?: MutationToRegisterPushTokenResolver<TParent>;
+  triggerFreeTextChat?: MutationToTriggerFreeTextChatResolver<TParent>;
+  triggerClaimChat?: MutationToTriggerClaimChatResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1445,6 +1453,17 @@ export interface MutationToRegisterPushTokenArgs {
 }
 export interface MutationToRegisterPushTokenResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToRegisterPushTokenArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToTriggerFreeTextChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToTriggerClaimChatArgs {
+  input: TriggerClaimChatInput;
+}
+export interface MutationToTriggerClaimChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToTriggerClaimChatArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

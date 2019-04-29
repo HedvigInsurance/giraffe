@@ -32,6 +32,8 @@ type Mutation {
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
   registerPushToken(pushToken: String!): Boolean
+  triggerFreeTextChat: Boolean
+  triggerClaimChat(input: TriggerClaimChatInput!): Boolean
 }
 
 type Subscription {
@@ -40,6 +42,10 @@ type Subscription {
   messages(mostRecentTimestamp: String!): [Message]
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
+}
+
+input TriggerClaimChatInput {
+  claimTypeId: ID
 }
 
 type Message {
