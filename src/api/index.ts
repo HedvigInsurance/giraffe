@@ -1,4 +1,5 @@
 import fetch, { RequestInit, Response } from 'node-fetch'
+import { format } from 'date-fns'
 import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
@@ -216,7 +217,7 @@ const getInsurance = async (
 
   return {
     ...json,
-    activeFrom: json.activeFrom.split('.')[0]
+    activeFrom: format(json.activeFrom, 'YYYY-MM-DDTHH:mm:ss')
   }
 }
 
