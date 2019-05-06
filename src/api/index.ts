@@ -212,7 +212,12 @@ const getInsurance = async (
     token,
   })
 
-  return data.json()
+  const json = await data.json()
+
+  return {
+    ...json,
+    activeFrom: json.activeFrom.split('.')[0]
+  }
 }
 
 const getUser = async (
