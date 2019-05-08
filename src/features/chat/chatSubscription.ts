@@ -51,9 +51,9 @@ export const subscribeToChat = (
   getChat(token, headers).then((chat) => {
     let previousChat = chat
 
-    previousChat.messages = previousChat.messages = previousChat.messages.filter(
+    previousChat.messages = previousChat.messages.filter(
       (message: any) =>
-        Number(message.header.timeStamp) <= Number(mostRecentTimestamp),
+        Number(message.header.timeStamp) >= Number(mostRecentTimestamp),
     )
 
     const intervalId = setInterval(async () => {
@@ -61,7 +61,13 @@ export const subscribeToChat = (
       const newChat = await getChat(token, headers)
       logger.info(`Did interval update chat for ${memberId}`)
 
-      if (!equals(previousChat, newChat)) {
+      if (
+        !equals(
+          previousChat.messages.map((m) => m.globalId),
+          newChat.messages.map((m) => m.globalId),
+        ) ||
+        !equals(previousChat.state, newChat.state)
+      ) {
         logger.info(`Sending chat updates to ${memberId}`)
 
         listeners
@@ -73,12 +79,6 @@ export const subscribeToChat = (
 
       previousChat = newChat
     }, 500)
-
-    if (intervals.get(memberId)) {
-      logger.info(`ABORT already had a listener for ${memberId}`)
-      clearInterval(intervalId)
-      return
-    }
 
     intervals.set(memberId, intervalId)
   })
