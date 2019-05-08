@@ -2,7 +2,7 @@ import { equals } from 'ramda'
 import * as uuid from 'uuid/v1'
 import { ChatDto, getChat } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { factory } from '../../utils/log';
+import { factory } from '../../utils/log'
 
 const logger = factory.getLogger('subscriptionLogger')
 
@@ -18,12 +18,16 @@ interface SubscribeInterface {
 
 const unsubscribe = (memberId: string, listenerId: string) => () => {
   listeners.get(memberId).delete(listenerId)
-  
+
   logger.info(`Unsubscribe ${memberId}`)
-  
+
+  logger.info(
+    `Number of subscribers for ${memberId} is ${listeners.get(memberId).size}`,
+  )
+
   if (listeners.get(memberId).size === 0) {
     logger.info(`Actually did unsubscribe ${memberId}`)
-    
+
     clearInterval(intervals.get(memberId))
     intervals.delete(memberId)
     listeners.delete(memberId)
@@ -59,7 +63,7 @@ export const subscribeToChat = (
 
       if (!equals(previousChat, newChat)) {
         logger.info(`Sending chat updates to ${memberId}`)
-        
+
         listeners
           .get(memberId)
           .forEach((listener: (chat: ChatDto, previousChat: ChatDto) => void) =>
