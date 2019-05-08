@@ -53,9 +53,13 @@ export const subscribeToChat = (
     )
 
     const intervalId = setInterval(async () => {
+      logger.info(`Will interval update chat for ${memberId}`)
       const newChat = await getChat(token, headers)
+      logger.info(`Did interval update chat for ${memberId}`)
 
       if (!equals(previousChat, newChat)) {
+        logger.info(`Sending chat updates to ${memberId}`)
+        
         listeners
           .get(memberId)
           .forEach((listener: (chat: ChatDto, previousChat: ChatDto) => void) =>
