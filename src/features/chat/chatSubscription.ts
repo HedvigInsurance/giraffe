@@ -2,7 +2,7 @@ import { equals } from 'ramda'
 import * as uuid from 'uuid/v1'
 import { ChatDto, getChat } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { factory } from './utils/log';
+import { factory } from '../../utils/log';
 
 const logger = factory.getLogger('subscriptionLogger')
 
