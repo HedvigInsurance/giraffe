@@ -20,6 +20,9 @@ import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
 import { subscribeToChat } from '../features/chat/chatSubscription'
 import { transformMessages } from '../features/chat/transform'
+import { factory } from '../utils/log'
+
+const logger = factory.getLogger('messagesLogger')
 
 export const messages: QueryToMessagesResolver = async (
   _root,
@@ -118,6 +121,8 @@ export const subscribeToMessage: SubscriptionToMessagesResolver = {
 
     asyncIterator.return = (value) => {
       unsubscribe()
+
+      logger.info(`AsyncIterator returned for ${user.memberId}`)
 
       return Promise.resolve({
         done: true,
