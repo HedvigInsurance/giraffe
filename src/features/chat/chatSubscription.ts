@@ -34,7 +34,7 @@ const unsubscribe = (memberId: string, listenerId: string) => () => {
   }
 
   setTimeout(() => {
-    if (listeners.get(memberId).size === 0) {
+    if (listeners.get(memberId) && listeners.get(memberId).size === 0) {
       logger.info(`Actually did unsubscribe after 2 seconds ${memberId}`)
 
       clearInterval(intervals.get(memberId))
