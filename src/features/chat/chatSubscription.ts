@@ -74,6 +74,12 @@ export const subscribeToChat = (
       previousChat = newChat
     }, 500)
 
+    if (intervals.get(memberId)) {
+      logger.info(`ABORT already had a listener for ${memberId}`)
+      clearInterval(intervalId)
+      return
+    }
+
     intervals.set(memberId, intervalId)
   })
 
