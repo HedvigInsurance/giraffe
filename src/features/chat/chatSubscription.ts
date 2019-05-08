@@ -32,6 +32,16 @@ const unsubscribe = (memberId: string, listenerId: string) => () => {
     intervals.delete(memberId)
     listeners.delete(memberId)
   }
+
+  setTimeout(() => {
+    if (listeners.get(memberId).size === 0) {
+      logger.info(`Actually did unsubscribe after 2 seconds ${memberId}`)
+
+      clearInterval(intervals.get(memberId))
+      intervals.delete(memberId)
+      listeners.delete(memberId)
+    }
+  }, 2000)
 }
 
 export const subscribeToChat = (
