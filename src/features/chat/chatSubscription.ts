@@ -32,16 +32,6 @@ const unsubscribe = (memberId: string, listenerId: string) => () => {
     intervals.delete(memberId)
     listeners.delete(memberId)
   }
-
-  setTimeout(() => {
-    if (listeners.get(memberId) && listeners.get(memberId).size === 0) {
-      logger.info(`Actually did unsubscribe after 2 seconds ${memberId}`)
-
-      clearInterval(intervals.get(memberId))
-      intervals.delete(memberId)
-      listeners.delete(memberId)
-    }
-  }, 2000)
 }
 
 export const subscribeToChat = (
@@ -67,6 +57,14 @@ export const subscribeToChat = (
     )
 
     const intervalId = setInterval(async () => {
+      const listenersForMember = listeners.get(memberId)
+
+      if (!listenersForMember || listenersForMember.size === 0) {
+        logger.info(`Cleaning up interval for ${memberId}`)
+        clearInterval(intervalId)
+        return
+      }
+
       logger.info(`Will interval update chat for ${memberId}`)
       const newChat = await getChat(token, headers)
       logger.info(`Did interval update chat for ${memberId}`)
