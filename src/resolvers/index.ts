@@ -21,7 +21,11 @@ import {
   sendChatTextResponse,
 } from './chatResponse'
 import { chatState, subscribeToChatState } from './chatState'
-import { triggerClaimChat, triggerFreeTextChat } from './chatTriggers'
+import {
+  triggerCallMeChat,
+  triggerClaimChat,
+  triggerFreeTextChat,
+} from './chatTriggers'
 import { createSession, createSessionV2 } from './createSession'
 import {
   currentChatResponse,
@@ -82,6 +86,7 @@ const resolvers: Resolver = {
     registerPushToken,
     triggerClaimChat,
     triggerFreeTextChat,
+    triggerCallMeChat,
   },
   Subscription: {
     offer: subscribeToOffer,

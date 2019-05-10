@@ -34,6 +34,7 @@ type Mutation {
   registerPushToken(pushToken: String!): Boolean
   triggerFreeTextChat: Boolean
   triggerClaimChat(input: TriggerClaimChatInput!): Boolean
+  triggerCallMeChat: Boolean
 }
 
 type Subscription {
