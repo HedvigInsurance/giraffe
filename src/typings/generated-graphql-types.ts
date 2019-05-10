@@ -400,6 +400,7 @@ export interface Mutation {
   registerPushToken?: boolean;
   triggerFreeTextChat?: boolean;
   triggerClaimChat?: boolean;
+  triggerCallMeChat?: boolean;
 }
 
 export interface CampaignInput {
@@ -1344,6 +1345,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   registerPushToken?: MutationToRegisterPushTokenResolver<TParent>;
   triggerFreeTextChat?: MutationToTriggerFreeTextChatResolver<TParent>;
   triggerClaimChat?: MutationToTriggerClaimChatResolver<TParent>;
+  triggerCallMeChat?: MutationToTriggerCallMeChatResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1464,6 +1466,10 @@ export interface MutationToTriggerClaimChatArgs {
 }
 export interface MutationToTriggerClaimChatResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToTriggerClaimChatArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToTriggerCallMeChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

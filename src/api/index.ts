@@ -1,5 +1,5 @@
-import fetch, { RequestInit, Response } from 'node-fetch'
 import { format } from 'date-fns'
+import fetch, { RequestInit, Response } from 'node-fetch'
 import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
@@ -217,7 +217,7 @@ const getInsurance = async (
 
   return {
     ...json,
-    activeFrom: format(json.activeFrom, 'YYYY-MM-DDTHH:mm:ss')
+    activeFrom: format(json.activeFrom, 'YYYY-MM-DDTHH:mm:ss'),
   }
 }
 
@@ -652,6 +652,15 @@ const triggerClaimChat = (token: string, headers: ForwardHeaders) =>
     token,
   })
 
+const triggerCallMeChat = (token: string, headers: ForwardHeaders) =>
+  callApi('/v2/app/fabTrigger/CALL_ME', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
 export {
   setChatResponse,
   getInsurance,
@@ -677,4 +686,5 @@ export {
   registerPushToken,
   triggerFreeTextChat,
   triggerClaimChat,
+  triggerCallMeChat,
 }
