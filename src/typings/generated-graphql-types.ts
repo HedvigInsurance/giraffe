@@ -401,6 +401,7 @@ export interface Mutation {
   triggerFreeTextChat?: boolean;
   triggerClaimChat?: boolean;
   triggerCallMeChat?: boolean;
+  emailSign?: boolean;
 }
 
 export interface CampaignInput {
@@ -1346,6 +1347,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   triggerFreeTextChat?: MutationToTriggerFreeTextChatResolver<TParent>;
   triggerClaimChat?: MutationToTriggerClaimChatResolver<TParent>;
   triggerCallMeChat?: MutationToTriggerCallMeChatResolver<TParent>;
+  emailSign?: MutationToEmailSignResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1469,6 +1471,10 @@ export interface MutationToTriggerClaimChatResolver<TParent = undefined, TResult
 }
 
 export interface MutationToTriggerCallMeChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToEmailSignResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

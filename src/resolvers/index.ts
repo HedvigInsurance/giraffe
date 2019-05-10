@@ -31,6 +31,7 @@ import {
   currentChatResponse,
   subscribeToCurrentChatResponse,
 } from './currentChatResponse'
+import { emailSign } from './emailSign'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
@@ -87,6 +88,7 @@ const resolvers: Resolver = {
     triggerClaimChat,
     triggerFreeTextChat,
     triggerCallMeChat,
+    emailSign,
   },
   Subscription: {
     offer: subscribeToOffer,

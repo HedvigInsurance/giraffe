@@ -661,6 +661,15 @@ const triggerCallMeChat = (token: string, headers: ForwardHeaders) =>
     token,
   })
 
+const performEmailSign = (token: string, headers: ForwardHeaders) =>
+  callApi('/hedvig/emailSign', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
 export {
   setChatResponse,
   getInsurance,
@@ -687,4 +696,5 @@ export {
   triggerFreeTextChat,
   triggerClaimChat,
   triggerCallMeChat,
+  performEmailSign,
 }
