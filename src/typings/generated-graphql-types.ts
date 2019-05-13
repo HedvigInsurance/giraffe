@@ -483,7 +483,7 @@ export interface TriggerClaimChatInput {
 export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
-  messages?: Array<Message | null>;
+  message: Message;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
 }
@@ -1494,7 +1494,7 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
 export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
   signStatus?: SubscriptionToSignStatusResolver<TParent>;
-  messages?: SubscriptionToMessagesResolver<TParent>;
+  message?: SubscriptionToMessageResolver<TParent>;
   currentChatResponse?: SubscriptionToCurrentChatResponseResolver<TParent>;
   chatState?: SubscriptionToChatStateResolver<TParent>;
 }
@@ -1509,12 +1509,9 @@ export interface SubscriptionToSignStatusResolver<TParent = undefined, TResult =
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
-export interface SubscriptionToMessagesArgs {
-  mostRecentTimestamp: string;
-}
-export interface SubscriptionToMessagesResolver<TParent = undefined, TResult = Array<Message | null> | null> {
-  resolve?: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
-  subscribe: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+export interface SubscriptionToMessageResolver<TParent = undefined, TResult = Message> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
 export interface SubscriptionToCurrentChatResponseArgs {

@@ -1,5 +1,5 @@
+import { $$asyncIterator } from 'iterall'
 import {
-  ChatDto,
   editLastResponse as editLastMessage,
   getChat,
   getUser,
@@ -7,22 +7,18 @@ import {
 } from '../api'
 import { pubsub } from '../pubsub'
 import {
-  Message,
   MessageBody,
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
   MutationToEditLastResponseResolver,
   MutationToResetConversationResolver,
   QueryToMessagesResolver,
-  SubscriptionToMessagesResolver,
+  SubscriptionToMessageResolver,
 } from '../typings/generated-graphql-types'
+import { MessageDto } from './../api/index'
 import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
-import { subscribeToChat } from '../features/chat/chatSubscription'
-import { transformMessages } from '../features/chat/transform'
-import { factory } from '../utils/log'
-
-const logger = factory.getLogger('messagesLogger')
+import { transformMessage, transformMessages } from '../features/chat/transform'
 
 export const messages: QueryToMessagesResolver = async (
   _root,
@@ -54,82 +50,37 @@ export const editLastResponse: MutationToEditLastResponseResolver = async (
   return true
 }
 
-export const subscribeToMessage: SubscriptionToMessagesResolver = {
-  subscribe: async (
-    _parent,
-    { mostRecentTimestamp },
-    { getToken, headers },
-  ) => {
+export const withMessageTransform = (
+  asyncIterator: AsyncIterator<MessageDto>,
+): any => ({
+  next() {
+    return asyncIterator.next().then(({ value, done }) => {
+      return {
+        value: {
+          message: transformMessage(value),
+        },
+        done,
+      }
+    })
+  },
+  return() {
+    return Promise.resolve({ value: undefined, done: true })
+  },
+  throw(error: any) {
+    return Promise.reject(error)
+  },
+  [$$asyncIterator as any]() {
+    return this
+  },
+})
+
+export const subscribeToMessage: SubscriptionToMessageResolver = {
+  subscribe: async (_parent, {}, { getToken, headers }) => {
     const token = getToken()
     const user = await getUser(token, headers)
-
-    const unsubscribe = subscribeToChat(
-      {
-        token,
-        memberId: user.memberId,
-        headers,
-        mostRecentTimestamp,
-      },
-      (chat: ChatDto, previousChat: ChatDto) => {
-        const transformedPreviousMessages = transformMessages(
-          previousChat.messages,
-        )
-
-        const transformedNewMessages = transformMessages(chat.messages)
-
-        const deletedMessages =
-          transformedNewMessages.length < transformedPreviousMessages.length
-
-        const messageDiff = deletedMessages
-          ? transformedPreviousMessages
-              .filter(
-                (message) =>
-                  !transformedNewMessages.find(
-                    (newMessage) => newMessage!.globalId === message!.globalId,
-                  ),
-              )
-              .reverse()
-          : transformedNewMessages
-              .filter(
-                (message) =>
-                  !transformedPreviousMessages.find(
-                    (previousMessage) =>
-                      previousMessage!.globalId === message!.globalId,
-                  ),
-              )
-              .reverse()
-
-        if (messageDiff.length !== 0) {
-          if (!deletedMessages) {
-            messageDiff.forEach((message) => {
-              pubsub.publish(`MESSAGE.${user.memberId}`, {
-                messages: [message],
-              })
-            })
-          } else {
-            pubsub.publish(`MESSAGE.${user.memberId}`, {
-              messages: messageDiff,
-            })
-          }
-        }
-      },
+    return withMessageTransform(
+      pubsub.asyncIterator<MessageDto>(`MESSAGE_SENT.${user.memberId}`),
     )
-
-    const asyncIterator = pubsub.asyncIterator<Message[]>(
-      `MESSAGE.${user.memberId}`,
-    )
-
-    asyncIterator.return = (value) => {
-      unsubscribe()
-
-      logger.info(`AsyncIterator returned for ${user.memberId}`)
-
-      return Promise.resolve({
-        done: true,
-        value,
-      })
-    }
-    return asyncIterator
   },
 }
 

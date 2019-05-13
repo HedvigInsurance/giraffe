@@ -31,13 +31,9 @@ const transformChoices = (choices: any) => {
   })
 }
 
-export const transformMessage: (message: MessageDto) => Message | null = (
+export const transformMessage: (message: MessageDto) => Message = (
   message: MessageDto,
 ) => {
-  if (!message) {
-    return null
-  }
-
   const getBody: (bodyInput: MessageBody) => MessageBody = (bodyInput) => {
     if (bodyInput.type === 'single_select') {
       const body = bodyInput as MessageBodySingleSelect
