@@ -3,6 +3,8 @@ import { parse } from 'date-fns'
 import { getUser } from '../api'
 import { MutationToLogResolver } from './../typings/generated-graphql-types'
 
+const logging = new Logging()
+
 export const log: MutationToLogResolver = async (
   _root,
   { input },
@@ -11,7 +13,6 @@ export const log: MutationToLogResolver = async (
   const token = getToken()
   const user = await getUser(token, headers)
 
-  const logging = new Logging()
   const log = logging.log(input.source)
 
   const entry = log.entry(
