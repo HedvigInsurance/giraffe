@@ -41,7 +41,7 @@ type Mutation {
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
-  messages(mostRecentTimestamp: String!): [Message]
+  message: Message!
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
 }

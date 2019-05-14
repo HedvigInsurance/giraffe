@@ -93,7 +93,7 @@ const resolvers: Resolver = {
   Subscription: {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
-    messages: subscribeToMessage,
+    message: subscribeToMessage,
     currentChatResponse: subscribeToCurrentChatResponse,
     chatState: subscribeToChatState,
   },
