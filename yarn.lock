@@ -560,14 +560,13 @@
     "@types/koa" "*"
     path-to-regexp "^1.7.0"
 
-"@types/koa@*", "@types/koa@^2.0.46":
-  version "2.0.46"
-  resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.0.46.tgz#24bc3cd405d10fcde81f876cd8285b44d4ddc3e9"
-  integrity sha512-Dw10hYKv3exrc71GmH/Fqnc7dCLzdiP8bM1MLelPYjgIH5kQ6mPFreM3Z0uLK9EFaeCZZUYqsedDLCf3Urrysg==
+"@types/koa@*", "@types/koa@^2.0.46", "@types/koa@^2.0.48":
+  version "2.0.48"
+  resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.0.48.tgz#29162783029d3e5df8b58c55f6bf0d35f78fc39f"
+  integrity sha512-CiIUYhHlOFJhSCTmsFoFkV2t9ij1JwW26nt0W9XZoWTvmAw6zTE0+k3IAoGICtjzIfhZpZcO323NHmI1LGmdDw==
   dependencies:
     "@types/accepts" "*"
     "@types/cookies" "*"
-    "@types/events" "*"
     "@types/http-assert" "*"
     "@types/keygrip" "*"
     "@types/koa-compose" "*"
