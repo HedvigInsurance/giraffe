@@ -29,8 +29,9 @@ const logger = factory.getLogger('index')
 
 // google cloud SDK only accepts an environment variable containing a path to a file
 if (config.GOOGLE_CLOUD) {
-  fs.writeFileSync('./google-cloud.json', config.GOOGLE_CLOUD)
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = './google-cloud.json'
+  const googleCloudPath = './google-cloud.json'
+  fs.writeFileSync(googleCloudPath, config.GOOGLE_CLOUD)
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = googleCloudPath
 }
 
 const handleError = (error: GraphQLError): void => {
