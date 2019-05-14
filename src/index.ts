@@ -7,6 +7,7 @@ import * as proxy from 'koa-better-http-proxy'
 import * as compress from 'koa-compress'
 import * as route from 'koa-route'
 
+import * as fs from 'fs'
 import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
@@ -25,6 +26,13 @@ Sentry.init({
 })
 
 const logger = factory.getLogger('index')
+
+// google cloud SDK only accepts an environment variable containing a path to a file
+if (config.GOOGLE_CLOUD) {
+  const googleCloudPath = './google-cloud.json'
+  fs.writeFileSync(googleCloudPath, config.GOOGLE_CLOUD)
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = googleCloudPath
+}
 
 const handleError = (error: GraphQLError): void => {
   logger.error(
@@ -69,7 +77,7 @@ makeSchema().then((schema) => {
       proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT || '', {}),
     ),
   )
-  
+
   logger.info('Creating server')
   const ws = createServer(app.callback())
 

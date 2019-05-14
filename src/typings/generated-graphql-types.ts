@@ -402,6 +402,7 @@ export interface Mutation {
   triggerClaimChat?: boolean;
   triggerCallMeChat?: boolean;
   emailSign?: boolean;
+  log?: boolean;
 }
 
 export interface CampaignInput {
@@ -478,6 +479,34 @@ export interface ChatResponseBodyAudioInput {
 
 export interface TriggerClaimChatInput {
   claimTypeId?: string;
+}
+
+export interface LoggingInput {
+  timestamp: TimeStamp;
+  source: LoggingSource;
+  payload: JSONObject;
+  severity: LoggingSeverity;
+}
+
+export type TimeStamp = any;
+
+export enum LoggingSource {
+  IOS = 'IOS',
+  ANDROID = 'ANDROID'
+}
+
+export type JSONObject = any;
+
+export enum LoggingSeverity {
+  DEFAULT = 'DEFAULT',
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  NOTICE = 'NOTICE',
+  WARNING = 'WARNING',
+  ERROR = 'ERROR',
+  CRITICAL = 'CRITICAL',
+  ALERT = 'ALERT',
+  EMERGENCY = 'EMERGENCY'
 }
 
 export interface Subscription {
@@ -564,6 +593,8 @@ export interface Resolver {
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
+  TimeStamp?: GraphQLScalarType;
+  JSONObject?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1348,6 +1379,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   triggerClaimChat?: MutationToTriggerClaimChatResolver<TParent>;
   triggerCallMeChat?: MutationToTriggerCallMeChatResolver<TParent>;
   emailSign?: MutationToEmailSignResolver<TParent>;
+  log?: MutationToLogResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1476,6 +1508,13 @@ export interface MutationToTriggerCallMeChatResolver<TParent = undefined, TResul
 
 export interface MutationToEmailSignResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToLogArgs {
+  input: LoggingInput;
+}
+export interface MutationToLogResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToLogArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

@@ -35,6 +35,7 @@ import { emailSign } from './emailSign'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
+import { log } from './logging'
 import { logout } from './logout'
 import { member, updateEmail, updatePhoneNumber } from './member'
 import {
@@ -89,6 +90,7 @@ const resolvers: Resolver = {
     triggerFreeTextChat,
     triggerCallMeChat,
     emailSign,
+    log,
   },
   Subscription: {
     offer: subscribeToOffer,
