@@ -6,3 +6,4 @@ node_modules
 .vscode
 *.log
 .DS_Store
+google-cloud.json

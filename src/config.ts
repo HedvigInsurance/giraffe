@@ -21,6 +21,8 @@ const APOLLO_ENGINE_KEY = process.env.APOLLO_ENGINE_KEY || ''
 const SENTRY_DSN = process.env.SENTRY_DSN || ''
 const SENTRY_ENV = process.env.SENTRY_ENV || process.env.NODE_ENV || ''
 
+const GOOGLE_CLOUD = process.env.GOOGLE_CLOUD || null
+
 export {
   BASE_URL,
   PORT,
@@ -35,4 +37,5 @@ export {
   APOLLO_ENGINE_KEY,
   SENTRY_DSN,
   SENTRY_ENV,
+  GOOGLE_CLOUD,
 }
