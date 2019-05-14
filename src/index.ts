@@ -7,7 +7,6 @@ import * as proxy from 'koa-better-http-proxy'
 import * as compress from 'koa-compress'
 import * as route from 'koa-route'
 
-import * as fs from 'fs'
 import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
