@@ -41,6 +41,7 @@ import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
   editLastResponse,
+  markMessageAsRead,
   messages,
   resetConversation,
   subscribeToMessage,
@@ -89,6 +90,7 @@ const resolvers: Resolver = {
     triggerFreeTextChat,
     triggerCallMeChat,
     emailSign,
+    markMessageAsRead,
   },
   Subscription: {
     offer: subscribeToOffer,

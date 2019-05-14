@@ -89,6 +89,7 @@ export const transformMessage: (message: MessageDto) => Message = (
         message.header.shouldRequestPushNotifications || false,
       pollingInterval: message.header.pollingInterval,
       loadingIndicator: message.header.loadingIndicator,
+      markedAsRead: message.header.markedAsRead,
     },
     body: messageBody,
   }

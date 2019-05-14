@@ -402,6 +402,7 @@ export interface Mutation {
   triggerClaimChat?: boolean;
   triggerCallMeChat?: boolean;
   emailSign?: boolean;
+  markMessageAsRead: Message;
 }
 
 export interface CampaignInput {
@@ -1348,6 +1349,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   triggerClaimChat?: MutationToTriggerClaimChatResolver<TParent>;
   triggerCallMeChat?: MutationToTriggerCallMeChatResolver<TParent>;
   emailSign?: MutationToEmailSignResolver<TParent>;
+  markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1476,6 +1478,13 @@ export interface MutationToTriggerCallMeChatResolver<TParent = undefined, TResul
 
 export interface MutationToEmailSignResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToMarkMessageAsReadArgs {
+  globalId: string;
+}
+export interface MutationToMarkMessageAsReadResolver<TParent = undefined, TResult = Message> {
+  (parent: TParent, args: MutationToMarkMessageAsReadArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
