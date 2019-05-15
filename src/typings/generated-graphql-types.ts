@@ -345,13 +345,14 @@ export interface MessageHeader {
   shouldRequestPushNotifications: boolean;
   pollingInterval: number;
   loadingIndicator?: string;
+  markedAsRead: boolean;
 }
 
 export interface ChatResponse {
   globalId: string;
   id: string;
-  body?: MessageBody;
-  header?: MessageHeader;
+  body: MessageBody;
+  header: MessageHeader;
 }
 
 export interface ChatState {
@@ -1231,6 +1232,7 @@ export interface MessageHeaderTypeResolver<TParent = MessageHeader> {
   shouldRequestPushNotifications?: MessageHeaderToShouldRequestPushNotificationsResolver<TParent>;
   pollingInterval?: MessageHeaderToPollingIntervalResolver<TParent>;
   loadingIndicator?: MessageHeaderToLoadingIndicatorResolver<TParent>;
+  markedAsRead?: MessageHeaderToMarkedAsReadResolver<TParent>;
 }
 
 export interface MessageHeaderToMessageIdResolver<TParent = MessageHeader, TResult = string> {
@@ -1265,6 +1267,10 @@ export interface MessageHeaderToLoadingIndicatorResolver<TParent = MessageHeader
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MessageHeaderToMarkedAsReadResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface ChatResponseTypeResolver<TParent = ChatResponse> {
   globalId?: ChatResponseToGlobalIdResolver<TParent>;
   id?: ChatResponseToIdResolver<TParent>;
@@ -1280,11 +1286,11 @@ export interface ChatResponseToIdResolver<TParent = ChatResponse, TResult = stri
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ChatResponseToBodyResolver<TParent = ChatResponse, TResult = MessageBody | null> {
+export interface ChatResponseToBodyResolver<TParent = ChatResponse, TResult = MessageBody> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ChatResponseToHeaderResolver<TParent = ChatResponse, TResult = MessageHeader | null> {
+export interface ChatResponseToHeaderResolver<TParent = ChatResponse, TResult = MessageHeader> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

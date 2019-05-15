@@ -68,6 +68,7 @@ type MessageHeader {
   shouldRequestPushNotifications: Boolean!
   pollingInterval: Int!
   loadingIndicator: String
+  markedAsRead: Boolean!
 }
 
 union MessageBody =
@@ -198,8 +199,8 @@ type ChatState {
 type ChatResponse {
   globalId: ID!
   id: ID!
-  body: MessageBody
-  header: MessageHeader
+  body: MessageBody!
+  header: MessageHeader!
 }
 
 input ChatResponseBodyTextInput {
