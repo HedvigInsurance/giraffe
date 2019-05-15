@@ -3,6 +3,7 @@ import {
   editLastResponse as editLastMessage,
   getChat,
   getUser,
+  markMessageAsRead as markMessageAsReadAPI,
   resetConversation as resetMessages,
 } from '../api'
 import { pubsub } from '../pubsub'
@@ -11,6 +12,7 @@ import {
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
   MutationToEditLastResponseResolver,
+  MutationToMarkMessageAsReadResolver,
   MutationToResetConversationResolver,
   QueryToMessagesResolver,
   SubscriptionToMessageResolver,
@@ -38,6 +40,16 @@ export const resetConversation: MutationToResetConversationResolver = async (
   const token = getToken()
   await resetMessages(token, headers)
   return true
+}
+
+export const markMessageAsRead: MutationToMarkMessageAsReadResolver = async (
+  _root,
+  { globalId },
+  { getToken, headers },
+) => {
+  const token = getToken()
+  const message = await markMessageAsReadAPI(globalId, token, headers)
+  return transformMessage(message)
 }
 
 export const editLastResponse: MutationToEditLastResponseResolver = async (

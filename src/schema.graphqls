@@ -36,6 +36,7 @@ type Mutation {
   triggerClaimChat(input: TriggerClaimChatInput!): Boolean
   triggerCallMeChat: Boolean
   emailSign: Boolean
+  markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
 }
 

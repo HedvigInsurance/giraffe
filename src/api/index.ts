@@ -108,6 +108,7 @@ interface MessageHeaderDto {
   shouldRequestPushNotifications: boolean
   pollingInterval: number
   loadingIndicator: string
+  markedAsRead: boolean
 }
 
 interface AvatarDto {
@@ -670,6 +671,22 @@ const performEmailSign = (token: string, headers: ForwardHeaders) =>
     token,
   })
 
+const markMessageAsRead = (
+  globalId: string,
+  token: string,
+  headers: ForwardHeaders,
+): Promise<MessageDto> =>
+  callApi('/v2/app/markAsRead', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify({
+        globalId,
+      }),
+    },
+    token,
+  }).then((res) => res.json())
+
 export {
   setChatResponse,
   getInsurance,
@@ -697,4 +714,5 @@ export {
   triggerClaimChat,
   triggerCallMeChat,
   performEmailSign,
+  markMessageAsRead,
 }
