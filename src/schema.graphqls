@@ -37,6 +37,7 @@ type Mutation {
   triggerCallMeChat: Boolean
   emailSign: Boolean
   markMessageAsRead(globalId: ID!): Message!
+  log(input: LoggingInput!): Boolean
 }
 
 type Subscription {
@@ -244,6 +245,33 @@ input CampaignInput {
   term: String
   content: String
   name: String
+}
+
+enum LoggingSource {
+  IOS
+  ANDROID
+}
+
+enum LoggingSeverity {
+  DEFAULT
+  DEBUG
+  INFO
+  NOTICE
+  WARNING
+  ERROR
+  CRITICAL
+  ALERT
+  EMERGENCY
+}
+
+scalar JSONObject
+scalar TimeStamp
+
+input LoggingInput {
+  timestamp: TimeStamp!
+  source: LoggingSource!
+  payload: JSONObject!
+  severity: LoggingSeverity!
 }
 
 type Avatar {

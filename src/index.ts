@@ -63,13 +63,15 @@ makeSchema().then((schema) => {
   app.use(loggingMiddleware)
   server.applyMiddleware({ app })
 
-  app.use(
-    route.get(
-      '/app-content-service/*',
-      proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT || '', {}),
-    ),
-  )
-  
+  if (process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT) {
+    app.use(
+      route.get(
+        '/app-content-service/*',
+        proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT, {}),
+      ),
+    )
+  }
+
   logger.info('Creating server')
   const ws = createServer(app.callback())
 
