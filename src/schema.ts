@@ -1,7 +1,7 @@
 import { ApolloLink } from 'apollo-link'
+import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
 import { createCacheLink } from 'apollo-link-redis-cache'
-import { setContext } from 'apollo-link-context'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
 import { GraphQLSchema } from 'graphql'
@@ -22,7 +22,7 @@ import * as config from './config'
 import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'
 import { resolvers } from './resolvers'
-import { factory} from './utils/log';
+import { factory } from './utils/log'
 
 const logger = factory.getLogger('schemaLogger')
 
