@@ -112,6 +112,21 @@ const makeSchema = async () => {
   })
   logger.info('PaymentServiceSchema Introspected')
 
+  const productPricingServiceLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.PRODUCT_PRICING_SERVICE_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let productPricingServiceSchema: GraphQLSchema | undefined
+  logger.info('Introspecting ProductPricingServiceSchema')
+  productPricingServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(productPricingServiceLink),
+    link: productPricingServiceLink,
+  })
+  logger.info('ProductPricingServiceSchema Introspected')
+
   const appContentServiceLink = authorizationContextLink.concat(
     createHttpLink({
       uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
@@ -141,6 +156,7 @@ const makeSchema = async () => {
       localSchema,
       dontPanicSchema,
       paymentServiceSchema,
+      productPricingServiceSchema,
       appContentServiceSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
