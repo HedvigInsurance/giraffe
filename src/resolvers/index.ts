@@ -21,25 +21,34 @@ import {
   sendChatTextResponse,
 } from './chatResponse'
 import { chatState, subscribeToChatState } from './chatState'
+import {
+  triggerCallMeChat,
+  triggerClaimChat,
+  triggerFreeTextChat,
+} from './chatTriggers'
 import { createSession, createSessionV2 } from './createSession'
 import {
   currentChatResponse,
   subscribeToCurrentChatResponse,
 } from './currentChatResponse'
+import { emailSign } from './emailSign'
 import { file } from './file'
 import { gifs } from './gifs'
 import { insurance } from './insurance'
+import { log } from './logging'
 import { logout } from './logout'
 import { member, updateEmail, updatePhoneNumber } from './member'
 import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
   editLastResponse,
+  markMessageAsRead,
   messages,
   resetConversation,
   subscribeToMessage,
 } from './messages'
 import { offerClosed } from './offerClosed'
+import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
@@ -77,11 +86,18 @@ const resolvers: Resolver = {
     editLastResponse,
     updateEmail,
     updatePhoneNumber,
+    registerPushToken,
+    triggerClaimChat,
+    triggerFreeTextChat,
+    triggerCallMeChat,
+    emailSign,
+    markMessageAsRead,
+    log,
   },
   Subscription: {
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
-    messages: subscribeToMessage,
+    message: subscribeToMessage,
     currentChatResponse: subscribeToCurrentChatResponse,
     chatState: subscribeToChatState,
   },

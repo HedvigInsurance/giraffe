@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import fetch, { RequestInit, Response } from 'node-fetch'
 import * as config from '../config'
 import { ForwardHeaders } from '../context'
@@ -107,6 +108,7 @@ interface MessageHeaderDto {
   shouldRequestPushNotifications: boolean
   pollingInterval: number
   loadingIndicator: string
+  markedAsRead: boolean
 }
 
 interface AvatarDto {
@@ -142,6 +144,10 @@ interface TrackingDto {
   utmContent?: string[]
   utmCampaign?: string
   utmTerm?: string[]
+}
+
+interface PushTokenDto {
+  token: string
 }
 
 type CallApi = (
@@ -208,7 +214,12 @@ const getInsurance = async (
     token,
   })
 
-  return data.json()
+  const json = await data.json()
+
+  return {
+    ...json,
+    activeFrom: format(json.activeFrom, 'YYYY-MM-DDTHH:mm:ss'),
+  }
 }
 
 const getUser = async (
@@ -610,6 +621,72 @@ const postPhoneNumber = (
     token,
   })
 
+const registerPushToken = (
+  token: string,
+  headers: ForwardHeaders,
+  body: PushTokenDto,
+) =>
+  callApi('/v2/app/push-token', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
+const triggerFreeTextChat = (token: string, headers: ForwardHeaders) =>
+  callApi('/v2/app/fabTrigger/CHAT', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
+const triggerClaimChat = (token: string, headers: ForwardHeaders) =>
+  callApi('/v2/app/fabTrigger/REPORT_CLAIM', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
+const triggerCallMeChat = (token: string, headers: ForwardHeaders) =>
+  callApi('/v2/app/fabTrigger/CALL_ME', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
+const performEmailSign = (token: string, headers: ForwardHeaders) =>
+  callApi('/hedvig/emailSign', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+    },
+    token,
+  })
+
+const markMessageAsRead = (
+  globalId: string,
+  token: string,
+  headers: ForwardHeaders,
+): Promise<MessageDto> =>
+  callApi('/v2/app/markAsRead', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify({
+        globalId,
+      }),
+    },
+    token,
+  }).then((res) => res.json())
+
 export {
   setChatResponse,
   getInsurance,
@@ -632,4 +709,10 @@ export {
   assignTrackingId,
   postEmail,
   postPhoneNumber,
+  registerPushToken,
+  triggerFreeTextChat,
+  triggerClaimChat,
+  triggerCallMeChat,
+  performEmailSign,
+  markMessageAsRead,
 }

@@ -32,14 +32,25 @@ type Mutation {
   editLastResponse: Boolean!
   updateEmail(input: String!): Member!
   updatePhoneNumber(input: String!): Member!
+  registerPushToken(pushToken: String!): Boolean
+  triggerFreeTextChat: Boolean
+  triggerClaimChat(input: TriggerClaimChatInput!): Boolean
+  triggerCallMeChat: Boolean
+  emailSign: Boolean
+  markMessageAsRead(globalId: ID!): Message!
+  log(input: LoggingInput!): Boolean
 }
 
 type Subscription {
   offer: OfferEvent
   signStatus: SignEvent
-  messages(mostRecentTimestamp: String!): [Message]
+  message: Message!
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
+}
+
+input TriggerClaimChatInput {
+  claimTypeId: ID
 }
 
 type Message {
@@ -58,6 +69,7 @@ type MessageHeader {
   shouldRequestPushNotifications: Boolean!
   pollingInterval: Int!
   loadingIndicator: String
+  markedAsRead: Boolean!
 }
 
 union MessageBody =
@@ -188,8 +200,8 @@ type ChatState {
 type ChatResponse {
   globalId: ID!
   id: ID!
-  body: MessageBody
-  header: MessageHeader
+  body: MessageBody!
+  header: MessageHeader!
 }
 
 input ChatResponseBodyTextInput {
@@ -235,6 +247,33 @@ input CampaignInput {
   term: String
   content: String
   name: String
+}
+
+enum LoggingSource {
+  IOS
+  ANDROID
+}
+
+enum LoggingSeverity {
+  DEFAULT
+  DEBUG
+  INFO
+  NOTICE
+  WARNING
+  ERROR
+  CRITICAL
+  ALERT
+  EMERGENCY
+}
+
+scalar JSONObject
+scalar TimeStamp
+
+input LoggingInput {
+  timestamp: TimeStamp!
+  source: LoggingSource!
+  payload: JSONObject!
+  severity: LoggingSeverity!
 }
 
 type Avatar {

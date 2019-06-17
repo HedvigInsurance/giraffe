@@ -345,13 +345,14 @@ export interface MessageHeader {
   shouldRequestPushNotifications: boolean;
   pollingInterval: number;
   loadingIndicator?: string;
+  markedAsRead: boolean;
 }
 
 export interface ChatResponse {
   globalId: string;
   id: string;
-  body?: MessageBody;
-  header?: MessageHeader;
+  body: MessageBody;
+  header: MessageHeader;
 }
 
 export interface ChatState {
@@ -398,6 +399,13 @@ export interface Mutation {
   editLastResponse: boolean;
   updateEmail: Member;
   updatePhoneNumber: Member;
+  registerPushToken?: boolean;
+  triggerFreeTextChat?: boolean;
+  triggerClaimChat?: boolean;
+  triggerCallMeChat?: boolean;
+  emailSign?: boolean;
+  markMessageAsRead: Message;
+  log?: boolean;
 }
 
 export interface CampaignInput {
@@ -479,10 +487,42 @@ export interface ChatResponseBodyAudioInput {
   url: string;
 }
 
+export interface TriggerClaimChatInput {
+  claimTypeId?: string;
+}
+
+export interface LoggingInput {
+  timestamp: TimeStamp;
+  source: LoggingSource;
+  payload: JSONObject;
+  severity: LoggingSeverity;
+}
+
+export type TimeStamp = any;
+
+export enum LoggingSource {
+  IOS = 'IOS',
+  ANDROID = 'ANDROID'
+}
+
+export type JSONObject = any;
+
+export enum LoggingSeverity {
+  DEFAULT = 'DEFAULT',
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  NOTICE = 'NOTICE',
+  WARNING = 'WARNING',
+  ERROR = 'ERROR',
+  CRITICAL = 'CRITICAL',
+  ALERT = 'ALERT',
+  EMERGENCY = 'EMERGENCY'
+}
+
 export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
-  messages?: Array<Message | null>;
+  message: Message;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
 }
@@ -564,6 +604,8 @@ export interface Resolver {
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
   ReceiptData?: ReceiptDataTypeResolver;
+  TimeStamp?: GraphQLScalarType;
+  JSONObject?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1199,6 +1241,7 @@ export interface MessageHeaderTypeResolver<TParent = MessageHeader> {
   shouldRequestPushNotifications?: MessageHeaderToShouldRequestPushNotificationsResolver<TParent>;
   pollingInterval?: MessageHeaderToPollingIntervalResolver<TParent>;
   loadingIndicator?: MessageHeaderToLoadingIndicatorResolver<TParent>;
+  markedAsRead?: MessageHeaderToMarkedAsReadResolver<TParent>;
 }
 
 export interface MessageHeaderToMessageIdResolver<TParent = MessageHeader, TResult = string> {
@@ -1233,6 +1276,10 @@ export interface MessageHeaderToLoadingIndicatorResolver<TParent = MessageHeader
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MessageHeaderToMarkedAsReadResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface ChatResponseTypeResolver<TParent = ChatResponse> {
   globalId?: ChatResponseToGlobalIdResolver<TParent>;
   id?: ChatResponseToIdResolver<TParent>;
@@ -1248,11 +1295,11 @@ export interface ChatResponseToIdResolver<TParent = ChatResponse, TResult = stri
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ChatResponseToBodyResolver<TParent = ChatResponse, TResult = MessageBody | null> {
+export interface ChatResponseToBodyResolver<TParent = ChatResponse, TResult = MessageBody> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ChatResponseToHeaderResolver<TParent = ChatResponse, TResult = MessageHeader | null> {
+export interface ChatResponseToHeaderResolver<TParent = ChatResponse, TResult = MessageHeader> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1344,6 +1391,13 @@ export interface MutationTypeResolver<TParent = undefined> {
   editLastResponse?: MutationToEditLastResponseResolver<TParent>;
   updateEmail?: MutationToUpdateEmailResolver<TParent>;
   updatePhoneNumber?: MutationToUpdatePhoneNumberResolver<TParent>;
+  registerPushToken?: MutationToRegisterPushTokenResolver<TParent>;
+  triggerFreeTextChat?: MutationToTriggerFreeTextChatResolver<TParent>;
+  triggerClaimChat?: MutationToTriggerClaimChatResolver<TParent>;
+  triggerCallMeChat?: MutationToTriggerCallMeChatResolver<TParent>;
+  emailSign?: MutationToEmailSignResolver<TParent>;
+  markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
+  log?: MutationToLogResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1455,6 +1509,46 @@ export interface MutationToUpdatePhoneNumberResolver<TParent = undefined, TResul
   (parent: TParent, args: MutationToUpdatePhoneNumberArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToRegisterPushTokenArgs {
+  pushToken: string;
+}
+export interface MutationToRegisterPushTokenResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToRegisterPushTokenArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToTriggerFreeTextChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToTriggerClaimChatArgs {
+  input: TriggerClaimChatInput;
+}
+export interface MutationToTriggerClaimChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToTriggerClaimChatArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToTriggerCallMeChatResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToEmailSignResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToMarkMessageAsReadArgs {
+  globalId: string;
+}
+export interface MutationToMarkMessageAsReadResolver<TParent = undefined, TResult = Message> {
+  (parent: TParent, args: MutationToMarkMessageAsReadArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToLogArgs {
+  input: LoggingInput;
+}
+export interface MutationToLogResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToLogArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
   token?: SessionInformationToTokenResolver<TParent>;
   memberId?: SessionInformationToMemberIdResolver<TParent>;
@@ -1494,7 +1588,7 @@ export interface ReceiptDataToDateResolver<TParent = ReceiptData, TResult = Loca
 export interface SubscriptionTypeResolver<TParent = undefined> {
   offer?: SubscriptionToOfferResolver<TParent>;
   signStatus?: SubscriptionToSignStatusResolver<TParent>;
-  messages?: SubscriptionToMessagesResolver<TParent>;
+  message?: SubscriptionToMessageResolver<TParent>;
   currentChatResponse?: SubscriptionToCurrentChatResponseResolver<TParent>;
   chatState?: SubscriptionToChatStateResolver<TParent>;
 }
@@ -1509,12 +1603,9 @@ export interface SubscriptionToSignStatusResolver<TParent = undefined, TResult =
   subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
-export interface SubscriptionToMessagesArgs {
-  mostRecentTimestamp: string;
-}
-export interface SubscriptionToMessagesResolver<TParent = undefined, TResult = Array<Message | null> | null> {
-  resolve?: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
-  subscribe: (parent: TParent, args: SubscriptionToMessagesArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+export interface SubscriptionToMessageResolver<TParent = undefined, TResult = Message> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
 export interface SubscriptionToCurrentChatResponseArgs {
