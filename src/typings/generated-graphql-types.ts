@@ -386,6 +386,7 @@ export interface Mutation {
   createOffer?: boolean;
   signOffer?: boolean;
   uploadFile: File;
+  scanReceipt?: ReceiptData;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
@@ -433,6 +434,13 @@ export interface SignInput {
 }
 
 export type Upload = any;
+
+export interface ReceiptData {
+  text?: string;
+  total?: number;
+  currency?: string;
+  date?: LocalDate;
+}
 
 export interface ChatResponseTextInput {
   globalId: string;
@@ -555,6 +563,7 @@ export interface Resolver {
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
+  ReceiptData?: ReceiptDataTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1323,6 +1332,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
+  scanReceipt?: MutationToScanReceiptResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
@@ -1371,6 +1381,13 @@ export interface MutationToUploadFileArgs {
 }
 export interface MutationToUploadFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: MutationToUploadFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToScanReceiptArgs {
+  key: string;
+}
+export interface MutationToScanReceiptResolver<TParent = undefined, TResult = ReceiptData | null> {
+  (parent: TParent, args: MutationToScanReceiptArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToSelectCashbackOptionArgs {
@@ -1448,6 +1465,29 @@ export interface SessionInformationToTokenResolver<TParent = SessionInformation,
 }
 
 export interface SessionInformationToMemberIdResolver<TParent = SessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptDataTypeResolver<TParent = ReceiptData> {
+  text?: ReceiptDataToTextResolver<TParent>;
+  total?: ReceiptDataToTotalResolver<TParent>;
+  currency?: ReceiptDataToCurrencyResolver<TParent>;
+  date?: ReceiptDataToDateResolver<TParent>;
+}
+
+export interface ReceiptDataToTextResolver<TParent = ReceiptData, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptDataToTotalResolver<TParent = ReceiptData, TResult = number | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptDataToCurrencyResolver<TParent = ReceiptData, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptDataToDateResolver<TParent = ReceiptData, TResult = LocalDate | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

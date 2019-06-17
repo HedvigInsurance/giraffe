@@ -20,6 +20,7 @@ type Mutation {
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
+  scanReceipt(key: String!): ReceiptData
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
@@ -340,6 +341,13 @@ enum InsuranceType {
   BRF
   STUDENT_RENT
   STUDENT_BRF
+}
+
+type ReceiptData {
+  text: String
+  total: Float
+  currency: String
+  date: LocalDate
 }
 
 type Cashback {
