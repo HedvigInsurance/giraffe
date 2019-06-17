@@ -1,4 +1,3 @@
-import * as fs from 'fs'
 import { getSiteMetadata } from './site-metadata'
 const vision = require('@google-cloud/vision')
 const client = new vision.ImageAnnotatorClient()
@@ -50,11 +49,13 @@ const getRectangle = (annotation: any): Rectangle => {
 export const scanRecept = async (url: string) => {
   const visionData = await client.documentTextDetection(url)
 
+  /*
   fs.writeFile(
     __dirname + '/japan-foto.json',
     JSON.stringify(visionData),
     () => {},
   )
+  */
 
   return visionData
 }
@@ -145,8 +146,35 @@ export const parseReceipt = async (visionObject: any) => {
     }
   }
   const dates = rawText.match(
-    /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))|([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))|([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))|((0[1-9]|[12][0-9]|3[0-2])\.(0[1-9]|(0[1-9]|1[0-2])|3[0-2])\.(([12]\d{3})|\d{2}))|((0[1-9]|[12][0-9]|3[0-2])\-(0[1-9]|(0[1-9]|1[0-2])|3[0-2])\-(([12]\d{3})|\d{2}))|((0[1-9]|[12][0-9]|3[0-2])\/(0[1-9]|(0[1-9]|1[0-2])|3[0-2])\/(([12]\d{3})|\d{2})))/g,
+    /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))|([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))|([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d{3})|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d{3})|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d)|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d)|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d))/g,
   )
+
+  const getDate = () => {
+    if (dates !== null) {
+      const rawDate = dates[0]
+      const dateParseable = rawDate.match(
+        /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))|([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))|([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d{3})|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d{3}))/g,
+      )
+
+      if (dateParseable) {
+        return new Date(rawDate)
+      }
+
+      const rearrangedDate =
+        '20' +
+        rawDate.substring(6, 8) +
+        '-' +
+        rawDate.substring(3, 5) +
+        '-' +
+        rawDate.substring(0, 2)
+
+      return new Date(rearrangedDate)
+    }
+
+    return null
+  }
+
+  getDate()
 
   const urls = rawText.match(
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
@@ -159,7 +187,7 @@ export const parseReceipt = async (visionObject: any) => {
   return {
     price: price !== null ? price.value : null,
     currency: price !== null ? currencyMap[price.currency] || 'SEK' : null,
-    date: dates !== null ? new Date(dates[0]).toString() : null,
+    date: getDate(),
     vendor:
       metadata !== null
         ? {

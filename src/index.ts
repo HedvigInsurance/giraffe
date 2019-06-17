@@ -2,7 +2,9 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { ApolloServer } from 'apollo-server-koa'
+import * as fs from 'fs'
 import * as Koa from 'koa'
+
 import * as proxy from 'koa-better-http-proxy'
 import * as compress from 'koa-compress'
 import * as route from 'koa-route'
@@ -19,7 +21,6 @@ import { factory } from './utils/log'
 import * as Sentry from '@sentry/node'
 import { getInnerErrorsFromCombinedError } from './utils/graphql-error'
 import { parseReceipt } from './utils/receipt'
-import * as fs from 'fs'
 
 Sentry.init({
   dsn: config.SENTRY_DSN,
@@ -28,17 +29,17 @@ Sentry.init({
 })
 
 const getReceiptData = async () => {
-  const results = JSON.parse(
+  const visionData = JSON.parse(
     fs
-      .readFileSync(__dirname + '../receipt-dumps/japan-foto-receipt.json')
+      .readFileSync(__dirname + '/receipt-dumps/japan-foto-receipt.json')
       .toString(),
   )
-  console.log(results)
 
-  const receipData = await parseReceipt(results)
-  console.log(receipData)
+  //const visionData = await scanRecept('https://i.imgur.com/OeUMph5.png')
+
+  const receiptData = await parseReceipt(visionData)
+  console.log(receiptData)
 }
-
 getReceiptData()
 
 const logger = factory.getLogger('index')
