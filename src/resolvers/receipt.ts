@@ -1,14 +1,27 @@
+// import { getUser } from '../api'
+import { esClient } from '../api/elasticsearch'
 import { MutationToScanReceiptResolver } from '../typings/generated-graphql-types'
-
-import { getUser } from '../api'
 
 export const scanReceipt: MutationToScanReceiptResolver = async (
   _root,
   { key },
-  { getToken, headers },
+  {},
 ) => {
-  const token = getToken()
-  const user = await getUser(token, headers)
+  // const token = getToken()
+  // const user = await getUser(token, headers)
 
-  return true
+  // console.log(esClient)
+
+  console.log(`Key: ${key}`)
+
+  esClient.cat.indices({ format: 'json' }, (err, res) => {
+    console.log(res)
+    if (err) {
+      console.error(err)
+    }
+  })
+
+  return {
+    text: 'Hej',
+  }
 }

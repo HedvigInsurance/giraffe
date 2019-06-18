@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { ApolloServer } from 'apollo-server-koa'
-import * as fs from 'fs'
+// import * as fs from 'fs'
 import * as Koa from 'koa'
 
 import * as proxy from 'koa-better-http-proxy'
@@ -20,14 +20,14 @@ import { factory } from './utils/log'
 
 import * as Sentry from '@sentry/node'
 import { getInnerErrorsFromCombinedError } from './utils/graphql-error'
-import { parseReceipt } from './utils/receipt'
+// import { parseReceipt } from './utils/receipt'
 
 Sentry.init({
   dsn: config.SENTRY_DSN,
   enabled: Boolean(config.SENTRY_DSN),
   environment: config.SENTRY_ENV,
 })
-
+/*
 const getReceiptData = async () => {
   const visionData = JSON.parse(
     fs
@@ -39,8 +39,8 @@ const getReceiptData = async () => {
 
   const receiptData = await parseReceipt(visionData)
   console.log(receiptData)
-}
-getReceiptData()
+}*/
+// getReceiptData()
 
 const logger = factory.getLogger('index')
 

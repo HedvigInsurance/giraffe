@@ -500,7 +500,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/elasticsearch@^5.0.34":
+"@types/elasticsearch@*", "@types/elasticsearch@^5.0.34":
   version "5.0.34"
   resolved "https://registry.yarnpkg.com/@types/elasticsearch/-/elasticsearch-5.0.34.tgz#e2983eaa71243ed10d74253178e4cf24413e1d01"
   integrity sha512-WZ0ZvO//5ZdNV6BpOzRH+bs7kJfRM00Mg9+o4wj1nUv9VVltzNhpiBXdx+3guPKPSR8TgSpMxL58IvCsBe+dag==
@@ -561,6 +561,15 @@
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.3.0.tgz#5e932606153da28e1d04f9043f4912cf61fd55dd"
   integrity sha512-RObYTpPMo0IY+ZksPtKHsXlYFRxsYIvUqd68e89Y7otDrXsjBy1VgMd53kxVV0JMsNlkCASjllFOlLlhxEv0iw==
+
+"@types/http-aws-es@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@types/http-aws-es/-/http-aws-es-6.0.0.tgz#d3cd11872900251dc5913706d2c475c284061df7"
+  integrity sha512-Ty29B6gdONvTEnGOMX/zf1og9MFhPqVCkiTRzaERHApBn1be7PwaP1X7izucVyTrYiOnq+yrBBztqJFCuuRYow==
+  dependencies:
+    "@types/elasticsearch" "*"
+    "@types/node" "*"
+    aws-sdk "^2.7.0"
 
 "@types/ioredis@^4.0.3":
   version "4.0.3"
@@ -1261,6 +1270,21 @@ aws-sdk@^2.356.0:
     sax "1.2.1"
     url "0.10.3"
     uuid "3.1.0"
+    xml2js "0.4.19"
+
+aws-sdk@^2.7.0:
+  version "2.477.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.477.0.tgz#6769a9176ba4234be9ed0ae9f0b064a17dccc3d1"
+  integrity sha512-CdUbQg0tIIydyCa+rUMzS7EuWV6hUQmSp6gWYy/hdsyeh+fpARjpijrerAML1iawsC47TKTgT5lYE97Kf6DTxg==
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
     xml2js "0.4.19"
 
 babel-code-frame@^6.22.0:
@@ -3205,6 +3229,11 @@ http-assert@^1.3.0:
   dependencies:
     deep-equal "~1.0.1"
     http-errors "~1.7.1"
+
+http-aws-es@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/http-aws-es/-/http-aws-es-6.0.0.tgz#1528978d2bee718b8732dcdced0856efa747aeff"
+  integrity sha512-g+qp7J110/m4aHrR3iit4akAlnW0UljZ6oTq/rCcbsI8KP9x+95vqUtx49M2XQ2JMpwJio3B6gDYx+E8WDxqiA==
 
 http-cache-semantics@3.8.1:
   version "3.8.1"
@@ -6361,7 +6390,7 @@ uuid@3.1.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
   integrity sha512-DIWtzUkw04M4k3bf1IcpS2tngXEL26YUD2M0tMDUpnUrz2hgzUBlD55a4FjdLGPvfHxS6uluGWvaVEqgBcVa+g==
 
-uuid@^3.0.1, uuid@^3.1.0, uuid@^3.2.1, uuid@^3.3.2:
+uuid@3.3.2, uuid@^3.0.1, uuid@^3.1.0, uuid@^3.2.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==

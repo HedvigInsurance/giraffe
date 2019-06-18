@@ -49,6 +49,7 @@ import {
 } from './messages'
 import { offerClosed } from './offerClosed'
 import { registerPushToken } from './push-token'
+import { scanReceipt } from './receipt'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
@@ -93,6 +94,7 @@ const resolvers: Resolver = {
     emailSign,
     markMessageAsRead,
     log,
+    scanReceipt,
   },
   Subscription: {
     offer: subscribeToOffer,
