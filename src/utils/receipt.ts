@@ -152,11 +152,12 @@ export const parseReceipt = async (visionObject: any) => {
         currencyMap[currencies !== null ? currencies[0].toLowerCase() : 'sek'],
     }
   }
-  const dates = rawText.match(
-    /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))|([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))|([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d{3})|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d{3})|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d)|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d)|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d))/g,
-  )
 
   const getDate = () => {
+    const dates = rawText.match(
+      /(([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))|([12]\d{3}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01]))|([12]\d{3}\.(0[1-9]|1[0-2])\.(0[1-9]|[12]\d|3[01]))|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d{3})|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d{3})|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d{3})|((0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-[12]\d)|((0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/[12]\d)|((0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.[12]\d))/g,
+    )
+
     if (dates !== null) {
       const rawDate = dates[0]
       const dateParseable = rawDate.match(
@@ -181,26 +182,41 @@ export const parseReceipt = async (visionObject: any) => {
     return null
   }
 
-  const urls = rawText.match(
-    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
-  )
+  const getVendor = async () => {
+    const urls = rawText.match(
+      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
+    )
 
-  const metadata = urls !== null ? await getSiteMetadata(urls[0]) : null
+    const metadata = urls !== null ? await getSiteMetadata(urls[0]) : null
+
+    const provider = metadata.provider
+      ? metadata.provider.charAt(0).toUpperCase() +
+        metadata.provider.substring(1)
+      : null
+
+    const matchedUrl = metadata.url
+      ? metadata.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
+      : null
+    const baseUrl = matchedUrl && matchedUrl[1].replace(/^www\./gi, '')
+
+    const icon = metadata.icon || null
+
+    return {
+      name: provider,
+      url: baseUrl,
+      icon,
+    }
+  }
 
   const total = getTotal()
+  const date = getDate()
+  const vendor = await getVendor()
 
   return {
     total: total.amount,
     currency: total.currency,
-    date: getDate(),
+    date,
     ocr: rawText,
-    vendor:
-      metadata !== null
-        ? {
-            name: metadata.provider,
-            url: metadata.url,
-            icon: metadata.icon,
-          }
-        : null,
+    vendor,
   }
 }

@@ -29,6 +29,27 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
 
   console.log(receiptData)
 
+  if (!receiptData) {
+    return {}
+  }
+
+  if (receiptData.vendor.url !== null) {
+    const res = await esClient.search({
+      index: 'vendors',
+      body: {
+        query: {
+          match: {
+            url: receiptData.vendor.url,
+          },
+        },
+      },
+    })
+
+    console.log(res)
+  }
+
+  // TODO: Check receiptData and make sure it is sufficient in order to save to ES and proceed with the scan
+
   await esClient.index({
     index: 'receipts',
     type: 'receipt',
