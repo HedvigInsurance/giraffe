@@ -20,7 +20,7 @@ type Mutation {
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
-  scanReceipt(key: String!): ReceiptData
+  scanReceipt(key: String!): Receipt
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
@@ -382,11 +382,17 @@ enum InsuranceType {
   STUDENT_BRF
 }
 
-type ReceiptData {
-  text: String
+type Receipt {
   total: Float
   currency: String
   date: LocalDate
+  vendor: ReceiptVendor
+}
+
+type ReceiptVendor {
+  name: String
+  url: String
+  icon: String
 }
 
 type Cashback {

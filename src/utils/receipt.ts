@@ -49,14 +49,6 @@ const getRectangle = (annotation: any): Rectangle => {
 export const scanRecept = async (url: string) => {
   const visionData = await client.documentTextDetection(url)
 
-  /*
-  fs.writeFile(
-    __dirname + '/japan-foto.json',
-    JSON.stringify(visionData),
-    () => {},
-  )
-  */
-
   return visionData
 }
 
@@ -95,7 +87,6 @@ export const parseReceipt = async (visionObject: any) => {
         const textRectangle = getRectangle(textAnnotation)
 
         if (textRectangle.y >= rect.y - 15 && textRectangle.y <= rect.y + 15) {
-          console.log(textRectangle)
           textAnnotationCandidates.push(textAnnotation)
         }
       })
@@ -174,7 +165,7 @@ export const parseReceipt = async (visionObject: any) => {
     return null
   }
 
-  getDate()
+  const date = getDate()
 
   const urls = rawText.match(
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
@@ -185,16 +176,15 @@ export const parseReceipt = async (visionObject: any) => {
   const metadata = urls !== null ? await getSiteMetadata(urls[0]) : null
 
   return {
-    price: price !== null ? price.value : null,
+    total: price !== null ? price.value : null,
     currency: price !== null ? currencyMap[price.currency] || 'SEK' : null,
-    date: getDate(),
+    date,
     vendor:
       metadata !== null
         ? {
-            title: metadata.title,
-            provider: metadata.provider,
-            icon: metadata.icon,
+            name: metadata.provider,
             url: metadata.url,
+            icon: metadata.icon,
           }
         : null,
   }

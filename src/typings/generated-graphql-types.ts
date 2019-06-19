@@ -387,7 +387,7 @@ export interface Mutation {
   createOffer?: boolean;
   signOffer?: boolean;
   uploadFile: File;
-  scanReceipt?: ReceiptData;
+  scanReceipt?: Receipt;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
@@ -443,11 +443,17 @@ export interface SignInput {
 
 export type Upload = any;
 
-export interface ReceiptData {
-  text?: string;
+export interface Receipt {
   total?: number;
   currency?: string;
   date?: LocalDate;
+  vendor?: ReceiptVendor;
+}
+
+export interface ReceiptVendor {
+  name?: string;
+  url?: string;
+  icon?: string;
 }
 
 export interface ChatResponseTextInput {
@@ -603,7 +609,8 @@ export interface Resolver {
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
-  ReceiptData?: ReceiptDataTypeResolver;
+  Receipt?: ReceiptTypeResolver;
+  ReceiptVendor?: ReceiptVendorTypeResolver;
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
@@ -1440,7 +1447,7 @@ export interface MutationToUploadFileResolver<TParent = undefined, TResult = Fil
 export interface MutationToScanReceiptArgs {
   key: string;
 }
-export interface MutationToScanReceiptResolver<TParent = undefined, TResult = ReceiptData | null> {
+export interface MutationToScanReceiptResolver<TParent = undefined, TResult = Receipt | null> {
   (parent: TParent, args: MutationToScanReceiptArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1562,26 +1569,44 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ReceiptDataTypeResolver<TParent = ReceiptData> {
-  text?: ReceiptDataToTextResolver<TParent>;
-  total?: ReceiptDataToTotalResolver<TParent>;
-  currency?: ReceiptDataToCurrencyResolver<TParent>;
-  date?: ReceiptDataToDateResolver<TParent>;
+export interface ReceiptTypeResolver<TParent = Receipt> {
+  total?: ReceiptToTotalResolver<TParent>;
+  currency?: ReceiptToCurrencyResolver<TParent>;
+  date?: ReceiptToDateResolver<TParent>;
+  vendor?: ReceiptToVendorResolver<TParent>;
 }
 
-export interface ReceiptDataToTextResolver<TParent = ReceiptData, TResult = string | null> {
+export interface ReceiptToTotalResolver<TParent = Receipt, TResult = number | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ReceiptDataToTotalResolver<TParent = ReceiptData, TResult = number | null> {
+export interface ReceiptToCurrencyResolver<TParent = Receipt, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ReceiptDataToCurrencyResolver<TParent = ReceiptData, TResult = string | null> {
+export interface ReceiptToDateResolver<TParent = Receipt, TResult = LocalDate | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ReceiptDataToDateResolver<TParent = ReceiptData, TResult = LocalDate | null> {
+export interface ReceiptToVendorResolver<TParent = Receipt, TResult = ReceiptVendor | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptVendorTypeResolver<TParent = ReceiptVendor> {
+  name?: ReceiptVendorToNameResolver<TParent>;
+  url?: ReceiptVendorToUrlResolver<TParent>;
+  icon?: ReceiptVendorToIconResolver<TParent>;
+}
+
+export interface ReceiptVendorToNameResolver<TParent = ReceiptVendor, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptVendorToUrlResolver<TParent = ReceiptVendor, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptVendorToIconResolver<TParent = ReceiptVendor, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
