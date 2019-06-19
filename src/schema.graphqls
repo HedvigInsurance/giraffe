@@ -387,6 +387,7 @@ type Receipt {
   currency: String
   date: LocalDate
   vendor: ReceiptVendor
+  ocr: String
 }
 
 type ReceiptVendor {

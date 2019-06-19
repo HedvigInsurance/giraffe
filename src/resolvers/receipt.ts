@@ -1,5 +1,5 @@
 // import { getUser } from '../api'
-// import { esClient } from '../api/elasticsearch'
+import { esClient } from '../api/elasticsearch'
 import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
 import { MutationToScanReceiptResolver } from '../typings/generated-graphql-types'
@@ -25,8 +25,18 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
   })
 
   const visionData = await receipt.scanRecept(signedUrl)
-
   const receiptData = await receipt.parseReceipt(visionData)
+
+  console.log(receiptData)
+
+  await esClient.index({
+    index: 'receipts',
+    type: 'receipt',
+    body: {
+      ...receiptData,
+      image: key,
+    },
+  })
 
   return {
     ...receiptData,

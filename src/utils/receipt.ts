@@ -10,22 +10,39 @@ interface Rectangle {
 }
 
 interface TotalPrice {
-  value: number
-  currency: string
+  amount: number
+  currency: Currency
 }
+
+enum Currency {
+  SEK = 'SEK',
+  EUR = 'EUR',
+  USD = 'USD',
+  DKK = 'DKK',
+  NOK = 'NOK',
+}
+
+const currencyMap: { [key: string]: Currency } = {
+  sek: Currency.SEK,
+  kr: Currency.SEK,
+  usd: Currency.USD,
+  $: Currency.USD,
+  eur: Currency.EUR,
+  '€': Currency.EUR,
+  dkk: Currency.DKK,
+  nok: Currency.NOK,
+}
+
+const currencyRegex = new RegExp(
+  `(${Object.keys(currencyMap)
+    .map((key) => {
+      return key.replace('$', '\\$')
+    })
+    .join('|')})`,
+  'gi',
+)
 
 const totalLabels = ['total', 'totalt', 'betala', 'summa', 'due']
-
-const currencyMap: { [key: string]: string } = {
-  sek: 'SEK',
-  kr: 'SEK',
-  usd: 'USD',
-  $: 'USD',
-  eur: 'EUR',
-  '€': 'EUR',
-  dkk: 'DKK',
-  nok: 'NOK',
-}
 
 const getRectangle = (annotation: any): Rectangle => {
   const vertices = annotation.boundingPoly.vertices
@@ -62,7 +79,7 @@ export const parseReceipt = async (visionObject: any) => {
 
   textAnnotations.shift()
 
-  const getPrice = () => {
+  const getTotal = () => {
     const totalRectangles: Rectangle[] = []
 
     textAnnotations.forEach((annotation: any) => {
@@ -95,28 +112,28 @@ export const parseReceipt = async (visionObject: any) => {
         .map((textAnnoation) => textAnnoation.description)
         .join('')
 
-      const currencyMatches = priceString
-        .toLowerCase()
-        .match(/(kr|sek|\€|eur|\$|usd|dkk|nok)/)
+      const currencyMatches = priceString.match(currencyRegex)
       const currency =
-        currencyMatches !== null ? currencyMatches[0] : 'SEK (default)'
+        currencyMap[
+          currencyMatches !== null ? currencyMatches[0].toLowerCase() : 'sek'
+        ]
 
-      const prices = priceString.match(/[0-9]+[\\.\\,][0-9][0-9]/g)
+      const priceMatches = priceString.match(/[0-9]+[\\.\\,][0-9][0-9]/g)
 
-      if (prices != null) {
-        const values: number[] = prices.map((price) =>
-          parseFloat(price.replace(/\./, '.')),
+      if (priceMatches !== null) {
+        const priceMatchValues: number[] = priceMatches.map((priceMatchValue) =>
+          parseFloat(priceMatchValue.replace(/\./, '.')),
         )
 
         priceCandidates.push({
-          value: Math.max(...values),
+          amount: Math.max(...priceMatchValues),
           currency,
         })
       }
     })
 
     if (priceCandidates.length !== 0) {
-      return priceCandidates.sort((a, b) => b.value - a.value)[0]
+      return priceCandidates.sort((a, b) => b.amount - a.amount)[0]
     }
 
     const priceStrings = rawText.match(/[0-9]+[\\.\\,][0-9][0-9]/g)
@@ -125,15 +142,14 @@ export const parseReceipt = async (visionObject: any) => {
         ? priceStrings.map((price: string) =>
             parseFloat(price.replace(/\./, '.')),
           )
-        : []
+        : null
 
-    const currencies = rawText
-      .toLowerCase()
-      .match(/(kr|sek|\€|eur|\$|usd|dkk|nok)/g)
+    const currencies = rawText.match(currencyRegex)
 
     return {
-      value: Math.max(...prices),
-      currency: currencies !== null ? currencies[0] : null,
+      amount: prices !== null ? Math.max(...prices) : null,
+      currency:
+        currencyMap[currencies !== null ? currencies[0].toLowerCase() : 'sek'],
     }
   }
   const dates = rawText.match(
@@ -165,20 +181,19 @@ export const parseReceipt = async (visionObject: any) => {
     return null
   }
 
-  const date = getDate()
-
   const urls = rawText.match(
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
   )
 
-  const price = getPrice()
-
   const metadata = urls !== null ? await getSiteMetadata(urls[0]) : null
 
+  const total = getTotal()
+
   return {
-    total: price !== null ? price.value : null,
-    currency: price !== null ? currencyMap[price.currency] || 'SEK' : null,
-    date,
+    total: total.amount,
+    currency: total.currency,
+    date: getDate(),
+    ocr: rawText,
     vendor:
       metadata !== null
         ? {

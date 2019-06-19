@@ -15,5 +15,5 @@ export const esClient = new elasticsearch.Client({
   }),
   connectionClass,
   host: AWS_ELASTICSEARCH_ENDPOINT,
-  log: ['error', 'trace'],
+  log: ['error'],
 })

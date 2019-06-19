@@ -448,6 +448,7 @@ export interface Receipt {
   currency?: string;
   date?: LocalDate;
   vendor?: ReceiptVendor;
+  ocr?: string;
 }
 
 export interface ReceiptVendor {
@@ -1574,6 +1575,7 @@ export interface ReceiptTypeResolver<TParent = Receipt> {
   currency?: ReceiptToCurrencyResolver<TParent>;
   date?: ReceiptToDateResolver<TParent>;
   vendor?: ReceiptToVendorResolver<TParent>;
+  ocr?: ReceiptToOcrResolver<TParent>;
 }
 
 export interface ReceiptToTotalResolver<TParent = Receipt, TResult = number | null> {
@@ -1589,6 +1591,10 @@ export interface ReceiptToDateResolver<TParent = Receipt, TResult = LocalDate | 
 }
 
 export interface ReceiptToVendorResolver<TParent = Receipt, TResult = ReceiptVendor | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptToOcrResolver<TParent = Receipt, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
