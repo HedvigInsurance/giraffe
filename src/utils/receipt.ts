@@ -189,17 +189,19 @@ export const parseReceipt = async (visionObject: any) => {
 
     const metadata = urls !== null ? await getSiteMetadata(urls[0]) : null
 
-    const provider = metadata.provider
-      ? metadata.provider.charAt(0).toUpperCase() +
-        metadata.provider.substring(1)
-      : null
+    const provider =
+      metadata && metadata.provider
+        ? metadata.provider.charAt(0).toUpperCase() +
+          metadata.provider.substring(1)
+        : null
 
-    const matchedUrl = metadata.url
-      ? metadata.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
-      : null
+    const matchedUrl =
+      metadata && metadata.url
+        ? metadata.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
+        : null
     const baseUrl = matchedUrl && matchedUrl[1].replace(/^www\./gi, '')
 
-    const icon = metadata.icon || null
+    const icon = (metadata && metadata.icon) || null
 
     return {
       name: provider,
