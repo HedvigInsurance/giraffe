@@ -25,6 +25,7 @@ export interface Query {
   chatState: ChatState;
   avatars?: Array<Avatar | null>;
   chatActions?: Array<ChatAction | null>;
+  receipts?: Array<Receipt | null>;
 }
 
 export interface Insurance {
@@ -380,6 +381,20 @@ export interface ChatAction {
 
 export type URL = any;
 
+export interface Receipt {
+  total?: number;
+  currency?: string;
+  date?: LocalDate;
+  vendor?: ReceiptVendor;
+  ocr?: string;
+}
+
+export interface ReceiptVendor {
+  name?: string;
+  url?: string;
+  icon?: string;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -442,20 +457,6 @@ export interface SignInput {
 }
 
 export type Upload = any;
-
-export interface Receipt {
-  total?: number;
-  currency?: string;
-  date?: LocalDate;
-  vendor?: ReceiptVendor;
-  ocr?: string;
-}
-
-export interface ReceiptVendor {
-  name?: string;
-  url?: string;
-  icon?: string;
-}
 
 export interface ChatResponseTextInput {
   globalId: string;
@@ -606,12 +607,12 @@ export interface Resolver {
   Object?: GraphQLScalarType;
   ChatAction?: ChatActionTypeResolver;
   URL?: GraphQLScalarType;
+  Receipt?: ReceiptTypeResolver;
+  ReceiptVendor?: ReceiptVendorTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
   Upload?: GraphQLScalarType;
-  Receipt?: ReceiptTypeResolver;
-  ReceiptVendor?: ReceiptVendorTypeResolver;
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
   Subscription?: SubscriptionTypeResolver;
@@ -631,6 +632,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   chatState?: QueryToChatStateResolver<TParent>;
   avatars?: QueryToAvatarsResolver<TParent>;
   chatActions?: QueryToChatActionsResolver<TParent>;
+  receipts?: QueryToReceiptsResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -684,6 +686,10 @@ export interface QueryToAvatarsResolver<TParent = undefined, TResult = Array<Ava
 }
 
 export interface QueryToChatActionsResolver<TParent = undefined, TResult = Array<ChatAction | null> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToReceiptsResolver<TParent = undefined, TResult = Array<Receipt | null> | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1380,6 +1386,52 @@ export interface ChatActionToEnabledResolver<TParent = ChatAction, TResult = boo
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface ReceiptTypeResolver<TParent = Receipt> {
+  total?: ReceiptToTotalResolver<TParent>;
+  currency?: ReceiptToCurrencyResolver<TParent>;
+  date?: ReceiptToDateResolver<TParent>;
+  vendor?: ReceiptToVendorResolver<TParent>;
+  ocr?: ReceiptToOcrResolver<TParent>;
+}
+
+export interface ReceiptToTotalResolver<TParent = Receipt, TResult = number | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptToCurrencyResolver<TParent = Receipt, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptToDateResolver<TParent = Receipt, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptToVendorResolver<TParent = Receipt, TResult = ReceiptVendor | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptToOcrResolver<TParent = Receipt, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptVendorTypeResolver<TParent = ReceiptVendor> {
+  name?: ReceiptVendorToNameResolver<TParent>;
+  url?: ReceiptVendorToUrlResolver<TParent>;
+  icon?: ReceiptVendorToIconResolver<TParent>;
+}
+
+export interface ReceiptVendorToNameResolver<TParent = ReceiptVendor, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptVendorToUrlResolver<TParent = ReceiptVendor, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ReceiptVendorToIconResolver<TParent = ReceiptVendor, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MutationTypeResolver<TParent = undefined> {
   logout?: MutationToLogoutResolver<TParent>;
   createSession?: MutationToCreateSessionResolver<TParent>;
@@ -1567,52 +1619,6 @@ export interface SessionInformationToTokenResolver<TParent = SessionInformation,
 }
 
 export interface SessionInformationToMemberIdResolver<TParent = SessionInformation, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptTypeResolver<TParent = Receipt> {
-  total?: ReceiptToTotalResolver<TParent>;
-  currency?: ReceiptToCurrencyResolver<TParent>;
-  date?: ReceiptToDateResolver<TParent>;
-  vendor?: ReceiptToVendorResolver<TParent>;
-  ocr?: ReceiptToOcrResolver<TParent>;
-}
-
-export interface ReceiptToTotalResolver<TParent = Receipt, TResult = number | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptToCurrencyResolver<TParent = Receipt, TResult = string | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptToDateResolver<TParent = Receipt, TResult = LocalDate | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptToVendorResolver<TParent = Receipt, TResult = ReceiptVendor | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptToOcrResolver<TParent = Receipt, TResult = string | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptVendorTypeResolver<TParent = ReceiptVendor> {
-  name?: ReceiptVendorToNameResolver<TParent>;
-  url?: ReceiptVendorToUrlResolver<TParent>;
-  icon?: ReceiptVendorToIconResolver<TParent>;
-}
-
-export interface ReceiptVendorToNameResolver<TParent = ReceiptVendor, TResult = string | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptVendorToUrlResolver<TParent = ReceiptVendor, TResult = string | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ReceiptVendorToIconResolver<TParent = ReceiptVendor, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

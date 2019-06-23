@@ -11,6 +11,7 @@ type Query {
   chatState: ChatState!
   avatars: [Avatar]
   chatActions: [ChatAction]
+  receipts: [Receipt]
 }
 
 type Mutation {
@@ -383,6 +384,7 @@ enum InsuranceType {
 }
 
 type Receipt {
+  image: String
   total: Float
   currency: String
   date: LocalDate

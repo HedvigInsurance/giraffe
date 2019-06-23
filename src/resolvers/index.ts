@@ -49,7 +49,7 @@ import {
 } from './messages'
 import { offerClosed } from './offerClosed'
 import { registerPushToken } from './push-token'
-import { scanReceipt } from './receipt'
+import { scanReceipt } from './receipts'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'

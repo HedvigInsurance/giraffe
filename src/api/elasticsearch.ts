@@ -7,6 +7,22 @@ import {
   AWS_ELASTICSEARCH_SECRET_ACCESS_KEY,
 } from '../config'
 
+export interface ReceiptDto {
+  image: string
+  total?: number
+  currency?: string
+  date?: Date
+  ocr: string
+  vendor?: string
+}
+
+export interface VendorDto {
+  name: string
+  url: string
+  icon?: string
+  updated: Date
+}
+
 export const esClient = new elasticsearch.Client({
   awsConfig: new AWS.Config({
     accessKeyId: AWS_ELASTICSEARCH_ACCESS_KEY_ID,
