@@ -382,6 +382,7 @@ export interface ChatAction {
 export type URL = any;
 
 export interface Receipt {
+  image?: string;
   total?: number;
   currency?: string;
   date?: LocalDate;
@@ -403,6 +404,7 @@ export interface Mutation {
   signOffer?: boolean;
   uploadFile: File;
   scanReceipt?: Receipt;
+  createReceipt?: boolean;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
@@ -457,6 +459,15 @@ export interface SignInput {
 }
 
 export type Upload = any;
+
+export interface CreateReceiptInput {
+  image: string;
+  total?: number;
+  currency?: string;
+  date?: LocalDate;
+  ocr: string;
+  url?: string;
+}
 
 export interface ChatResponseTextInput {
   globalId: string;
@@ -1387,11 +1398,16 @@ export interface ChatActionToEnabledResolver<TParent = ChatAction, TResult = boo
 }
 
 export interface ReceiptTypeResolver<TParent = Receipt> {
+  image?: ReceiptToImageResolver<TParent>;
   total?: ReceiptToTotalResolver<TParent>;
   currency?: ReceiptToCurrencyResolver<TParent>;
   date?: ReceiptToDateResolver<TParent>;
   vendor?: ReceiptToVendorResolver<TParent>;
   ocr?: ReceiptToOcrResolver<TParent>;
+}
+
+export interface ReceiptToImageResolver<TParent = Receipt, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface ReceiptToTotalResolver<TParent = Receipt, TResult = number | null> {
@@ -1440,6 +1456,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   signOffer?: MutationToSignOfferResolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
   scanReceipt?: MutationToScanReceiptResolver<TParent>;
+  createReceipt?: MutationToCreateReceiptResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
@@ -1502,6 +1519,13 @@ export interface MutationToScanReceiptArgs {
 }
 export interface MutationToScanReceiptResolver<TParent = undefined, TResult = Receipt | null> {
   (parent: TParent, args: MutationToScanReceiptArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToCreateReceiptArgs {
+  input: CreateReceiptInput;
+}
+export interface MutationToCreateReceiptResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToCreateReceiptArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToSelectCashbackOptionArgs {

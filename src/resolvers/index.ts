@@ -49,7 +49,7 @@ import {
 } from './messages'
 import { offerClosed } from './offerClosed'
 import { registerPushToken } from './push-token'
-import { scanReceipt } from './receipts'
+import { createReceipt, receipts, scanReceipt } from './receipts'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
@@ -68,6 +68,7 @@ const resolvers: Resolver = {
     currentChatResponse,
     avatars,
     chatActions,
+    receipts,
   },
   Mutation: {
     logout,
@@ -95,6 +96,7 @@ const resolvers: Resolver = {
     markMessageAsRead,
     log,
     scanReceipt,
+    createReceipt,
   },
   Subscription: {
     offer: subscribeToOffer,

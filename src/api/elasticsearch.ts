@@ -1,11 +1,7 @@
 import * as AWS from 'aws-sdk'
 import * as elasticsearch from 'elasticsearch'
 import * as connectionClass from 'http-aws-es'
-import {
-  AWS_ELASTICSEARCH_ACCESS_KEY_ID,
-  AWS_ELASTICSEARCH_ENDPOINT,
-  AWS_ELASTICSEARCH_SECRET_ACCESS_KEY,
-} from '../config'
+import { AWS_ELASTICSEARCH_ENDPOINT, AWS_KEY, AWS_SECRET } from '../config'
 
 export interface ReceiptDto {
   image: string
@@ -17,7 +13,7 @@ export interface ReceiptDto {
 }
 
 export interface VendorDto {
-  name: string
+  name?: string
   url: string
   icon?: string
   updated: Date
@@ -25,8 +21,8 @@ export interface VendorDto {
 
 export const esClient = new elasticsearch.Client({
   awsConfig: new AWS.Config({
-    accessKeyId: AWS_ELASTICSEARCH_ACCESS_KEY_ID,
-    secretAccessKey: AWS_ELASTICSEARCH_SECRET_ACCESS_KEY,
+    accessKeyId: AWS_KEY,
+    secretAccessKey: AWS_SECRET,
     region: 'eu-central-1',
   }),
   connectionClass,

@@ -22,6 +22,7 @@ type Mutation {
   signOffer(details: SignInput!): Boolean
   uploadFile(file: Upload!): File!
   scanReceipt(key: String!): Receipt
+  createReceipt(input: CreateReceiptInput!): Boolean
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
@@ -240,6 +241,15 @@ input ChatResponseBodyAudioInput {
 input ChatResponseAudioInput {
   globalId: ID!
   body: ChatResponseBodyAudioInput!
+}
+
+input CreateReceiptInput {
+  image: String!
+  total: Float
+  currency: String
+  date: LocalDate
+  ocr: String!
+  url: String
 }
 
 input CampaignInput {

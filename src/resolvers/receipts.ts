@@ -6,10 +6,11 @@ import { esClient, ReceiptDto, VendorDto } from '../api/elasticsearch'
 import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
 import {
+  MutationToCreateReceiptResolver,
   MutationToScanReceiptResolver,
   QueryToReceiptsResolver,
 } from '../typings/generated-graphql-types'
-import * as receipt from '../utils/receipt'
+import * as receiptUtils from '../utils/receipt'
 
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
 const ONE_MINUTE = 60
@@ -52,8 +53,6 @@ export const receipts: QueryToReceiptsResolver = async (
           })
         : null
 
-      console.log(vendorSearch)
-
       const vendor =
         vendorSearch !== null && vendorSearch.found === true
           ? (vendorSearch._source as VendorDto)
@@ -86,7 +85,7 @@ export const receipts: QueryToReceiptsResolver = async (
 }
 
 const uploadVendorIcon = (vendorIconUrl: string) =>
-  new Promise(async (resolve) => {
+  new Promise<string>(async (resolve) => {
     if (!vendorIconUrl) {
       return resolve(undefined)
     }
@@ -121,35 +120,9 @@ const uploadVendorIcon = (vendorIconUrl: string) =>
     })
   })
 
-export const scanReceipt: MutationToScanReceiptResolver = async (
-  _root,
-  { key },
-  {},
-) => {
-  // const token = getToken()
-  // const user = await getUser(token, headers)
-
-  // TODO: getToken(), getUser()
-  // Check that metadata userId == getUser().userId
-
-  // TODO: Check receiptData and make sure it is sufficient in order to save to ES and proceed with the scan
-
-  const signedUrl = s3.getSignedUrl('getObject', {
-    Bucket: AWS_S3_BUCKET,
-    Key: key,
-    Expires: ONE_MINUTE,
-  })
-
-  const visionData = await receipt.scanRecept(signedUrl)
-  const receiptData = await receipt.parseReceipt(visionData)
-
-  if (!receiptData) {
-    // TODO
-    return {}
-  }
-
-  const indexedVendor: any = await new Promise(async (resolve) => {
-    if (receiptData.vendor.url === null) {
+const indexVendor = (vendor: VendorDto) =>
+  new Promise<{ id: string; icon?: string }>(async (resolve) => {
+    if (!vendor.url) {
       resolve(undefined)
     }
 
@@ -158,7 +131,7 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
       body: {
         query: {
           match: {
-            url: receiptData.vendor.url,
+            url: vendor.url,
           },
         },
       },
@@ -166,11 +139,11 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
 
     const foundVendor =
       searchResonse.hits.total > 0
-        ? (searchResonse.hits.hits[0]._source as any)
-        : null
+        ? (searchResonse.hits.hits[0]._source as VendorDto)
+        : undefined
 
     const shouldIndexVendor = () => {
-      if (foundVendor === null) {
+      if (!foundVendor) {
         return true
       }
 
@@ -188,7 +161,7 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
       return buffer1.toString('base64') !== buffer2.toString('base64')
     }
 
-    if (shouldIndexVendor() === false) {
+    if (shouldIndexVendor() === false && foundVendor) {
       resolve({
         id: searchResonse.hits.hits[0]._id,
         icon: foundVendor.icon,
@@ -196,32 +169,33 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
     }
 
     const vendorIconUrl =
-      foundVendor !== null && foundVendor.icon !== null
+      foundVendor && foundVendor.icon !== null
         ? s3.getSignedUrl('getObject', {
             Bucket: AWS_S3_BUCKET,
             Key: foundVendor.icon,
             Expires: ONE_MINUTE,
           })
-        : null
+        : undefined
 
     const shouldUploadIcon =
-      vendorIconUrl !== null && receiptData.vendor.icon !== null
-        ? await imageDiffers(vendorIconUrl, receiptData.vendor.icon)
+      vendorIconUrl && vendor.icon
+        ? await imageDiffers(vendorIconUrl, vendor.icon)
         : true
 
-    const iconKey = shouldUploadIcon
-      ? await uploadVendorIcon(receiptData.vendor.icon)
-      : foundVendor !== null && foundVendor.icon
+    const iconKey =
+      shouldUploadIcon && vendor.icon
+        ? await uploadVendorIcon(vendor.icon)
+        : foundVendor && foundVendor.icon
 
     const vendorIndexReponse = await esClient.index({
       index: 'vendors',
-      ...(foundVendor !== null && { id: searchResonse.hits.hits[0]._id }),
+      ...(foundVendor && { id: searchResonse.hits.hits[0]._id }),
       type: 'vendor',
       body: {
-        name: receiptData.vendor.name,
-        url: foundVendor.url,
-        icon: iconKey,
-        updated: new Date(),
+        name: vendor.name || (foundVendor && foundVendor.name) || null,
+        url: vendor.url,
+        icon: iconKey || null,
+        updated: vendor.updated,
       },
     })
 
@@ -231,17 +205,30 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
     })
   })
 
-  await esClient.index({
-    index: 'receipts',
-    type: 'receipt',
-    body: {
-      image: key,
-      total: receiptData.total,
-      currency: receiptData.currency,
-      date: receiptData.date,
-      ocr: receiptData.ocr,
-      vendor: indexedVendor !== undefined ? indexedVendor.id : null,
-    },
+export const scanReceipt: MutationToScanReceiptResolver = async (
+  _root,
+  { key },
+  {},
+) => {
+  // const token = getToken()
+  // const user = await getUser(token, headers) ...
+
+  const signedUrl = s3.getSignedUrl('getObject', {
+    Bucket: AWS_S3_BUCKET,
+    Key: key,
+    Expires: ONE_MINUTE,
+  })
+
+  const visionData = await receiptUtils.scanRecept(signedUrl)
+  const receiptData = await receiptUtils.parseReceipt(visionData)
+
+  if (!receiptData) {
+    return {}
+  }
+
+  const indexedVendor = await indexVendor({
+    ...receiptData.vendor,
+    updated: new Date(),
   })
 
   const iconUrl =
@@ -260,4 +247,37 @@ export const scanReceipt: MutationToScanReceiptResolver = async (
       icon: iconUrl,
     },
   }
+}
+
+export const createReceipt: MutationToCreateReceiptResolver = async (
+  _root,
+  { input },
+  {},
+) => {
+  // const token = getToken()
+  // const user = await getUser(token, headers) ...
+
+  const { image, total, currency, date, ocr, url } = input
+
+  const indexedVendor = url
+    ? await indexVendor({
+        ...(await receiptUtils.getVendor(url)),
+        updated: new Date(),
+      })
+    : undefined
+
+  const response = await esClient.index({
+    index: 'receipts',
+    type: 'receipt',
+    body: {
+      image,
+      total,
+      currency,
+      date,
+      ocr,
+      vendor: indexedVendor !== undefined ? indexedVendor.id : null,
+    },
+  })
+
+  return response.result === 'created'
 }

@@ -63,6 +63,30 @@ const getRectangle = (annotation: any): Rectangle => {
   return rectangle
 }
 
+export const getVendor = async (url: string) => {
+  const metadata = await getSiteMetadata(url)
+
+  const provider =
+    metadata && metadata.provider
+      ? metadata.provider.charAt(0).toUpperCase() +
+        metadata.provider.substring(1)
+      : null
+
+  const matchedUrl =
+    metadata && metadata.url
+      ? metadata.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
+      : null
+  const baseUrl = matchedUrl && matchedUrl[1].replace(/^www\./gi, '')
+
+  const icon = (metadata && metadata.icon) || null
+
+  return {
+    name: provider,
+    url: baseUrl,
+    icon,
+  }
+}
+
 export const scanRecept = async (url: string) => {
   const visionData = await client.documentTextDetection(url)
 
@@ -182,37 +206,16 @@ export const parseReceipt = async (visionObject: any) => {
     return null
   }
 
-  const getVendor = async () => {
-    const urls = rawText.match(
-      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
-    )
-
-    const metadata = urls !== null ? await getSiteMetadata(urls[0]) : null
-
-    const provider =
-      metadata && metadata.provider
-        ? metadata.provider.charAt(0).toUpperCase() +
-          metadata.provider.substring(1)
-        : null
-
-    const matchedUrl =
-      metadata && metadata.url
-        ? metadata.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
-        : null
-    const baseUrl = matchedUrl && matchedUrl[1].replace(/^www\./gi, '')
-
-    const icon = (metadata && metadata.icon) || null
-
-    return {
-      name: provider,
-      url: baseUrl,
-      icon,
-    }
-  }
+  const urls = rawText.match(
+    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g,
+  )
 
   const total = getTotal()
   const date = getDate()
-  const vendor = await getVendor()
+  const vendor =
+    urls !== null
+      ? await getVendor(urls[0])
+      : { name: null, url: null, icon: null }
 
   return {
     total: total.amount,
