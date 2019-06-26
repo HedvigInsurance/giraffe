@@ -328,8 +328,7 @@ input SignInput {
 type Insurance {
   address: String
   postalNumber: String
-  monthlyCost: Int
-  safetyIncreasers: [String!]
+  cost: InsuranceCost
   personsInHousehold: Int
   certificateUrl: String
   status: InsuranceStatus!
@@ -342,6 +341,13 @@ type Insurance {
   livingSpace: Int
 
   perilCategories: [PerilCategory]
+
+  monthlyCost: Int @deprecated(
+    reason: "Use cost instead"
+  )
+  safetyIncreasers: [String!] @deprecated(
+    reason: "No longer supported"
+  )
 }
 
 type Member {
@@ -405,6 +411,17 @@ type ChatAction {
   text: String
   triggerUrl: URL
   enabled: Boolean
+}
+
+type InsuranceCost {
+  monthlyGross: MonetaryAmountV2!,
+  monthlyDiscount: MonetaryAmountV2!,
+  monthlyNet: MonetaryAmountV2!
+}
+
+type MonetaryAmountV2 {
+  amount: String!,
+  currency: String!
 }
 
 enum BankIdStatus {

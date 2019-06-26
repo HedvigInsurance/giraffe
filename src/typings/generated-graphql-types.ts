@@ -30,8 +30,7 @@ export interface Query {
 export interface Insurance {
   address?: string;
   postalNumber?: string;
-  monthlyCost?: number;
-  safetyIncreasers?: Array<string>;
+  cost?: InsuranceCost;
   personsInHousehold?: number;
   certificateUrl?: string;
   status: InsuranceStatus;
@@ -43,6 +42,29 @@ export interface Insurance {
   currentInsurerName?: string;
   livingSpace?: number;
   perilCategories?: Array<PerilCategory | null>;
+  
+  /**
+   * 
+   * @deprecated Use cost instead
+   */
+  monthlyCost?: number;
+  
+  /**
+   * 
+   * @deprecated No longer supported
+   */
+  safetyIncreasers?: Array<string>;
+}
+
+export interface InsuranceCost {
+  monthlyGross: MonetaryAmountV2;
+  monthlyDiscount: MonetaryAmountV2;
+  monthlyNet: MonetaryAmountV2;
+}
+
+export interface MonetaryAmountV2 {
+  amount: string;
+  currency: string;
 }
 
 export enum InsuranceStatus {
@@ -546,6 +568,8 @@ export interface SignEvent {
 export interface Resolver {
   Query?: QueryTypeResolver;
   Insurance?: InsuranceTypeResolver;
+  InsuranceCost?: InsuranceCostTypeResolver;
+  MonetaryAmountV2?: MonetaryAmountV2TypeResolver;
   LocalDate?: GraphQLScalarType;
   PerilCategory?: PerilCategoryTypeResolver;
   Peril?: PerilTypeResolver;
@@ -673,8 +697,7 @@ export interface QueryToChatActionsResolver<TParent = undefined, TResult = Array
 export interface InsuranceTypeResolver<TParent = Insurance> {
   address?: InsuranceToAddressResolver<TParent>;
   postalNumber?: InsuranceToPostalNumberResolver<TParent>;
-  monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
-  safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
+  cost?: InsuranceToCostResolver<TParent>;
   personsInHousehold?: InsuranceToPersonsInHouseholdResolver<TParent>;
   certificateUrl?: InsuranceToCertificateUrlResolver<TParent>;
   status?: InsuranceToStatusResolver<TParent>;
@@ -686,6 +709,8 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   currentInsurerName?: InsuranceToCurrentInsurerNameResolver<TParent>;
   livingSpace?: InsuranceToLivingSpaceResolver<TParent>;
   perilCategories?: InsuranceToPerilCategoriesResolver<TParent>;
+  monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
+  safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
@@ -696,11 +721,7 @@ export interface InsuranceToPostalNumberResolver<TParent = Insurance, TResult = 
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface InsuranceToMonthlyCostResolver<TParent = Insurance, TResult = number | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface InsuranceToSafetyIncreasersResolver<TParent = Insurance, TResult = Array<string> | null> {
+export interface InsuranceToCostResolver<TParent = Insurance, TResult = InsuranceCost | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -745,6 +766,45 @@ export interface InsuranceToLivingSpaceResolver<TParent = Insurance, TResult = n
 }
 
 export interface InsuranceToPerilCategoriesResolver<TParent = Insurance, TResult = Array<PerilCategory | null> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToMonthlyCostResolver<TParent = Insurance, TResult = number | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToSafetyIncreasersResolver<TParent = Insurance, TResult = Array<string> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceCostTypeResolver<TParent = InsuranceCost> {
+  monthlyGross?: InsuranceCostToMonthlyGrossResolver<TParent>;
+  monthlyDiscount?: InsuranceCostToMonthlyDiscountResolver<TParent>;
+  monthlyNet?: InsuranceCostToMonthlyNetResolver<TParent>;
+}
+
+export interface InsuranceCostToMonthlyGrossResolver<TParent = InsuranceCost, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceCostToMonthlyDiscountResolver<TParent = InsuranceCost, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceCostToMonthlyNetResolver<TParent = InsuranceCost, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MonetaryAmountV2TypeResolver<TParent = MonetaryAmountV2> {
+  amount?: MonetaryAmountV2ToAmountResolver<TParent>;
+  currency?: MonetaryAmountV2ToCurrencyResolver<TParent>;
+}
+
+export interface MonetaryAmountV2ToAmountResolver<TParent = MonetaryAmountV2, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MonetaryAmountV2ToCurrencyResolver<TParent = MonetaryAmountV2, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
