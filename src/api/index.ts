@@ -12,6 +12,7 @@ import {
   MessageBodySingleSelect,
   PerilCategory,
   SignState,
+  InsuranceCost,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -21,6 +22,7 @@ import {
 } from './../typings/generated-graphql-types'
 
 interface InsuranceDto {
+  cost: InsuranceCost
   currentTotalPrice: number
   addressStreet: string
   zipCode: string

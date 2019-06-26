@@ -14,9 +14,9 @@ const loadInsurance = async (
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
     currentInsurerName: insuranceResponse.currentInsurerName,
+    cost: insuranceResponse.cost,
     policyUrl: insuranceResponse.policyUrl,
     presaleInformationUrl: insuranceResponse.presaleInformationUrl,
-    monthlyCost: insuranceResponse.currentTotalPrice,
     address: insuranceResponse.addressStreet,
     postalNumber: insuranceResponse.zipCode,
     certificateUrl: insuranceResponse.certificateUrl,
@@ -25,6 +25,7 @@ const loadInsurance = async (
     activeFrom: insuranceResponse.activeFrom,
     perilCategories: insuranceResponse.categories,
     livingSpace: insuranceResponse.livingSpace,
+    monthlyCost: insuranceResponse.currentTotalPrice,
     safetyIncreasers: user.safetyIncreasers,
   }
 }

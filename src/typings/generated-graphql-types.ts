@@ -30,7 +30,7 @@ export interface Query {
 export interface Insurance {
   address?: string;
   postalNumber?: string;
-  cost: InsuranceCost;
+  cost?: InsuranceCost;
   personsInHousehold?: number;
   certificateUrl?: string;
   status: InsuranceStatus;
@@ -721,7 +721,7 @@ export interface InsuranceToPostalNumberResolver<TParent = Insurance, TResult = 
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface InsuranceToCostResolver<TParent = Insurance, TResult = InsuranceCost> {
+export interface InsuranceToCostResolver<TParent = Insurance, TResult = InsuranceCost | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

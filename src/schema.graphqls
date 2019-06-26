@@ -328,7 +328,7 @@ input SignInput {
 type Insurance {
   address: String
   postalNumber: String
-  cost: InsuranceCost!
+  cost: InsuranceCost
   personsInHousehold: Int
   certificateUrl: String
   status: InsuranceStatus!
@@ -413,6 +413,17 @@ type ChatAction {
   enabled: Boolean
 }
 
+type InsuranceCost {
+  monthlyGross: MonetaryAmountV2!,
+  monthlyDiscount: MonetaryAmountV2!,
+  monthlyNet: MonetaryAmountV2!
+}
+
+type MonetaryAmountV2 {
+  amount: String!,
+  currency: String!
+}
+
 enum BankIdStatus {
   pending
   failed
@@ -424,17 +435,6 @@ enum SignState {
   IN_PROGRESS
   FAILED
   COMPLETED
-}
-
-type InsuranceCost {
-  monthlyGross: MonetaryAmountV2!,
-  monthlyDiscount: MonetaryAmountV2!,
-  monthlyNet: MonetaryAmountV2!
-}
-
-type MonetaryAmountV2 {
-  amount: String!,
-  currency: String!
 }
 
 scalar LocalDate
