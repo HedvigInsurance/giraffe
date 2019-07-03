@@ -11,6 +11,7 @@ import {
   MessageBody,
   MessageBodyChoices,
   MessageBodyChoicesTypeResolver,
+  MessageBodyFileToFileResolver,
   MutationToEditLastResponseResolver,
   MutationToMarkMessageAsReadResolver,
   MutationToResetConversationResolver,
@@ -21,6 +22,7 @@ import { MessageDto } from './../api/index'
 import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
 import { transformMessage, transformMessages } from '../features/chat/transform'
+import { fileInner } from './file'
 
 export const messages: QueryToMessagesResolver = async (
   _root,
@@ -148,4 +150,19 @@ export const __resolveMessageBodyChoicesType: MessageBodyChoicesTypeResolver = (
   }
 
   return 'MessageBodyChoicesUndefined'
+}
+
+export const getFileByMessageBody: MessageBodyFileToFileResolver = async (
+  { key },
+  _args,
+  { getToken, headers },
+) => {
+  const token = getToken()
+  const user = await getUser(token, headers)
+
+  if (!key) {
+    throw Error('Cannot query a file without a key')
+  }
+
+  return fileInner(key, user.memberId)
 }

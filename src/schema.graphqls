@@ -140,6 +140,8 @@ type MessageBodyFile implements MessageBodyCore {
   text: String!
   key: String
   mimeType: String
+
+  file: File!
 }
 
 type MessageBodyUndefined implements MessageBodyCore {

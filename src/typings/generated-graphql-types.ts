@@ -344,6 +344,7 @@ export interface MessageBodyFile extends MessageBodyCore {
   text: string;
   key?: string;
   mimeType?: string;
+  file: File;
 }
 
 export interface MessageBodyParagraph extends MessageBodyCore {
@@ -1225,6 +1226,7 @@ export interface MessageBodyFileTypeResolver<TParent = MessageBodyFile> {
   text?: MessageBodyFileToTextResolver<TParent>;
   key?: MessageBodyFileToKeyResolver<TParent>;
   mimeType?: MessageBodyFileToMimeTypeResolver<TParent>;
+  file?: MessageBodyFileToFileResolver<TParent>;
 }
 
 export interface MessageBodyFileToTypeResolver<TParent = MessageBodyFile, TResult = string> {
@@ -1244,6 +1246,10 @@ export interface MessageBodyFileToKeyResolver<TParent = MessageBodyFile, TResult
 }
 
 export interface MessageBodyFileToMimeTypeResolver<TParent = MessageBodyFile, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyFileToFileResolver<TParent = MessageBodyFile, TResult = File> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
