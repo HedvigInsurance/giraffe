@@ -42,6 +42,7 @@ import {
   __resolveMessageBodyChoicesType,
   __resolveType as __resolveMessageBodyType,
   editLastResponse,
+  getFileByMessageBody,
   markMessageAsRead,
   messages,
   resetConversation,
@@ -112,6 +113,9 @@ const resolvers: Resolver = {
   },
   MessageBodyChoices: {
     __resolveType: __resolveMessageBodyChoicesType,
+  },
+  MessageBodyFile: {
+    file: getFileByMessageBody,
   },
 }
 
