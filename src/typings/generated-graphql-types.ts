@@ -316,12 +316,25 @@ export interface MessageBodyText extends MessageBodyCore {
   type: string;
   id: string;
   text: string;
+  placeholder?: string;
+  keyboard?: KeyboardType;
+}
+
+export enum KeyboardType {
+  DEFAULT = 'DEFAULT',
+  NUMBERPAD = 'NUMBERPAD',
+  DECIMALPAD = 'DECIMALPAD',
+  NUMERIC = 'NUMERIC',
+  EMAIL = 'EMAIL',
+  PHONE = 'PHONE'
 }
 
 export interface MessageBodyNumber extends MessageBodyCore {
   type: string;
   id: string;
   text: string;
+  placeholder?: string;
+  keyboard?: KeyboardType;
 }
 
 export interface MessageBodyAudio extends MessageBodyCore {
@@ -1142,6 +1155,8 @@ export interface MessageBodyTextTypeResolver<TParent = MessageBodyText> {
   type?: MessageBodyTextToTypeResolver<TParent>;
   id?: MessageBodyTextToIdResolver<TParent>;
   text?: MessageBodyTextToTextResolver<TParent>;
+  placeholder?: MessageBodyTextToPlaceholderResolver<TParent>;
+  keyboard?: MessageBodyTextToKeyboardResolver<TParent>;
 }
 
 export interface MessageBodyTextToTypeResolver<TParent = MessageBodyText, TResult = string> {
@@ -1156,10 +1171,20 @@ export interface MessageBodyTextToTextResolver<TParent = MessageBodyText, TResul
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MessageBodyTextToPlaceholderResolver<TParent = MessageBodyText, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyTextToKeyboardResolver<TParent = MessageBodyText, TResult = KeyboardType | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MessageBodyNumberTypeResolver<TParent = MessageBodyNumber> {
   type?: MessageBodyNumberToTypeResolver<TParent>;
   id?: MessageBodyNumberToIdResolver<TParent>;
   text?: MessageBodyNumberToTextResolver<TParent>;
+  placeholder?: MessageBodyNumberToPlaceholderResolver<TParent>;
+  keyboard?: MessageBodyNumberToKeyboardResolver<TParent>;
 }
 
 export interface MessageBodyNumberToTypeResolver<TParent = MessageBodyNumber, TResult = string> {
@@ -1171,6 +1196,14 @@ export interface MessageBodyNumberToIdResolver<TParent = MessageBodyNumber, TRes
 }
 
 export interface MessageBodyNumberToTextResolver<TParent = MessageBodyNumber, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyNumberToPlaceholderResolver<TParent = MessageBodyNumber, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageBodyNumberToKeyboardResolver<TParent = MessageBodyNumber, TResult = KeyboardType | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
