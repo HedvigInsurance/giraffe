@@ -1,6 +1,7 @@
 import { MessageDto } from '../../api'
 
 import {
+  KeyboardType,
   Message,
   MessageBody,
   MessageBodyAudio,
@@ -31,9 +32,7 @@ const transformChoices = (choices: any) => {
   })
 }
 
-export const transformMessage: (message: MessageDto) => Message = (
-  message: MessageDto,
-) => {
+export const transformMessage: (message: MessageDto) => Message = (message) => {
   const getBody: (bodyInput: MessageBody) => MessageBody = (bodyInput) => {
     if (bodyInput.type === 'single_select') {
       const body = bodyInput as MessageBodySingleSelect
@@ -48,11 +47,11 @@ export const transformMessage: (message: MessageDto) => Message = (
     }
 
     if (bodyInput.type === 'text') {
-      return bodyInput as MessageBodyText
+      return transformTextOrNumberBody(bodyInput as MessageBodyText)
     }
 
     if (bodyInput.type === 'number') {
-      return bodyInput as MessageBodyNumber
+      return transformTextOrNumberBody(bodyInput as MessageBodyNumber)
     }
 
     if (bodyInput.type === 'audio') {
@@ -92,6 +91,43 @@ export const transformMessage: (message: MessageDto) => Message = (
       markedAsRead: message.header.markedAsRead,
     },
     body: messageBody,
+  }
+}
+
+const transformTextOrNumberBody = <
+  T extends MessageBodyText | MessageBodyNumber
+>(
+  body: T,
+): T => {
+  const ret = Object.assign({}, body) // tslint:disable-line prefer-object-spread
+  if (body.keyboard) {
+    ret.keyboard = mapKeyboard(ret.keyboard as string)
+  }
+  return ret
+}
+
+const mapKeyboard = (unmapped: string): KeyboardType => {
+  switch (unmapped) {
+    case 'default': {
+      return KeyboardType.DEFAULT
+    }
+    case 'number-pad': {
+      return KeyboardType.NUMBERPAD
+    }
+    case 'decimal-pad': {
+      return KeyboardType.DECIMALPAD
+    }
+    case 'numeric': {
+      return KeyboardType.NUMERIC
+    }
+    case 'email-address': {
+      return KeyboardType.EMAIL
+    }
+    case 'phone-pad': {
+      return KeyboardType.PHONE
+    }
+    default:
+      throw Error(`unknown keyboard type: ${unmapped}`)
   }
 }
 

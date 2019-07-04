@@ -106,12 +106,25 @@ type MessageBodyText implements MessageBodyCore {
   type: String!
   id: ID!
   text: String!
+  placeholder: String
+  keyboard: KeyboardType
 }
 
 type MessageBodyNumber implements MessageBodyCore {
   type: String!
   id: ID!
   text: String!
+  placeholder: String
+  keyboard: KeyboardType
+}
+
+enum KeyboardType {
+  DEFAULT
+  NUMBERPAD
+  DECIMALPAD
+  NUMERIC
+  EMAIL
+  PHONE
 }
 
 type MessageBodyAudio implements MessageBodyCore {
