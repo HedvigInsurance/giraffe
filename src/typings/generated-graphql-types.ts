@@ -382,6 +382,7 @@ export interface MessageHeader {
   pollingInterval: number;
   loadingIndicator?: string;
   markedAsRead: boolean;
+  statusMessage?: string;
 }
 
 export interface ChatResponse {
@@ -1332,6 +1333,7 @@ export interface MessageHeaderTypeResolver<TParent = MessageHeader> {
   pollingInterval?: MessageHeaderToPollingIntervalResolver<TParent>;
   loadingIndicator?: MessageHeaderToLoadingIndicatorResolver<TParent>;
   markedAsRead?: MessageHeaderToMarkedAsReadResolver<TParent>;
+  statusMessage?: MessageHeaderToStatusMessageResolver<TParent>;
 }
 
 export interface MessageHeaderToMessageIdResolver<TParent = MessageHeader, TResult = string> {
@@ -1367,6 +1369,10 @@ export interface MessageHeaderToLoadingIndicatorResolver<TParent = MessageHeader
 }
 
 export interface MessageHeaderToMarkedAsReadResolver<TParent = MessageHeader, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MessageHeaderToStatusMessageResolver<TParent = MessageHeader, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
