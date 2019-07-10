@@ -89,6 +89,7 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
       pollingInterval: message.header.pollingInterval,
       loadingIndicator: message.header.loadingIndicator,
       markedAsRead: message.header.markedAsRead,
+      statusMessage: message.header.statusMessage,
     },
     body: messageBody,
   }

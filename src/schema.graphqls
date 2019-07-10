@@ -69,6 +69,7 @@ type MessageHeader {
   pollingInterval: Int!
   loadingIndicator: String
   markedAsRead: Boolean!
+  statusMessage: String
 }
 
 union MessageBody =

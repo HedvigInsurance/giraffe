@@ -6,13 +6,13 @@ import {
   BankIdStatus,
   ChatResponseAudioInput,
   ChatResponseFileInput,
+  InsuranceCost,
   InsuranceStatus,
   InsuranceType,
   MessageBodyChoicesCore,
   MessageBodySingleSelect,
   PerilCategory,
   SignState,
-  InsuranceCost,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -111,6 +111,7 @@ interface MessageHeaderDto {
   pollingInterval: number
   loadingIndicator: string
   markedAsRead: boolean
+  statusMessage?: string
 }
 
 interface AvatarDto {
