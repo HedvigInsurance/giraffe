@@ -38,7 +38,7 @@
     "koa-route": "^3.2.0",
     "node-fetch": "^2.3.0",
     "ramda": "^0.25.0",
-    "subscriptions-transport-ws": "^0.9.15",
+    "subscriptions-transport-ws": "^0.9.16",
     "typescript-logging": "^0.6.3",
     "uuid": "^3.3.2"
   },
