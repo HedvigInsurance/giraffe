@@ -442,6 +442,7 @@ export interface Mutation {
   emailSign?: boolean;
   markMessageAsRead: Message;
   log?: boolean;
+  uploadClaim?: boolean;
 }
 
 export interface CampaignInput {
@@ -1493,6 +1494,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   emailSign?: MutationToEmailSignResolver<TParent>;
   markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
   log?: MutationToLogResolver<TParent>;
+  uploadClaim?: MutationToUploadClaimResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1635,6 +1637,14 @@ export interface MutationToLogArgs {
 }
 export interface MutationToLogResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToLogArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUploadClaimArgs {
+  globalId: string;
+  claim: Upload;
+}
+export interface MutationToUploadClaimResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToUploadClaimArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

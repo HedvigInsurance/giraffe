@@ -38,6 +38,7 @@ type Mutation {
   emailSign: Boolean
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
+  uploadClaim(globalId: ID!, claim: Upload!): Boolean
 }
 
 type Subscription {
