@@ -544,10 +544,10 @@
   resolved "https://registry.yarnpkg.com/@types/koa-compose/-/koa-compose-3.2.2.tgz#dc106e000bbf92a3ac900f756df47344887ee847"
   integrity sha1-3BBuAAu/kqOskA91bfRzRIh+6Ec=
 
-"@types/koa-compress@^2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@types/koa-compress/-/koa-compress-2.0.8.tgz#426a2fac419aff7d1a7d87fd78203bf0d26a94fb"
-  integrity sha512-ewDLlqKmn+rS1uwQntBeKY8okG7220pZgl66gORdDE8Sq465/dRequ/ZzbNYWRrRmYDaElZZ0Gfk/dliHUoCkg==
+"@types/koa-compress@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@types/koa-compress/-/koa-compress-2.0.9.tgz#5d19f7d928f78b451a9afd148863e2b45f51e541"
+  integrity sha512-1Sa9OsbHd2N2N7gLpdIRHe8W99EZbfIR31D7Iisx16XgwZCnWUtGXzXQejhu74Y1pE/wILqBP6VL49ch/MVpZw==
   dependencies:
     "@types/koa" "*"
     "@types/node" "*"
