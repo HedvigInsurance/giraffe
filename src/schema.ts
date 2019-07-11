@@ -51,6 +51,7 @@ const makeSchema = async () => {
   logger.info('Graphcms schema introspected')
 
   const cachedTranslationsLink = ApolloLink.from([
+    // @ts-ignore - false negative
     createCacheLink(redis),
     translationsLink,
   ])
@@ -143,6 +144,7 @@ const makeSchema = async () => {
 
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
+    // @ts-ignore - This type is incorrect
     resolvers: {
       Upload: GraphQLUpload,
       ...(resolvers as IResolvers<any, Context>),

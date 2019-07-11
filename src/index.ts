@@ -37,64 +37,76 @@ const handleError = (error: GraphQLError): void => {
   )
 }
 
-makeSchema().then((schema) => {
-  logger.info('Schema initialized')
-  const server = new ApolloServer({
-    schema,
-    context: getWebContext,
-    playground: config.PLAYGROUND_ENABLED && {
-      subscriptionEndpoint: '/subscriptions',
-    },
-    introspection: true,
-    formatError: (error: GraphQLError) => {
-      handleError(error)
-      return error
-    },
-    engine: config.APOLLO_ENGINE_KEY
-      ? {
-          apiKey: config.APOLLO_ENGINE_KEY,
-        }
-      : undefined,
-  })
-
-  const app = new Koa()
-
-  app.use(compress())
-  app.use(loggingMiddleware)
-  server.applyMiddleware({ app })
-
-  if (process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT) {
-    app.use(
-      route.get(
-        '/app-content-service/*',
-        proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT, {}),
-      ),
-    )
-  }
-
-  logger.info('Creating server')
-  const ws = createServer(app.callback())
-
-  ws.listen(config.PORT, () => {
-    logger.info(`Server listening at http://localhost:${config.PORT}`)
-    new SubscriptionServer( // tslint:disable-line no-unused-expression
-      {
-        keepAlive: 10_000,
-        execute,
-        subscribe,
-        schema,
-        onConnect: getWebSocketContext,
-        onOperation: (_msg: any, params: any) => {
-          params.formatResponse = (response: any) => {
-            if (response.errors) {
-              response.errors.forEach(handleError)
-            }
-            return response
-          }
-          return params
-        },
+makeSchema()
+  .then((schema) => {
+    logger.info('Schema initialized')
+    const server = new ApolloServer({
+      schema,
+      context: getWebContext,
+      playground: config.PLAYGROUND_ENABLED && {
+        subscriptionEndpoint: '/subscriptions',
       },
-      { server: ws, path: '/subscriptions' },
-    )
+      introspection: true,
+      formatError: (error: GraphQLError) => {
+        handleError(error)
+        return error
+      },
+      engine: config.APOLLO_ENGINE_KEY
+        ? {
+            apiKey: config.APOLLO_ENGINE_KEY,
+          }
+        : undefined,
+    })
+
+    logger.info('Created Apollo Server')
+
+    const app = new Koa()
+
+    logger.info('Created Koa server')
+
+    app.use(compress())
+
+    logger.info('Added compress middleware')
+    app.use(loggingMiddleware)
+    logger.info('Added logging middleware')
+    server.applyMiddleware({ app })
+    logger.info('Added Apollo Server Middleware')
+
+    if (process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT) {
+      app.use(
+        route.get(
+          '/app-content-service/*',
+          // @ts-ignore - False positive
+          proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT, {}),
+        ),
+      )
+      logger.info('Added app-content-service proxy middleware')
+    }
+
+    logger.info('Creating http server')
+    const ws = createServer(app.callback())
+
+    ws.listen(config.PORT, () => {
+      logger.info(`Server listening at http://localhost:${config.PORT}`)
+      new SubscriptionServer( // tslint:disable-line no-unused-expression
+        {
+          keepAlive: 10_000,
+          execute,
+          subscribe,
+          schema,
+          onConnect: getWebSocketContext,
+          onOperation: (_msg: any, params: any) => {
+            params.formatResponse = (response: any) => {
+              if (response.errors) {
+                response.errors.forEach(handleError)
+              }
+              return response
+            }
+            return params
+          },
+        },
+        { server: ws, path: '/subscriptions' },
+      )
+    })
   })
-})
+  .catch((e) => logger.error(e))
