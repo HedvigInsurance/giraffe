@@ -28,7 +28,7 @@
     "graphql": "^14.0.2",
     "graphql-middleware": "^2.0.2",
     "graphql-redis-subscriptions": "^2.0.0",
-    "graphql-subscriptions": "1.0.0",
+    "graphql-subscriptions": "1.1.0",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
     "ioredis": "^4.3.0",
