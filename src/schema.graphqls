@@ -253,7 +253,7 @@ input ChatResponseBodyAudioInput {
 
 input ChatResponseAudioInput {
   globalId: ID!
-  body: ChatResponseBodyAudioInput!
+  file: Upload!
 }
 
 input CampaignInput {

@@ -15,6 +15,7 @@ const GIPHY_API_KEY = process.env.GIPHY_API_KEY || ''
 const AWS_KEY = process.env.AWS_KEY || ''
 const AWS_SECRET = process.env.AWS_SECRET || ''
 const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || ''
+const AWS_CLAIMS_S3_BUCKET = process.env.AWS_CLAIMS_S3_BUCKET || ''
 
 const APOLLO_ENGINE_KEY = process.env.APOLLO_ENGINE_KEY || ''
 
@@ -33,6 +34,7 @@ export {
   AWS_KEY,
   AWS_SECRET,
   AWS_S3_BUCKET,
+  AWS_CLAIMS_S3_BUCKET,
   GIPHY_API_KEY,
   APOLLO_ENGINE_KEY,
   SENTRY_DSN,

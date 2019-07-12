@@ -24,14 +24,14 @@ export const uploadFile: MutationToUploadFileResolver = async (
   const token = getToken()
   const user = await getUser(token, headers)
 
-  const { stream, filename, mimetype } = await file
+  const { createReadStream, filename, mimetype } = await file
 
   const finalFile = (await new Promise((resolve) => {
     const key = `${uuid()}-${filename}`
     const params = {
       Bucket: AWS_S3_BUCKET,
       Key: key,
-      Body: stream,
+      Body: createReadStream(),
       ContentType: mimetype,
       Metadata: {
         MemberId: user.memberId,

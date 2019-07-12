@@ -509,11 +509,7 @@ export interface ChatResponseBodyFileInput {
 
 export interface ChatResponseAudioInput {
   globalId: string;
-  body: ChatResponseBodyAudioInput;
-}
-
-export interface ChatResponseBodyAudioInput {
-  url: string;
+  file: Upload;
 }
 
 export interface TriggerClaimChatInput {
@@ -568,6 +564,10 @@ export enum OfferStatus {
 
 export interface SignEvent {
   status?: SignStatus;
+}
+
+export interface ChatResponseBodyAudioInput {
+  url: string;
 }
 
 /*********************************
