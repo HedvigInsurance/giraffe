@@ -26,7 +26,6 @@ import {
   triggerClaimChat,
   triggerFreeTextChat,
 } from './chatTriggers'
-import { uploadClaim } from './claims'
 import { createSession, createSessionV2 } from './createSession'
 import {
   currentChatResponse,
@@ -95,7 +94,6 @@ const resolvers: Resolver = {
     emailSign,
     markMessageAsRead,
     log,
-    uploadClaim,
   },
   Subscription: {
     offer: subscribeToOffer,

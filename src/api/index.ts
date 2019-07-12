@@ -4,7 +4,6 @@ import * as config from '../config'
 import { ForwardHeaders } from '../context'
 import {
   BankIdStatus,
-  ChatResponseAudioInput,
   ChatResponseFileInput,
   InsuranceCost,
   InsuranceStatus,
@@ -501,7 +500,7 @@ export const setChatFileResponse = async (
 export const setChatAudioResponse = async (
   token: string,
   headers: ForwardHeaders,
-  responseInput: ChatResponseAudioInput,
+  responseInput: { globalId: string; url: string },
 ): Promise<boolean> => {
   const { messages } = await getChat(token, headers)
 
@@ -518,7 +517,7 @@ export const setChatAudioResponse = async (
     body: {
       ...responseMessage.body,
       type: 'audio',
-      url: responseInput.body.url,
+      url: responseInput.url,
     },
   }
 
