@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/koa-compress": "^2.0.9",
     "@types/koa-route": "^3.2.4",
-    "@types/ramda": "^0.26.15",
+    "@types/ramda": "^0.26.16",
     "@types/dotenv": "^6.1.1",
     "@types/graphql": "^14.2.2",
     "@types/ioredis": "^4.0.13",
