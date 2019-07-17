@@ -18,7 +18,7 @@
     "apollo-link-http": "^1.5.15",
     "apollo-link-redis-cache": "0.0.3",
     "apollo-server-core": "^2.6.8",
-    "apollo-server-koa": "^2.6.8",
+    "apollo-server-koa": "^2.7.0",
     "aws-sdk": "^2.490.0",
     "date-fns": "^1.30.1",
     "dotenv": "^8.0.0",
