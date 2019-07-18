@@ -689,6 +689,25 @@ const markMessageAsRead = (
     token,
   }).then((res) => res.json())
 
+
+export interface BankIdAuthDto {
+  autoStartToken: string
+}
+
+const authMemeber = (
+  memberId: string,
+  headers: ForwardHeaders,
+): Promise<BankIdAuthDto> =>
+  callApi('/member/bankId/auth', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify({
+        memberId
+      })
+    }
+  }).then((res) => res.json())
+
 export {
   setChatResponse,
   getInsurance,
@@ -717,4 +736,5 @@ export {
   triggerCallMeChat,
   performEmailSign,
   markMessageAsRead,
+  authMemeber,
 }

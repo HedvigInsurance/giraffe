@@ -38,6 +38,7 @@ type Mutation {
   emailSign: Boolean
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
+  autoStartToken: AutoStartTokenResponse
 }
 
 type Subscription {
@@ -438,6 +439,10 @@ type InsuranceCost {
 type MonetaryAmountV2 {
   amount: String!,
   currency: String!
+}
+
+type AutoStartTokenResponse {
+  autoStartToken: String!
 }
 
 enum BankIdStatus {

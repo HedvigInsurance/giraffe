@@ -442,6 +442,7 @@ export interface Mutation {
   emailSign?: boolean;
   markMessageAsRead: Message;
   log?: boolean;
+  autoStartToken?: AutoStartTokenResponse;
 }
 
 export interface CampaignInput {
@@ -544,6 +545,10 @@ export enum LoggingSeverity {
   EMERGENCY = 'EMERGENCY'
 }
 
+export interface AutoStartTokenResponse {
+  autoStartToken: string;
+}
+
 export interface Subscription {
   offer?: OfferEvent;
   signStatus?: SignEvent;
@@ -636,6 +641,7 @@ export interface Resolver {
   Upload?: GraphQLScalarType;
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
+  AutoStartTokenResponse?: AutoStartTokenResponseTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1493,6 +1499,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   emailSign?: MutationToEmailSignResolver<TParent>;
   markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
   log?: MutationToLogResolver<TParent>;
+  autoStartToken?: MutationToAutoStartTokenResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1637,6 +1644,10 @@ export interface MutationToLogResolver<TParent = undefined, TResult = boolean | 
   (parent: TParent, args: MutationToLogArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToAutoStartTokenResolver<TParent = undefined, TResult = AutoStartTokenResponse | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
   token?: SessionInformationToTokenResolver<TParent>;
   memberId?: SessionInformationToMemberIdResolver<TParent>;
@@ -1647,6 +1658,14 @@ export interface SessionInformationToTokenResolver<TParent = SessionInformation,
 }
 
 export interface SessionInformationToMemberIdResolver<TParent = SessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AutoStartTokenResponseTypeResolver<TParent = AutoStartTokenResponse> {
+  autoStartToken?: AutoStartTokenResponseToAutoStartTokenResolver<TParent>;
+}
+
+export interface AutoStartTokenResponseToAutoStartTokenResolver<TParent = AutoStartTokenResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
