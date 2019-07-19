@@ -555,6 +555,7 @@ export interface Subscription {
   message: Message;
   currentChatResponse?: ChatResponse;
   chatState: ChatState;
+  authStatus?: AuthEvent;
 }
 
 export interface OfferEvent {
@@ -569,6 +570,22 @@ export enum OfferStatus {
 
 export interface SignEvent {
   status?: SignStatus;
+}
+
+export interface AuthEvent {
+  status?: AuthStatus;
+}
+
+export interface AuthStatus {
+  collectStatus?: CollectStatus;
+  authState?: AuthState;
+}
+
+export enum AuthState {
+  INITIATED = 'INITIATED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  FAILED = 'FAILED',
+  SUCCESS = 'SUCCESS'
 }
 
 export interface ChatResponseBodyAudioInput {
@@ -645,6 +662,8 @@ export interface Resolver {
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
+  AuthEvent?: AuthEventTypeResolver;
+  AuthStatus?: AuthStatusTypeResolver;
 }
 export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
@@ -1675,6 +1694,7 @@ export interface SubscriptionTypeResolver<TParent = undefined> {
   message?: SubscriptionToMessageResolver<TParent>;
   currentChatResponse?: SubscriptionToCurrentChatResponseResolver<TParent>;
   chatState?: SubscriptionToChatStateResolver<TParent>;
+  authStatus?: SubscriptionToAuthStatusResolver<TParent>;
 }
 
 export interface SubscriptionToOfferResolver<TParent = undefined, TResult = OfferEvent | null> {
@@ -1708,6 +1728,11 @@ export interface SubscriptionToChatStateResolver<TParent = undefined, TResult = 
   subscribe: (parent: TParent, args: SubscriptionToChatStateArgs, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 }
 
+export interface SubscriptionToAuthStatusResolver<TParent = undefined, TResult = AuthEvent | null> {
+  resolve?: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
+  subscribe: (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+}
+
 export interface OfferEventTypeResolver<TParent = OfferEvent> {
   status?: OfferEventToStatusResolver<TParent>;
   insurance?: OfferEventToInsuranceResolver<TParent>;
@@ -1726,5 +1751,26 @@ export interface SignEventTypeResolver<TParent = SignEvent> {
 }
 
 export interface SignEventToStatusResolver<TParent = SignEvent, TResult = SignStatus | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AuthEventTypeResolver<TParent = AuthEvent> {
+  status?: AuthEventToStatusResolver<TParent>;
+}
+
+export interface AuthEventToStatusResolver<TParent = AuthEvent, TResult = AuthStatus | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AuthStatusTypeResolver<TParent = AuthStatus> {
+  collectStatus?: AuthStatusToCollectStatusResolver<TParent>;
+  authState?: AuthStatusToAuthStateResolver<TParent>;
+}
+
+export interface AuthStatusToCollectStatusResolver<TParent = AuthStatus, TResult = CollectStatus | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AuthStatusToAuthStateResolver<TParent = AuthStatus, TResult = AuthState | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }

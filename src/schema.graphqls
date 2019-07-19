@@ -47,6 +47,7 @@ type Subscription {
   message: Message!
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
+  authStatus: AuthEvent
 }
 
 input TriggerClaimChatInput {
@@ -319,6 +320,10 @@ type SignEvent {
   status: SignStatus
 }
 
+type AuthEvent {
+  status: AuthStatus
+}
+
 enum OfferStatus {
   SUCCESS
   FAIL
@@ -419,6 +424,11 @@ type SignStatus {
   signState: SignState
 }
 
+type AuthStatus {
+  collectStatus: CollectStatus
+  authState: AuthState
+}
+
 type CollectStatus {
   status: BankIdStatus
   code: String
@@ -456,6 +466,13 @@ enum SignState {
   IN_PROGRESS
   FAILED
   COMPLETED
+}
+
+enum AuthState {
+  INITIATED
+  IN_PROGRESS
+  FAILED
+  SUCCESS
 }
 
 scalar LocalDate
