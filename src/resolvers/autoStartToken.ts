@@ -10,10 +10,10 @@ const autoStartToken: MutationToAutoStartTokenResolver = async (
 ) => {
   const token = getToken()
   const autoStartTokenResult = await authMemeber(token, headers)
-  const autoStartTokenString = autoStartTokenResult.autoStartToken
+  const autoStartToken = autoStartTokenResult.autoStartToken
 
   return  {
-    autoStartTokenString
+    autoStartToken
   }
 }
 
