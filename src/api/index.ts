@@ -694,7 +694,7 @@ export interface BankIdAuthDto {
   autoStartToken: string
 }
 
-const authMemeber = (
+const authMember = (
   token: string,
   headers: ForwardHeaders,
 ): Promise<BankIdAuthDto> =>
@@ -734,5 +734,5 @@ export {
   triggerCallMeChat,
   performEmailSign,
   markMessageAsRead,
-  authMemeber,
+  authMember,
 }
