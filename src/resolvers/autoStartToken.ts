@@ -1,4 +1,4 @@
-import { getUser, authMemeber } from '../api'
+import { authMemeber } from '../api'
 import {
   MutationToAutoStartTokenResolver
 } from '../typings/generated-graphql-types'
@@ -8,12 +8,12 @@ const autoStartToken: MutationToAutoStartTokenResolver = async (
   _args,
   { headers, getToken },
 ) => {
-  const user = await getUser(getToken(), headers)
-  const autoStartTokenResult = await authMemeber(user.memberId, headers)
-  const autoStartToken = autoStartTokenResult.autoStartToken
+  const token = getToken()
+  const autoStartTokenResult = await authMemeber(token, headers)
+  const autoStartTokenString = autoStartTokenResult.autoStartToken
 
   return  {
-    autoStartToken
+    autoStartTokenString
   }
 }
 

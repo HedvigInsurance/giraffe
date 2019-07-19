@@ -695,17 +695,15 @@ export interface BankIdAuthDto {
 }
 
 const authMemeber = (
-  memberId: string,
+  token: string,
   headers: ForwardHeaders,
 ): Promise<BankIdAuthDto> =>
-  callApi('/member/bankId/auth', {
+  callApi('/v2/member/bankId/auth', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
-      body: JSON.stringify({
-        memberId
-      })
-    }
+    },
+    token,
   }).then((res) => res.json())
 
 export {
