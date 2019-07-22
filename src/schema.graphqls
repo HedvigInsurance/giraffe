@@ -38,7 +38,7 @@ type Mutation {
   emailSign: Boolean
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
-  autoStartToken: AutoStartTokenResponse
+  bankIdAuth: BankIdAuthResponse!
 }
 
 type Subscription {
@@ -451,7 +451,7 @@ type MonetaryAmountV2 {
   currency: String!
 }
 
-type AutoStartTokenResponse {
+type BankIdAuthResponse {
   autoStartToken: String!
 }
 
