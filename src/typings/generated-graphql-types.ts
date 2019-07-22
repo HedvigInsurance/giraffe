@@ -573,12 +573,7 @@ export interface SignEvent {
 }
 
 export interface AuthEvent {
-  status?: AuthStatus;
-}
-
-export interface AuthStatus {
-  collectStatus?: CollectStatus;
-  authState?: AuthState;
+  status?: AuthState;
 }
 
 export enum AuthState {
@@ -663,7 +658,6 @@ export interface Resolver {
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
   AuthEvent?: AuthEventTypeResolver;
-  AuthStatus?: AuthStatusTypeResolver;
 }
 export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
@@ -1758,19 +1752,6 @@ export interface AuthEventTypeResolver<TParent = AuthEvent> {
   status?: AuthEventToStatusResolver<TParent>;
 }
 
-export interface AuthEventToStatusResolver<TParent = AuthEvent, TResult = AuthStatus | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface AuthStatusTypeResolver<TParent = AuthStatus> {
-  collectStatus?: AuthStatusToCollectStatusResolver<TParent>;
-  authState?: AuthStatusToAuthStateResolver<TParent>;
-}
-
-export interface AuthStatusToCollectStatusResolver<TParent = AuthStatus, TResult = CollectStatus | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface AuthStatusToAuthStateResolver<TParent = AuthStatus, TResult = AuthState | null> {
+export interface AuthEventToStatusResolver<TParent = AuthEvent, TResult = AuthState | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
