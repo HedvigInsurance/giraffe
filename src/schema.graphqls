@@ -321,7 +321,7 @@ type SignEvent {
 }
 
 type AuthEvent {
-  status: AuthStatus
+  status: AuthState
 }
 
 enum OfferStatus {
@@ -422,11 +422,6 @@ type Cashback {
 type SignStatus {
   collectStatus: CollectStatus
   signState: SignState
-}
-
-type AuthStatus {
-  collectStatus: CollectStatus
-  authState: AuthState
 }
 
 type CollectStatus {
