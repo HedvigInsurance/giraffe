@@ -689,7 +689,6 @@ const markMessageAsRead = (
     token,
   }).then((res) => res.json())
 
-
 export interface BankIdAuthDto {
   autoStartToken: string
 }
@@ -698,7 +697,7 @@ const authMember = (
   token: string,
   headers: ForwardHeaders,
 ): Promise<BankIdAuthDto> =>
-  callApi('/v2/member/bankId/auth', {
+  callApi('/v2/member/bankid/auth', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
