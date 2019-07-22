@@ -38,6 +38,7 @@ type Mutation {
   emailSign: Boolean
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
+  autoStartToken: AutoStartTokenResponse
 }
 
 type Subscription {
@@ -46,6 +47,7 @@ type Subscription {
   message: Message!
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
+  authStatus: AuthEvent
 }
 
 input TriggerClaimChatInput {
@@ -318,6 +320,10 @@ type SignEvent {
   status: SignStatus
 }
 
+type AuthEvent {
+  status: AuthStatus
+}
+
 enum OfferStatus {
   SUCCESS
   FAIL
@@ -418,6 +424,11 @@ type SignStatus {
   signState: SignState
 }
 
+type AuthStatus {
+  collectStatus: CollectStatus
+  authState: AuthState
+}
+
 type CollectStatus {
   status: BankIdStatus
   code: String
@@ -440,6 +451,10 @@ type MonetaryAmountV2 {
   currency: String!
 }
 
+type AutoStartTokenResponse {
+  autoStartToken: String!
+}
+
 enum BankIdStatus {
   pending
   failed
@@ -451,6 +466,13 @@ enum SignState {
   IN_PROGRESS
   FAILED
   COMPLETED
+}
+
+enum AuthState {
+  INITIATED
+  IN_PROGRESS
+  FAILED
+  SUCCESS
 }
 
 scalar LocalDate

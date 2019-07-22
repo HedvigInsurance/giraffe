@@ -9,6 +9,9 @@ import {
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
 } from '../features/offer/sign'
+import {
+  subscribeToAuthStatus,
+} from '../features/auth/authSubscription'
 import { Resolver } from '../typings/generated-graphql-types'
 import { avatars } from './avatars'
 import { cashback } from './cashback'
@@ -101,6 +104,7 @@ const resolvers: Resolver = {
     message: subscribeToMessage,
     currentChatResponse: subscribeToCurrentChatResponse,
     chatState: subscribeToChatState,
+    authStatus: subscribeToAuthStatus,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent,
