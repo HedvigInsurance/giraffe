@@ -1,3 +1,4 @@
+import { bankIdAuth, subscribeToAuthStatus } from '../features/auth'
 import {
   createOffer,
   getInsuranceByOfferSuccessEvent,
@@ -9,9 +10,6 @@ import {
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
 } from '../features/offer/sign'
-import {
-  subscribeToAuthStatus,
-} from '../features/auth/authSubscription'
 import { Resolver } from '../typings/generated-graphql-types'
 import { avatars } from './avatars'
 import { cashback } from './cashback'
@@ -97,6 +95,7 @@ const resolvers: Resolver = {
     emailSign,
     markMessageAsRead,
     log,
+    bankIdAuth,
   },
   Subscription: {
     offer: subscribeToOffer,

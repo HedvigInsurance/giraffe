@@ -442,7 +442,7 @@ export interface Mutation {
   emailSign?: boolean;
   markMessageAsRead: Message;
   log?: boolean;
-  autoStartToken?: AutoStartTokenResponse;
+  bankIdAuth: BankIdAuthResponse;
 }
 
 export interface CampaignInput {
@@ -545,7 +545,7 @@ export enum LoggingSeverity {
   EMERGENCY = 'EMERGENCY'
 }
 
-export interface AutoStartTokenResponse {
+export interface BankIdAuthResponse {
   autoStartToken: string;
 }
 
@@ -658,7 +658,7 @@ export interface Resolver {
   Upload?: GraphQLScalarType;
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
-  AutoStartTokenResponse?: AutoStartTokenResponseTypeResolver;
+  BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1518,7 +1518,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   emailSign?: MutationToEmailSignResolver<TParent>;
   markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
   log?: MutationToLogResolver<TParent>;
-  autoStartToken?: MutationToAutoStartTokenResolver<TParent>;
+  bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1663,7 +1663,7 @@ export interface MutationToLogResolver<TParent = undefined, TResult = boolean | 
   (parent: TParent, args: MutationToLogArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToAutoStartTokenResolver<TParent = undefined, TResult = AutoStartTokenResponse | null> {
+export interface MutationToBankIdAuthResolver<TParent = undefined, TResult = BankIdAuthResponse> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1680,11 +1680,11 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface AutoStartTokenResponseTypeResolver<TParent = AutoStartTokenResponse> {
-  autoStartToken?: AutoStartTokenResponseToAutoStartTokenResolver<TParent>;
+export interface BankIdAuthResponseTypeResolver<TParent = BankIdAuthResponse> {
+  autoStartToken?: BankIdAuthResponseToAutoStartTokenResolver<TParent>;
 }
 
-export interface AutoStartTokenResponseToAutoStartTokenResolver<TParent = AutoStartTokenResponse, TResult = string> {
+export interface BankIdAuthResponseToAutoStartTokenResolver<TParent = BankIdAuthResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
