@@ -48,14 +48,13 @@ import {
   messages,
   resetConversation,
   subscribeToMessage,
-  registerCampaign,
 } from './messages'
 import { offerClosed } from './offerClosed'
 import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
-import {  } from '.m'
+import { registerBranchCampaign } from './analytics'
 
 const resolvers: Resolver = {
   Query: {
@@ -98,7 +97,7 @@ const resolvers: Resolver = {
     markMessageAsRead,
     log,
     bankIdAuth,
-    registerCampaign,
+    registerBranchCampaign,
   },
   Subscription: {
     offer: subscribeToOffer,

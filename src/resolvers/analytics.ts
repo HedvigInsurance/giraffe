@@ -19,7 +19,8 @@ const registerBranchCampaign: MutationToRegiserBranchCampaignResolver = async (
 
     return response.ok
   }
-  return false
+
+  throw new Error("campaign was undefined")
 }
 
 export { registerBranchCampaign }
