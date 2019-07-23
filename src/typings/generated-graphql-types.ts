@@ -1664,7 +1664,7 @@ export interface MutationToBankIdAuthResolver<TParent = undefined, TResult = Ban
 }
 
 export interface MutationToRegisterBranchCampaignArgs {
-  campaign?: CampaignInput;
+  campaign: CampaignInput;
 }
 export interface MutationToRegisterBranchCampaignResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToRegisterBranchCampaignArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;

@@ -39,7 +39,7 @@ type Mutation {
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
   bankIdAuth: BankIdAuthResponse!
-  registerBranchCampaign(campaign: CampaignInput): Boolean
+  registerBranchCampaign(campaign: CampaignInput!): Boolean
 }
 
 type Subscription {
