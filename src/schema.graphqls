@@ -18,7 +18,8 @@ type Mutation {
   createSession(campaign: CampaignInput, trackingId: UUID): String!
   createSessionV2: SessionInformation
   createOffer(details: OfferInput!): Boolean
-  signOffer(details: SignInput!): Boolean
+  signOffer(details: SignInput!): Boolean @deprecated(reason: "Use `signOfferV2`.")
+  signOfferV2(details: SignInput): BankIdSignResponse!
   uploadFile(file: Upload!): File!
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
@@ -448,6 +449,10 @@ type MonetaryAmountV2 {
 }
 
 type BankIdAuthResponse {
+  autoStartToken: String!
+}
+
+type BankIdSignResponse {
   autoStartToken: String!
 }
 

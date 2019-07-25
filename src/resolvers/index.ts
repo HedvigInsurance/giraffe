@@ -6,6 +6,7 @@ import {
   subscribeToOffer,
 } from '../features/offer'
 import {
+  signOfferV2,
   getSignStatus,
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
@@ -77,6 +78,7 @@ const resolvers: Resolver = {
     createSessionV2,
     createOffer,
     signOffer,
+    signOfferV2,
     uploadFile,
     selectCashbackOption,
     offerClosed,
