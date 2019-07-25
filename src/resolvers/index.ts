@@ -55,6 +55,7 @@ import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
+import { registerBranchCampaign } from './analytics'
 
 const resolvers: Resolver = {
   Query: {
@@ -97,6 +98,7 @@ const resolvers: Resolver = {
     markMessageAsRead,
     log,
     bankIdAuth,
+    registerBranchCampaign,
     startBankIdSignFromApp,
   },
   Subscription: {

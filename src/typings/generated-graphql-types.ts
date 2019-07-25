@@ -443,6 +443,7 @@ export interface Mutation {
   markMessageAsRead: Message;
   log?: boolean;
   bankIdAuth: BankIdAuthResponse;
+  registerBranchCampaign?: boolean;
   startBankIdSignFromApp: BankIdSignResponsResponse;
 }
 
@@ -1519,6 +1520,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
   log?: MutationToLogResolver<TParent>;
   bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
+  registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   startBankIdSignFromApp?: MutationToStartBankIdSignFromAppResolver<TParent>;
 }
 
@@ -1666,6 +1668,13 @@ export interface MutationToLogResolver<TParent = undefined, TResult = boolean | 
 
 export interface MutationToBankIdAuthResolver<TParent = undefined, TResult = BankIdAuthResponse> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToRegisterBranchCampaignArgs {
+  campaign: CampaignInput;
+}
+export interface MutationToRegisterBranchCampaignResolver<TParent = undefined, TResult = boolean | null> {
+  (parent: TParent, args: MutationToRegisterBranchCampaignArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToStartBankIdSignFromAppResolver<TParent = undefined, TResult = BankIdSignResponsResponse> {
