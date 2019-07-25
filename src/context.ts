@@ -2,6 +2,7 @@ import { AuthenticationError } from 'apollo-server-core'
 import * as Koa from 'koa'
 import { ConnectionContext } from 'subscriptions-transport-ws'
 import * as uuidv4 from 'uuid/v4'
+import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
 
 interface Context {
@@ -33,7 +34,8 @@ const getWebContext = async ({
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
       'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
     },
-    remoteIp: checkedCtx.request.ip,
+    remoteIp:
+      checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
   }
 }
 
