@@ -9,6 +9,7 @@ import {
   getSignStatus,
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
+  startBankIdSignFromApp,
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
 import { avatars } from './avatars'
@@ -96,6 +97,7 @@ const resolvers: Resolver = {
     markMessageAsRead,
     log,
     bankIdAuth,
+    startBankIdSignFromApp,
   },
   Subscription: {
     offer: subscribeToOffer,

@@ -1,4 +1,4 @@
-import { getUser, signStatus, websign } from '../../api'
+import { getUser, signStatus, websign, signDetails } from '../../api'
 import { ForwardHeaders } from '../../context'
 import { pubsub } from '../../pubsub'
 import {
@@ -8,6 +8,7 @@ import {
   SignEventToStatusResolver,
   SignStatus,
   SubscriptionToSignStatusResolver,
+  MutationToStartBankIdSignFromAppResolver,
 } from '../../typings/generated-graphql-types'
 
 const signOffer: MutationToSignOfferResolver = async (
@@ -74,9 +75,29 @@ const subscribeToSignStatus: SubscriptionToSignStatusResolver = {
   },
 }
 
+const startBankIdSignFromApp: MutationToStartBankIdSignFromAppResolver = async (
+  _parent,
+  _args,
+  { getToken, headers, remoteIp },
+) => {
+  const token = getToken()
+  const signDetailsResult = await signDetails(token)
+
+  const websignResult = await websign(token, headers, {
+    email: signDetailsResult.email,
+    ssn: signDetailsResult.personalNumber,
+    ipAddress: remoteIp,
+  })
+
+  return {
+    autoStartToken: websignResult.bankIdOrderResponse.autoStartToken
+  }
+}
+
 export {
   signOffer,
   getSignStatus,
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
+  startBankIdSignFromApp,
 }

@@ -39,6 +39,7 @@ type Mutation {
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
   bankIdAuth: BankIdAuthResponse!
+  startBankIdSignFromApp: BankIdSignResponsResponse!
 }
 
 type Subscription {
@@ -447,6 +448,10 @@ type MonetaryAmountV2 {
 }
 
 type BankIdAuthResponse {
+  autoStartToken: String!
+}
+
+type BankIdSignResponsResponse {
   autoStartToken: String!
 }
 

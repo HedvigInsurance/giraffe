@@ -263,12 +263,18 @@ const createProduct = async (
   return data.json()
 }
 
+interface WebsignResponse {
+  bankIdOrderResponse: {
+    autoStartToken: string
+  }
+}
+
 const websign = async (
   token: string,
   headers: ForwardHeaders,
   body: SignDto,
-) => {
-  await callApi('/v2/member/sign/websign', {
+): Promise<WebsignResponse> => {
+  const data = await callApi('/v2/member/sign/websign', {
     mergeOptions: {
       method: 'POST',
       headers: (headers as any) as RequestInit['headers'],
@@ -276,6 +282,7 @@ const websign = async (
     },
     token,
   })
+  return data.json()
 }
 
 const signStatus = async (
@@ -705,6 +712,22 @@ const authMember = (
     token,
   }).then((res) => res.json())
 
+
+export interface BankIdSignDetailsDto {
+  personalNumber: string,
+  email: string
+}
+
+const signDetails = (
+  token: string,
+): Promise<BankIdSignDetailsDto> =>
+  callApi('/v2/app/onboarding-data', {
+    mergeOptions: {
+      method: 'GET',
+    },
+    token,
+  }).then((res) => res.json())
+
 export {
   setChatResponse,
   getInsurance,
@@ -734,4 +757,5 @@ export {
   performEmailSign,
   markMessageAsRead,
   authMember,
+  signDetails,
 }
