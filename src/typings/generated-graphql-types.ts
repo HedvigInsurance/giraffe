@@ -422,7 +422,13 @@ export interface Mutation {
   createSession: string;
   createSessionV2?: SessionInformation;
   createOffer?: boolean;
+  
+  /**
+   * 
+   * @deprecated Use `signOfferV2`.
+   */
   signOffer?: boolean;
+  signOfferV2: BankIdSignResponse;
   uploadFile: File;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
@@ -444,7 +450,6 @@ export interface Mutation {
   log?: boolean;
   bankIdAuth: BankIdAuthResponse;
   registerBranchCampaign?: boolean;
-  startBankIdSignFromApp: BankIdSignResponsResponse;
 }
 
 export interface CampaignInput {
@@ -478,6 +483,10 @@ export interface OfferInput {
 export interface SignInput {
   personalNumber: string;
   email: string;
+}
+
+export interface BankIdSignResponse {
+  autoStartToken: string;
 }
 
 export type Upload = any;
@@ -548,10 +557,6 @@ export enum LoggingSeverity {
 }
 
 export interface BankIdAuthResponse {
-  autoStartToken: string;
-}
-
-export interface BankIdSignResponsResponse {
   autoStartToken: string;
 }
 
@@ -656,11 +661,11 @@ export interface Resolver {
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
+  BankIdSignResponse?: BankIdSignResponseTypeResolver;
   Upload?: GraphQLScalarType;
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
-  BankIdSignResponsResponse?: BankIdSignResponsResponseTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1500,6 +1505,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   createSessionV2?: MutationToCreateSessionV2Resolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
+  signOfferV2?: MutationToSignOfferV2Resolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
@@ -1521,7 +1527,6 @@ export interface MutationTypeResolver<TParent = undefined> {
   log?: MutationToLogResolver<TParent>;
   bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
-  startBankIdSignFromApp?: MutationToStartBankIdSignFromAppResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -1552,6 +1557,13 @@ export interface MutationToSignOfferArgs {
 }
 export interface MutationToSignOfferResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToSignOfferArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToSignOfferV2Args {
+  details?: SignInput;
+}
+export interface MutationToSignOfferV2Resolver<TParent = undefined, TResult = BankIdSignResponse> {
+  (parent: TParent, args: MutationToSignOfferV2Args, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToUploadFileArgs {
@@ -1677,10 +1689,6 @@ export interface MutationToRegisterBranchCampaignResolver<TParent = undefined, T
   (parent: TParent, args: MutationToRegisterBranchCampaignArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToStartBankIdSignFromAppResolver<TParent = undefined, TResult = BankIdSignResponsResponse> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
   token?: SessionInformationToTokenResolver<TParent>;
   memberId?: SessionInformationToMemberIdResolver<TParent>;
@@ -1694,19 +1702,19 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface BankIdSignResponseTypeResolver<TParent = BankIdSignResponse> {
+  autoStartToken?: BankIdSignResponseToAutoStartTokenResolver<TParent>;
+}
+
+export interface BankIdSignResponseToAutoStartTokenResolver<TParent = BankIdSignResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface BankIdAuthResponseTypeResolver<TParent = BankIdAuthResponse> {
   autoStartToken?: BankIdAuthResponseToAutoStartTokenResolver<TParent>;
 }
 
 export interface BankIdAuthResponseToAutoStartTokenResolver<TParent = BankIdAuthResponse, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface BankIdSignResponsResponseTypeResolver<TParent = BankIdSignResponsResponse> {
-  autoStartToken?: BankIdSignResponsResponseToAutoStartTokenResolver<TParent>;
-}
-
-export interface BankIdSignResponsResponseToAutoStartTokenResolver<TParent = BankIdSignResponsResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

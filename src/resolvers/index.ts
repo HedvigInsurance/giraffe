@@ -6,10 +6,10 @@ import {
   subscribeToOffer,
 } from '../features/offer'
 import {
+  signOfferV2,
   getSignStatus,
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
-  startBankIdSignFromApp,
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
 import { avatars } from './avatars'
@@ -78,6 +78,7 @@ const resolvers: Resolver = {
     createSessionV2,
     createOffer,
     signOffer,
+    signOfferV2,
     uploadFile,
     selectCashbackOption,
     offerClosed,
@@ -99,7 +100,6 @@ const resolvers: Resolver = {
     log,
     bankIdAuth,
     registerBranchCampaign,
-    startBankIdSignFromApp,
   },
   Subscription: {
     offer: subscribeToOffer,

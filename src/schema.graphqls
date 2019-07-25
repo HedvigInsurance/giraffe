@@ -18,7 +18,8 @@ type Mutation {
   createSession(campaign: CampaignInput, trackingId: UUID): String!
   createSessionV2: SessionInformation
   createOffer(details: OfferInput!): Boolean
-  signOffer(details: SignInput!): Boolean
+  signOffer(details: SignInput!): Boolean @deprecated(reason: "Use `signOfferV2`.")
+  signOfferV2(details: SignInput): BankIdSignResponse!
   uploadFile(file: Upload!): File!
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
@@ -40,7 +41,6 @@ type Mutation {
   log(input: LoggingInput!): Boolean
   bankIdAuth: BankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
-  startBankIdSignFromApp: BankIdSignResponsResponse!
 }
 
 type Subscription {
@@ -452,7 +452,7 @@ type BankIdAuthResponse {
   autoStartToken: String!
 }
 
-type BankIdSignResponsResponse {
+type BankIdSignResponse {
   autoStartToken: String!
 }
 

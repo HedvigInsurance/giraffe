@@ -3,12 +3,12 @@ import { ForwardHeaders } from '../../context'
 import { pubsub } from '../../pubsub'
 import {
   MutationToSignOfferResolver,
+  MutationToSignOfferV2Resolver,
   QueryToSignStatusResolver,
   SignEvent,
   SignEventToStatusResolver,
   SignStatus,
   SubscriptionToSignStatusResolver,
-  MutationToStartBankIdSignFromAppResolver,
 } from '../../typings/generated-graphql-types'
 
 const signOffer: MutationToSignOfferResolver = async (
@@ -27,6 +27,40 @@ const signOffer: MutationToSignOfferResolver = async (
   })
 
   return true
+}
+
+const signOfferV2: MutationToSignOfferV2Resolver = async (
+  _parent,
+  { details },
+  { getToken, headers, remoteIp },
+) => {
+  const token = getToken()
+  if (!remoteIp) {
+    throw new Error(`Must have an ip. X-Forwarded-For is: ${remoteIp}`)
+  }
+
+  if (!details) {
+    const signDetailsResult = await signDetails(token)
+    const websignResult = await websign(token, headers, {
+      email: signDetailsResult.email,
+      ssn: signDetailsResult.personalNumber,
+      ipAddress: remoteIp,
+    })
+
+    return {
+      autoStartToken: websignResult.bankIdOrderResponse.autoStartToken
+    }
+  }
+
+  const websignResult = await websign(token, headers, {
+    ssn: details.personalNumber,
+    email: details.email,
+    ipAddress: remoteIp,
+  })
+
+  return {
+    autoStartToken: websignResult.bankIdOrderResponse.autoStartToken
+  }
 }
 
 const getSignStatus: QueryToSignStatusResolver = async (
@@ -75,29 +109,10 @@ const subscribeToSignStatus: SubscriptionToSignStatusResolver = {
   },
 }
 
-const startBankIdSignFromApp: MutationToStartBankIdSignFromAppResolver = async (
-  _parent,
-  _args,
-  { getToken, headers, remoteIp },
-) => {
-  const token = getToken()
-  const signDetailsResult = await signDetails(token)
-
-  const websignResult = await websign(token, headers, {
-    email: signDetailsResult.email,
-    ssn: signDetailsResult.personalNumber,
-    ipAddress: remoteIp,
-  })
-
-  return {
-    autoStartToken: websignResult.bankIdOrderResponse.autoStartToken
-  }
-}
-
 export {
   signOffer,
+  signOfferV2,
   getSignStatus,
   getSignStatusFromSignEvent,
   subscribeToSignStatus,
-  startBankIdSignFromApp,
 }
