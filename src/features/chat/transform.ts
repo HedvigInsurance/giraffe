@@ -47,11 +47,11 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
     }
 
     if (bodyInput.type === 'text') {
-      return transformTextOrNumberBody(bodyInput as MessageBodyText)
+      return transformTextOrNumberBody<MessageBodyText>(bodyInput)
     }
 
     if (bodyInput.type === 'number') {
-      return transformTextOrNumberBody(bodyInput as MessageBodyNumber)
+      return transformTextOrNumberBody<MessageBodyNumber>(bodyInput)
     }
 
     if (bodyInput.type === 'audio') {
@@ -98,11 +98,11 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
 const transformTextOrNumberBody = <
   T extends MessageBodyText | MessageBodyNumber
 >(
-  body: T,
+  body: T & { keyboardType?: string },
 ): T => {
   const ret = Object.assign({}, body) // tslint:disable-line prefer-object-spread
-  if (body.keyboard) {
-    ret.keyboard = mapKeyboard(ret.keyboard as string)
+  if (ret.keyboardType) {
+    ret.keyboard = mapKeyboard(ret.keyboardType)
   }
   return ret
 }
