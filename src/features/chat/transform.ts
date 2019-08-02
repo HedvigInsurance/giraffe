@@ -82,11 +82,11 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
       fromMyself: message.header.fromId !== 1,
       messageId: message.header.messageId,
       timeStamp: message.header.timeStamp,
-      richTextChatCompatible: message.header.richTextChatCompatible,
+      richTextChatCompatible: message.header.richTextChatCompatible || false,
       editAllowed: message.header.editAllowed,
       shouldRequestPushNotifications:
         message.header.shouldRequestPushNotifications || false,
-      pollingInterval: message.header.pollingInterval,
+      pollingInterval: message.header.pollingInterval || 0,
       loadingIndicator: message.header.loadingIndicator,
       markedAsRead: message.header.markedAsRead,
       statusMessage: message.header.statusMessage,

@@ -10,7 +10,11 @@ import { pubsub } from '../pubsub'
 import {
   MessageBody,
   MessageBodyChoices,
+  MessageBodyChoicesCore,
+  MessageBodyChoicesCoreTypeResolver,
   MessageBodyChoicesTypeResolver,
+  MessageBodyCore,
+  MessageBodyCoreTypeResolver,
   MessageBodyFileToFileResolver,
   MutationToEditLastResponseResolver,
   MutationToMarkMessageAsReadResolver,
@@ -140,6 +144,62 @@ export const __resolveType: MessageBodyTypeResolver = (obj: MessageBody) => {
 
 export const __resolveMessageBodyChoicesType: MessageBodyChoicesTypeResolver = (
   obj: MessageBodyChoices,
+) => {
+  if (obj.type === 'selection') {
+    return 'MessageBodyChoicesSelection'
+  }
+
+  if (obj.type === 'link') {
+    return 'MessageBodyChoicesLink'
+  }
+
+  return 'MessageBodyChoicesUndefined'
+}
+
+export const __resolveMessageBodyCoreType: MessageBodyCoreTypeResolver = (
+  obj: MessageBodyCore,
+) => {
+  if (obj.type === 'single_select') {
+    return 'MessageBodySingleSelect'
+  }
+
+  if (obj.type === 'multiple_select') {
+    return 'MessageBodyMultipleSelect'
+  }
+
+  if (obj.type === 'paragraph') {
+    return 'MessageBodyParagraph'
+  }
+
+  if (obj.type === 'text') {
+    return 'MessageBodyText'
+  }
+
+  if (obj.type === 'number') {
+    return 'MessageBodyNumber'
+  }
+
+  if (obj.type === 'audio') {
+    return 'MessageBodyAudio'
+  }
+
+  if (obj.type === 'bankid_collcet') {
+    return 'MessageBodyBankIdCollect'
+  }
+
+  if (obj.type === 'file_upload') {
+    return 'MessageBodyFile'
+  }
+
+  if (obj.type === 'paragraph') {
+    return 'MessageBodyParagraph'
+  }
+
+  return 'MessageBodyUndefined'
+}
+
+export const __resolveMessageBodyChoicesCoreType: MessageBodyChoicesCoreTypeResolver = (
+  obj: MessageBodyChoicesCore,
 ) => {
   if (obj.type === 'selection') {
     return 'MessageBodyChoicesSelection'
