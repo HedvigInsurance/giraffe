@@ -6,12 +6,13 @@ import {
   subscribeToOffer,
 } from '../features/offer'
 import {
-  signOfferV2,
   getSignStatus,
   getSignStatusFromSignEvent,
+  signOfferV2,
   subscribeToSignStatus,
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
+import { registerBranchCampaign } from './analytics'
 import { avatars } from './avatars'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
@@ -41,7 +42,9 @@ import { log } from './logging'
 import { logout } from './logout'
 import { member, updateEmail, updatePhoneNumber } from './member'
 import {
+  __resolveMessageBodyChoicesCoreType,
   __resolveMessageBodyChoicesType,
+  __resolveMessageBodyCoreType,
   __resolveType as __resolveMessageBodyType,
   editLastResponse,
   getFileByMessageBody,
@@ -55,7 +58,6 @@ import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
-import { registerBranchCampaign } from './analytics'
 
 const resolvers: Resolver = {
   Query: {
@@ -118,8 +120,14 @@ const resolvers: Resolver = {
   MessageBody: {
     __resolveType: __resolveMessageBodyType,
   },
+  MessageBodyCore: {
+    __resolveType: __resolveMessageBodyCoreType,
+  },
   MessageBodyChoices: {
     __resolveType: __resolveMessageBodyChoicesType,
+  },
+  MessageBodyChoicesCore: {
+    __resolveType: __resolveMessageBodyChoicesCoreType,
   },
   MessageBodyFile: {
     file: getFileByMessageBody,
