@@ -606,11 +606,6 @@ export enum AuthState {
   SUCCESS = 'SUCCESS'
 }
 
-export interface MonetaryAmount {
-  amount: string;
-  currency: string;
-}
-
 export interface ChatResponseBodyAudioInput {
   url: string;
 }
@@ -688,7 +683,6 @@ export interface Resolver {
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
   AuthEvent?: AuthEventTypeResolver;
-  MonetaryAmount?: MonetaryAmountTypeResolver;
 }
 export interface QueryTypeResolver<TParent = undefined> {
   insurance?: QueryToInsuranceResolver<TParent>;
@@ -1831,18 +1825,5 @@ export interface AuthEventTypeResolver<TParent = AuthEvent> {
 }
 
 export interface AuthEventToStatusResolver<TParent = AuthEvent, TResult = AuthState | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface MonetaryAmountTypeResolver<TParent = MonetaryAmount> {
-  amount?: MonetaryAmountToAmountResolver<TParent>;
-  currency?: MonetaryAmountToCurrencyResolver<TParent>;
-}
-
-export interface MonetaryAmountToAmountResolver<TParent = MonetaryAmount, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface MonetaryAmountToCurrencyResolver<TParent = MonetaryAmount, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }

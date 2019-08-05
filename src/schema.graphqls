@@ -56,11 +56,6 @@ input TriggerClaimChatInput {
   claimTypeId: ID
 }
 
-type MonetaryAmount {
-  amount: String!
-  currency: String!
-}
-
 type Message {
   globalId: ID!
   id: ID!
