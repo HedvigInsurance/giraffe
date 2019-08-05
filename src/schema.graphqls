@@ -56,6 +56,11 @@ input TriggerClaimChatInput {
   claimTypeId: ID
 }
 
+type MonetaryAmount {
+  amount: String!
+  currency: String!
+}
+
 type Message {
   globalId: ID!
   id: ID!
@@ -363,15 +368,22 @@ type Insurance {
   policyUrl: String
   currentInsurerName: String
   livingSpace: Int
-
-  perilCategories: [PerilCategory]
-
+  perilCategories: [PerilCategory] @deprecated(
+    reason: "Use arrangedPerilCategories instead"
+  )
   monthlyCost: Int @deprecated(
     reason: "Use cost instead"
   )
   safetyIncreasers: [String!] @deprecated(
     reason: "No longer supported"
   )
+  arrangedPerilCategories: ArrangedPerilCategories!
+}
+
+type ArrangedPerilCategories {
+  me: PerilCategory!
+  home: PerilCategory!
+  stuff: PerilCategory!
 }
 
 type Member {

@@ -51,28 +51,30 @@ export const sendChatAudioResponse: MutationToSendChatAudioResponseResolver = as
   const user = await getUser(token, headers)
 
   const { createReadStream, filename, mimetype } = await file
-  const uploadedFileUrl: string = await new Promise((resolve, reject) => {
-    const key = `${uuid()}-${filename}`
-    const params = {
-      Bucket: AWS_CLAIMS_S3_BUCKET,
-      Key: key,
-      Body: createReadStream(),
-      ContentType: mimetype,
-      Metadata: {
-        MemberId: user.memberId,
-      },
-    }
-
-    s3.upload(params, UPLOAD_OPTIONS, (err, data) => {
-      if (err) {
-        logger.error('Got error when attempting to upload', err)
-        reject(err)
-        return
+  const uploadedFileUrl: string = await new Promise<string>(
+    (resolve, reject) => {
+      const key = `${uuid()}-${filename}`
+      const params = {
+        Bucket: AWS_CLAIMS_S3_BUCKET,
+        Key: key,
+        Body: createReadStream(),
+        ContentType: mimetype,
+        Metadata: {
+          MemberId: user.memberId,
+        },
       }
 
-      resolve(data.Location)
-    })
-  })
+      s3.upload(params, UPLOAD_OPTIONS, (err, data) => {
+        if (err) {
+          logger.error('Got error when attempting to upload', err)
+          reject(err)
+          return
+        }
+
+        resolve(data.Location)
+      })
+    },
+  )
   return setChatAudioResponse(token, headers, {
     globalId,
     url: uploadedFileUrl,
