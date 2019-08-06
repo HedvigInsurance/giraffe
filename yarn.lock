@@ -122,21 +122,21 @@
     retry-request "^4.0.0"
     teeny-request "^4.0.0"
 
-"@google-cloud/logging@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/logging/-/logging-5.2.0.tgz#d112fb9ded1d7fa08e1d27f28811be8995114368"
-  integrity sha512-HvgNDkWL5BpT/EtkcC4XlR7EmSQqEnR5ndWzJ+ehwK4P6zzTsJRlW5VZBFLRBWfgp+3fU7vHMNEEYa1MXsEfUA==
+"@google-cloud/logging@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/logging/-/logging-5.2.1.tgz#3316cbe9f68ed3fb67df46eeceaff9fa36170f75"
+  integrity sha512-goO1oRgpqw/EqjoPAHrxzMUdDA8tm18av41Lqo3De521eMMXpdN9TJgLLCZBPizqu5ZP+A37qmL8rTM1m2LowA==
   dependencies:
     "@google-cloud/common-grpc" "^1.0.0"
-    "@google-cloud/paginator" "^1.0.0"
+    "@google-cloud/paginator" "^2.0.0"
     "@google-cloud/projectify" "^1.0.0"
     "@google-cloud/promisify" "^1.0.0"
-    "@opencensus/propagation-stackdriver" "0.0.14"
+    "@opencensus/propagation-stackdriver" "0.0.16"
     arrify "^2.0.0"
     eventid "^0.1.2"
     extend "^3.0.2"
     gcp-metadata "^2.0.0"
-    google-auth-library "^4.0.0"
+    google-auth-library "^5.0.0"
     google-gax "^1.0.0"
     is "^3.2.1"
     on-finished "^2.3.0"
@@ -145,17 +145,15 @@
     snakecase-keys "^3.0.0"
     stream-events "^1.0.4"
     through2 "^3.0.0"
-    type-fest "^0.5.0"
+    type-fest "^0.7.0"
 
-"@google-cloud/paginator@^1.0.0":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@google-cloud/paginator/-/paginator-1.0.2.tgz#4d4371d7e3cb35ad00180f724d42c317dbe15b52"
-  integrity sha512-mUqsRAJ/OT/Zo/Qh2v+kEeWsEgKZtK4vs2skSiVeudPLwjLSVng+fYZYtLK4kx05OSnm16MqurcPqW14g1/TgQ==
+"@google-cloud/paginator@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/paginator/-/paginator-2.0.0.tgz#187af93634341e79cf1d41dccde5c9082508a0f2"
+  integrity sha512-droVsitvSUGSoMV7Hbk2B5dCFkZIz9YNu3D1AxgFh+hmbSEWJ9SgB/M3WrU8CUx3pseH7IbLuq8jgs3HEFzeHw==
   dependencies:
     arrify "^2.0.0"
     extend "^3.0.1"
-    split-array-stream "^2.0.0"
-    stream-events "^1.0.4"
 
 "@google-cloud/projectify@^1.0.0":
   version "1.0.1"
@@ -339,10 +337,10 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-1.0.4.tgz#b740f68609dfae8aa71c3a6cab15d816407ba493"
   integrity sha512-60CHpq+eqnTxLZQ4PGHYNwUX572hgpMHGPtTWMjdTMsAvlm69lZV/4ly6O3sAYkomo4NggGcomrDpBe34rxUqw==
 
-"@opencensus/core@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@opencensus/core/-/core-0.0.14.tgz#7d4058b4c260713595643fc9dbb5c48ba077297f"
-  integrity sha512-JozZkTqm57/g1RfMqZ9ZiJrrJ1O4UnVetVTW2e+AFa0fW+Zam5xBD8UmfNAYy/pIYfejknKEO6x9LFW95bbxcw==
+"@opencensus/core@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@opencensus/core/-/core-0.0.16.tgz#52bd612432b6f1ac2eec3332cdcf0c8046fc27f1"
+  integrity sha512-SZv5VpdLAzjLZAXwycj0XnvOWiVLu4HYanEZxXZNpvtXA6tQDlMP8Qssrd7Lz7+mWxAeRNaHiCf9Vy+A15R8tA==
   dependencies:
     continuation-local-storage "^3.2.1"
     log-driver "^1.2.7"
@@ -350,12 +348,12 @@
     shimmer "^1.2.0"
     uuid "^3.2.1"
 
-"@opencensus/propagation-stackdriver@0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@opencensus/propagation-stackdriver/-/propagation-stackdriver-0.0.14.tgz#2c0cd57c79ef70716c7bbda719b221c169507dbf"
-  integrity sha512-caq5a7xKr5NThXy87ACx4AcQXI3186hxR0LNt2yxxgoMk2Sz7qasxZvMoA2A5t27iF6x3m/V7TeIKAuomgAyMA==
+"@opencensus/propagation-stackdriver@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@opencensus/propagation-stackdriver/-/propagation-stackdriver-0.0.16.tgz#4cd8b37ef526fe4bed2f57335ff93c9ea89faa11"
+  integrity sha512-zL9jtppvMHDJDO5XsfNRKaI98shfmQkxNzT7pQu2rSLjBz9xFNLzhCLoEvx3Qlj+xrepJcBnhzFftxY+Bn6VFg==
   dependencies:
-    "@opencensus/core" "^0.0.14"
+    "@opencensus/core" "^0.0.16"
     hex2dec "^1.0.1"
     uuid "^3.2.1"
 
@@ -2738,6 +2736,20 @@ google-auth-library@^4.0.0:
     jws "^3.1.5"
     lru-cache "^5.0.0"
 
+google-auth-library@^5.0.0:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-5.1.2.tgz#6d64c9d44c21bafc4ff6fdcb26f10b91f16f9a18"
+  integrity sha512-MALEV8rwNx4NAWFlQcA3nN25pYg72PfMTpgfds4sMFvTtHoUk8ZPb8wuPBf1bNNLCS3pDwV4XJcu/uJeDCuFLw==
+  dependencies:
+    arrify "^2.0.0"
+    base64-js "^1.3.0"
+    fast-text-encoding "^1.0.0"
+    gaxios "^2.0.0"
+    gcp-metadata "^2.0.0"
+    gtoken "^4.0.0"
+    jws "^3.1.5"
+    lru-cache "^5.0.0"
+
 google-gax@^1.0.0:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.1.4.tgz#b455cc7c8a3173cfa96d2df1c2f9d142af5452fb"
@@ -2897,6 +2909,16 @@ gtoken@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-3.0.2.tgz#09b3c2998a785f81d7d020b9221d65d27e0e8e62"
   integrity sha512-BOBi6Zz31JfxhSHRZBIDdbwIbOPyux10WxJHdx8wz/FMP1zyN1xFrsAWsgcLe5ww5v/OZu/MePUEZAjgJXSauA==
+  dependencies:
+    gaxios "^2.0.0"
+    google-p12-pem "^2.0.0"
+    jws "^3.1.5"
+    mime "^2.2.0"
+
+gtoken@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-4.0.0.tgz#42b63a935a03a61eedf0ec14f74f6875bad627bd"
+  integrity sha512-XaRCfHJxhj06LmnWNBzVTAr85NfAErq0W1oabkdqwbq3uL/QTB1kyvGog361Uu2FMG/8e3115sIy/97Rnd4GjQ==
   dependencies:
     gaxios "^2.0.0"
     google-p12-pem "^2.0.0"
@@ -5388,13 +5410,6 @@ spdx-license-ids@^3.0.0:
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.4.tgz#75ecd1a88de8c184ef015eafb51b5b48bfd11bb1"
   integrity sha512-7j8LYJLeY/Yb6ACbQ7F76qy5jHkp0U6jgBfJsk97bwWlVUnUWsAgpyaCvo17h0/RQGnQ036tVDomiwoI4pDkQA==
 
-split-array-stream@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/split-array-stream/-/split-array-stream-2.0.0.tgz#85a4f8bfe14421d7bca7f33a6d176d0c076a53b1"
-  integrity sha512-hmMswlVY91WvGMxs0k8MRgq8zb2mSen4FmDNc5AFiTWtrBpdZN6nwD6kROVe4vNL+ywrvbCKsWVCnEd4riELIg==
-  dependencies:
-    is-stream-ended "^0.1.4"
-
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/split-string/-/split-string-3.1.0.tgz#7cb09dda3a86585705c64b39a6466038682e8fe2"
@@ -5862,10 +5877,10 @@ type-fest@^0.3.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.3.1.tgz#63d00d204e059474fe5e1b7c011112bbd1dc29e1"
   integrity sha512-cUGJnCdr4STbePCgqNFbpVNCepa+kAVohJs1sLhxzdH+gnEoOd8VhbYa7pD3zZYGiURWM2xzEII3fQcRizDkYQ==
 
-type-fest@^0.5.0:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.5.2.tgz#d6ef42a0356c6cd45f49485c3b6281fc148e48a2"
-  integrity sha512-DWkS49EQKVX//Tbupb9TFa19c7+MK1XmzkrZUR8TAktmE/DizXoaoJV6TZ/tSIPXipqNiRI6CyAe7x69Jb6RSw==
+type-fest@^0.7.0:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.7.1.tgz#8dda65feaf03ed78f0a3f9678f1869147f7c5c48"
+  integrity sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==
 
 type-is@^1.6.16, type-is@~1.6.6:
   version "1.6.18"
