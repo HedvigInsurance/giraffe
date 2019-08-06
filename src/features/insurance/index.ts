@@ -10,6 +10,7 @@ const loadInsurance = async (
     getInsurance(token, headers),
     getUser(token, headers),
   ])
+
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
@@ -24,6 +25,11 @@ const loadInsurance = async (
     type: insuranceResponse.insuranceType,
     activeFrom: insuranceResponse.activeFrom,
     perilCategories: insuranceResponse.categories,
+    arrangedPerilCategories: {
+      me: insuranceResponse.categories[0],
+      home: insuranceResponse.categories[1],
+      stuff: insuranceResponse.categories[2],
+    },
     livingSpace: insuranceResponse.livingSpace,
     monthlyCost: insuranceResponse.currentTotalPrice,
     safetyIncreasers: user.safetyIncreasers,

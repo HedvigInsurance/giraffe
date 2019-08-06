@@ -41,6 +41,11 @@ export interface Insurance {
   policyUrl?: string;
   currentInsurerName?: string;
   livingSpace?: number;
+  
+  /**
+   * 
+   * @deprecated Use arrangedPerilCategories instead
+   */
   perilCategories?: Array<PerilCategory | null>;
   
   /**
@@ -54,6 +59,7 @@ export interface Insurance {
    * @deprecated No longer supported
    */
   safetyIncreasers?: Array<string>;
+  arrangedPerilCategories: ArrangedPerilCategories;
 }
 
 export interface InsuranceCost {
@@ -96,6 +102,12 @@ export interface Peril {
   title?: string;
   imageUrl?: string;
   description?: string;
+}
+
+export interface ArrangedPerilCategories {
+  me: PerilCategory;
+  home: PerilCategory;
+  stuff: PerilCategory;
 }
 
 export interface Cashback {
@@ -616,6 +628,7 @@ export interface Resolver {
   LocalDate?: GraphQLScalarType;
   PerilCategory?: PerilCategoryTypeResolver;
   Peril?: PerilTypeResolver;
+  ArrangedPerilCategories?: ArrangedPerilCategoriesTypeResolver;
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
@@ -757,6 +770,7 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   perilCategories?: InsuranceToPerilCategoriesResolver<TParent>;
   monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
   safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
+  arrangedPerilCategories?: InsuranceToArrangedPerilCategoriesResolver<TParent>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
@@ -820,6 +834,10 @@ export interface InsuranceToMonthlyCostResolver<TParent = Insurance, TResult = n
 }
 
 export interface InsuranceToSafetyIncreasersResolver<TParent = Insurance, TResult = Array<string> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToArrangedPerilCategoriesResolver<TParent = Insurance, TResult = ArrangedPerilCategories> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -897,6 +915,24 @@ export interface PerilToImageUrlResolver<TParent = Peril, TResult = string | nul
 }
 
 export interface PerilToDescriptionResolver<TParent = Peril, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ArrangedPerilCategoriesTypeResolver<TParent = ArrangedPerilCategories> {
+  me?: ArrangedPerilCategoriesToMeResolver<TParent>;
+  home?: ArrangedPerilCategoriesToHomeResolver<TParent>;
+  stuff?: ArrangedPerilCategoriesToStuffResolver<TParent>;
+}
+
+export interface ArrangedPerilCategoriesToMeResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ArrangedPerilCategoriesToHomeResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ArrangedPerilCategoriesToStuffResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
