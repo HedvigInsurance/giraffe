@@ -373,6 +373,8 @@ type Insurance {
     reason: "No longer supported"
   )
   arrangedPerilCategories: ArrangedPerilCategories!
+  renewalCertificateUrl: String
+  renewalDate: LocalDate
 }
 
 type ArrangedPerilCategories {

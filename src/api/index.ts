@@ -36,6 +36,8 @@ interface InsuranceDto {
   currentInsurerName: string
   policyUrl: string
   livingSpace: number
+  renewalCertificateUrl: string
+  renewalDate: string
 }
 
 interface UserDto {

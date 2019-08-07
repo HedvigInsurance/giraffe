@@ -60,6 +60,8 @@ export interface Insurance {
    */
   safetyIncreasers?: Array<string>;
   arrangedPerilCategories: ArrangedPerilCategories;
+  renewalCertificateUrl?: string;
+  renewalDate?: LocalDate;
 }
 
 export interface InsuranceCost {
@@ -771,6 +773,8 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
   safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
   arrangedPerilCategories?: InsuranceToArrangedPerilCategoriesResolver<TParent>;
+  renewalCertificateUrl?: InsuranceToRenewalCertificateUrlResolver<TParent>;
+  renewalDate?: InsuranceToRenewalDateResolver<TParent>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
@@ -838,6 +842,14 @@ export interface InsuranceToSafetyIncreasersResolver<TParent = Insurance, TResul
 }
 
 export interface InsuranceToArrangedPerilCategoriesResolver<TParent = Insurance, TResult = ArrangedPerilCategories> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToRenewalCertificateUrlResolver<TParent = Insurance, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToRenewalDateResolver<TParent = Insurance, TResult = LocalDate | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
