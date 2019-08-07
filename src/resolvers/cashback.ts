@@ -1,18 +1,18 @@
 import { getCashbackOptions, getUser } from '../api'
-import { QueryToCashbackResolver } from '../typings/generated-graphql-types'
+import { ForwardHeaders } from '../context'
+import {
+  Cashback,
+  QueryToCashbackResolver,
+} from '../typings/generated-graphql-types'
 
-const cashback: QueryToCashbackResolver = async (
-  _root,
-  _args,
-  { getToken, headers },
-) => {
-  const token = getToken()
+const cashbackInner = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<Cashback | null> => {
   const user = await getUser(token, headers)
   const options = await getCashbackOptions(token, headers)
 
-  const cashback = options.find(
-    (cashback) => cashback.name === user.selectedCashback,
-  )
+  const cashback = options.find((c) => c.name === user.selectedCashback)
 
   if (!cashback) {
     return null
@@ -21,4 +21,14 @@ const cashback: QueryToCashbackResolver = async (
   return cashback
 }
 
-export { cashback }
+const resolveCashback: QueryToCashbackResolver = async (
+  _root,
+  _args,
+  { getToken, headers },
+) => {
+  const token = getToken()
+
+  return cashbackInner(token, headers)
+}
+
+export { resolveCashback as cashback, cashbackInner }
