@@ -376,9 +376,9 @@ type Insurance {
 }
 
 type ArrangedPerilCategories {
-  me: PerilCategory!
-  home: PerilCategory!
-  stuff: PerilCategory!
+  me: PerilCategory
+  home: PerilCategory
+  stuff: PerilCategory
 }
 
 type Member {

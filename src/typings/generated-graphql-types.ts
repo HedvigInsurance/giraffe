@@ -105,9 +105,9 @@ export interface Peril {
 }
 
 export interface ArrangedPerilCategories {
-  me: PerilCategory;
-  home: PerilCategory;
-  stuff: PerilCategory;
+  me?: PerilCategory;
+  home?: PerilCategory;
+  stuff?: PerilCategory;
 }
 
 export interface Cashback {
@@ -924,15 +924,15 @@ export interface ArrangedPerilCategoriesTypeResolver<TParent = ArrangedPerilCate
   stuff?: ArrangedPerilCategoriesToStuffResolver<TParent>;
 }
 
-export interface ArrangedPerilCategoriesToMeResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
+export interface ArrangedPerilCategoriesToMeResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ArrangedPerilCategoriesToHomeResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
+export interface ArrangedPerilCategoriesToHomeResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ArrangedPerilCategoriesToStuffResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
+export interface ArrangedPerilCategoriesToStuffResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
