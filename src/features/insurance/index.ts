@@ -33,8 +33,7 @@ const loadInsurance = async (
     livingSpace: insuranceResponse.livingSpace,
     monthlyCost: insuranceResponse.currentTotalPrice,
     safetyIncreasers: user.safetyIncreasers,
-    renewalCertificateUrl: insuranceResponse.renewalCertificateUrl,
-    renewalDate: insuranceResponse.renewalDate,
+    renewal: insuranceResponse.renewal,
   }
 }
 

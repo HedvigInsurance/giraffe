@@ -11,6 +11,7 @@ import {
   MessageBodyChoicesCore,
   MessageBodySingleSelect,
   PerilCategory,
+  Renewal,
   SignState,
 } from '../typings/generated-graphql-types'
 import {
@@ -36,8 +37,7 @@ interface InsuranceDto {
   currentInsurerName: string
   policyUrl: string
   livingSpace: number
-  renewalCertificateUrl: string
-  renewalDate: string
+  renewal: Renewal
 }
 
 interface UserDto {

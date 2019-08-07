@@ -60,8 +60,7 @@ export interface Insurance {
    */
   safetyIncreasers?: Array<string>;
   arrangedPerilCategories: ArrangedPerilCategories;
-  renewalCertificateUrl?: string;
-  renewalDate?: LocalDate;
+  renewal?: Renewal;
 }
 
 export interface InsuranceCost {
@@ -110,6 +109,11 @@ export interface ArrangedPerilCategories {
   me: PerilCategory;
   home: PerilCategory;
   stuff: PerilCategory;
+}
+
+export interface Renewal {
+  certificateUrl: string;
+  date: LocalDate;
 }
 
 export interface Cashback {
@@ -631,6 +635,7 @@ export interface Resolver {
   PerilCategory?: PerilCategoryTypeResolver;
   Peril?: PerilTypeResolver;
   ArrangedPerilCategories?: ArrangedPerilCategoriesTypeResolver;
+  Renewal?: RenewalTypeResolver;
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
@@ -773,8 +778,7 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   monthlyCost?: InsuranceToMonthlyCostResolver<TParent>;
   safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
   arrangedPerilCategories?: InsuranceToArrangedPerilCategoriesResolver<TParent>;
-  renewalCertificateUrl?: InsuranceToRenewalCertificateUrlResolver<TParent>;
-  renewalDate?: InsuranceToRenewalDateResolver<TParent>;
+  renewal?: InsuranceToRenewalResolver<TParent>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
@@ -845,11 +849,7 @@ export interface InsuranceToArrangedPerilCategoriesResolver<TParent = Insurance,
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface InsuranceToRenewalCertificateUrlResolver<TParent = Insurance, TResult = string | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface InsuranceToRenewalDateResolver<TParent = Insurance, TResult = LocalDate | null> {
+export interface InsuranceToRenewalResolver<TParent = Insurance, TResult = Renewal | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -945,6 +945,19 @@ export interface ArrangedPerilCategoriesToHomeResolver<TParent = ArrangedPerilCa
 }
 
 export interface ArrangedPerilCategoriesToStuffResolver<TParent = ArrangedPerilCategories, TResult = PerilCategory> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface RenewalTypeResolver<TParent = Renewal> {
+  certificateUrl?: RenewalToCertificateUrlResolver<TParent>;
+  date?: RenewalToDateResolver<TParent>;
+}
+
+export interface RenewalToCertificateUrlResolver<TParent = Renewal, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface RenewalToDateResolver<TParent = Renewal, TResult = LocalDate> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
