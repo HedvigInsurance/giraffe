@@ -33,6 +33,7 @@ const loadInsurance = async (
     livingSpace: insuranceResponse.livingSpace,
     monthlyCost: insuranceResponse.currentTotalPrice,
     safetyIncreasers: user.safetyIncreasers,
+    renewal: insuranceResponse.renewal,
   }
 }
 

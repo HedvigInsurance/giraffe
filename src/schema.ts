@@ -137,6 +137,7 @@ const makeSchema = async () => {
   )
 
   let appContentServiceSchema: GraphQLSchema | undefined
+  logger.info('Introspecting AppContentService')
   appContentServiceSchema = makeRemoteExecutableSchema({
     schema: await introspectSchema(appContentServiceLink),
     link: appContentServiceLink,
@@ -150,6 +151,7 @@ const makeSchema = async () => {
       ...(resolvers as IResolvers<any, Context>),
     },
   })
+  logger.info('AppContentService Introspected')
 
   logger.info('Merging schemas')
   const schema = mergeSchemas({
