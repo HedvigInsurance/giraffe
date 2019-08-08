@@ -1,5 +1,6 @@
-import { getUser, setSelectedCashbackOption } from '../api'
+import { setSelectedCashbackOption } from '../api'
 import { MutationToSelectCashbackOptionResolver } from '../typings/generated-graphql-types'
+import { cashbackInner } from './cashback'
 
 const selectCashbackOption: MutationToSelectCashbackOptionResolver = async (
   _root,
@@ -10,12 +11,9 @@ const selectCashbackOption: MutationToSelectCashbackOptionResolver = async (
   const result = await setSelectedCashbackOption(token, headers, id)
 
   if (result === 204) {
-    const user = await getUser(token, headers)
-
-    return {
-      id,
-      name: user.selectedCashback,
-      imageUrl: user.selectedCashbackImageUrl,
+    const cashback = await cashbackInner(token, headers)
+    if (cashback !== null) {
+      return cashback
     }
   }
 
