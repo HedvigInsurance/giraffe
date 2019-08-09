@@ -12,6 +12,7 @@ interface Context {
 }
 
 interface ForwardHeaders {
+  'User-Agent': string
   'X-Forwarded-For': string
   'X-Request-Id': string
 }
@@ -31,6 +32,7 @@ const getWebContext = async ({
   return {
     getToken,
     headers: {
+      'User-Agent': checkedCtx.get('User-Agent'),
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
       'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
     },
@@ -51,6 +53,7 @@ const getWebSocketContext = (
     return connectionParams.Authorization
   }
   const headers: ForwardHeaders = {
+    'User-Agent': context.request.headers['User-Agent'] as string,
     'X-Forwarded-For': context.request.headers['x-forwarded-for'] as string,
     'X-Request-Id':
       typeof context.request.headers['x-request-id'] === 'string'
