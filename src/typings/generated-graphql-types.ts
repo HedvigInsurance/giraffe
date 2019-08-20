@@ -128,8 +128,8 @@ export interface Renewal {
 }
 
 export interface PreviousInsurer {
-  displayName: string;
-  identifier: string;
+  displayName?: string;
+  id: string;
   switchable: boolean;
 }
 
@@ -986,15 +986,15 @@ export interface RenewalToDateResolver<TParent = Renewal, TResult = LocalDate> {
 
 export interface PreviousInsurerTypeResolver<TParent = PreviousInsurer> {
   displayName?: PreviousInsurerToDisplayNameResolver<TParent>;
-  identifier?: PreviousInsurerToIdentifierResolver<TParent>;
+  id?: PreviousInsurerToIdResolver<TParent>;
   switchable?: PreviousInsurerToSwitchableResolver<TParent>;
 }
 
-export interface PreviousInsurerToDisplayNameResolver<TParent = PreviousInsurer, TResult = string> {
+export interface PreviousInsurerToDisplayNameResolver<TParent = PreviousInsurer, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface PreviousInsurerToIdentifierResolver<TParent = PreviousInsurer, TResult = string> {
+export interface PreviousInsurerToIdResolver<TParent = PreviousInsurer, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

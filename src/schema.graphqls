@@ -383,7 +383,7 @@ type Insurance {
 
 type PreviousInsurer {
   displayName: String
-  identifier: String!
+  id: ID!
   switchable: Boolean!
 }
 

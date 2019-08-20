@@ -34,7 +34,7 @@ const loadInsurance = async (
 
   const previousInsurer = insuranceResponse.insuredAtOtherCompany
     ? ({
-        identifier: insuranceResponse.currentInsurerName,
+        id: insuranceResponse.currentInsurerName,
         displayName: previousInsurerMap.get(
           insuranceResponse.currentInsurerName,
         ),
