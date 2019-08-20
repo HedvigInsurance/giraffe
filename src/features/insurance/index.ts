@@ -1,6 +1,27 @@
 import { getInsurance, getUser } from '../../api'
 import { ForwardHeaders } from '../../context'
 import { Insurance } from '../../typings/generated-graphql-types'
+import { PreviousInsurer } from './../../typings/generated-graphql-types'
+
+const switchableInsuranceProviders = [
+  'ICA',
+  'FOLKSAM',
+  'TRYGG_HANSA',
+  'TRE_KRONOR',
+]
+
+const previousInsurerMap = new Map<String, String>([
+  ['LANSFORSAKRINGAR', 'Länsförsäkringar'],
+  ['IF', 'If'],
+  ['FOLKSAM', 'Folksam'],
+  ['TRYGG_HANSA', 'Trygg-Hansa'],
+  ['MODERNA', 'Moderna Försäkringar'],
+  ['ICA', 'ICA Försäkring'],
+  ['GJENSIDIGE', 'Gjensidige'],
+  ['VARDIA', 'Vardia'],
+  ['TRE_KRONOR', 'Tre kronor'],
+  ['OTHER', ''],
+])
 
 const loadInsurance = async (
   token: string,
@@ -10,6 +31,18 @@ const loadInsurance = async (
     getInsurance(token, headers),
     getUser(token, headers),
   ])
+
+  const previousInsurer = insuranceResponse.insuredAtOtherCompany
+    ? ({
+        identifier: insuranceResponse.currentInsurerName,
+        displayName: previousInsurerMap.get(
+          insuranceResponse.currentInsurerName,
+        ),
+        switchable: switchableInsuranceProviders.includes(
+          insuranceResponse.currentInsurerName,
+        ),
+      } as PreviousInsurer)
+    : undefined
 
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
@@ -34,6 +67,7 @@ const loadInsurance = async (
     monthlyCost: insuranceResponse.currentTotalPrice,
     safetyIncreasers: user.safetyIncreasers,
     renewal: insuranceResponse.renewal,
+    previousInsurer,
   }
 }
 

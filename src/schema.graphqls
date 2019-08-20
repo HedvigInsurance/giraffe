@@ -358,10 +358,14 @@ type Insurance {
   status: InsuranceStatus!
   type: InsuranceType
   activeFrom: LocalDate
-  insuredAtOtherCompany: Boolean
+  insuredAtOtherCompany: Boolean @deprecated(
+    reason: "Use previousInsurer instead"
+  )
   presaleInformationUrl: String
   policyUrl: String
-  currentInsurerName: String
+  currentInsurerName: String @deprecated(
+    reason: "Use previousInsurer instead"
+  )
   livingSpace: Int
   perilCategories: [PerilCategory] @deprecated(
     reason: "Use arrangedPerilCategories instead"
@@ -374,6 +378,13 @@ type Insurance {
   )
   arrangedPerilCategories: ArrangedPerilCategories!
   renewal: Renewal
+  previousInsurer: PreviousInsurer
+}
+
+type PreviousInsurer {
+  displayName: String
+  identifier: String!
+  switchable: Boolean!
 }
 
 type Renewal {

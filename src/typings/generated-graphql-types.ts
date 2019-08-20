@@ -36,9 +36,19 @@ export interface Insurance {
   status: InsuranceStatus;
   type?: InsuranceType;
   activeFrom?: LocalDate;
+  
+  /**
+   * 
+   * @deprecated Use previousInsurer instead
+   */
   insuredAtOtherCompany?: boolean;
   presaleInformationUrl?: string;
   policyUrl?: string;
+  
+  /**
+   * 
+   * @deprecated Use previousInsurer instead
+   */
   currentInsurerName?: string;
   livingSpace?: number;
   
@@ -61,6 +71,7 @@ export interface Insurance {
   safetyIncreasers?: Array<string>;
   arrangedPerilCategories: ArrangedPerilCategories;
   renewal?: Renewal;
+  previousInsurer?: PreviousInsurer;
 }
 
 export interface InsuranceCost {
@@ -114,6 +125,12 @@ export interface ArrangedPerilCategories {
 export interface Renewal {
   certificateUrl: string;
   date: LocalDate;
+}
+
+export interface PreviousInsurer {
+  displayName: string;
+  identifier: string;
+  switchable: boolean;
 }
 
 export interface Cashback {
@@ -636,6 +653,7 @@ export interface Resolver {
   Peril?: PerilTypeResolver;
   ArrangedPerilCategories?: ArrangedPerilCategoriesTypeResolver;
   Renewal?: RenewalTypeResolver;
+  PreviousInsurer?: PreviousInsurerTypeResolver;
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
@@ -779,6 +797,7 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   safetyIncreasers?: InsuranceToSafetyIncreasersResolver<TParent>;
   arrangedPerilCategories?: InsuranceToArrangedPerilCategoriesResolver<TParent>;
   renewal?: InsuranceToRenewalResolver<TParent>;
+  previousInsurer?: InsuranceToPreviousInsurerResolver<TParent>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
@@ -850,6 +869,10 @@ export interface InsuranceToArrangedPerilCategoriesResolver<TParent = Insurance,
 }
 
 export interface InsuranceToRenewalResolver<TParent = Insurance, TResult = Renewal | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToPreviousInsurerResolver<TParent = Insurance, TResult = PreviousInsurer | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -958,6 +981,24 @@ export interface RenewalToCertificateUrlResolver<TParent = Renewal, TResult = st
 }
 
 export interface RenewalToDateResolver<TParent = Renewal, TResult = LocalDate> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface PreviousInsurerTypeResolver<TParent = PreviousInsurer> {
+  displayName?: PreviousInsurerToDisplayNameResolver<TParent>;
+  identifier?: PreviousInsurerToIdentifierResolver<TParent>;
+  switchable?: PreviousInsurerToSwitchableResolver<TParent>;
+}
+
+export interface PreviousInsurerToDisplayNameResolver<TParent = PreviousInsurer, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface PreviousInsurerToIdentifierResolver<TParent = PreviousInsurer, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface PreviousInsurerToSwitchableResolver<TParent = PreviousInsurer, TResult = boolean> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
