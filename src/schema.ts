@@ -136,6 +136,21 @@ const makeSchema = async () => {
     }),
   )
 
+  const accountServiceLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let accountServiceSchema: GraphQLSchema | undefined
+  logger.info('Introspecting AccountServiceSchema')
+  accountServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(accountServiceLink),
+    link: accountServiceLink,
+  })
+  logger.info('AccountServiceSchema Introspected')
+
   let appContentServiceSchema: GraphQLSchema | undefined
   logger.info('Introspecting AppContentService')
   appContentServiceSchema = makeRemoteExecutableSchema({
@@ -161,6 +176,7 @@ const makeSchema = async () => {
       dontPanicSchema,
       paymentServiceSchema,
       productPricingServiceSchema,
+      accountServiceSchema,
       appContentServiceSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
