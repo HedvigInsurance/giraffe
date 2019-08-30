@@ -78,12 +78,15 @@ export interface InsuranceCost {
   monthlyGross: MonetaryAmountV2;
   monthlyDiscount: MonetaryAmountV2;
   monthlyNet: MonetaryAmountV2;
+  freeUntil?: LocalDate;
 }
 
 export interface MonetaryAmountV2 {
   amount: string;
   currency: string;
 }
+
+export type LocalDate = any;
 
 export enum InsuranceStatus {
   PENDING = 'PENDING',
@@ -99,8 +102,6 @@ export enum InsuranceType {
   STUDENT_RENT = 'STUDENT_RENT',
   STUDENT_BRF = 'STUDENT_BRF'
 }
-
-export type LocalDate = any;
 
 export interface PerilCategory {
   title?: string;
@@ -880,6 +881,7 @@ export interface InsuranceCostTypeResolver<TParent = InsuranceCost> {
   monthlyGross?: InsuranceCostToMonthlyGrossResolver<TParent>;
   monthlyDiscount?: InsuranceCostToMonthlyDiscountResolver<TParent>;
   monthlyNet?: InsuranceCostToMonthlyNetResolver<TParent>;
+  freeUntil?: InsuranceCostToFreeUntilResolver<TParent>;
 }
 
 export interface InsuranceCostToMonthlyGrossResolver<TParent = InsuranceCost, TResult = MonetaryAmountV2> {
@@ -891,6 +893,10 @@ export interface InsuranceCostToMonthlyDiscountResolver<TParent = InsuranceCost,
 }
 
 export interface InsuranceCostToMonthlyNetResolver<TParent = InsuranceCost, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceCostToFreeUntilResolver<TParent = InsuranceCost, TResult = LocalDate | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

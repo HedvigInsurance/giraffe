@@ -465,6 +465,7 @@ type InsuranceCost {
   monthlyGross: MonetaryAmountV2!,
   monthlyDiscount: MonetaryAmountV2!,
   monthlyNet: MonetaryAmountV2!
+  freeUntil: LocalDate
 }
 
 type MonetaryAmountV2 {
