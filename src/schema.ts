@@ -32,11 +32,11 @@ const typeDefs = gql(
 
 const redis = config.REDIS_CLUSTER_MODE
   ? new Redis.Cluster([
-      {
-        host: config.REDIS_HOSTNAME,
-        port: config.REDIS_PORT,
-      },
-    ])
+    {
+      host: config.REDIS_HOSTNAME,
+      port: config.REDIS_PORT,
+    },
+  ])
   : new Redis({ host: config.REDIS_HOSTNAME, port: config.REDIS_PORT })
 
 const makeSchema = async () => {
@@ -128,6 +128,7 @@ const makeSchema = async () => {
   })
   logger.info('ProductPricingServiceSchema Introspected')
 
+
   const accountServiceLink = authorizationContextLink.concat(
     createHttpLink({
       uri: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
@@ -136,12 +137,18 @@ const makeSchema = async () => {
     }),
   )
   let accountServiceSchema: GraphQLSchema | undefined
-  logger.info('Introspecting AccountServiceSchema')
-  accountServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(accountServiceLink),
-    link: accountServiceLink,
-  })
-  logger.info('AccountServiceSchema Introspected')
+  try {
+    logger.info('Introspecting AccountServiceSchema')
+    accountServiceSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(accountServiceLink),
+      link: accountServiceLink,
+    })
+    logger.info('AccountServiceSchema Introspected')
+  } catch (e) {
+    /* noop */
+    logger.error('DontPanicSchema Introspection failed (Ignoring)')
+  }
+
 
   const appContentServiceLink = authorizationContextLink.concat(
     createHttpLink({
