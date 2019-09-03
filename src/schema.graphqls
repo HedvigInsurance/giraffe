@@ -113,6 +113,7 @@ type MessageBodyText implements MessageBodyCore {
   text: String!
   placeholder: String
   keyboard: KeyboardType
+  textContentType: TextContentType
 }
 
 type MessageBodyNumber implements MessageBodyCore {
@@ -121,6 +122,7 @@ type MessageBodyNumber implements MessageBodyCore {
   text: String!
   placeholder: String
   keyboard: KeyboardType
+  textContentType: TextContentType
 }
 
 enum KeyboardType {
@@ -130,6 +132,35 @@ enum KeyboardType {
   NUMERIC
   EMAIL
   PHONE
+}
+
+enum TextContentType {
+  NONE
+  URL
+  ADDRESS_CITY
+  ADDRESS_CITY_STATE
+  ADDRESS_STATE
+  COUNTRY_NAME
+  CREDIT_CARD_NUMBER
+  EMAIL_ADDRESS
+  FAMILY_NAME
+  FULL_STREET_ADDRESS
+  GIVEN_NAME
+  JOB_TITLE
+  LOCATION
+  MIDDLE_NAME
+  NAME
+  NAME_PREFIX
+  NAME_SUFFIX
+  NICK_NAME
+  ORGANIZATION_NAME
+  POSTAL_CODE
+  STREET_ADDRESS_LINE1
+  STREET_ADDRESS_LINE2
+  SUBLOCALITY
+  TELEPHONE_NUMBER
+  USERNAME
+  PASSWORD
 }
 
 type MessageBodyAudio implements MessageBodyCore {
