@@ -15,6 +15,7 @@ interface ForwardHeaders {
   'User-Agent': string
   'X-Forwarded-For': string
   'X-Request-Id': string
+  'Accept-Language': string
 }
 
 const getWebContext = async ({
@@ -35,6 +36,7 @@ const getWebContext = async ({
       'User-Agent': checkedCtx.get('User-Agent'),
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
       'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
+      'Accept-Language': checkedCtx.get('accept-language'),
     },
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
@@ -59,6 +61,7 @@ const getWebSocketContext = (
       typeof context.request.headers['x-request-id'] === 'string'
         ? (context.request.headers['x-request-id'] as string)
         : uuidv4(),
+    'Accept-Language': context.request.headers['accept-language'] as string,
   }
 
   return {
