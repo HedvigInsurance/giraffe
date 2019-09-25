@@ -68,6 +68,11 @@ const loadInsurance = async (
     safetyIncreasers: user.safetyIncreasers,
     renewal: insuranceResponse.renewal,
     previousInsurer,
+    ancillaryArea: insuranceResponse.ancillaryArea,
+    yearOfConstruction: insuranceResponse.yearOfConstruction,
+    numberOfBathrooms: insuranceResponse.numberOfBathrooms,
+    extraBuildings: insuranceResponse.extraBuildings,
+    isSubleted: insuranceResponse.isSubleted,
   }
 }
 

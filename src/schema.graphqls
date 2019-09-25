@@ -410,6 +410,25 @@ type Insurance {
   arrangedPerilCategories: ArrangedPerilCategories!
   renewal: Renewal
   previousInsurer: PreviousInsurer
+
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuilding!]
+  isSubleted: Boolean
+}
+
+type ExtraBuilding {
+  type: ExtraBuildingType
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+enum ExtraBuildingType {
+  GARAGE
+  ATTEFALL
+  FRIGGEBOD
+  OTHER
 }
 
 type PreviousInsurer {

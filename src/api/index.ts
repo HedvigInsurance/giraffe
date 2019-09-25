@@ -13,6 +13,7 @@ import {
   PerilCategory,
   Renewal,
   SignState,
+  ExtraBuildingType,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -38,6 +39,17 @@ interface InsuranceDto {
   policyUrl: string
   livingSpace: number
   renewal: Renewal
+  ancillaryArea: number
+  yearOfConstruction: number
+  numberOfBathrooms: number
+  extraBuildings: ExtraBuilding[]
+  isSubleted: boolean
+}
+
+interface ExtraBuilding {
+  type: ExtraBuildingType
+  area: number
+  hasWaterConnected: boolean
 }
 
 interface UserDto {
