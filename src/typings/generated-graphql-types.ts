@@ -105,7 +105,8 @@ export enum InsuranceType {
   RENT = 'RENT',
   BRF = 'BRF',
   STUDENT_RENT = 'STUDENT_RENT',
-  STUDENT_BRF = 'STUDENT_BRF'
+  STUDENT_BRF = 'STUDENT_BRF',
+  HOUSE = 'HOUSE'
 }
 
 export interface PerilCategory {

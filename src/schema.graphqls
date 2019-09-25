@@ -482,6 +482,7 @@ enum InsuranceType {
   BRF
   STUDENT_RENT
   STUDENT_BRF
+  HOUSE
 }
 
 type Cashback {
