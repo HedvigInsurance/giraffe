@@ -410,7 +410,6 @@ type Insurance {
   arrangedPerilCategories: ArrangedPerilCategories!
   renewal: Renewal
   previousInsurer: PreviousInsurer
-
   ancillaryArea: Int
   yearOfConstruction: Int
   numberOfBathrooms: Int
