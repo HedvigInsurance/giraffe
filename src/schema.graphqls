@@ -413,21 +413,39 @@ type Insurance {
   ancillaryArea: Int
   yearOfConstruction: Int
   numberOfBathrooms: Int
-  extraBuildingsSwe: [ExtraBuildingSwe!]
+  extraBuildings: [ExtraBuilding!]
   isSubleted: Boolean
 }
 
-type ExtraBuildingSwe {
-  type: ExtraBuildingTypeSwe
+union ExtraBuilding =
+    ExtraBuildingGarage
+  | ExtraBuildingAttefalls
+  | ExtraBuildingFriggebod
+  | ExtraBuildingOther
+
+interface ExtraBuildingCore {
   area: Int!
   hasWaterConnected: Boolean!
 }
 
-enum ExtraBuildingTypeSwe {
-  GARAGE
-  ATTEFALL
-  FRIGGEBOD
-  OTHER
+type ExtraBuildingGarage implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingAttefalls implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingFriggebod implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingOther implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
 }
 
 type PreviousInsurer {

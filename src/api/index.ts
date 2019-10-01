@@ -13,7 +13,6 @@ import {
   PerilCategory,
   Renewal,
   SignState,
-  ExtraBuildingTypeSwe,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -47,7 +46,7 @@ interface InsuranceDto {
 }
 
 interface ExtraBuilding {
-  type: ExtraBuildingTypeSwe
+  type: string
   area: number
   hasWaterConnected: boolean
 }

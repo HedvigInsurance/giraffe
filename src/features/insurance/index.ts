@@ -46,11 +46,40 @@ const loadInsurance = async (
       } as PreviousInsurer)
     : undefined
 
-  const extraBuildingsSwe = insuranceResponse.extraBuildings.map(extraBuilding => ({
-      type: extraBuilding.type,
-      area: extraBuilding.area,
-      hasWaterConnected: extraBuilding.hasWaterConnected,
-    })
+  const extraBuildings = insuranceResponse.extraBuildings.map(extraBuilding => {
+      if (extraBuilding.type == "GARAGE") {
+        return {
+          __typename: "ExtraBuildingGarage",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == "ATTEFALS") {
+        return {
+          __typename: "ExtraBuildingAttefalls",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == "FRIGGEBOD") {
+        return {
+          __typename: "ExtraBuildingFriggebod",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == "OTHER") {
+        return {
+          __typename: "ExtraBuildingOther",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      return {
+        area: extraBuilding.area,
+        hasWaterConnected: extraBuilding.hasWaterConnected,
+      }
+    }
   )
   
 
@@ -81,7 +110,7 @@ const loadInsurance = async (
     ancillaryArea: insuranceResponse.ancillaryArea,
     yearOfConstruction: insuranceResponse.yearOfConstruction,
     numberOfBathrooms: insuranceResponse.numberOfBathrooms,
-    extraBuildingsSwe: extraBuildingsSwe,
+    extraBuildings: extraBuildings,
     isSubleted: insuranceResponse.isSubleted,
   }
 }
