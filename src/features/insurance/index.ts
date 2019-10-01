@@ -110,7 +110,7 @@ const loadInsurance = async (
     ancillaryArea: insuranceResponse.ancillaryArea,
     yearOfConstruction: insuranceResponse.yearOfConstruction,
     numberOfBathrooms: insuranceResponse.numberOfBathrooms,
-    extraBuildings: extraBuildings,
+    extraBuildings,
     isSubleted: insuranceResponse.isSubleted,
   }
 }
