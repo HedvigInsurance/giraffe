@@ -413,17 +413,17 @@ type Insurance {
   ancillaryArea: Int
   yearOfConstruction: Int
   numberOfBathrooms: Int
-  extraBuildings: [ExtraBuilding!]
+  extraBuildingsSwe: [ExtraBuildingSwe!]
   isSubleted: Boolean
 }
 
-type ExtraBuilding {
-  type: ExtraBuildingType
+type ExtraBuildingSwe {
+  type: ExtraBuildingTypeSwe
   area: Int!
   hasWaterConnected: Boolean!
 }
 
-enum ExtraBuildingType {
+enum ExtraBuildingTypeSwe {
   GARAGE
   ATTEFALL
   FRIGGEBOD

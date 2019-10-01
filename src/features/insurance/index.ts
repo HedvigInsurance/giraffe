@@ -1,6 +1,8 @@
 import { getInsurance, getUser } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { Insurance } from '../../typings/generated-graphql-types'
+import { 
+  Insurance
+} from '../../typings/generated-graphql-types'
 import { PreviousInsurer } from './../../typings/generated-graphql-types'
 
 const switchableInsuranceProviders = [
@@ -44,6 +46,14 @@ const loadInsurance = async (
       } as PreviousInsurer)
     : undefined
 
+  const extraBuildingsSwe = insuranceResponse.extraBuildings.map(extraBuilding => ({
+      type: extraBuilding.type,
+      area: extraBuilding.area,
+      hasWaterConnected: extraBuilding.hasWaterConnected,
+    })
+  )
+  
+
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
@@ -71,7 +81,7 @@ const loadInsurance = async (
     ancillaryArea: insuranceResponse.ancillaryArea,
     yearOfConstruction: insuranceResponse.yearOfConstruction,
     numberOfBathrooms: insuranceResponse.numberOfBathrooms,
-    extraBuildings: insuranceResponse.extraBuildings,
+    extraBuildingsSwe: extraBuildingsSwe,
     isSubleted: insuranceResponse.isSubleted,
   }
 }
