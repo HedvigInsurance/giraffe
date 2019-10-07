@@ -1,6 +1,8 @@
 import { getInsurance, getUser } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { Insurance } from '../../typings/generated-graphql-types'
+import { 
+  Insurance
+} from '../../typings/generated-graphql-types'
 import { PreviousInsurer } from './../../typings/generated-graphql-types'
 
 const switchableInsuranceProviders = [
@@ -44,6 +46,43 @@ const loadInsurance = async (
       } as PreviousInsurer)
     : undefined
 
+  const extraBuildings = insuranceResponse.extraBuildings.map(extraBuilding => {
+      if (extraBuilding.type == "GARAGE") {
+        return {
+          __typename: "ExtraBuildingGarage",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == "ATTEFALS") {
+        return {
+          __typename: "ExtraBuildingAttefalls",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == "FRIGGEBOD") {
+        return {
+          __typename: "ExtraBuildingFriggebod",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == "OTHER") {
+        return {
+          __typename: "ExtraBuildingOther",
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      return {
+        area: extraBuilding.area,
+        hasWaterConnected: extraBuilding.hasWaterConnected,
+      }
+    }
+  )
+  
+
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
@@ -68,6 +107,11 @@ const loadInsurance = async (
     safetyIncreasers: user.safetyIncreasers,
     renewal: insuranceResponse.renewal,
     previousInsurer,
+    ancillaryArea: insuranceResponse.ancillaryArea,
+    yearOfConstruction: insuranceResponse.yearOfConstruction,
+    numberOfBathrooms: insuranceResponse.numberOfBathrooms,
+    extraBuildings,
+    isSubleted: insuranceResponse.isSubleted,
   }
 }
 

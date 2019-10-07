@@ -410,6 +410,42 @@ type Insurance {
   arrangedPerilCategories: ArrangedPerilCategories!
   renewal: Renewal
   previousInsurer: PreviousInsurer
+  ancillaryArea: Int
+  yearOfConstruction: Int
+  numberOfBathrooms: Int
+  extraBuildings: [ExtraBuilding!]
+  isSubleted: Boolean
+}
+
+union ExtraBuilding =
+    ExtraBuildingGarage
+  | ExtraBuildingAttefalls
+  | ExtraBuildingFriggebod
+  | ExtraBuildingOther
+
+interface ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGarage implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingAttefalls implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingFriggebod implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingOther implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!  
 }
 
 type PreviousInsurer {
@@ -464,6 +500,7 @@ enum InsuranceType {
   BRF
   STUDENT_RENT
   STUDENT_BRF
+  HOUSE
 }
 
 type Cashback {

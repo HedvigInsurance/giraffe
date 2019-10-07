@@ -72,6 +72,11 @@ export interface Insurance {
   arrangedPerilCategories: ArrangedPerilCategories;
   renewal?: Renewal;
   previousInsurer?: PreviousInsurer;
+  ancillaryArea?: number;
+  yearOfConstruction?: number;
+  numberOfBathrooms?: number;
+  extraBuildings?: Array<ExtraBuilding>;
+  isSubleted?: boolean;
 }
 
 export interface InsuranceCost {
@@ -100,7 +105,8 @@ export enum InsuranceType {
   RENT = 'RENT',
   BRF = 'BRF',
   STUDENT_RENT = 'STUDENT_RENT',
-  STUDENT_BRF = 'STUDENT_BRF'
+  STUDENT_BRF = 'STUDENT_BRF',
+  HOUSE = 'HOUSE'
 }
 
 export interface PerilCategory {
@@ -132,6 +138,67 @@ export interface PreviousInsurer {
   displayName?: string;
   id: string;
   switchable: boolean;
+}
+
+export type ExtraBuilding =
+ExtraBuildingGarage |
+ExtraBuildingAttefalls |
+ExtraBuildingFriggebod |
+ExtraBuildingOther;
+
+/** Use this to resolve union type ExtraBuilding */
+export type PossibleExtraBuildingTypeNames =
+'ExtraBuildingGarage' |
+'ExtraBuildingAttefalls' |
+'ExtraBuildingFriggebod' |
+'ExtraBuildingOther';
+
+export interface ExtraBuildingNameMap {
+  ExtraBuilding: ExtraBuilding;
+  ExtraBuildingGarage: ExtraBuildingGarage;
+  ExtraBuildingAttefalls: ExtraBuildingAttefalls;
+  ExtraBuildingFriggebod: ExtraBuildingFriggebod;
+  ExtraBuildingOther: ExtraBuildingOther;
+}
+
+export interface ExtraBuildingGarage extends ExtraBuildingCore {
+  area: number;
+  hasWaterConnected: boolean;
+}
+
+export interface ExtraBuildingCore {
+  area: number;
+  hasWaterConnected: boolean;
+}
+
+/** Use this to resolve interface type ExtraBuildingCore */
+export type PossibleExtraBuildingCoreTypeNames =
+'ExtraBuildingGarage' |
+'ExtraBuildingAttefalls' |
+'ExtraBuildingFriggebod' |
+'ExtraBuildingOther';
+
+export interface ExtraBuildingCoreNameMap {
+  ExtraBuildingCore: ExtraBuildingCore;
+  ExtraBuildingGarage: ExtraBuildingGarage;
+  ExtraBuildingAttefalls: ExtraBuildingAttefalls;
+  ExtraBuildingFriggebod: ExtraBuildingFriggebod;
+  ExtraBuildingOther: ExtraBuildingOther;
+}
+
+export interface ExtraBuildingAttefalls extends ExtraBuildingCore {
+  area: number;
+  hasWaterConnected: boolean;
+}
+
+export interface ExtraBuildingFriggebod extends ExtraBuildingCore {
+  area: number;
+  hasWaterConnected: boolean;
+}
+
+export interface ExtraBuildingOther extends ExtraBuildingCore {
+  area: number;
+  hasWaterConnected: boolean;
 }
 
 export interface Cashback {
@@ -686,6 +753,18 @@ export interface Resolver {
   ArrangedPerilCategories?: ArrangedPerilCategoriesTypeResolver;
   Renewal?: RenewalTypeResolver;
   PreviousInsurer?: PreviousInsurerTypeResolver;
+  ExtraBuilding?: {
+    __resolveType: ExtraBuildingTypeResolver
+  };
+  
+  ExtraBuildingGarage?: ExtraBuildingGarageTypeResolver;
+  ExtraBuildingCore?: {
+    __resolveType: ExtraBuildingCoreTypeResolver
+  };
+  
+  ExtraBuildingAttefalls?: ExtraBuildingAttefallsTypeResolver;
+  ExtraBuildingFriggebod?: ExtraBuildingFriggebodTypeResolver;
+  ExtraBuildingOther?: ExtraBuildingOtherTypeResolver;
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
@@ -830,6 +909,11 @@ export interface InsuranceTypeResolver<TParent = Insurance> {
   arrangedPerilCategories?: InsuranceToArrangedPerilCategoriesResolver<TParent>;
   renewal?: InsuranceToRenewalResolver<TParent>;
   previousInsurer?: InsuranceToPreviousInsurerResolver<TParent>;
+  ancillaryArea?: InsuranceToAncillaryAreaResolver<TParent>;
+  yearOfConstruction?: InsuranceToYearOfConstructionResolver<TParent>;
+  numberOfBathrooms?: InsuranceToNumberOfBathroomsResolver<TParent>;
+  extraBuildings?: InsuranceToExtraBuildingsResolver<TParent>;
+  isSubleted?: InsuranceToIsSubletedResolver<TParent>;
 }
 
 export interface InsuranceToAddressResolver<TParent = Insurance, TResult = string | null> {
@@ -905,6 +989,26 @@ export interface InsuranceToRenewalResolver<TParent = Insurance, TResult = Renew
 }
 
 export interface InsuranceToPreviousInsurerResolver<TParent = Insurance, TResult = PreviousInsurer | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToAncillaryAreaResolver<TParent = Insurance, TResult = number | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToYearOfConstructionResolver<TParent = Insurance, TResult = number | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToNumberOfBathroomsResolver<TParent = Insurance, TResult = number | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToExtraBuildingsResolver<TParent = Insurance, TResult = Array<ExtraBuilding> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface InsuranceToIsSubletedResolver<TParent = Insurance, TResult = boolean | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -1036,6 +1140,64 @@ export interface PreviousInsurerToIdResolver<TParent = PreviousInsurer, TResult 
 }
 
 export interface PreviousInsurerToSwitchableResolver<TParent = PreviousInsurer, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingTypeResolver<TParent = ExtraBuilding> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingGarage' | 'ExtraBuildingAttefalls' | 'ExtraBuildingFriggebod' | 'ExtraBuildingOther';
+}
+export interface ExtraBuildingGarageTypeResolver<TParent = ExtraBuildingGarage> {
+  area?: ExtraBuildingGarageToAreaResolver<TParent>;
+  hasWaterConnected?: ExtraBuildingGarageToHasWaterConnectedResolver<TParent>;
+}
+
+export interface ExtraBuildingGarageToAreaResolver<TParent = ExtraBuildingGarage, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingGarageToHasWaterConnectedResolver<TParent = ExtraBuildingGarage, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingCoreTypeResolver<TParent = ExtraBuildingCore> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingGarage' | 'ExtraBuildingAttefalls' | 'ExtraBuildingFriggebod' | 'ExtraBuildingOther';
+}
+export interface ExtraBuildingAttefallsTypeResolver<TParent = ExtraBuildingAttefalls> {
+  area?: ExtraBuildingAttefallsToAreaResolver<TParent>;
+  hasWaterConnected?: ExtraBuildingAttefallsToHasWaterConnectedResolver<TParent>;
+}
+
+export interface ExtraBuildingAttefallsToAreaResolver<TParent = ExtraBuildingAttefalls, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingAttefallsToHasWaterConnectedResolver<TParent = ExtraBuildingAttefalls, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingFriggebodTypeResolver<TParent = ExtraBuildingFriggebod> {
+  area?: ExtraBuildingFriggebodToAreaResolver<TParent>;
+  hasWaterConnected?: ExtraBuildingFriggebodToHasWaterConnectedResolver<TParent>;
+}
+
+export interface ExtraBuildingFriggebodToAreaResolver<TParent = ExtraBuildingFriggebod, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingFriggebodToHasWaterConnectedResolver<TParent = ExtraBuildingFriggebod, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingOtherTypeResolver<TParent = ExtraBuildingOther> {
+  area?: ExtraBuildingOtherToAreaResolver<TParent>;
+  hasWaterConnected?: ExtraBuildingOtherToHasWaterConnectedResolver<TParent>;
+}
+
+export interface ExtraBuildingOtherToAreaResolver<TParent = ExtraBuildingOther, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingOtherToHasWaterConnectedResolver<TParent = ExtraBuildingOther, TResult = boolean> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

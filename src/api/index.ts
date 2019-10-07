@@ -38,6 +38,17 @@ interface InsuranceDto {
   policyUrl: string
   livingSpace: number
   renewal: Renewal
+  ancillaryArea: number
+  yearOfConstruction: number
+  numberOfBathrooms: number
+  extraBuildings: ExtraBuilding[]
+  isSubleted: boolean
+}
+
+interface ExtraBuilding {
+  type: string
+  area: number
+  hasWaterConnected: boolean
 }
 
 interface UserDto {
