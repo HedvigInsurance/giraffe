@@ -419,8 +419,18 @@ type Insurance {
 
 union ExtraBuilding =
     ExtraBuildingGarage
-  | ExtraBuildingAttefalls
+  | ExtraBuildingCarport
+  | ExtraBuildingShed
+  | ExtraBuildingStorehouse
   | ExtraBuildingFriggebod
+  | ExtraBuildingAttefall
+  | ExtraBuildingOuthouse
+  | ExtraBuildingGuesthouse
+  | ExtraBuildingGazebo
+  | ExtraBuildingGreenhouse
+  | ExtraBuildingSauna
+  | ExtraBuildingBarn
+  | ExtraBuildingBoathouse
   | ExtraBuildingOther
 
 interface ExtraBuildingCore {
@@ -433,14 +443,64 @@ type ExtraBuildingGarage implements ExtraBuildingCore {
   hasWaterConnected: Boolean!  
 }
 
-type ExtraBuildingAttefalls implements ExtraBuildingCore {
+type ExtraBuildingCarport implements ExtraBuildingCore {
   area: Int!
-  hasWaterConnected: Boolean!  
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingShed implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingStorehouse implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
 }
 
 type ExtraBuildingFriggebod implements ExtraBuildingCore {
   area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingAttefall implements ExtraBuildingCore {
+  area: Int!
   hasWaterConnected: Boolean!  
+}
+
+type ExtraBuildingOuthouse implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGuesthouse implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGazebo implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGreenhouse implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingSauna implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingBarn implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingBoathouse implements ExtraBuildingCore {
+  area: Int!
+  hasWaterConnected: Boolean!
 }
 
 type ExtraBuildingOther implements ExtraBuildingCore {

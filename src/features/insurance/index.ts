@@ -1,8 +1,6 @@
 import { getInsurance, getUser } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { 
-  Insurance
-} from '../../typings/generated-graphql-types'
+import { Insurance } from '../../typings/generated-graphql-types'
 import { PreviousInsurer } from './../../typings/generated-graphql-types'
 
 const switchableInsuranceProviders = [
@@ -46,31 +44,103 @@ const loadInsurance = async (
       } as PreviousInsurer)
     : undefined
 
-  const extraBuildings = insuranceResponse.extraBuildings.map(extraBuilding => {
-      if (extraBuilding.type == "GARAGE") {
+  const extraBuildings = insuranceResponse.extraBuildings.map(
+    (extraBuilding) => {
+      if (extraBuilding.type == 'GARAGE') {
         return {
-          __typename: "ExtraBuildingGarage",
+          __typename: 'ExtraBuildingGarage',
           area: extraBuilding.area,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
-      if (extraBuilding.type == "ATTEFALS") {
+      if (extraBuilding.type == 'CARPORT') {
         return {
-          __typename: "ExtraBuildingAttefalls",
+          __typename: 'ExtraBuildingCarport',
           area: extraBuilding.area,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
-      if (extraBuilding.type == "FRIGGEBOD") {
+      if (extraBuilding.type == 'SHED') {
         return {
-          __typename: "ExtraBuildingFriggebod",
+          __typename: 'ExtraBuildingShed',
           area: extraBuilding.area,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
-      if (extraBuilding.type == "OTHER") {
+      if (extraBuilding.type == 'STOREHOUSE') {
         return {
-          __typename: "ExtraBuildingOther",
+          __typename: 'ExtraBuildingStorehouse',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'FRIGGEBOD') {
+        return {
+          __typename: 'ExtraBuildingFriggebod',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'ATTEFALL') {
+        return {
+          __typename: 'ExtraBuildingAttefall',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+
+      if (extraBuilding.type == 'OUTHOUSE') {
+        return {
+          __typename: 'ExtraBuildingOuthouse',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'GUESTHOUSE') {
+        return {
+          __typename: 'ExtraBuildingGuesthouse',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'GAZEBO') {
+        return {
+          __typename: 'ExtraBuildingGazebo',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'GREENHOUSE') {
+        return {
+          __typename: 'ExtraBuildingGreenhouse',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'SAUNA') {
+        return {
+          __typename: 'ExtraBuildingSauna',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'BARN') {
+        return {
+          __typename: 'ExtraBuildingBarn',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'BOATHOUSE') {
+        return {
+          __typename: 'ExtraBuildingBoathouse',
+          area: extraBuilding.area,
+          hasWaterConnected: extraBuilding.hasWaterConnected,
+        }
+      }
+      if (extraBuilding.type == 'OTHER') {
+        return {
+          __typename: 'ExtraBuildingOther',
           area: extraBuilding.area,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
@@ -79,9 +149,8 @@ const loadInsurance = async (
         area: extraBuilding.area,
         hasWaterConnected: extraBuilding.hasWaterConnected,
       }
-    }
+    },
   )
-  
 
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
