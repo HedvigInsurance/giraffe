@@ -44,7 +44,7 @@ const loadInsurance = async (
       } as PreviousInsurer)
     : undefined
 
-  const extraBuildings = insuranceResponse.extraBuildings.map(
+  const extraBuildings = insuranceResponse.extraBuildings ? insuranceResponse.extraBuildings.map(
     (extraBuilding) => {
       if (extraBuilding.type == 'GARAGE') {
         return {
@@ -150,7 +150,7 @@ const loadInsurance = async (
         hasWaterConnected: extraBuilding.hasWaterConnected,
       }
     },
-  )
+  ) : null
 
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
