@@ -150,7 +150,7 @@ const loadInsurance = async (
         hasWaterConnected: extraBuilding.hasWaterConnected,
       }
     },
-  ) : null
+  ) : undefined
 
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
