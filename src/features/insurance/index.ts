@@ -50,6 +50,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingGarage',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -57,6 +58,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingCarport',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -64,6 +66,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingShed',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -71,6 +74,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingStorehouse',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -78,6 +82,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingFriggebod',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -85,6 +90,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingAttefall',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -93,6 +99,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingOuthouse',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -100,6 +107,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingGuesthouse',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -107,6 +115,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingGazebo',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -114,6 +123,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingGreenhouse',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -121,6 +131,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingSauna',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -128,6 +139,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingBarn',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -135,6 +147,7 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingBoathouse',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
@@ -142,16 +155,18 @@ const loadInsurance = async (
         return {
           __typename: 'ExtraBuildingOther',
           area: extraBuilding.area,
+          displayName: extraBuilding.displayName,
           hasWaterConnected: extraBuilding.hasWaterConnected,
         }
       }
       return {
         area: extraBuilding.area,
+        displayName: extraBuilding.displayName,
         hasWaterConnected: extraBuilding.hasWaterConnected,
       }
     },
   ) : undefined
-
+  
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,

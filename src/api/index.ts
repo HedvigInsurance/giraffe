@@ -47,6 +47,7 @@ interface InsuranceDto {
 
 interface ExtraBuilding {
   type: string
+  displayName: string
   area: number
   hasWaterConnected: boolean
 }
@@ -229,7 +230,9 @@ const getInsurance = async (
     token,
   })
 
+  console.log("data: " + JSON.stringify(data))
   const json = await data.json()
+  console.log("json: " + JSON.stringify(json))
 
   return {
     ...json,
