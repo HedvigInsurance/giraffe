@@ -166,7 +166,7 @@ const loadInsurance = async (
       }
     },
   ) : undefined
-  
+
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,
     personsInHousehold: insuranceResponse.personsInHousehold,
