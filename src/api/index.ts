@@ -47,6 +47,7 @@ interface InsuranceDto {
 
 interface ExtraBuilding {
   type: string
+  displayName: string
   area: number
   hasWaterConnected: boolean
 }
