@@ -16,6 +16,7 @@ interface ForwardHeaders {
   'X-Forwarded-For': string
   'X-Request-Id': string
   'Accept-Language': string
+  'X-Attribution-Code': string
 }
 
 const getWebContext = async ({
@@ -37,6 +38,7 @@ const getWebContext = async ({
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
       'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
       'Accept-Language': checkedCtx.get('accept-language'),
+      'X-Attribution-Code': checkedCtx.get('x-attribution-code'),
     },
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
