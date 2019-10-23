@@ -62,6 +62,7 @@ const getWebSocketContext = (
         ? (context.request.headers['x-request-id'] as string)
         : uuidv4(),
     'Accept-Language': context.request.headers['accept-language'] as string,
+    'X-Attribution-Code': context.request.headers['x-attribution-code'] as string,
   }
 
   return {
