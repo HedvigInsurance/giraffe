@@ -1,7 +1,8 @@
-import { getUser, postEmail, postPhoneNumber } from '../api'
+import { getUser, postEmail, postPhoneNumber, postLanguage } from '../api'
 import {
   MutationToUpdateEmailResolver,
   MutationToUpdatePhoneNumberResolver,
+  MutationToUpdateLanguageResolver,
   QueryToMemberResolver,
 } from '../typings/generated-graphql-types'
 
@@ -18,7 +19,7 @@ const member: QueryToMemberResolver = async (
     firstName: memberResponse.firstName,
     lastName: memberResponse.lastName,
     email: memberResponse.email,
-    phoneNumber: memberResponse.phoneNumber,
+    phoneNumber: memberResponse.phoneNumber
   }
 }
 
@@ -48,4 +49,16 @@ const updatePhoneNumber: MutationToUpdatePhoneNumberResolver = async (
   return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
-export { member, updateEmail, updatePhoneNumber }
+const updateLanguage: MutationToUpdateLanguageResolver = async (
+  _root,
+  { input },
+  { getToken, headers },
+) => {
+  const token = getToken()
+  await postLanguage(token, headers, {
+    acceptLanguage: input,
+  })
+  return true
+}
+
+export { member, updateEmail, updatePhoneNumber, updateLanguage }

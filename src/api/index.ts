@@ -644,6 +644,20 @@ const postPhoneNumber = (
     token,
   })
 
+const postLanguage = (
+    token: string,
+    headers: ForwardHeaders,
+    body: { acceptLanguage: string },
+  ) =>
+    callApi('/member/language/update', {
+      mergeOptions: {
+        headers: (headers as any) as RequestInit['headers'],
+        method: 'POST',
+        body: JSON.stringify(body),
+      },
+      token,
+    })
+
 const registerPushToken = (
   token: string,
   headers: ForwardHeaders,
@@ -772,4 +786,5 @@ export {
   markMessageAsRead,
   authMember,
   signDetails,
+  postLanguage,
 }
