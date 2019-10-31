@@ -25,6 +25,7 @@ export interface Query {
   chatState: ChatState;
   avatars?: Array<Avatar | null>;
   chatActions?: Array<ChatAction | null>;
+  travel: Travel;
 }
 
 export interface Insurance {
@@ -666,6 +667,11 @@ export interface ChatAction {
 
 export type URL = any;
 
+export interface Travel {
+  possiblyTravelling: boolean;
+  countryISOCode: string;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -932,6 +938,7 @@ export interface Resolver {
   Object?: GraphQLScalarType;
   ChatAction?: ChatActionTypeResolver;
   URL?: GraphQLScalarType;
+  Travel?: TravelTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
@@ -958,6 +965,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   chatState?: QueryToChatStateResolver<TParent>;
   avatars?: QueryToAvatarsResolver<TParent>;
   chatActions?: QueryToChatActionsResolver<TParent>;
+  travel?: QueryToTravelResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -1011,6 +1019,10 @@ export interface QueryToAvatarsResolver<TParent = undefined, TResult = Array<Ava
 }
 
 export interface QueryToChatActionsResolver<TParent = undefined, TResult = Array<ChatAction | null> | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToTravelResolver<TParent = undefined, TResult = Travel> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -2132,6 +2144,19 @@ export interface ChatActionToTriggerUrlResolver<TParent = ChatAction, TResult = 
 }
 
 export interface ChatActionToEnabledResolver<TParent = ChatAction, TResult = boolean | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TravelTypeResolver<TParent = Travel> {
+  possiblyTravelling?: TravelToPossiblyTravellingResolver<TParent>;
+  countryISOCode?: TravelToCountryISOCodeResolver<TParent>;
+}
+
+export interface TravelToPossiblyTravellingResolver<TParent = Travel, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TravelToCountryISOCodeResolver<TParent = Travel, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
