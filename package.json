@@ -13,6 +13,7 @@
   "dependencies": {
     "@google-cloud/logging": "^5.2.0",
     "@sentry/node": "^5.5.0",
+    "@types/geoip-lite": "^1.1.29",
     "apollo-link": "^1.2.12",
     "apollo-link-context": "^1.0.18",
     "apollo-link-http": "^1.5.15",
@@ -22,6 +23,7 @@
     "aws-sdk": "^2.503.0",
     "date-fns": "^1.30.1",
     "dotenv": "^8.0.0",
+    "geoip-lite": "^1.3.8",
     "graphql": "^14.4.2",
     "graphql-middleware": "^3.0.3",
     "graphql-redis-subscriptions": "^2.1.1",

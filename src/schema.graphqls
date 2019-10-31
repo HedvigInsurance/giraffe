@@ -11,6 +11,7 @@ type Query {
   chatState: ChatState!
   avatars: [Avatar]
   chatActions: [ChatAction]
+  travel: Travel!
 }
 
 type Mutation {
@@ -54,6 +55,11 @@ type Subscription {
 
 input TriggerClaimChatInput {
   claimTypeId: ID
+}
+
+type Travel {
+  possiblyTravelling: Boolean!
+  countryISOCode: String!
 }
 
 type Message {
