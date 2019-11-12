@@ -1,3 +1,4 @@
+import { travel } from './travel';
 import { bankIdAuth, subscribeToAuthStatus } from '../features/auth'
 import {
   createOffer,
@@ -73,6 +74,7 @@ const resolvers: Resolver = {
     currentChatResponse,
     avatars,
     chatActions,
+    travel
   },
   Mutation: {
     logout,
