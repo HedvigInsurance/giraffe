@@ -148,6 +148,26 @@ const makeSchema = async () => {
     logger.error('AccountServiceSchema Introspection failed (Ignoring)', e)
   }
 
+  const lookupServiceLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let lookupServiceSchema: GraphQLSchema | undefined
+  try {
+    logger.info('Introspecting LookupServiceSchema')
+    lookupServiceSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(lookupServiceLink),
+      link: lookupServiceLink,
+    })
+    logger.info('LookupServiceSchema Introspected')
+  } catch (e) {
+    /* noop */
+    logger.error('LookupServiceSchema Introspection failed (Ignoring)', e)
+  }
+
   const appContentServiceLink = authorizationContextLink.concat(
     createHttpLink({
       uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
@@ -181,6 +201,7 @@ const makeSchema = async () => {
       paymentServiceSchema,
       productPricingServiceSchema,
       accountServiceSchema,
+      lookupServiceSchema,
       appContentServiceSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
