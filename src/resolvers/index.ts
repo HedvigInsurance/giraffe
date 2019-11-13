@@ -41,7 +41,7 @@ import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { log } from './logging'
 import { logout } from './logout'
-import { member, updateEmail, updatePhoneNumber } from './member'
+import { member, updateEmail, updatePhoneNumber, updateLanguage } from './member'
 import {
   __resolveMessageBodyChoicesCoreType,
   __resolveMessageBodyChoicesType,
@@ -103,7 +103,8 @@ const resolvers: Resolver = {
     markMessageAsRead,
     log,
     bankIdAuth,
-    registerBranchCampaign
+    registerBranchCampaign,
+    updateLanguage,
   },
   Subscription: {
     offer: subscribeToOffer,

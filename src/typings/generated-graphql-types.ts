@@ -356,6 +356,7 @@ export interface Member {
   lastName?: string;
   email?: string;
   phoneNumber?: string;
+  acceptLanguage?: string;
 }
 
 export interface Gif {
@@ -705,6 +706,7 @@ export interface Mutation {
   log?: boolean;
   bankIdAuth: BankIdAuthResponse;
   registerBranchCampaign?: boolean;
+  updateLanguage: boolean;
 }
 
 export interface CampaignInput {
@@ -1608,6 +1610,7 @@ export interface MemberTypeResolver<TParent = Member> {
   lastName?: MemberToLastNameResolver<TParent>;
   email?: MemberToEmailResolver<TParent>;
   phoneNumber?: MemberToPhoneNumberResolver<TParent>;
+  acceptLanguage?: MemberToAcceptLanguageResolver<TParent>;
 }
 
 export interface MemberToIdResolver<TParent = Member, TResult = string | null> {
@@ -1627,6 +1630,10 @@ export interface MemberToEmailResolver<TParent = Member, TResult = string | null
 }
 
 export interface MemberToPhoneNumberResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToAcceptLanguageResolver<TParent = Member, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -2188,6 +2195,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   log?: MutationToLogResolver<TParent>;
   bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
+  updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2348,6 +2356,13 @@ export interface MutationToRegisterBranchCampaignArgs {
 }
 export interface MutationToRegisterBranchCampaignResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToRegisterBranchCampaignArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdateLanguageArgs {
+  input: string;
+}
+export interface MutationToUpdateLanguageResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdateLanguageArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
