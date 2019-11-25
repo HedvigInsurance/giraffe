@@ -148,13 +148,10 @@ const makeSchema = async () => {
     logger.error('AccountServiceSchema Introspection failed (Ignoring)', e)
   }
 
-  const lookupServiceLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
+  const lookupServiceLink = createHttpLink({
+    uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
+    fetch: fetch as any,
+  })
   let lookupServiceSchema: GraphQLSchema | undefined
   try {
     logger.info('Introspecting LookupServiceSchema')
