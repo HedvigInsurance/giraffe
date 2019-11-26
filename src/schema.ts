@@ -165,6 +165,23 @@ const makeSchema = async () => {
     logger.error('LookupServiceSchema Introspection failed (Ignoring)', e)
   }
 
+  const underwriterLink = createHttpLink({
+    uri: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
+    fetch: fetch as any,
+  })
+  let underwriterSchema: GraphQLSchema | undefined
+  try {
+    logger.info('Introspecting UnderwriterSchema')
+    underwriterSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(underwriterLink),
+      link: underwriterLink,
+    })
+    logger.info('UnderwriterSchema Introspected')
+  } catch (e) {
+    /* noop */
+    logger.error('UnderwriterSchema Introspection failed (Ignoring)', e)
+  }
+
   const appContentServiceLink = authorizationContextLink.concat(
     createHttpLink({
       uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
@@ -199,6 +216,7 @@ const makeSchema = async () => {
       productPricingServiceSchema,
       accountServiceSchema,
       lookupServiceSchema,
+      underwriterSchema,
       appContentServiceSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
