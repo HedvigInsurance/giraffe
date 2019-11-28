@@ -24,6 +24,8 @@ const SENTRY_ENV = process.env.SENTRY_ENV || process.env.NODE_ENV || ''
 
 const GOOGLE_CLOUD = process.env.GOOGLE_CLOUD || null
 
+const ANGEL_URL = process.env.ANGEL_URL || ''
+
 export {
   BASE_URL,
   PORT,
@@ -40,4 +42,5 @@ export {
   SENTRY_DSN,
   SENTRY_ENV,
   GOOGLE_CLOUD,
+  ANGEL_URL,
 }

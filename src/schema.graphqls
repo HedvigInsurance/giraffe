@@ -12,6 +12,7 @@ type Query {
   avatars: [Avatar]
   chatActions: [ChatAction]
   travel: Travel!
+  angelStory(name: String!): AngelStory
 }
 
 type Mutation {
@@ -61,6 +62,10 @@ input TriggerClaimChatInput {
 type Travel {
   possiblyTravelling: Boolean!
   countryISOCode: String!
+}
+
+type AngelStory {
+  content: String!
 }
 
 type Message {
