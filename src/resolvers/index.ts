@@ -1,4 +1,3 @@
-import { travel } from './travel';
 import { bankIdAuth, subscribeToAuthStatus } from '../features/auth'
 import {
   createOffer,
@@ -14,6 +13,7 @@ import {
 } from '../features/offer/sign'
 import { Resolver } from '../typings/generated-graphql-types'
 import { registerBranchCampaign } from './analytics'
+import { angelStory } from './angelStory'
 import { avatars } from './avatars'
 import { cashback } from './cashback'
 import { cashbackOptions } from './cashbackOptions'
@@ -41,7 +41,12 @@ import { gifs } from './gifs'
 import { insurance } from './insurance'
 import { log } from './logging'
 import { logout } from './logout'
-import { member, updateEmail, updatePhoneNumber, updateLanguage } from './member'
+import {
+  member,
+  updateEmail,
+  updateLanguage,
+  updatePhoneNumber,
+} from './member'
 import {
   __resolveMessageBodyChoicesCoreType,
   __resolveMessageBodyChoicesType,
@@ -57,6 +62,7 @@ import {
 import { offerClosed } from './offerClosed'
 import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
+import { travel } from './travel'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile } from './uploadFile'
 
@@ -74,7 +80,8 @@ const resolvers: Resolver = {
     currentChatResponse,
     avatars,
     chatActions,
-    travel
+    travel,
+    angelStory,
   },
   Mutation: {
     logout,

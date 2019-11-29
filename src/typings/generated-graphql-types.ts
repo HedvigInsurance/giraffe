@@ -26,6 +26,7 @@ export interface Query {
   avatars?: Array<Avatar | null>;
   chatActions?: Array<ChatAction | null>;
   travel: Travel;
+  angelStory?: AngelStory;
 }
 
 export interface Insurance {
@@ -673,6 +674,10 @@ export interface Travel {
   countryISOCode: string;
 }
 
+export interface AngelStory {
+  content: string;
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -941,6 +946,7 @@ export interface Resolver {
   ChatAction?: ChatActionTypeResolver;
   URL?: GraphQLScalarType;
   Travel?: TravelTypeResolver;
+  AngelStory?: AngelStoryTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
@@ -968,6 +974,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   avatars?: QueryToAvatarsResolver<TParent>;
   chatActions?: QueryToChatActionsResolver<TParent>;
   travel?: QueryToTravelResolver<TParent>;
+  angelStory?: QueryToAngelStoryResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -1026,6 +1033,13 @@ export interface QueryToChatActionsResolver<TParent = undefined, TResult = Array
 
 export interface QueryToTravelResolver<TParent = undefined, TResult = Travel> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToAngelStoryArgs {
+  name: string;
+}
+export interface QueryToAngelStoryResolver<TParent = undefined, TResult = AngelStory | null> {
+  (parent: TParent, args: QueryToAngelStoryArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {
@@ -2164,6 +2178,14 @@ export interface TravelToPossiblyTravellingResolver<TParent = Travel, TResult = 
 }
 
 export interface TravelToCountryISOCodeResolver<TParent = Travel, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AngelStoryTypeResolver<TParent = AngelStory> {
+  content?: AngelStoryToContentResolver<TParent>;
+}
+
+export interface AngelStoryToContentResolver<TParent = AngelStory, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
