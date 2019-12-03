@@ -98,6 +98,19 @@ const makeSchema = async () => {
     },
   }))
 
+  const optionalAuthorizationContextLink = setContext((_, previousContext) => {
+    try {
+       return {
+         headers: {
+         authorization: `Bearer ${previousContext.graphqlContext &&
+           previousContext.graphqlContext.getToken &&
+           previousContext.graphqlContext.getToken()}`,
+       }}
+     } catch(e) {
+       return {}
+     }
+  })
+
   const paymentServiceLink = authorizationContextLink.concat(
     createHttpLink({
       uri: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
@@ -165,10 +178,13 @@ const makeSchema = async () => {
     logger.error('LookupServiceSchema Introspection failed (Ignoring)', e)
   }
 
-  const underwriterLink = createHttpLink({
-    uri: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
-    fetch: fetch as any,
-  })
+  const underwriterLink = optionalAuthorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
   let underwriterSchema: GraphQLSchema | undefined
   try {
     logger.info('Introspecting UnderwriterSchema')
