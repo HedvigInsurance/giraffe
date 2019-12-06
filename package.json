@@ -54,7 +54,7 @@
     "@types/uuid": "^3.4.5",
     "@types/ws": "^6.0.1",
     "apollo": "^2.16.3",
-    "concurrently": "^4.1.1",
+    "concurrently": "^5.0.0",
     "graphql-schema-typescript": "^1.2.9",
     "nodemon": "^1.19.1",
     "prettier": "^1.18.2",
