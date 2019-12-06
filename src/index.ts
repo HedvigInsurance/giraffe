@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+import './utils/tracer'
+
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
 import * as proxy from 'koa-better-http-proxy'
