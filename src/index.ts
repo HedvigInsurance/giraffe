@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import './utils/tracer'
+import './utils/datadog'
 
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
