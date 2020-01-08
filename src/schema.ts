@@ -1,11 +1,17 @@
 import { ApolloLink } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws';
 import { createCacheLink } from 'apollo-link-redis-cache'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
 import { readFileSync } from 'fs'
 import { GraphQLSchema } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
+import { SubscriptionClient } from "subscriptions-transport-ws";
+
+import * as WebSocket from 'ws';
 import {
   FilterRootFields,
   introspectSchema,
@@ -161,10 +167,26 @@ const makeSchema = async () => {
     logger.error('AccountServiceSchema Introspection failed (Ignoring)', e)
   }
 
-  const lookupServiceLink = createHttpLink({
+  const lookupServiceHTTPLink = createHttpLink({
     uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
     fetch: fetch as any,
   })
+
+  const lookupServiceWSClient = new SubscriptionClient(process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || "", {
+    reconnect: true
+  }, WebSocket);
+
+  const lookupServiceWSLink = new WebSocketLink(lookupServiceWSClient);
+
+  const lookupServiceLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+    },
+    lookupServiceWSLink,
+    lookupServiceHTTPLink,
+  );
+
   let lookupServiceSchema: GraphQLSchema | undefined
   try {
     logger.info('Introspecting LookupServiceSchema')

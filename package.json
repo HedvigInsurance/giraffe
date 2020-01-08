@@ -18,6 +18,7 @@
     "apollo-link-context": "^1.0.18",
     "apollo-link-http": "^1.5.15",
     "apollo-link-redis-cache": "0.0.3",
+    "apollo-link-ws": "^1.0.19",
     "apollo-server-core": "^2.8.1",
     "apollo-server-koa": "^2.8.1",
     "aws-sdk": "^2.503.0",
