@@ -234,6 +234,24 @@ const makeSchema = async () => {
     link: appContentServiceLink,
   })
 
+  const embarkLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.EMBARK_GRAPHQL_ENDPOINt,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let embarkSchema: GraphQLSchema | undefined
+  try {
+    logger.info('Introspecting Embark')
+    embarkSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(embarkLink),
+      link: embarkLink,
+    })
+  } catch (e) {
+    logger.error('Embark Introspection failed (Ignoring)', e)
+  }
+
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     // @ts-ignore - This type is incorrect
@@ -256,6 +274,7 @@ const makeSchema = async () => {
       lookupServiceSchema,
       underwriterSchema,
       appContentServiceSchema,
+      embarkSchema
     ].filter(Boolean) as GraphQLSchema[],
   })
   logger.info('Schemas merged')
