@@ -236,7 +236,7 @@ const makeSchema = async () => {
 
   const embarkLink = authorizationContextLink.concat(
     createHttpLink({
-      uri: process.env.EMBARK_GRAPHQL_ENDPOINt,
+      uri: process.env.EMBARK_GRAPHQL_ENDPOINT,
       fetch: fetch as any,
       credentials: 'include',
     }),
