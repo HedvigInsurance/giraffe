@@ -85,6 +85,17 @@ makeSchema()
       logger.info('Added app-content-service proxy middleware')
     }
 
+    if (process.env.EMBARK_FORMAT_ENDPOINT) {
+      app.use(
+        route.get(
+          '/embark/format.js',
+          // @ts-ignore - False positive
+          proxy(process.env.EMBARK_FORMAT_ENDPOINT, {}),
+        ),
+      )
+      logger.info('Added embark proxy middleware')
+    }
+
     logger.info('Creating http server')
     const ws = createServer(app.callback())
 
