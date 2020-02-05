@@ -1,17 +1,16 @@
 import { ApolloLink } from 'apollo-link'
+import { split } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
-import { WebSocketLink } from 'apollo-link-ws';
 import { createCacheLink } from 'apollo-link-redis-cache'
+import { WebSocketLink } from 'apollo-link-ws'
 import { gql, GraphQLUpload } from 'apollo-server-koa'
+import { getMainDefinition } from 'apollo-utilities'
 import { readFileSync } from 'fs'
 import { GraphQLSchema } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
-import { split } from 'apollo-link';
-import { getMainDefinition } from 'apollo-utilities';
-import { SubscriptionClient } from "subscriptions-transport-ws";
+import { SubscriptionClient } from 'subscriptions-transport-ws'
 
-import * as WebSocket from 'ws';
 import {
   FilterRootFields,
   introspectSchema,
@@ -24,6 +23,7 @@ import {
 import * as Redis from 'ioredis'
 import fetch from 'node-fetch'
 import { resolve } from 'path'
+import * as WebSocket from 'ws'
 import * as config from './config'
 import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'
@@ -67,7 +67,7 @@ const makeSchema = async () => {
     link: cachedTranslationsLink,
   })
 
-  const allowedRootFields = ['languages', 'marketingStories', "coreMLModels"]
+  const allowedRootFields = ['languages', 'marketingStories', 'coreMLModels']
 
   const transformedTranslationSchema = transformSchema(
     executableTranslationsSchema,
@@ -106,15 +106,16 @@ const makeSchema = async () => {
 
   const optionalAuthorizationContextLink = setContext((_, previousContext) => {
     try {
-       return {
-         headers: {
-         authorization: `Bearer ${previousContext.graphqlContext &&
-           previousContext.graphqlContext.getToken &&
-           previousContext.graphqlContext.getToken()}`,
-       }}
-     } catch(e) {
-       return {}
-     }
+      return {
+        headers: {
+          authorization: `Bearer ${previousContext.graphqlContext &&
+            previousContext.graphqlContext.getToken &&
+            previousContext.graphqlContext.getToken()}`,
+        },
+      }
+    } catch (e) {
+      return {}
+    }
   })
 
   const paymentServiceLink = authorizationContextLink.concat(
@@ -172,20 +173,27 @@ const makeSchema = async () => {
     fetch: fetch as any,
   })
 
-  const lookupServiceWSClient = new SubscriptionClient(process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || "", {
-    reconnect: true
-  }, WebSocket);
+  const lookupServiceWSClient = new SubscriptionClient(
+    process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || '',
+    {
+      reconnect: true,
+    },
+    WebSocket,
+  )
 
-  const lookupServiceWSLink = new WebSocketLink(lookupServiceWSClient);
+  const lookupServiceWSLink = new WebSocketLink(lookupServiceWSClient)
 
   const lookupServiceLink = split(
     ({ query }) => {
-      const definition = getMainDefinition(query);
-      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+      const definition = getMainDefinition(query)
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      )
     },
     lookupServiceWSLink,
     lookupServiceHTTPLink,
-  );
+  )
 
   let lookupServiceSchema: GraphQLSchema | undefined
   try {
@@ -252,6 +260,24 @@ const makeSchema = async () => {
     logger.error('Embark Introspection failed (Ignoring)', e)
   }
 
+  const keyGearLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.KEY_GEAR_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let keyGearSchema: GraphQLSchema | undefined
+  try {
+    logger.info('Introspecting KeyGear')
+    keyGearSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(keyGearLink),
+      link: keyGearLink,
+    })
+  } catch (e) {
+    logger.error('KeyGear Introspection failed (Ignoring)', e)
+  }
+
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
     // @ts-ignore - This type is incorrect
@@ -274,7 +300,8 @@ const makeSchema = async () => {
       lookupServiceSchema,
       underwriterSchema,
       appContentServiceSchema,
-      embarkSchema
+      embarkSchema,
+      keyGearSchema,
     ].filter(Boolean) as GraphQLSchema[],
   })
   logger.info('Schemas merged')
