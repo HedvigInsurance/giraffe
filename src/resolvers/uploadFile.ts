@@ -51,6 +51,7 @@ export const uploadFile: MutationToUploadFileResolver = async (
 
         resolve({
           signedUrl,
+          bucket: AWS_S3_BUCKET,
           key,
         })
       }
