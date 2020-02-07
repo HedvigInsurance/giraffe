@@ -25,6 +25,7 @@ export const fileInner = async (
 
     return {
       signedUrl,
+      bucket: AWS_S3_BUCKET,
       key,
     }
   }

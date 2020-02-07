@@ -375,6 +375,11 @@ export interface File {
    * S3 key that can be used to retreive new signed urls in the future.
    */
   key: string;
+  
+  /**
+   * S3 bucket that the file was uploaded to.
+   */
+  bucket: string;
 }
 
 export interface Message {
@@ -1662,6 +1667,7 @@ export interface GifToUrlResolver<TParent = Gif, TResult = string | null> {
 export interface FileTypeResolver<TParent = File> {
   signedUrl?: FileToSignedUrlResolver<TParent>;
   key?: FileToKeyResolver<TParent>;
+  bucket?: FileToBucketResolver<TParent>;
 }
 
 export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
@@ -1669,6 +1675,10 @@ export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
 }
 
 export interface FileToKeyResolver<TParent = File, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface FileToBucketResolver<TParent = File, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
