@@ -674,4 +674,8 @@ type File {
   S3 key that can be used to retreive new signed urls in the future.
   """
   key: String!
+  """
+  S3 bucket that the file was uploaded to.
+  """
+  bucket: String!
 }
