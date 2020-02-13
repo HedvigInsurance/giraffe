@@ -8,6 +8,7 @@ import { AWS_S3_BUCKET } from '../config'
 import {
   File,
   MutationToUploadFileResolver,
+  MutationToUploadFilesResolver,
 } from '../typings/generated-graphql-types'
 import { factory } from '../utils/log'
 
@@ -24,9 +25,39 @@ export const uploadFile: MutationToUploadFileResolver = async (
   const token = getToken()
   const user = await getUser(token, headers)
 
-  const { createReadStream, filename, mimetype } = await file
+  const resolvedFile = await file
 
-  const finalFile = (await new Promise((resolve) => {
+  const finalFile = await uploadFileInner(resolvedFile, user.memberId)
+  if (!finalFile) {
+    throw new UserInputError("Couldn't upload file")
+  }
+
+  return finalFile
+}
+
+export const uploadFiles: MutationToUploadFilesResolver = async (
+  _root,
+  { files },
+  { getToken, headers },
+) => {
+  const token = getToken()
+  const user = await getUser(token, headers)
+
+  const resolvedFiles = await Promise.all(files)
+  const uploads = await Promise.all(
+    resolvedFiles.map((f) => uploadFileInner(f, user.memberId)),
+  )
+
+  if (uploads.filter((u) => !u).length > 0) {
+    throw new UserInputError("Couldn't upload files")
+  }
+
+  return uploads
+}
+
+const uploadFileInner = (file: any, memberId: string) => {
+  return new Promise<File>((resolve) => {
+    const { createReadStream, filename, mimetype } = file
     const key = `${uuid()}-${filename}`
     const params = {
       Bucket: AWS_S3_BUCKET,
@@ -34,7 +65,7 @@ export const uploadFile: MutationToUploadFileResolver = async (
       Body: createReadStream(),
       ContentType: mimetype,
       Metadata: {
-        MemberId: user.memberId,
+        MemberId: memberId,
       },
     }
 
@@ -56,11 +87,5 @@ export const uploadFile: MutationToUploadFileResolver = async (
         })
       }
     })
-  })) as File
-
-  if (!finalFile) {
-    throw new UserInputError("Couldn't upload file")
-  }
-
-  return finalFile
+  })
 }

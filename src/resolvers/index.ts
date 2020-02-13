@@ -64,7 +64,7 @@ import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
 import { travel } from './travel'
 import { startDirectDebitRegistration } from './trustly'
-import { uploadFile } from './uploadFile'
+import { uploadFile, uploadFiles } from './uploadFile'
 
 const resolvers: Resolver = {
   Query: {
@@ -91,6 +91,7 @@ const resolvers: Resolver = {
     signOffer,
     signOfferV2,
     uploadFile,
+    uploadFiles,
     selectCashbackOption,
     offerClosed,
     startDirectDebitRegistration,

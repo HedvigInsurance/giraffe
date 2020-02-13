@@ -23,6 +23,7 @@ type Mutation {
   signOffer(details: SignInput!): Boolean @deprecated(reason: "Use `signOfferV2`.")
   signOfferV2(details: SignInput): BankIdSignResponse!
   uploadFile(file: Upload!): File!
+  uploadFiles(files: [Upload!]!): [File!]
   selectCashbackOption(id: ID!): Cashback!
   offerClosed: Boolean!
   startDirectDebitRegistration: URL!
