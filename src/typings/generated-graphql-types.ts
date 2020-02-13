@@ -696,6 +696,7 @@ export interface Mutation {
   signOffer?: boolean;
   signOfferV2: BankIdSignResponse;
   uploadFile: File;
+  uploadFiles?: Array<File>;
   selectCashbackOption: Cashback;
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
@@ -2207,6 +2208,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   signOffer?: MutationToSignOfferResolver<TParent>;
   signOfferV2?: MutationToSignOfferV2Resolver<TParent>;
   uploadFile?: MutationToUploadFileResolver<TParent>;
+  uploadFiles?: MutationToUploadFilesResolver<TParent>;
   selectCashbackOption?: MutationToSelectCashbackOptionResolver<TParent>;
   offerClosed?: MutationToOfferClosedResolver<TParent>;
   startDirectDebitRegistration?: MutationToStartDirectDebitRegistrationResolver<TParent>;
@@ -2272,6 +2274,13 @@ export interface MutationToUploadFileArgs {
 }
 export interface MutationToUploadFileResolver<TParent = undefined, TResult = File> {
   (parent: TParent, args: MutationToUploadFileArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUploadFilesArgs {
+  files: Array<Upload>;
+}
+export interface MutationToUploadFilesResolver<TParent = undefined, TResult = Array<File> | null> {
+  (parent: TParent, args: MutationToUploadFilesArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToSelectCashbackOptionArgs {
