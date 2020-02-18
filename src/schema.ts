@@ -71,7 +71,12 @@ const makeSchema = async () => {
     link: cachedTranslationsLink,
   })
 
-  const allowedRootFields = ['languages', 'marketingStories', 'coreMLModels']
+  const allowedRootFields = [
+    'languages',
+    'marketingStories',
+    'coreMLModels',
+    'keyGearItemCoverages',
+  ]
 
   const transformedTranslationSchema = transformSchema(
     executableTranslationsSchema,
