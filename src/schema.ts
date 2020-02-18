@@ -28,6 +28,10 @@ import * as config from './config'
 import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'
 import { resolvers } from './resolvers'
+import {
+  crossSchemaExtensions,
+  getCrossSchemaResolvers,
+} from './resolvers/cross-schema'
 import { factory } from './utils/log'
 
 const logger = factory.getLogger('schemaLogger')
@@ -302,7 +306,9 @@ const makeSchema = async () => {
       appContentServiceSchema,
       embarkSchema,
       keyGearSchema,
+      crossSchemaExtensions,
     ].filter(Boolean) as GraphQLSchema[],
+    resolvers: getCrossSchemaResolvers(transformedTranslationSchema),
   })
   logger.info('Schemas merged')
 
