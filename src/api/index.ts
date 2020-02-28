@@ -741,6 +741,24 @@ const authMember = (
     token,
   }).then((res) => res.json())
 
+export interface NorwegianBankIdAuthDto {
+  autoStartToken: string
+}
+
+export interface
+const norwegianAuthMember = (
+    token: string,
+    headers: ForwardHeaders,
+  ): Promise<NorwegianBankIdAuthDto> =>
+    callApi('/member/norway/bankid/auth', {
+      mergeOptions: {
+        headers: (headers as any) as RequestInit['headers'],
+        method: 'POST',
+        body: JSON.stringify(body),
+      },
+      token,
+    }).then((res) => res.json())
+
 
 export interface BankIdSignDetailsDto {
   personalNumber: string,

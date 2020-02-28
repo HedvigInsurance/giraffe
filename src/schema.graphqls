@@ -43,6 +43,7 @@ type Mutation {
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
   bankIdAuth: BankIdAuthResponse!
+  norwegianBankIdAuth: NorwegianBankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
 }
@@ -632,6 +633,10 @@ type MonetaryAmountV2 {
 
 type BankIdAuthResponse {
   autoStartToken: String!
+}
+
+type NorwegianBankIdAuthResponse {
+  redirectUrl: String!
 }
 
 type BankIdSignResponse {
