@@ -635,7 +635,8 @@ type BankIdAuthResponse {
 }
 
 type BankIdSignResponse {
-  autoStartToken: String!
+  autoStartToken: String
+  redirectUrl: String
 }
 
 enum BankIdStatus {

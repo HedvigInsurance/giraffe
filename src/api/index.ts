@@ -278,9 +278,10 @@ const createProduct = async (
 }
 
 interface WebsignResponse {
-  bankIdOrderResponse: {
+  bankIdOrderResponse?: {
     autoStartToken: string
   }
+  redirectUrl?: string
 }
 
 const websign = async (

@@ -754,7 +754,8 @@ export interface SignInput {
 }
 
 export interface BankIdSignResponse {
-  autoStartToken: string;
+  autoStartToken?: string;
+  redirectUrl?: string;
 }
 
 export type Upload = any;
@@ -2421,9 +2422,14 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
 
 export interface BankIdSignResponseTypeResolver<TParent = BankIdSignResponse> {
   autoStartToken?: BankIdSignResponseToAutoStartTokenResolver<TParent>;
+  redirectUrl?: BankIdSignResponseToRedirectUrlResolver<TParent>;
 }
 
-export interface BankIdSignResponseToAutoStartTokenResolver<TParent = BankIdSignResponse, TResult = string> {
+export interface BankIdSignResponseToAutoStartTokenResolver<TParent = BankIdSignResponse, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface BankIdSignResponseToRedirectUrlResolver<TParent = BankIdSignResponse, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
