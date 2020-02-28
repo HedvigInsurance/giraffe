@@ -88,8 +88,6 @@ const uploadFileInner = async (file: any, memberId: string) => {
     Metadata: metadata,
   }
 
-  throw Error('Foo')
-
   return new Promise<File>((resolve) => {
     s3.upload(params, UPLOAD_OPTIONS, (err) => {
       if (err) {
