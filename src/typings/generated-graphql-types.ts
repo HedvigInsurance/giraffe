@@ -687,6 +687,7 @@ export interface Mutation {
   logout: boolean;
   createSession: string;
   createSessionV2?: SessionInformation;
+  createSessionV3?: SessionInformationV3;
   createOffer?: boolean;
   
   /**
@@ -733,6 +734,40 @@ export type UUID = any;
 
 export interface SessionInformation {
   token: string;
+  memberId: string;
+}
+
+export interface CreateSessionInput {
+  authMethod?: AuthMethod;
+}
+
+export enum AuthMethod {
+  SWEDISH_BANK_ID = 'SWEDISH_BANK_ID',
+  NORWEGIAN_BANK_ID = 'NORWEGIAN_BANK_ID'
+}
+
+export type SessionInformationV3 =
+SwedishBankIdSessionInformation |
+NorwegianBankIdSessionInformation;
+
+/** Use this to resolve union type SessionInformationV3 */
+export type PossibleSessionInformationV3TypeNames =
+'SwedishBankIdSessionInformation' |
+'NorwegianBankIdSessionInformation';
+
+export interface SessionInformationV3NameMap {
+  SessionInformationV3: SessionInformationV3;
+  SwedishBankIdSessionInformation: SwedishBankIdSessionInformation;
+  NorwegianBankIdSessionInformation: NorwegianBankIdSessionInformation;
+}
+
+export interface SwedishBankIdSessionInformation {
+  token: string;
+  memberId: string;
+}
+
+export interface NorwegianBankIdSessionInformation {
+  redirectUrl: string;
   memberId: string;
 }
 
@@ -962,6 +997,12 @@ export interface Resolver {
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
+  SessionInformationV3?: {
+    __resolveType: SessionInformationV3TypeResolver
+  };
+  
+  SwedishBankIdSessionInformation?: SwedishBankIdSessionInformationTypeResolver;
+  NorwegianBankIdSessionInformation?: NorwegianBankIdSessionInformationTypeResolver;
   BankIdSignResponse?: BankIdSignResponseTypeResolver;
   Upload?: GraphQLScalarType;
   TimeStamp?: GraphQLScalarType;
@@ -2211,6 +2252,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   logout?: MutationToLogoutResolver<TParent>;
   createSession?: MutationToCreateSessionResolver<TParent>;
   createSessionV2?: MutationToCreateSessionV2Resolver<TParent>;
+  createSessionV3?: MutationToCreateSessionV3Resolver<TParent>;
   createOffer?: MutationToCreateOfferResolver<TParent>;
   signOffer?: MutationToSignOfferResolver<TParent>;
   signOfferV2?: MutationToSignOfferV2Resolver<TParent>;
@@ -2254,6 +2296,13 @@ export interface MutationToCreateSessionResolver<TParent = undefined, TResult = 
 
 export interface MutationToCreateSessionV2Resolver<TParent = undefined, TResult = SessionInformation | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToCreateSessionV3Args {
+  input?: CreateSessionInput;
+}
+export interface MutationToCreateSessionV3Resolver<TParent = undefined, TResult = SessionInformationV3 | null> {
+  (parent: TParent, args: MutationToCreateSessionV3Args, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToCreateOfferArgs {
@@ -2428,6 +2477,35 @@ export interface SessionInformationToTokenResolver<TParent = SessionInformation,
 }
 
 export interface SessionInformationToMemberIdResolver<TParent = SessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SessionInformationV3TypeResolver<TParent = SessionInformationV3> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'SwedishBankIdSessionInformation' | 'NorwegianBankIdSessionInformation';
+}
+export interface SwedishBankIdSessionInformationTypeResolver<TParent = SwedishBankIdSessionInformation> {
+  token?: SwedishBankIdSessionInformationToTokenResolver<TParent>;
+  memberId?: SwedishBankIdSessionInformationToMemberIdResolver<TParent>;
+}
+
+export interface SwedishBankIdSessionInformationToTokenResolver<TParent = SwedishBankIdSessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishBankIdSessionInformationToMemberIdResolver<TParent = SwedishBankIdSessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianBankIdSessionInformationTypeResolver<TParent = NorwegianBankIdSessionInformation> {
+  redirectUrl?: NorwegianBankIdSessionInformationToRedirectUrlResolver<TParent>;
+  memberId?: NorwegianBankIdSessionInformationToMemberIdResolver<TParent>;
+}
+
+export interface NorwegianBankIdSessionInformationToRedirectUrlResolver<TParent = NorwegianBankIdSessionInformation, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianBankIdSessionInformationToMemberIdResolver<TParent = NorwegianBankIdSessionInformation, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

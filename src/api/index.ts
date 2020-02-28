@@ -742,10 +742,9 @@ const authMember = (
   }).then((res) => res.json())
 
 export interface NorwegianBankIdAuthDto {
-  autoStartToken: string
+  redirectUrl: string
 }
 
-export interface
 const norwegianAuthMember = (
     token: string,
     headers: ForwardHeaders,
@@ -754,7 +753,6 @@ const norwegianAuthMember = (
       mergeOptions: {
         headers: (headers as any) as RequestInit['headers'],
         method: 'POST',
-        body: JSON.stringify(body),
       },
       token,
     }).then((res) => res.json())
@@ -804,6 +802,7 @@ export {
   performEmailSign,
   markMessageAsRead,
   authMember,
+  norwegianAuthMember,
   signDetails,
   postLanguage,
 }

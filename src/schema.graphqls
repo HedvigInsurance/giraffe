@@ -19,6 +19,7 @@ type Mutation {
   logout: Boolean!
   createSession(campaign: CampaignInput, trackingId: UUID): String!
   createSessionV2: SessionInformation
+  createSessionV3(input: CreateSessionInput): SessionInformationV3
   createOffer(details: OfferInput!): Boolean
   signOffer(details: SignInput!): Boolean @deprecated(reason: "Use `signOfferV2`.")
   signOfferV2(details: SignInput): BankIdSignResponse!
@@ -55,6 +56,15 @@ type Subscription {
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
   authStatus: AuthEvent
+}
+
+input CreateSessionInput {
+  authMethod: AuthMethod
+}
+
+enum AuthMethod {
+  SWEDISH_BANK_ID,
+  NORWEGIAN_BANK_ID
 }
 
 input TriggerClaimChatInput {
@@ -355,6 +365,20 @@ type Gif {
 
 type SessionInformation {
   token: String!
+  memberId: String!
+}
+
+union SessionInformationV3 =
+  SwedishBankIdSessionInformation
+  | NorwegianBankIdSessionInformation
+
+type SwedishBankIdSessionInformation {
+  token: String!
+  memberId: String!
+}
+
+type NorwegianBankIdSessionInformation {
+  redirectUrl: String!
   memberId: String!
 }
 
