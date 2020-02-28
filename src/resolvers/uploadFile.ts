@@ -1,10 +1,13 @@
 import { UserInputError } from 'apollo-server-koa'
+// @ts-ignore - typescript refuses to cooperate
+import streamToPromise = require('stream-to-promise')
 
 import * as uuid from 'uuid/v1'
 
 import { getUser } from '../api'
 import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
+import { generateBlurhash } from '../features/blurhash'
 import {
   File,
   MutationToUploadFileResolver,
@@ -55,20 +58,39 @@ export const uploadFiles: MutationToUploadFilesResolver = async (
   return uploads
 }
 
-const uploadFileInner = (file: any, memberId: string) => {
-  return new Promise<File>((resolve) => {
-    const { createReadStream, filename, mimetype } = file
-    const key = `${uuid()}-${filename}`
-    const params = {
-      Bucket: AWS_S3_BUCKET,
-      Key: key,
-      Body: createReadStream(),
-      ContentType: mimetype,
-      Metadata: {
-        MemberId: memberId,
-      },
-    }
+const uploadFileInner = async (file: any, memberId: string) => {
+  const { createReadStream, filename, mimetype } = file
+  const key = `${uuid()}-${filename}`
 
+  const body = await streamToPromise(createReadStream())
+  let blurhash: string | undefined
+  if (mimetype.startsWith('image')) {
+    try {
+      blurhash = await generateBlurhash(body)
+    } catch (e) {
+      // No-op. Blurhash is a bonus
+    }
+  }
+
+  const metadata: AWS.S3.Metadata = {
+    MemberId: memberId,
+  }
+
+  if (blurhash) {
+    metadata.Blurhash = blurhash
+  }
+
+  const params = {
+    Bucket: AWS_S3_BUCKET,
+    Key: key,
+    Body: body,
+    ContentType: mimetype,
+    Metadata: metadata,
+  }
+
+  throw Error('Foo')
+
+  return new Promise<File>((resolve) => {
     s3.upload(params, UPLOAD_OPTIONS, (err) => {
       if (err) {
         logger.error('Got error when attempting to upload error: ', err)
@@ -84,6 +106,7 @@ const uploadFileInner = (file: any, memberId: string) => {
           signedUrl,
           bucket: AWS_S3_BUCKET,
           key,
+          blurhash,
         })
       }
     })
