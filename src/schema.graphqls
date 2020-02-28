@@ -679,8 +679,4 @@ type File {
   S3 bucket that the file was uploaded to.
   """
   bucket: String!
-  """
-  Hash that can be used to make a very pretty blurred preview. Only available for image uploads.
-  """
-  blurhash: String
 }

@@ -380,11 +380,6 @@ export interface File {
    * S3 bucket that the file was uploaded to.
    */
   bucket: string;
-  
-  /**
-   * Hash that can be used to make a very pretty blurred preview. Only available for image uploads.
-   */
-  blurhash?: string;
 }
 
 export interface Message {
@@ -1674,7 +1669,6 @@ export interface FileTypeResolver<TParent = File> {
   signedUrl?: FileToSignedUrlResolver<TParent>;
   key?: FileToKeyResolver<TParent>;
   bucket?: FileToBucketResolver<TParent>;
-  blurhash?: FileToBlurhashResolver<TParent>;
 }
 
 export interface FileToSignedUrlResolver<TParent = File, TResult = string> {
@@ -1686,10 +1680,6 @@ export interface FileToKeyResolver<TParent = File, TResult = string> {
 }
 
 export interface FileToBucketResolver<TParent = File, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface FileToBlurhashResolver<TParent = File, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
