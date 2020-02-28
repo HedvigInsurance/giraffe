@@ -715,7 +715,14 @@ export interface Mutation {
   emailSign?: boolean;
   markMessageAsRead: Message;
   log?: boolean;
+  
+  /**
+   * 
+   * @deprecated Use `swedishBankIdAuth`.
+   */
   bankIdAuth: BankIdAuthResponse;
+  swedishBankIdAuth: BankIdAuthResponse;
+  norwegianBankIdAuth: NorwegianBankIdAuthResponse;
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
 }
@@ -827,6 +834,10 @@ export enum LoggingSeverity {
 
 export interface BankIdAuthResponse {
   autoStartToken: string;
+}
+
+export interface NorwegianBankIdAuthResponse {
+  redirectUrl: string;
 }
 
 export interface Subscription {
@@ -962,6 +973,7 @@ export interface Resolver {
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
+  NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -2229,6 +2241,8 @@ export interface MutationTypeResolver<TParent = undefined> {
   markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
   log?: MutationToLogResolver<TParent>;
   bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
+  swedishBankIdAuth?: MutationToSwedishBankIdAuthResolver<TParent>;
+  norwegianBankIdAuth?: MutationToNorwegianBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
 }
@@ -2393,6 +2407,14 @@ export interface MutationToBankIdAuthResolver<TParent = undefined, TResult = Ban
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToSwedishBankIdAuthResolver<TParent = undefined, TResult = BankIdAuthResponse> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToNorwegianBankIdAuthResolver<TParent = undefined, TResult = NorwegianBankIdAuthResponse> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MutationToRegisterBranchCampaignArgs {
   campaign: CampaignInput;
 }
@@ -2438,6 +2460,14 @@ export interface BankIdAuthResponseTypeResolver<TParent = BankIdAuthResponse> {
 }
 
 export interface BankIdAuthResponseToAutoStartTokenResolver<TParent = BankIdAuthResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianBankIdAuthResponseTypeResolver<TParent = NorwegianBankIdAuthResponse> {
+  redirectUrl?: NorwegianBankIdAuthResponseToRedirectUrlResolver<TParent>;
+}
+
+export interface NorwegianBankIdAuthResponseToRedirectUrlResolver<TParent = NorwegianBankIdAuthResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

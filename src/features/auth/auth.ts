@@ -1,5 +1,5 @@
-import { authMember, norwegianAuthMember } from '../../api'
-import { MutationToBankIdAuthResolver, MutationToNorwegianBankIdAuthResolver } from '../../typings/generated-graphql-types'
+import { swedishAuthMember, norwegianAuthMember } from '../../api'
+import { MutationToBankIdAuthResolver, MutationToSwedishBankIdAuthResolver, MutationToNorwegianBankIdAuthResolver } from '../../typings/generated-graphql-types'
 
 export const bankIdAuth: MutationToBankIdAuthResolver = async (
   _parent,
@@ -7,7 +7,21 @@ export const bankIdAuth: MutationToBankIdAuthResolver = async (
   { headers, getToken },
 ) => {
   const token = getToken()
-  const autoStartTokenResult = await authMember(token, headers)
+  const autoStartTokenResult = await swedishAuthMember(token, headers)
+  const autoStartToken = autoStartTokenResult.autoStartToken
+
+  return {
+    autoStartToken,
+  }
+}
+
+export const swedishBankIdAuth: MutationToSwedishBankIdAuthResolver = async (
+  _parent,
+  _args,
+  { headers, getToken },
+) => {
+  const token = getToken()
+  const autoStartTokenResult = await swedishAuthMember(token, headers)
   const autoStartToken = autoStartTokenResult.autoStartToken
 
   return {
