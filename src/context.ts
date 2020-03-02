@@ -4,10 +4,12 @@ import { ConnectionContext } from 'subscriptions-transport-ws'
 import * as uuidv4 from 'uuid/v4'
 import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
+import { GraphQLSchema } from 'graphql'
 
 interface Context {
   getToken: () => string
   headers: ForwardHeaders
+  graphCMSSchema: GraphQLSchema
   remoteIp: string
 }
 
@@ -18,7 +20,7 @@ interface ForwardHeaders {
   'Accept-Language': string
 }
 
-const getWebContext = async ({
+const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
   ctx,
 }: {
   ctx: Koa.Context
@@ -32,6 +34,7 @@ const getWebContext = async ({
   }
   return {
     getToken,
+    graphCMSSchema,
     headers: {
       'User-Agent': checkedCtx.get('User-Agent'),
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
@@ -43,7 +46,7 @@ const getWebContext = async ({
   }
 }
 
-const getWebSocketContext = (
+const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
   connectionParams: { Authorization: string },
   _webSocket: any,
   context: ConnectionContext,
@@ -67,6 +70,7 @@ const getWebSocketContext = (
   return {
     getToken,
     headers,
+    graphCMSSchema,
     remoteIp:
       headers['X-Forwarded-For'] ||
       (context.request.connection.address() as string),

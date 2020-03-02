@@ -1,10 +1,13 @@
+import { Feature } from './../typings/generated-graphql-types';
 import { getUser, postEmail, postPhoneNumber, postLanguage } from '../api'
 import {
   MutationToUpdateEmailResolver,
   MutationToUpdatePhoneNumberResolver,
   MutationToUpdateLanguageResolver,
   QueryToMemberResolver,
+  MemberToFeaturesResolver
 } from '../typings/generated-graphql-types'
+import { graphql } from "graphql"
 
 const member: QueryToMemberResolver = async (
   _parent,
@@ -19,8 +22,36 @@ const member: QueryToMemberResolver = async (
     firstName: memberResponse.firstName,
     lastName: memberResponse.lastName,
     email: memberResponse.email,
-    phoneNumber: memberResponse.phoneNumber
+    phoneNumber: memberResponse.phoneNumber,
+    features: []
   }
+}
+
+export const memberFeatures: MemberToFeaturesResolver = async (
+  _parent,
+  _args,
+  { getToken, headers, graphCMSSchema },
+) => {
+  const token = getToken()
+  const user = await getUser(token, headers)
+
+  const result = await graphql(graphCMSSchema, `
+    query Features($memberId: String!) {
+      userFeatures(where: { memberId: $memberId }) {
+        feature
+      }
+    }
+  `, null, null, {
+    memberId: user.memberId
+  })
+
+  if (!result.data) {
+    throw new Error("failed to fetch member features")
+  }
+
+  return result.data.userFeatures
+    .filter((feature: { feature: string }) => feature.feature === "KeyGear")
+    .map((_: { feature: string }) => Feature.KeyGear)
 }
 
 const updateEmail: MutationToUpdateEmailResolver = async (

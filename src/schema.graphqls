@@ -553,6 +553,10 @@ type ArrangedPerilCategories {
   stuff: PerilCategory
 }
 
+enum Feature {
+  KeyGear
+}
+
 type Member {
   id: ID
   firstName: String
@@ -560,6 +564,7 @@ type Member {
   email: String
   phoneNumber: String
   acceptLanguage: String
+  features: [Feature!]!
 }
 
 type PerilCategory {

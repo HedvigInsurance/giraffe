@@ -40,11 +40,11 @@ const handleError = (error: GraphQLError): void => {
 }
 
 makeSchema()
-  .then((schema) => {
+  .then(({ schema, graphCMSSchema }) => {
     logger.info('Schema initialized')
     const server = new ApolloServer({
       schema,
-      context: getWebContext,
+      context: getWebContext(graphCMSSchema),
       playground: config.PLAYGROUND_ENABLED && {
         subscriptionEndpoint: '/subscriptions',
       },
@@ -107,7 +107,7 @@ makeSchema()
           execute,
           subscribe,
           schema,
-          onConnect: getWebSocketContext,
+          onConnect: getWebSocketContext(graphCMSSchema),
           onOperation: (_msg: any, params: any) => {
             params.formatResponse = (response: any) => {
               if (response.errors) {
