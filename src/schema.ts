@@ -317,7 +317,7 @@ const makeSchema = async () => {
   })
   logger.info('Schemas merged')
 
-  return applyMiddleware(schema, sentryMiddleware)
+  return { schema: applyMiddleware(schema, sentryMiddleware), graphCMSSchema: executableTranslationsSchema }
 }
 
 export { makeSchema }

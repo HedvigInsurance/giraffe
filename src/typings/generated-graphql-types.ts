@@ -358,6 +358,11 @@ export interface Member {
   email?: string;
   phoneNumber?: string;
   acceptLanguage?: string;
+  features: Array<Feature>;
+}
+
+export enum Feature {
+  KeyGear = 'KeyGear'
 }
 
 export interface Gif {
@@ -1644,6 +1649,7 @@ export interface MemberTypeResolver<TParent = Member> {
   email?: MemberToEmailResolver<TParent>;
   phoneNumber?: MemberToPhoneNumberResolver<TParent>;
   acceptLanguage?: MemberToAcceptLanguageResolver<TParent>;
+  features?: MemberToFeaturesResolver<TParent>;
 }
 
 export interface MemberToIdResolver<TParent = Member, TResult = string | null> {
@@ -1667,6 +1673,10 @@ export interface MemberToPhoneNumberResolver<TParent = Member, TResult = string 
 }
 
 export interface MemberToAcceptLanguageResolver<TParent = Member, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MemberToFeaturesResolver<TParent = Member, TResult = Array<Feature>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

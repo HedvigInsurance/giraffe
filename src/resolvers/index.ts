@@ -43,6 +43,7 @@ import { log } from './logging'
 import { logout } from './logout'
 import {
   member,
+  memberFeatures,
   updateEmail,
   updateLanguage,
   updatePhoneNumber,
@@ -143,6 +144,9 @@ const resolvers: Resolver = {
   MessageBodyFile: {
     file: getFileByMessageBody,
   },
+  Member: {
+    features: memberFeatures
+  }
 }
 
 export { resolvers }
