@@ -1,7 +1,7 @@
 import { swedishAuthMember, norwegianAuthMember } from '../../api'
 import { MutationToBankIdAuthResolver, MutationToSwedishBankIdAuthResolver, MutationToNorwegianBankIdAuthResolver } from '../../typings/generated-graphql-types'
 
-export const bankIdAuth: MutationToBankIdAuthResolver = async (
+const bankIdAuth: MutationToBankIdAuthResolver = async (
   _parent,
   _args,
   { headers, getToken },
@@ -15,7 +15,7 @@ export const bankIdAuth: MutationToBankIdAuthResolver = async (
   }
 }
 
-export const swedishBankIdAuth: MutationToSwedishBankIdAuthResolver = async (
+const swedishBankIdAuth: MutationToSwedishBankIdAuthResolver = async (
   _parent,
   _args,
   { headers, getToken },
@@ -29,7 +29,7 @@ export const swedishBankIdAuth: MutationToSwedishBankIdAuthResolver = async (
   }
 }
 
-export const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async (
+const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async (
   _parent,
   _args,
   { headers, getToken },
@@ -42,3 +42,5 @@ export const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async 
     redirectUrl,
   }
 }
+
+export { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth }
