@@ -35,7 +35,7 @@ const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async (
   { headers, getToken },
 ) => {
   const token = getToken()
-  const norwegianAuthResult = await norwegianAuthMember(token, headers)
+  const norwegianAuthResult = await norwegianAuthMember(token, headers, { personalNumber: null })
   const redirectUrl = norwegianAuthResult.redirectUrl
 
   return {

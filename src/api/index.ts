@@ -748,11 +748,13 @@ export interface NorwegianBankIdAuthDto {
 const norwegianAuthMember = (
     token: string,
     headers: ForwardHeaders,
+    body: { personalNumber: string | null },
   ): Promise<NorwegianBankIdAuthDto> =>
     callApi('/member/norway/bankid/auth', {
       mergeOptions: {
         headers: (headers as any) as RequestInit['headers'],
         method: 'POST',
+        body: JSON.stringify(body),
       },
       token,
     }).then((res) => res.json())
