@@ -48,7 +48,8 @@ const signOfferV2: MutationToSignOfferV2Resolver = async (
     })
 
     return {
-      autoStartToken: websignResult.bankIdOrderResponse.autoStartToken
+      autoStartToken: websignResult.bankIdOrderResponse ? (websignResult.bankIdOrderResponse.autoStartToken as string): undefined,
+      redirectUrl: websignResult.redirectUrl
     }
   }
 
@@ -59,7 +60,8 @@ const signOfferV2: MutationToSignOfferV2Resolver = async (
   })
 
   return {
-    autoStartToken: websignResult.bankIdOrderResponse.autoStartToken
+    autoStartToken: websignResult.bankIdOrderResponse ? (websignResult.bankIdOrderResponse.autoStartToken as string): undefined,
+    redirectUrl: websignResult.redirectUrl
   }
 }
 

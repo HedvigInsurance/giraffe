@@ -278,9 +278,10 @@ const createProduct = async (
 }
 
 interface WebsignResponse {
-  bankIdOrderResponse: {
+  bankIdOrderResponse?: {
     autoStartToken: string
   }
+  redirectUrl?: string
 }
 
 const websign = async (
@@ -728,7 +729,7 @@ export interface BankIdAuthDto {
   autoStartToken: string
 }
 
-const authMember = (
+const swedishAuthMember = (
   token: string,
   headers: ForwardHeaders,
 ): Promise<BankIdAuthDto> =>
@@ -739,6 +740,22 @@ const authMember = (
     },
     token,
   }).then((res) => res.json())
+
+export interface NorwegianBankIdAuthDto {
+  redirectUrl: string
+}
+
+const norwegianAuthMember = (
+    token: string,
+    headers: ForwardHeaders,
+  ): Promise<NorwegianBankIdAuthDto> =>
+    callApi('/member/norway/bankid/auth', {
+      mergeOptions: {
+        headers: (headers as any) as RequestInit['headers'],
+        method: 'POST',
+      },
+      token,
+    }).then((res) => res.json())
 
 
 export interface BankIdSignDetailsDto {
@@ -784,7 +801,8 @@ export {
   triggerCallMeChat,
   performEmailSign,
   markMessageAsRead,
-  authMember,
+  swedishAuthMember,
+  norwegianAuthMember,
   signDetails,
   postLanguage,
 }

@@ -42,7 +42,9 @@ type Mutation {
   emailSign: Boolean
   markMessageAsRead(globalId: ID!): Message!
   log(input: LoggingInput!): Boolean
-  bankIdAuth: BankIdAuthResponse!
+  bankIdAuth: BankIdAuthResponse! @deprecated(reason: "Use `swedishBankIdAuth`.")
+  swedishBankIdAuth: BankIdAuthResponse!
+  norwegianBankIdAuth: NorwegianBankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
 }
@@ -635,7 +637,8 @@ type BankIdAuthResponse {
 }
 
 type BankIdSignResponse {
-  autoStartToken: String!
+  autoStartToken: String
+  redirectUrl: String
 }
 
 enum BankIdStatus {
@@ -656,6 +659,10 @@ enum AuthState {
   IN_PROGRESS
   FAILED
   SUCCESS
+}
+
+type NorwegianBankIdAuthResponse {
+  redirectUrl: String!
 }
 
 scalar LocalDate

@@ -715,7 +715,14 @@ export interface Mutation {
   emailSign?: boolean;
   markMessageAsRead: Message;
   log?: boolean;
+  
+  /**
+   * 
+   * @deprecated Use `swedishBankIdAuth`.
+   */
   bankIdAuth: BankIdAuthResponse;
+  swedishBankIdAuth: BankIdAuthResponse;
+  norwegianBankIdAuth: NorwegianBankIdAuthResponse;
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
 }
@@ -754,7 +761,8 @@ export interface SignInput {
 }
 
 export interface BankIdSignResponse {
-  autoStartToken: string;
+  autoStartToken?: string;
+  redirectUrl?: string;
 }
 
 export type Upload = any;
@@ -826,6 +834,10 @@ export enum LoggingSeverity {
 
 export interface BankIdAuthResponse {
   autoStartToken: string;
+}
+
+export interface NorwegianBankIdAuthResponse {
+  redirectUrl: string;
 }
 
 export interface Subscription {
@@ -961,6 +973,7 @@ export interface Resolver {
   TimeStamp?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
+  NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -2228,6 +2241,8 @@ export interface MutationTypeResolver<TParent = undefined> {
   markMessageAsRead?: MutationToMarkMessageAsReadResolver<TParent>;
   log?: MutationToLogResolver<TParent>;
   bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
+  swedishBankIdAuth?: MutationToSwedishBankIdAuthResolver<TParent>;
+  norwegianBankIdAuth?: MutationToNorwegianBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
 }
@@ -2392,6 +2407,14 @@ export interface MutationToBankIdAuthResolver<TParent = undefined, TResult = Ban
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToSwedishBankIdAuthResolver<TParent = undefined, TResult = BankIdAuthResponse> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToNorwegianBankIdAuthResolver<TParent = undefined, TResult = NorwegianBankIdAuthResponse> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MutationToRegisterBranchCampaignArgs {
   campaign: CampaignInput;
 }
@@ -2421,9 +2444,14 @@ export interface SessionInformationToMemberIdResolver<TParent = SessionInformati
 
 export interface BankIdSignResponseTypeResolver<TParent = BankIdSignResponse> {
   autoStartToken?: BankIdSignResponseToAutoStartTokenResolver<TParent>;
+  redirectUrl?: BankIdSignResponseToRedirectUrlResolver<TParent>;
 }
 
-export interface BankIdSignResponseToAutoStartTokenResolver<TParent = BankIdSignResponse, TResult = string> {
+export interface BankIdSignResponseToAutoStartTokenResolver<TParent = BankIdSignResponse, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface BankIdSignResponseToRedirectUrlResolver<TParent = BankIdSignResponse, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -2432,6 +2460,14 @@ export interface BankIdAuthResponseTypeResolver<TParent = BankIdAuthResponse> {
 }
 
 export interface BankIdAuthResponseToAutoStartTokenResolver<TParent = BankIdAuthResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianBankIdAuthResponseTypeResolver<TParent = NorwegianBankIdAuthResponse> {
+  redirectUrl?: NorwegianBankIdAuthResponseToRedirectUrlResolver<TParent>;
+}
+
+export interface NorwegianBankIdAuthResponseToRedirectUrlResolver<TParent = NorwegianBankIdAuthResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
