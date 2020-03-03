@@ -1,9 +1,10 @@
 import { Feature } from './../typings/generated-graphql-types';
-import { getUser, postEmail, postPhoneNumber, postLanguage } from '../api'
+import { getUser, postEmail, postPhoneNumber, postLanguage, postMarket } from '../api'
 import {
   MutationToUpdateEmailResolver,
   MutationToUpdatePhoneNumberResolver,
   MutationToUpdateLanguageResolver,
+  MutationToUpdateMarketResolver,
   QueryToMemberResolver,
   MemberToFeaturesResolver
 } from '../typings/generated-graphql-types'
@@ -92,4 +93,16 @@ const updateLanguage: MutationToUpdateLanguageResolver = async (
   return true
 }
 
-export { member, updateEmail, updatePhoneNumber, updateLanguage }
+const updateMarket: MutationToUpdateMarketResolver = async (
+  _root,
+  { input },
+  { getToken, headers },
+) => {
+  const token = getToken()
+  await postMarket(token, headers, {
+    market: input,
+  })
+  return true
+}
+
+export { member, updateEmail, updatePhoneNumber, updateLanguage, updateMarket }

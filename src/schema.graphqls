@@ -46,7 +46,8 @@ type Mutation {
   swedishBankIdAuth: BankIdAuthResponse!
   norwegianBankIdAuth: NorwegianBankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
-  updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
+  updateMarket(input: String!): Boolean! # input should be in the format as Accept-Language header
+  updateLanguage(input: String!): Boolean! # input should be in the format of  ISO 3166  alpha-2 country code
 }
 
 type Subscription {

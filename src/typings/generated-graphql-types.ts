@@ -728,6 +728,7 @@ export interface Mutation {
   swedishBankIdAuth: BankIdAuthResponse;
   norwegianBankIdAuth: NorwegianBankIdAuthResponse;
   registerBranchCampaign?: boolean;
+  updateMarket: boolean;
   updateLanguage: boolean;
 }
 
@@ -2248,6 +2249,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   swedishBankIdAuth?: MutationToSwedishBankIdAuthResolver<TParent>;
   norwegianBankIdAuth?: MutationToNorwegianBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
+  updateMarket?: MutationToUpdateMarketResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
 }
 
@@ -2424,6 +2426,13 @@ export interface MutationToRegisterBranchCampaignArgs {
 }
 export interface MutationToRegisterBranchCampaignResolver<TParent = undefined, TResult = boolean | null> {
   (parent: TParent, args: MutationToRegisterBranchCampaignArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdateMarketArgs {
+  input: string;
+}
+export interface MutationToUpdateMarketResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdateMarketArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToUpdateLanguageArgs {

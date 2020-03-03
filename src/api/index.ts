@@ -659,6 +659,20 @@ const postLanguage = (
       token,
     })
 
+const postMarket = (
+  token: string,
+  headers: ForwardHeaders,
+  body: { market: string },
+) =>
+  callApi('/member/market/update', {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+    token,
+  })
+
 const registerPushToken = (
   token: string,
   headers: ForwardHeaders,
@@ -807,4 +821,5 @@ export {
   norwegianAuthMember,
   signDetails,
   postLanguage,
+  postMarket
 }
