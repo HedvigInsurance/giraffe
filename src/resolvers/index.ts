@@ -63,7 +63,7 @@ import {
 import { offerClosed } from './offerClosed'
 import { registerPushToken } from './push-token'
 import { selectCashbackOption } from './selectCashbackOption'
-import { travel } from './travel'
+import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
 
@@ -81,7 +81,7 @@ const resolvers: Resolver = {
     currentChatResponse,
     avatars,
     chatActions,
-    travel,
+    geo,
     angelStory,
   },
   Mutation: {

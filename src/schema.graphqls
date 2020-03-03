@@ -11,7 +11,7 @@ type Query {
   chatState: ChatState!
   avatars: [Avatar]
   chatActions: [ChatAction]
-  travel: Travel!
+  geo: Geo!
   angelStory(name: String!): AngelStory
 }
 
@@ -62,8 +62,7 @@ input TriggerClaimChatInput {
   claimTypeId: ID
 }
 
-type Travel {
-  possiblyTravelling: Boolean!
+type Geo {
   countryISOCode: String!
 }
 
