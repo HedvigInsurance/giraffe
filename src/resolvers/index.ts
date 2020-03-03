@@ -1,4 +1,4 @@
-import { bankIdAuth, subscribeToAuthStatus } from '../features/auth'
+import { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth, subscribeToAuthStatus } from '../features/auth'
 import {
   createOffer,
   getInsuranceByOfferSuccessEvent,
@@ -112,6 +112,8 @@ const resolvers: Resolver = {
     markMessageAsRead,
     log,
     bankIdAuth,
+    swedishBankIdAuth,
+    norwegianBankIdAuth,
     registerBranchCampaign,
     updateLanguage,
   },
