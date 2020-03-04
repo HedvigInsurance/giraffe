@@ -728,8 +728,8 @@ export interface Mutation {
   swedishBankIdAuth: BankIdAuthResponse;
   norwegianBankIdAuth: NorwegianBankIdAuthResponse;
   registerBranchCampaign?: boolean;
-  updateMarket: boolean;
   updateLanguage: boolean;
+  updateMarket: boolean;
 }
 
 export interface CampaignInput {
@@ -843,6 +843,11 @@ export interface BankIdAuthResponse {
 
 export interface NorwegianBankIdAuthResponse {
   redirectUrl: string;
+}
+
+export enum Market {
+  SE = 'SE',
+  NO = 'NO'
 }
 
 export interface Subscription {
@@ -2249,8 +2254,8 @@ export interface MutationTypeResolver<TParent = undefined> {
   swedishBankIdAuth?: MutationToSwedishBankIdAuthResolver<TParent>;
   norwegianBankIdAuth?: MutationToNorwegianBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
-  updateMarket?: MutationToUpdateMarketResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
+  updateMarket?: MutationToUpdateMarketResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2428,18 +2433,18 @@ export interface MutationToRegisterBranchCampaignResolver<TParent = undefined, T
   (parent: TParent, args: MutationToRegisterBranchCampaignArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToUpdateMarketArgs {
-  input: string;
-}
-export interface MutationToUpdateMarketResolver<TParent = undefined, TResult = boolean> {
-  (parent: TParent, args: MutationToUpdateMarketArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface MutationToUpdateLanguageArgs {
   input: string;
 }
 export interface MutationToUpdateLanguageResolver<TParent = undefined, TResult = boolean> {
   (parent: TParent, args: MutationToUpdateLanguageArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToUpdateMarketArgs {
+  input: Market;
+}
+export interface MutationToUpdateMarketResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: MutationToUpdateMarketArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

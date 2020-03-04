@@ -821,5 +821,5 @@ export {
   norwegianAuthMember,
   signDetails,
   postLanguage,
-  postMarket
+  postMarket,
 }
