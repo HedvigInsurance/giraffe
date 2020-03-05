@@ -46,6 +46,7 @@ import {
   memberFeatures,
   updateEmail,
   updateLanguage,
+  updateMarket,
   updatePhoneNumber,
 } from './member'
 import {
@@ -116,6 +117,7 @@ const resolvers: Resolver = {
     norwegianBankIdAuth,
     registerBranchCampaign,
     updateLanguage,
+    updateMarket,
   },
   Subscription: {
     offer: subscribeToOffer,

@@ -96,13 +96,14 @@ const updateLanguage: MutationToUpdateLanguageResolver = async (
 const updateMarket: MutationToUpdateMarketResolver = async (
   _root,
   { input },
-  { getToken, headers },
+  { getToken, headers, ...rest},
+  info,
 ) => {
   const token = getToken()
   await postMarket(token, headers, {
     market: input,
   })
-  return true
+  return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
 export { member, updateEmail, updatePhoneNumber, updateLanguage, updateMarket }

@@ -729,7 +729,7 @@ export interface Mutation {
   norwegianBankIdAuth: NorwegianBankIdAuthResponse;
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
-  updateMarket: boolean;
+  updateMarket: Member;
 }
 
 export interface CampaignInput {
@@ -2441,9 +2441,9 @@ export interface MutationToUpdateLanguageResolver<TParent = undefined, TResult =
 }
 
 export interface MutationToUpdateMarketArgs {
-  input: Market;
+  market: Market;
 }
-export interface MutationToUpdateMarketResolver<TParent = undefined, TResult = boolean> {
+export interface MutationToUpdateMarketResolver<TParent = undefined, TResult = Member> {
   (parent: TParent, args: MutationToUpdateMarketArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
