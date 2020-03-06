@@ -729,7 +729,7 @@ export interface Mutation {
   norwegianBankIdAuth: NorwegianBankIdAuthResponse;
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
-  updateMarket: Member;
+  updatePickedLocale: Member;
 }
 
 export interface CampaignInput {
@@ -845,7 +845,7 @@ export interface NorwegianBankIdAuthResponse {
   redirectUrl: string;
 }
 
-export enum Market {
+export enum PickedLocale {
   SE = 'SE',
   NO = 'NO'
 }
@@ -2255,7 +2255,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   norwegianBankIdAuth?: MutationToNorwegianBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
-  updateMarket?: MutationToUpdateMarketResolver<TParent>;
+  updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2440,11 +2440,11 @@ export interface MutationToUpdateLanguageResolver<TParent = undefined, TResult =
   (parent: TParent, args: MutationToUpdateLanguageArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToUpdateMarketArgs {
-  market: Market;
+export interface MutationToUpdatePickedLocaleArgs {
+  pickedLocale: PickedLocale;
 }
-export interface MutationToUpdateMarketResolver<TParent = undefined, TResult = Member> {
-  (parent: TParent, args: MutationToUpdateMarketArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResult = Member> {
+  (parent: TParent, args: MutationToUpdatePickedLocaleArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {

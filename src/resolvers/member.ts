@@ -1,10 +1,10 @@
 import { Feature } from './../typings/generated-graphql-types';
-import { getUser, postEmail, postPhoneNumber, postLanguage, postMarket } from '../api'
+import { getUser, postEmail, postPhoneNumber, postLanguage, postPickedLocale } from '../api'
 import {
   MutationToUpdateEmailResolver,
   MutationToUpdatePhoneNumberResolver,
   MutationToUpdateLanguageResolver,
-  MutationToUpdateMarketResolver,
+  MutationToUpdatePickedLocaleResolver,
   QueryToMemberResolver,
   MemberToFeaturesResolver
 } from '../typings/generated-graphql-types'
@@ -93,17 +93,17 @@ const updateLanguage: MutationToUpdateLanguageResolver = async (
   return true
 }
 
-const updateMarket: MutationToUpdateMarketResolver = async (
+const updatePickedLocale: MutationToUpdatePickedLocaleResolver = async (
   _root,
-  { input },
+  { pickedLocale },
   { getToken, headers, ...rest},
   info,
 ) => {
   const token = getToken()
-  await postMarket(token, headers, {
-    market: input,
+  await postPickedLocale(token, headers, {
+    PickedLocale: pickedLocale,
   })
   return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
-export { member, updateEmail, updatePhoneNumber, updateLanguage, updateMarket }
+export { member, updateEmail, updatePhoneNumber, updateLanguage, updatePickedLocale }

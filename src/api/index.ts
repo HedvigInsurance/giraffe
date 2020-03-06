@@ -13,6 +13,7 @@ import {
   PerilCategory,
   Renewal,
   SignState,
+  PickedLocale,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -659,12 +660,12 @@ const postLanguage = (
       token,
     })
 
-const postMarket = (
+const postPickedLocale = (
   token: string,
   headers: ForwardHeaders,
-  body: { market: string },
+  body: { pickedLocale: PickedLocale },
 ) =>
-  callApi('/member/market/update', {
+  callApi('/member/pickedLocale/update', {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
@@ -821,5 +822,5 @@ export {
   norwegianAuthMember,
   signDetails,
   postLanguage,
-  postMarket,
+  postPickedLocale,
 }
