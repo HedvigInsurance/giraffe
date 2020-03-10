@@ -101,7 +101,7 @@ const updatePickedLocale: MutationToUpdatePickedLocaleResolver = async (
 ) => {
   const token = getToken()
   await postPickedLocale(token, headers, {
-    PickedLocale: pickedLocale,
+    pickedLocale: pickedLocale,
   })
   return member(_root, {}, { getToken, headers, ...rest }, info)
 }
