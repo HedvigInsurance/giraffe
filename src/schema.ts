@@ -76,6 +76,7 @@ const makeSchema = async () => {
     'marketingStories',
     'coreMLModels',
     'keyGearItemCoverages',
+    'importantMessages'
   ]
 
   const transformedTranslationSchema = transformSchema(
