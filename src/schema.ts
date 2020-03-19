@@ -76,7 +76,7 @@ const makeSchema = async () => {
     'marketingStories',
     'coreMLModels',
     'keyGearItemCoverages',
-    'importantMessages'
+    'importantMessages',
   ]
 
   const transformedTranslationSchema = transformSchema(
@@ -238,13 +238,11 @@ const makeSchema = async () => {
     logger.error('UnderwriterSchema Introspection failed (Ignoring)', e)
   }
 
-  const appContentServiceLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
+  const appContentServiceLink = createHttpLink({
+    uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
+    fetch: fetch as any,
+    credentials: 'include',
+  })
   let appContentServiceSchema: GraphQLSchema | undefined
   logger.info('Introspecting AppContentService')
   appContentServiceSchema = makeRemoteExecutableSchema({
@@ -318,7 +316,10 @@ const makeSchema = async () => {
   })
   logger.info('Schemas merged')
 
-  return { schema: applyMiddleware(schema, sentryMiddleware), graphCMSSchema: executableTranslationsSchema }
+  return {
+    schema: applyMiddleware(schema, sentryMiddleware),
+    graphCMSSchema: executableTranslationsSchema,
+  }
 }
 
 export { makeSchema }
