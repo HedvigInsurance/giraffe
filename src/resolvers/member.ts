@@ -1,9 +1,11 @@
 import { Feature } from './../typings/generated-graphql-types';
-import { getUser, postEmail, postPhoneNumber, postLanguage, isEligibleForReferrals } from '../api'
+import { getUser, postEmail, postPhoneNumber, postLanguage, postPickedLocale, isEligibleForReferrals } from '../api'
+
 import {
   MutationToUpdateEmailResolver,
   MutationToUpdatePhoneNumberResolver,
   MutationToUpdateLanguageResolver,
+  MutationToUpdatePickedLocaleResolver,
   QueryToMemberResolver,
   MemberToFeaturesResolver
 } from '../typings/generated-graphql-types'
@@ -100,4 +102,17 @@ const updateLanguage: MutationToUpdateLanguageResolver = async (
   return true
 }
 
-export { member, updateEmail, updatePhoneNumber, updateLanguage }
+const updatePickedLocale: MutationToUpdatePickedLocaleResolver = async (
+  _root,
+  { pickedLocale },
+  { getToken, headers, ...rest},
+  info,
+) => {
+  const token = getToken()
+  await postPickedLocale(token, headers, {
+    pickedLocale: pickedLocale,
+  })
+  return member(_root, {}, { getToken, headers, ...rest }, info)
+}
+
+export { member, updateEmail, updatePhoneNumber, updateLanguage, updatePickedLocale }
