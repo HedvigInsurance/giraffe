@@ -6,6 +6,10 @@ export const crossSchemaExtensions = `
     covered: [KeyGearItemCoverage!]!
     exceptions: [KeyGearItemCoverage!]!
   }
+
+  extend type Contract {
+    perils(locale: Locale!): [PerilV2!]!
+  }
 `
 
 const getCoveredIds = (category: KeyGearItemCategory) => {
@@ -114,8 +118,38 @@ interface KeyGearItem {
   category: KeyGearItemCategory
 }
 
+interface Contract {
+  typeOfContract: TypeOfContract
+}
+
+enum TypeOfContract {
+  SE_HOUSE = 'SE_HOUSE',
+  SE_APARTMENT_BRF = 'SE_APARTMENT_BRF',
+  SE_APARTMENT_RENT = 'SE_APARTMENT_RENT',
+  SE_APARTMENT_STUDENT_BRF = 'SE_APARTMENT_STUDENT_BRF',
+  SE_APARTMENT_STUDENT_RENT = 'SE_APARTMENT_STUDENT_RENT',
+  NO_HOME_CONTENT_BRF = 'NO_HOME_CONTENT_BRF',
+  NO_HOME_CONTENT_RENT = 'NO_HOME_CONTENT_RENT',
+  NO_HOME_CONTENT_YOUTH_BRF = 'NO_HOME_CONTENT_YOUTH_BRF',
+  NO_HOME_CONTENT_YOUTH_RENT = 'NO_HOME_CONTENT_YOUTH_RENT',
+  NO_TRAVEL = 'NO_TRAVEL',
+  NO_TRAVEL_YOUTH = 'NO_TRAVEL_YOUTH'
+}
+
+interface ContractPerilsArgs {
+  locale: Locale
+}
+
+enum Locale {
+  sv_SE = 'sv_SE',
+  en_SE = 'en_SE',
+  nb_NO = 'nb_NO',
+  en_NO = 'en_NO'
+}
+
 export const getCrossSchemaResolvers = (
   graphcmsSchema: GraphQLSchema,
+  contentSchema: GraphQLSchema
 ): IResolvers => {
   return {
     KeyGearItem: {
@@ -154,5 +188,23 @@ export const getCrossSchemaResolvers = (
         },
       },
     },
+    Contract: {
+      perils: {
+        fragment: `fragment ContractCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (contract: Contract, args: ContractPerilsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'perils',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
+      }
+    }
   }
 }

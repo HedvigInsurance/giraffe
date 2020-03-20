@@ -314,7 +314,7 @@ const makeSchema = async () => {
       keyGearSchema,
       crossSchemaExtensions,
     ].filter(Boolean) as GraphQLSchema[],
-    resolvers: getCrossSchemaResolvers(transformedTranslationSchema),
+    resolvers: getCrossSchemaResolvers(transformedTranslationSchema, appContentServiceSchema),
   })
   logger.info('Schemas merged')
 
