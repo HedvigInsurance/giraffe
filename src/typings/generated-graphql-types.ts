@@ -362,7 +362,8 @@ export interface Member {
 }
 
 export enum Feature {
-  KeyGear = 'KeyGear'
+  KeyGear = 'KeyGear',
+  Referrals = 'Referrals'
 }
 
 export interface Gif {

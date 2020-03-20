@@ -555,7 +555,8 @@ type ArrangedPerilCategories {
 }
 
 enum Feature {
-  KeyGear
+  KeyGear,
+  Referrals
 }
 
 type Member {

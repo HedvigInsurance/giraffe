@@ -1,5 +1,5 @@
 import { Feature } from './../typings/generated-graphql-types';
-import { getUser, postEmail, postPhoneNumber, postLanguage } from '../api'
+import { getUser, postEmail, postPhoneNumber, postLanguage, isEligibleForReferrals } from '../api'
 import {
   MutationToUpdateEmailResolver,
   MutationToUpdatePhoneNumberResolver,
@@ -49,9 +49,17 @@ export const memberFeatures: MemberToFeaturesResolver = async (
     throw new Error("failed to fetch member features")
   }
 
-  return result.data.userFeatures
-    .filter((feature: { feature: string }) => feature.feature === "KeyGear")
-    .map((_: { feature: string }) => Feature.KeyGear)
+  const features = result.data.userFeatures
+      .filter((feature: { feature: string }) => feature.feature === "KeyGear")
+      .map((_: { feature: string }) => Feature.KeyGear)
+
+  const eligibleForReferrals = await isEligibleForReferrals(token, headers)
+
+  if (eligibleForReferrals) {
+    features.push(Feature.Referrals)
+  }
+
+  return features
 }
 
 const updateEmail: MutationToUpdateEmailResolver = async (

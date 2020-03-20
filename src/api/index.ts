@@ -775,6 +775,22 @@ const signDetails = (
     token,
   }).then((res) => res.json())
 
+const isEligibleForReferrals = async (
+    token: string,
+    headers: ForwardHeaders,
+  ): Promise<boolean> => {
+    const data = await callApi('/campaign/member/eligibleForReferral', {
+      mergeOptions: {
+        headers: (headers as any) as RequestInit['headers'],
+      },
+      token,
+    })
+
+    const json = await data.json()
+
+    return json.eligible
+  }
+
 export {
   setChatResponse,
   getInsurance,
@@ -807,4 +823,5 @@ export {
   norwegianAuthMember,
   signDetails,
   postLanguage,
+  isEligibleForReferrals,
 }
