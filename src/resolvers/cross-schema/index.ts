@@ -10,6 +10,10 @@ export const crossSchemaExtensions = `
   extend type Contract {
     perils(locale: Locale!): [PerilV2!]!
   }
+
+  extend type CompleteQuote {
+    perils(locale: Locale!): [PerilV2!]!
+  }
 `
 
 const getCoveredIds = (category: KeyGearItemCategory) => {
@@ -122,21 +126,25 @@ interface Contract {
   typeOfContract: TypeOfContract
 }
 
+interface CompleteQuote {
+  typeOfContract: TypeOfContract
+}
+
 enum TypeOfContract {
   SE_HOUSE = 'SE_HOUSE',
   SE_APARTMENT_BRF = 'SE_APARTMENT_BRF',
   SE_APARTMENT_RENT = 'SE_APARTMENT_RENT',
   SE_APARTMENT_STUDENT_BRF = 'SE_APARTMENT_STUDENT_BRF',
   SE_APARTMENT_STUDENT_RENT = 'SE_APARTMENT_STUDENT_RENT',
-  NO_HOME_CONTENT_BRF = 'NO_HOME_CONTENT_BRF',
+  NO_HOME_CONTENT_OWN = 'NO_HOME_CONTENT_OWN',
   NO_HOME_CONTENT_RENT = 'NO_HOME_CONTENT_RENT',
-  NO_HOME_CONTENT_YOUTH_BRF = 'NO_HOME_CONTENT_YOUTH_BRF',
+  NO_HOME_CONTENT_YOUTH_OWN = 'NO_HOME_CONTENT_YOUTH_OWN',
   NO_HOME_CONTENT_YOUTH_RENT = 'NO_HOME_CONTENT_YOUTH_RENT',
   NO_TRAVEL = 'NO_TRAVEL',
   NO_TRAVEL_YOUTH = 'NO_TRAVEL_YOUTH'
 }
 
-interface ContractPerilsArgs {
+interface PerilsArgs {
   locale: Locale
 }
 
@@ -191,13 +199,31 @@ export const getCrossSchemaResolvers = (
     Contract: {
       perils: {
         fragment: `fragment ContractCrossSchemaFragment on Contract { typeOfContract }`,
-        resolve: (contract: Contract, args: ContractPerilsArgs, context, info) => {
+        resolve: (contract: Contract, args: PerilsArgs, context, info) => {
           return info.mergeInfo.delegateToSchema({
             schema: contentSchema,
             operation: 'query',
             fieldName: 'perils',
             args: {
               contractType: contract.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
+      }
+    },
+    CompleteQuote: {
+      perils: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (quote: CompleteQuote, args: PerilsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'perils',
+            args: {
+              contractType: quote.typeOfContract,
               locale: args.locale
             },
             context,
