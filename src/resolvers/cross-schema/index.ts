@@ -9,10 +9,12 @@ export const crossSchemaExtensions = `
 
   extend type Contract {
     perils(locale: Locale!): [PerilV2!]!
+    insurableLimits(locale: Locale!): [InsurableLimit!]!
   }
 
   extend type CompleteQuote {
     perils(locale: Locale!): [PerilV2!]!
+    insurableLimits(locale: Locale!): [InsurableLimit!]!
   }
 `
 
@@ -148,6 +150,10 @@ interface PerilsArgs {
   locale: Locale
 }
 
+interface InsurableLimitArgs {
+  locale: Locale
+}
+
 enum Locale {
   sv_SE = 'sv_SE',
   en_SE = 'en_SE',
@@ -212,6 +218,22 @@ export const getCrossSchemaResolvers = (
             info,
           })
         }
+      },
+      insurableLimits: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (quote: CompleteQuote, args: InsurableLimitArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'insurableLimits',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
       }
     },
     CompleteQuote: {
@@ -222,6 +244,22 @@ export const getCrossSchemaResolvers = (
             schema: contentSchema,
             operation: 'query',
             fieldName: 'perils',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
+      },
+      insurableLimits: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (quote: CompleteQuote, args: InsurableLimitArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'insurableLimits',
             args: {
               contractType: quote.typeOfContract,
               locale: args.locale
