@@ -10,11 +10,13 @@ export const crossSchemaExtensions = `
   extend type Contract {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
+    termsAndConditions(locale: Locale!): InsuranceTerm!
   }
 
   extend type CompleteQuote {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
+    termsAndConditions(locale: Locale!): InsuranceTerm!
   }
 `
 
@@ -154,6 +156,10 @@ interface InsurableLimitArgs {
   locale: Locale
 }
 
+interface TermsAndConditionsArgs {
+  locale: Locale
+}
+
 enum Locale {
   sv_SE = 'sv_SE',
   en_SE = 'en_SE',
@@ -220,14 +226,30 @@ export const getCrossSchemaResolvers = (
         }
       },
       insurableLimits: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
-        resolve: (quote: CompleteQuote, args: InsurableLimitArgs, context, info) => {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (contract: Contract, args: InsurableLimitArgs, context, info) => {
           return info.mergeInfo.delegateToSchema({
             schema: contentSchema,
             operation: 'query',
             fieldName: 'insurableLimits',
             args: {
-              contractType: quote.typeOfContract,
+              contractType: contract.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
+      },
+      termsAndConditions: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (contract: Contract, args: TermsAndConditionsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'termsAndConditions',
+            args: {
+              contractType: contract.typeOfContract,
               locale: args.locale
             },
             context,
@@ -260,6 +282,22 @@ export const getCrossSchemaResolvers = (
             schema: contentSchema,
             operation: 'query',
             fieldName: 'insurableLimits',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
+      },
+      termsAndConditions: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (quote: CompleteQuote, args: TermsAndConditionsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'termsAndConditions',
             args: {
               contractType: quote.typeOfContract,
               locale: args.locale
