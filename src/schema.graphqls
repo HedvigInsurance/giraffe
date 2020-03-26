@@ -47,7 +47,7 @@ type Mutation {
   norwegianBankIdAuth: NorwegianBankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
-  updatePickedLocale(pickedLocale: Locale!): Boolean!
+  updatePickedLocale(pickedLocale: Locale!): Member!
 }
 
 enum Locale {
