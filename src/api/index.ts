@@ -13,7 +13,7 @@ import {
   PerilCategory,
   Renewal,
   SignState,
-  PickedLocale,
+  Locale,
 } from '../typings/generated-graphql-types'
 import {
   ChatResponseSingleSelectInput,
@@ -663,7 +663,7 @@ const postLanguage = (
 const postPickedLocale = (
   token: string,
   headers: ForwardHeaders,
-  body: { pickedLocale: PickedLocale },
+  body: { pickedLocale: Locale },
 ) =>
   callApi('/member/pickedLocale/update', {
     mergeOptions: {

@@ -846,9 +846,11 @@ export interface NorwegianBankIdAuthResponse {
   redirectUrl: string;
 }
 
-export enum PickedLocale {
-  SE = 'SE',
-  NO = 'NO'
+export enum Locale {
+  sv_SE = 'sv_SE',
+  en_SE = 'en_SE',
+  nb_NO = 'nb_NO',
+  en_NO = 'en_NO'
 }
 
 export interface Subscription {
@@ -2442,7 +2444,7 @@ export interface MutationToUpdateLanguageResolver<TParent = undefined, TResult =
 }
 
 export interface MutationToUpdatePickedLocaleArgs {
-  pickedLocale: PickedLocale;
+  pickedLocale: Locale;
 }
 export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResult = Member> {
   (parent: TParent, args: MutationToUpdatePickedLocaleArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
