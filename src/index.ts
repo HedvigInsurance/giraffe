@@ -79,7 +79,12 @@ makeSchema()
         route.get(
           '/app-content-service/*',
           // @ts-ignore - False positive
-          proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT, {}),
+          proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT, {
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, OPTIONS, HEAD',
+            },
+          }),
         ),
       )
       logger.info('Added app-content-service proxy middleware')
