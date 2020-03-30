@@ -47,11 +47,14 @@ type Mutation {
   norwegianBankIdAuth: NorwegianBankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
-  updatePickedLocale(pickedLocale: PickedLocale!): Member! # input should be in the format of  ISO 3166  alpha-2 country code
+  updatePickedLocale(pickedLocale: Locale!): Member!
 }
-enum PickedLocale {
-  SE
-  NO
+
+enum Locale {
+  sv_SE
+  en_SE
+  nb_NO
+  en_NO
 }
 
 type Subscription {
