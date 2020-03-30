@@ -11,12 +11,14 @@ export const crossSchemaExtensions = `
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
     termsAndConditions(locale: Locale!): InsuranceTerm!
+    insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
 
   extend type CompleteQuote {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
     termsAndConditions(locale: Locale!): InsuranceTerm!
+    insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
 `
 
@@ -160,6 +162,10 @@ interface TermsAndConditionsArgs {
   locale: Locale
 }
 
+interface InsuranceTermsArgs {
+  locale: Locale
+}
+
 enum Locale {
   sv_SE = 'sv_SE',
   en_SE = 'en_SE',
@@ -256,6 +262,22 @@ export const getCrossSchemaResolvers = (
             info,
           })
         }
+      },
+      insuranceTerms: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (contract: Contract, args: InsuranceTermsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'termsAndConditions',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
       }
     },
     CompleteQuote: {
@@ -294,6 +316,22 @@ export const getCrossSchemaResolvers = (
       termsAndConditions: {
         fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
         resolve: (quote: CompleteQuote, args: TermsAndConditionsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'termsAndConditions',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale
+            },
+            context,
+            info,
+          })
+        }
+      },
+      insuranceTerms: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (quote: CompleteQuote, args: InsuranceTermsArgs, context, info) => {
           return info.mergeInfo.delegateToSchema({
             schema: contentSchema,
             operation: 'query',
