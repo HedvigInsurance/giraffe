@@ -269,7 +269,7 @@ export const getCrossSchemaResolvers = (
           return info.mergeInfo.delegateToSchema({
             schema: contentSchema,
             operation: 'query',
-            fieldName: 'termsAndConditions',
+            fieldName: 'insuranceTerms',
             args: {
               contractType: contract.typeOfContract,
               locale: args.locale
@@ -335,7 +335,7 @@ export const getCrossSchemaResolvers = (
           return info.mergeInfo.delegateToSchema({
             schema: contentSchema,
             operation: 'query',
-            fieldName: 'termsAndConditions',
+            fieldName: 'insuranceTerms',
             args: {
               contractType: quote.typeOfContract,
               locale: args.locale
