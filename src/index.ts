@@ -5,7 +5,7 @@ import './utils/datadog'
 
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
-import * as proxy from 'koa-better-http-proxy'
+import * as proxy from 'koa-proxies'
 import * as compress from 'koa-compress'
 import * as route from 'koa-route'
 
@@ -76,16 +76,11 @@ makeSchema()
 
     if (process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT) {
       app.use(
-        route.get(
-          '/app-content-service/*',
-          // @ts-ignore - False positive
-          proxy(process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT, {
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET, OPTIONS, HEAD',
-            },
-          }),
-        ),
+        proxy('/app-content-service/*', {
+          changeOrigin: false,
+          target: process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT,
+          logs: true,
+        }),
       )
       logger.info('Added app-content-service proxy middleware')
     }
