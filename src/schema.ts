@@ -239,7 +239,7 @@ const makeSchema = async () => {
   }
 
   const appContentServiceLink = createHttpLink({
-    uri: process.env.APP_CONTENT_SERVICE_GRAPHQL_ENDPOINT,
+    uri: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
     fetch: fetch as any,
     credentials: 'include',
   })
