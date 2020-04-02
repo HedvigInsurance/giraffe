@@ -74,11 +74,11 @@ makeSchema()
     server.applyMiddleware({ app })
     logger.info('Added Apollo Server Middleware')
 
-    if (process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT) {
+    if (process.env.CONTENT_SERVICE_PUBLIC_ENDPOINT) {
       app.use(
         proxy('/app-content-service/*', {
           changeOrigin: false,
-          target: process.env.APP_CONTENT_SERVICE_PUBLIC_ENDPOINT,
+          target: process.env.CONTENT_SERVICE_PUBLIC_ENDPOINT,
           logs: true,
         }),
       )
