@@ -239,7 +239,7 @@ const makeSchema = async () => {
     logger.error('UnderwriterSchema Introspection failed (Ignoring)', e)
   }
 
-  const appContentServiceLink = authorizationContextLink.concat(
+  const appContentServiceLink = optionalAuthorizationContextLink.concat(
     createHttpLink({
       uri: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
       fetch: fetch as any,
