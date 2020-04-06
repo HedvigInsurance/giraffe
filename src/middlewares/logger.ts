@@ -9,10 +9,10 @@ const loggingMiddleware = async (
 ) => {
   await next()
   const { request, response } = ctx
-  if (response.length < 5000) {
-    logger.info(`${request.method} '${request.url}' ${response.status}\nbody:${response.body}`)
-  } else {
-    logger.info(`${request.method} '${request.url}' ${response.status}`)
+
+  logger.info(`${request.method} '${request.url}' ${response.status}`)
+  if (request.url != '/.well-known/apollo/server-health') {
+    console.log('Body: ' + response.body)
   }
 }
 
