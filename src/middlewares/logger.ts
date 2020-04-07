@@ -11,6 +11,9 @@ const loggingMiddleware = async (
   const { request, response } = ctx
 
   logger.info(`${request.method} '${request.url}' ${response.status}`)
+  if (request.url != '/.well-known/apollo/server-health') {
+    console.log('Headers: ' + JSON.stringify(request.headers) + ' Body: ' + response.body)
+  }
 }
 
 export { loggingMiddleware }
