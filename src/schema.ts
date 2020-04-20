@@ -113,7 +113,6 @@ const makeSchema = async () => {
         previousContext.graphqlContext.getToken &&
         previousContext.graphqlContext.getToken()}`,
       ...(previousContext.graphqlContext &&
-        previousContext.graphqlContext.headers &&
         previousContext.graphqlContext.headers && {
           'X-Forwarded-For':
             previousContext.graphqlContext.headers['X-Forwarded-For'],
