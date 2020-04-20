@@ -77,7 +77,7 @@ const makeSchema = async () => {
     'coreMLModels',
     'keyGearItemCoverages',
     'importantMessages',
-    'appMarketingImages'
+    'appMarketingImages',
   ]
 
   const transformedTranslationSchema = transformSchema(
@@ -112,6 +112,12 @@ const makeSchema = async () => {
       authorization: `Bearer ${previousContext.graphqlContext &&
         previousContext.graphqlContext.getToken &&
         previousContext.graphqlContext.getToken()}`,
+      ...(previousContext.graphqlContext &&
+        previousContext.graphqlContext.headers &&
+        previousContext.graphqlContext.headers && {
+          'X-Forwarded-For':
+            previousContext.graphqlContext.headers['X-Forwarded-For'],
+        }),
     },
   }))
 
@@ -315,11 +321,17 @@ const makeSchema = async () => {
       keyGearSchema,
       crossSchemaExtensions,
     ].filter(Boolean) as GraphQLSchema[],
-    resolvers: getCrossSchemaResolvers(transformedTranslationSchema, appContentServiceSchema),
+    resolvers: getCrossSchemaResolvers(
+      transformedTranslationSchema,
+      appContentServiceSchema,
+    ),
   })
   logger.info('Schemas merged')
 
-  return { schema: applyMiddleware(schema, sentryMiddleware), graphCMSSchema: executableTranslationsSchema }
+  return {
+    schema: applyMiddleware(schema, sentryMiddleware),
+    graphCMSSchema: executableTranslationsSchema,
+  }
 }
 
 export { makeSchema }
