@@ -5,8 +5,8 @@ import './utils/datadog'
 
 import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
-import * as proxy from 'koa-proxies'
 import * as compress from 'koa-compress'
+import * as proxy from 'koa-proxies'
 import * as route from 'koa-route'
 
 import { execute, GraphQLError, subscribe } from 'graphql'
