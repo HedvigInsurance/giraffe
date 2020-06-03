@@ -1,5 +1,4 @@
-import { ApolloLink } from 'apollo-link'
-import { split } from 'apollo-link'
+import { ApolloLink, split } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
 import { createCacheLink } from 'apollo-link-redis-cache'
@@ -126,9 +125,9 @@ const makeSchema = async () => {
   )
   let apiGatewaySchema: GraphQLSchema | undefined
   logger.info('Introspecting API Gateway schema')
-  paymentServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(paymentServiceLink),
-    link: paymentServiceLink,
+  apiGatewaySchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(apiGatewayLink),
+    link: apiGatewayLink,
   })
   logger.info('API Gateway schema introspected')
 

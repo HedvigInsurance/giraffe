@@ -1,10 +1,10 @@
 import { AuthenticationError } from 'apollo-server-core'
+import { GraphQLSchema } from 'graphql'
 import * as Koa from 'koa'
 import { ConnectionContext } from 'subscriptions-transport-ws'
 import * as uuidv4 from 'uuid/v4'
 import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
-import { GraphQLSchema } from 'graphql'
 
 interface Context {
   getToken: () => string
