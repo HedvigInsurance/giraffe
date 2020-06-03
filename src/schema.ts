@@ -90,23 +90,6 @@ const makeSchema = async () => {
     ],
   )
 
-  const dontPanicLink = createHttpLink({
-    uri: process.env.DONT_PANIC_ENDPOINT,
-    fetch: fetch as any,
-  })
-  let dontPanicSchema: GraphQLSchema | undefined
-  try {
-    logger.info('Introspecting dontPanicSchema')
-    dontPanicSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(dontPanicLink),
-      link: dontPanicLink,
-    })
-    logger.info('DontPanicSchema Introspected')
-  } catch (e) {
-    /* noop */
-    logger.error('DontPanicSchema Introspection failed (Ignoring)')
-  }
-
   const authorizationContextLink = setContext((_, previousContext) => ({
     headers: {
       authorization: `Bearer ${previousContext.graphqlContext &&
@@ -133,6 +116,21 @@ const makeSchema = async () => {
       return {}
     }
   })
+
+  const apiGatewayLink = authorizationContextLink.concat(
+    createHttpLink({
+      uri: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
+      fetch: fetch as any,
+      credentials: 'include',
+    }),
+  )
+  let apiGatewaySchema: GraphQLSchema | undefined
+  logger.info('Introspecting API Gateway schema')
+  paymentServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(paymentServiceLink),
+    link: paymentServiceLink,
+  })
+  logger.info('API Gateway schema introspected')
 
   const paymentServiceLink = authorizationContextLink.concat(
     createHttpLink({
@@ -309,7 +307,7 @@ const makeSchema = async () => {
     schemas: [
       transformedTranslationSchema,
       localSchema,
-      dontPanicSchema,
+      apiGatewaySchema,
       paymentServiceSchema,
       productPricingServiceSchema,
       accountServiceSchema,
