@@ -12,6 +12,7 @@ export const crossSchemaExtensions = `
     insurableLimits(locale: Locale!): [InsurableLimit!]!
     termsAndConditions(locale: Locale!): InsuranceTerm!
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
+    referralTerms(locale: Locale!): ReferralTerm!
   }
 
   extend type CompleteQuote {
@@ -177,6 +178,10 @@ interface InsuranceTermsArgs {
   locale: Locale
 }
 
+interface ReferralTermsArgs {
+  locale: Locale
+}
+
 enum Locale {
   sv_SE = 'sv_SE',
   en_SE = 'en_SE',
@@ -296,6 +301,27 @@ export const getCrossSchemaResolvers = (
             schema: contentSchema,
             operation: 'query',
             fieldName: 'insuranceTerms',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      referralTerms: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (
+          contract: Contract,
+          args: ReferralTermsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'referralTerms',
             args: {
               contractType: contract.typeOfContract,
               locale: args.locale,
