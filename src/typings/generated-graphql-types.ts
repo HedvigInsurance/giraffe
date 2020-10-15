@@ -728,6 +728,7 @@ export interface Mutation {
   bankIdAuth: BankIdAuthResponse;
   swedishBankIdAuth: BankIdAuthResponse;
   norwegianBankIdAuth: NorwegianBankIdAuthResponse;
+  danishBankIdAuth: DanishBankIdAuthResponse;
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
   updatePickedLocale: Member;
@@ -843,6 +844,10 @@ export interface BankIdAuthResponse {
 }
 
 export interface NorwegianBankIdAuthResponse {
+  redirectUrl: string;
+}
+
+export interface DanishBankIdAuthResponse {
   redirectUrl: string;
 }
 
@@ -987,6 +992,7 @@ export interface Resolver {
   JSONObject?: GraphQLScalarType;
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
   NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
+  DanishBankIdAuthResponse?: DanishBankIdAuthResponseTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -2256,6 +2262,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   bankIdAuth?: MutationToBankIdAuthResolver<TParent>;
   swedishBankIdAuth?: MutationToSwedishBankIdAuthResolver<TParent>;
   norwegianBankIdAuth?: MutationToNorwegianBankIdAuthResolver<TParent>;
+  danishBankIdAuth?: MutationToDanishBankIdAuthResolver<TParent>;
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
   updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
@@ -2429,6 +2436,10 @@ export interface MutationToNorwegianBankIdAuthResolver<TParent = undefined, TRes
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToDanishBankIdAuthResolver<TParent = undefined, TResult = DanishBankIdAuthResponse> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface MutationToRegisterBranchCampaignArgs {
   campaign: CampaignInput;
 }
@@ -2489,6 +2500,14 @@ export interface NorwegianBankIdAuthResponseTypeResolver<TParent = NorwegianBank
 }
 
 export interface NorwegianBankIdAuthResponseToRedirectUrlResolver<TParent = NorwegianBankIdAuthResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishBankIdAuthResponseTypeResolver<TParent = DanishBankIdAuthResponse> {
+  redirectUrl?: DanishBankIdAuthResponseToRedirectUrlResolver<TParent>;
+}
+
+export interface DanishBankIdAuthResponseToRedirectUrlResolver<TParent = DanishBankIdAuthResponse, TResult = string> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
