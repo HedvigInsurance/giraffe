@@ -1,2 +1,2 @@
-export { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth } from './auth'
+export { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth, danishBankIdAuth } from './auth'
 export { subscribeToAuthStatus } from './authSubscription'

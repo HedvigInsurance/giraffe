@@ -756,7 +756,7 @@ const swedishAuthMember = (
     token,
   }).then((res) => res.json())
 
-export interface NorwegianBankIdAuthDto {
+export interface RedirectBankIdAuthDto {
   redirectUrl: string
 }
 
@@ -764,7 +764,7 @@ const norwegianAuthMember = (
     token: string,
     headers: ForwardHeaders,
     body: { personalNumber: string | null },
-  ): Promise<NorwegianBankIdAuthDto> =>
+  ): Promise<RedirectBankIdAuthDto> =>
     callApi('/member/norway/bankid/auth', {
       mergeOptions: {
         headers: (headers as any) as RequestInit['headers'],
@@ -774,6 +774,19 @@ const norwegianAuthMember = (
       token,
     }).then((res) => res.json())
 
+const danishAuthMember = (
+    token: string,
+    headers: ForwardHeaders,
+    body: { personalNumber: string | null },
+  ): Promise<RedirectBankIdAuthDto> =>
+    callApi('/member/denmark/bankid/auth', {
+      mergeOptions: {
+        headers: (headers as any) as RequestInit['headers'],
+        method: 'POST',
+        body: JSON.stringify(body),
+      },
+      token,
+    }).then((res) => res.json())
 
 export interface BankIdSignDetailsDto {
   personalNumber: string,
@@ -836,6 +849,7 @@ export {
   markMessageAsRead,
   swedishAuthMember,
   norwegianAuthMember,
+  danishAuthMember,
   signDetails,
   postLanguage,
   postPickedLocale,
