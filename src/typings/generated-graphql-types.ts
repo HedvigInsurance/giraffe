@@ -855,7 +855,9 @@ export enum Locale {
   sv_SE = 'sv_SE',
   en_SE = 'en_SE',
   nb_NO = 'nb_NO',
-  en_NO = 'en_NO'
+  en_NO = 'en_NO',
+  da_DK = 'da_DK',
+  en_DK = 'en_DK'
 }
 
 export interface Subscription {
