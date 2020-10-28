@@ -9,7 +9,7 @@ ADD . .
 
 RUN yarn build
 
-FROM node:10.11.0-alpine
+FROM node:10.12.0-alpine
 WORKDIR /usr/src/app
 
 COPY package.json .
