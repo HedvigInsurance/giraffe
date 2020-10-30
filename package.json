@@ -12,7 +12,7 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "@google-cloud/logging": "^5.2.0",
-    "@sentry/node": "^5.12.5",
+    "@sentry/node": "^5.27.2",
     "@types/geoip-lite": "^1.1.29",
     "apollo-link": "^1.2.12",
     "apollo-link-context": "^1.0.18",
