@@ -369,7 +369,7 @@ type SessionInformation {
   memberId: String!
 }
 
-type OfferEvent @deprecated(reason: "Use Quotes instead") {
+type OfferEvent {
   status: OfferStatus!
   insurance: Insurance
 }
@@ -382,12 +382,12 @@ type AuthEvent {
   status: AuthState
 }
 
-enum OfferStatus @deprecated(reason: "Use Quotes instead") {
+enum OfferStatus {
   SUCCESS
   FAIL
 }
 
-input OfferInput @deprecated(reason: "Use Quotes instead") {
+input OfferInput {
   firstName: String!
   lastName: String!
   age: Int!
@@ -405,7 +405,7 @@ input SignInput {
   email: String!
 }
 
-type Insurance @deprecated(reason: "Use `Contract` instead") {
+type Insurance {
   address: String
   postalNumber: String
   cost: InsuranceCost
@@ -594,7 +594,7 @@ type Peril {
   description: String
 }
 
-enum InsuranceStatus @deprecated(reason: "Use `ContractStatus` instead") {
+enum InsuranceStatus {
   PENDING
   ACTIVE
   INACTIVE
@@ -602,7 +602,7 @@ enum InsuranceStatus @deprecated(reason: "Use `ContractStatus` instead") {
   TERMINATED
 }
 
-enum InsuranceType @deprecated(reason: "Use `TypeOfContract` instead") {
+enum InsuranceType {
   RENT
   BRF
   STUDENT_RENT
