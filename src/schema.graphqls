@@ -19,13 +19,13 @@ type Mutation {
   logout: Boolean!
   createSession(campaign: CampaignInput, trackingId: UUID): String!
   createSessionV2: SessionInformation
-  createOffer(details: OfferInput!): Boolean
+  createOffer(details: OfferInput!): Boolean @deprecated(reason: "Use Quotes instead")
   signOffer(details: SignInput!): Boolean @deprecated(reason: "Use `signOfferV2`.")
-  signOfferV2(details: SignInput): BankIdSignResponse!
+  signOfferV2(details: SignInput): BankIdSignResponse! @deprecated(reason: "Use Quotes instead")
   uploadFile(file: Upload!): File!
   uploadFiles(files: [Upload!]!): [File!]
   selectCashbackOption(id: ID!): Cashback!
-  offerClosed: Boolean!
+  offerClosed: Boolean! @deprecated(reason: "Use Quotes instead")
   startDirectDebitRegistration: URL!
   sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
   sendChatSingleSelectResponse(input: ChatResponseSingleSelectInput!): Boolean!
@@ -61,8 +61,8 @@ enum Locale {
 }
 
 type Subscription {
-  offer: OfferEvent
-  signStatus: SignEvent
+  offer: OfferEvent @deprecated(reason: "Use Quotes instead")
+  signStatus: SignEvent @deprecated(reason: "Use Quotes instead")
   message: Message!
   currentChatResponse(mostRecentTimestamp: String!): ChatResponse
   chatState(mostRecentTimestamp: String!): ChatState!
@@ -369,9 +369,9 @@ type SessionInformation {
   memberId: String!
 }
 
-type OfferEvent {
+type OfferEvent @deprecated(reason: "Use Quotes instead") {
   status: OfferStatus!
-  insurance: Insurance @deprecated(reason: "Insurance is a dead concept")
+  insurance: Insurance
 }
 
 type SignEvent {
@@ -382,12 +382,12 @@ type AuthEvent {
   status: AuthState
 }
 
-enum OfferStatus {
+enum OfferStatus @deprecated(reason: "Use Quotes instead") {
   SUCCESS
   FAIL
 }
 
-input OfferInput {
+input OfferInput @deprecated(reason: "Use Quotes instead") {
   firstName: String!
   lastName: String!
   age: Int!
@@ -405,7 +405,7 @@ input SignInput {
   email: String!
 }
 
-type Insurance {
+type Insurance @deprecated(reason: "Use `Contract` instead") {
   address: String
   postalNumber: String
   cost: InsuranceCost
@@ -594,7 +594,7 @@ type Peril {
   description: String
 }
 
-enum InsuranceStatus {
+enum InsuranceStatus @deprecated(reason: "Use `ContractStatus` instead") {
   PENDING
   ACTIVE
   INACTIVE
@@ -602,7 +602,7 @@ enum InsuranceStatus {
   TERMINATED
 }
 
-enum InsuranceType {
+enum InsuranceType @deprecated(reason: "Use `TypeOfContract` instead") {
   RENT
   BRF
   STUDENT_RENT
