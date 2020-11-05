@@ -1,5 +1,5 @@
 type Query {
-  insurance: Insurance!
+  insurance: Insurance! @deprecated(reason: "Use `contracts` instead")
   cashback: Cashback
   cashbackOptions: [Cashback]!
   signStatus: SignStatus
@@ -371,7 +371,7 @@ type SessionInformation {
 
 type OfferEvent {
   status: OfferStatus!
-  insurance: Insurance
+  insurance: Insurance @deprecated(reason: "Insurance is a dead concept")
 }
 
 type SignEvent {
