@@ -13,6 +13,11 @@ import { GraphQLResolveInfo, GraphQLScalarType } from 'graphql';
  *                             *
  *******************************/
 export interface Query {
+  
+  /**
+   * 
+   * @deprecated Use `contracts` instead
+   */
   insurance: Insurance;
   cashback?: Cashback;
   cashbackOptions: Array<Cashback | null>;
@@ -692,6 +697,11 @@ export interface Mutation {
   logout: boolean;
   createSession: string;
   createSessionV2?: SessionInformation;
+  
+  /**
+   * 
+   * @deprecated Use Quotes instead
+   */
   createOffer?: boolean;
   
   /**
@@ -699,10 +709,20 @@ export interface Mutation {
    * @deprecated Use `signOfferV2`.
    */
   signOffer?: boolean;
+  
+  /**
+   * 
+   * @deprecated Use Quotes instead
+   */
   signOfferV2: BankIdSignResponse;
   uploadFile: File;
   uploadFiles?: Array<File>;
   selectCashbackOption: Cashback;
+  
+  /**
+   * 
+   * @deprecated Use Quotes instead
+   */
   offerClosed: boolean;
   startDirectDebitRegistration: URL;
   sendChatTextResponse: boolean;
@@ -861,7 +881,17 @@ export enum Locale {
 }
 
 export interface Subscription {
+  
+  /**
+   * 
+   * @deprecated Use Quotes instead
+   */
   offer?: OfferEvent;
+  
+  /**
+   * 
+   * @deprecated Use Quotes instead
+   */
   signStatus?: SignEvent;
   message: Message;
   currentChatResponse?: ChatResponse;
