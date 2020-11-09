@@ -250,11 +250,15 @@ const makeSchema = async () => {
     }),
   )
   let embarkSchema: GraphQLSchema | undefined
-  logger.info('Introspecting Embark')
-  embarkSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(embarkLink),
-    link: embarkLink,
-  })
+  try {
+    logger.info('Introspecting Embark')
+    embarkSchema = makeRemoteExecutableSchema({
+      schema: await introspectSchema(embarkLink),
+      link: embarkLink,
+    })
+  } catch (e) {
+    logger.error('Embark Introspection failed (Ignoring)', e)
+  }
 
   const keyGearLink = authorizationContextLink.concat(
     createHttpLink({
