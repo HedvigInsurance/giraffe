@@ -171,17 +171,12 @@ const makeSchema = async () => {
     }),
   )
   let accountServiceSchema: GraphQLSchema | undefined
-  try {
-    logger.info('Introspecting AccountServiceSchema')
-    accountServiceSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(accountServiceLink),
-      link: accountServiceLink,
-    })
-    logger.info('AccountServiceSchema Introspected')
-  } catch (e) {
-    /* noop */
-    logger.error('AccountServiceSchema Introspection failed (Ignoring)', e)
-  }
+  logger.info('Introspecting AccountServiceSchema')
+  accountServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(accountServiceLink),
+    link: accountServiceLink,
+  })
+  logger.info('AccountServiceSchema Introspected')
 
   const lookupServiceHTTPLink = createHttpLink({
     uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
@@ -211,17 +206,12 @@ const makeSchema = async () => {
   )
 
   let lookupServiceSchema: GraphQLSchema | undefined
-  try {
-    logger.info('Introspecting LookupServiceSchema')
-    lookupServiceSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(lookupServiceLink),
-      link: lookupServiceLink,
-    })
-    logger.info('LookupServiceSchema Introspected')
-  } catch (e) {
-    /* noop */
-    logger.error('LookupServiceSchema Introspection failed (Ignoring)', e)
-  }
+  logger.info('Introspecting LookupServiceSchema')
+  lookupServiceSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(lookupServiceLink),
+    link: lookupServiceLink,
+  })
+  logger.info('LookupServiceSchema Introspected')
 
   const underwriterLink = optionalAuthorizationContextLink.concat(
     createHttpLink({
@@ -231,17 +221,12 @@ const makeSchema = async () => {
     }),
   )
   let underwriterSchema: GraphQLSchema | undefined
-  try {
-    logger.info('Introspecting UnderwriterSchema')
-    underwriterSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(underwriterLink),
-      link: underwriterLink,
-    })
-    logger.info('UnderwriterSchema Introspected')
-  } catch (e) {
-    /* noop */
-    logger.error('UnderwriterSchema Introspection failed (Ignoring)', e)
-  }
+  logger.info('Introspecting UnderwriterSchema')
+  underwriterSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(underwriterLink),
+    link: underwriterLink,
+  })
+  logger.info('UnderwriterSchema Introspected')
 
   const appContentServiceLink = optionalAuthorizationContextLink.concat(
     createHttpLink({
@@ -283,15 +268,11 @@ const makeSchema = async () => {
     }),
   )
   let keyGearSchema: GraphQLSchema | undefined
-  try {
-    logger.info('Introspecting KeyGear')
-    keyGearSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(keyGearLink),
-      link: keyGearLink,
-    })
-  } catch (e) {
-    logger.error('KeyGear Introspection failed (Ignoring)', e)
-  }
+  logger.info('Introspecting KeyGear')
+  keyGearSchema = makeRemoteExecutableSchema({
+    schema: await introspectSchema(keyGearLink),
+    link: keyGearLink,
+  })
 
   const localSchema = makeExecutableSchema<Context>({
     typeDefs,
