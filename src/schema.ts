@@ -51,7 +51,7 @@ const redis = config.REDIS_CLUSTER_MODE
 const makeSchema = async () => {
   logger.info('Initializing schema')
   const translationsLink = createHttpLink({
-    uri: 'https://api-euwest.graphcms.com/v1/cjmawd9hw036a01cuzmjhplka/master',
+    uri: 'https://api-eu-central-1.graphcms.com/v2/cjmawd9hw036a01cuzmjhplka/master',
     fetch: fetch as any,
   })
 
