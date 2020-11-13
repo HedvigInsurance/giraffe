@@ -4,11 +4,17 @@ import { cashbackInner } from './cashback'
 
 const selectCashbackOption: MutationToSelectCashbackOptionResolver = async (
   _root,
-  { id },
+  { id, locale },
   { getToken, headers },
 ) => {
   const token = getToken()
-  const result = await setSelectedCashbackOption(token, headers, id)
+
+  const headersAndLocale = {
+    ...headers,
+    Locale: locale
+  }
+
+  const result = await setSelectedCashbackOption(token, headersAndLocale, id)
 
   if (result === 204) {
     const cashback = await cashbackInner(token, headers)

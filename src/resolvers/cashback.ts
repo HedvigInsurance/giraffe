@@ -23,12 +23,17 @@ const cashbackInner = async (
 
 const resolveCashback: QueryToCashbackResolver = async (
   _root,
-  _args,
+  { locale },
   { getToken, headers },
 ) => {
   const token = getToken()
 
-  return cashbackInner(token, headers)
+  const headersAndLocale = {
+    ...headers,
+    Locale: locale
+  }
+
+  return cashbackInner(token, headersAndLocale)
 }
 
 export { resolveCashback as cashback, cashbackInner }
