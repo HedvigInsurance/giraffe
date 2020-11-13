@@ -323,6 +323,15 @@ export interface ExtraBuildingOther extends ExtraBuildingCore {
   hasWaterConnected: boolean;
 }
 
+export enum Locale {
+  sv_SE = 'sv_SE',
+  en_SE = 'en_SE',
+  nb_NO = 'nb_NO',
+  en_NO = 'en_NO',
+  da_DK = 'da_DK',
+  en_DK = 'en_DK'
+}
+
 export interface Cashback {
   id?: string;
   name?: string;
@@ -871,15 +880,6 @@ export interface DanishBankIdAuthResponse {
   redirectUrl: string;
 }
 
-export enum Locale {
-  sv_SE = 'sv_SE',
-  en_SE = 'en_SE',
-  nb_NO = 'nb_NO',
-  en_NO = 'en_NO',
-  da_DK = 'da_DK',
-  en_DK = 'en_DK'
-}
-
 export interface Subscription {
   
   /**
@@ -1051,12 +1051,18 @@ export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insuran
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface QueryToCashbackArgs {
+  locale?: Locale;
+}
 export interface QueryToCashbackResolver<TParent = undefined, TResult = Cashback | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+  (parent: TParent, args: QueryToCashbackArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface QueryToCashbackOptionsArgs {
+  locale?: Locale;
+}
 export interface QueryToCashbackOptionsResolver<TParent = undefined, TResult = Array<Cashback | null>> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+  (parent: TParent, args: QueryToCashbackOptionsArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface QueryToSignStatusResolver<TParent = undefined, TResult = SignStatus | null> {
@@ -2353,6 +2359,7 @@ export interface MutationToUploadFilesResolver<TParent = undefined, TResult = Ar
 
 export interface MutationToSelectCashbackOptionArgs {
   id: string;
+  locale?: Locale;
 }
 export interface MutationToSelectCashbackOptionResolver<TParent = undefined, TResult = Cashback> {
   (parent: TParent, args: MutationToSelectCashbackOptionArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;

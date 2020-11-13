@@ -3,9 +3,15 @@ import { QueryToCashbackOptionsResolver } from './../typings/generated-graphql-t
 
 export const cashbackOptions: QueryToCashbackOptionsResolver = async (
   _root,
-  _args,
+  { locale },
   { getToken, headers },
 ) => {
   const token = getToken()
-  return getCashbackOptions(token, headers)
+
+  const headersAndLocale = {
+    ...headers,
+    Locale: locale
+  }
+
+  return getCashbackOptions(token, headersAndLocale)
 }

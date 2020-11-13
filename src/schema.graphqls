@@ -1,7 +1,7 @@
 type Query {
   insurance: Insurance! @deprecated(reason: "Use `contracts` instead")
-  cashback: Cashback
-  cashbackOptions: [Cashback]!
+  cashback(locale: Locale): Cashback
+  cashbackOptions(locale: Locale): [Cashback]!
   signStatus: SignStatus
   member: Member!
   gifs(query: String!): [Gif]!
@@ -24,7 +24,7 @@ type Mutation {
   signOfferV2(details: SignInput): BankIdSignResponse! @deprecated(reason: "Use Quotes instead")
   uploadFile(file: Upload!): File!
   uploadFiles(files: [Upload!]!): [File!]
-  selectCashbackOption(id: ID!): Cashback!
+  selectCashbackOption(id: ID!, locale: Locale): Cashback!
   offerClosed: Boolean! @deprecated(reason: "Use Quotes instead")
   startDirectDebitRegistration: URL!
   sendChatTextResponse(input: ChatResponseTextInput!): Boolean!
