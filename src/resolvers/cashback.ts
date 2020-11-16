@@ -1,4 +1,4 @@
-import { getCashbackOptions, getUser } from '../api'
+import { getCashbackOptions } from '../api'
 import { ForwardHeaders } from '../context'
 import {
   Cashback,
@@ -9,10 +9,9 @@ const cashbackInner = async (
   token: string,
   headers: ForwardHeaders,
 ): Promise<Cashback | null> => {
-  const user = await getUser(token, headers)
   const options = await getCashbackOptions(token, headers)
 
-  const cashback = options.find((c) => c.name === user.selectedCashback)
+  const cashback = options.find((c) => c.selected)
 
   if (!cashback) {
     return null
