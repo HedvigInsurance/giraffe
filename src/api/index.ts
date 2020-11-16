@@ -102,6 +102,7 @@ interface CashbackDto {
   imageUrl: string
   selectedUrl: string
   paragraph: string
+  selected: boolean
 }
 
 interface RegisterDirectDebitDto {
