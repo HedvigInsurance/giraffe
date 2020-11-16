@@ -16,7 +16,7 @@ const selectCashbackOption: MutationToSelectCashbackOptionResolver = async (
 
   const result = await setSelectedCashbackOption(token, headersAndLocale, id)
 
-  if (result === 204) {
+  if (result === 204 || result === 200) {
     const cashback = await cashbackInner(token, headers)
     if (cashback !== null) {
       return cashback
