@@ -18,6 +18,7 @@ interface ForwardHeaders {
   'X-Forwarded-For': string
   'X-Request-Id': string
   'Accept-Language': string
+  'Enable-Simple-Sign': string
 }
 
 const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
@@ -40,6 +41,7 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
       'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
       'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
       'Accept-Language': checkedCtx.get('accept-language'),
+      'Enable-Simple-Sign': checkedCtx.get('Enable-Simple-Sign'),
     },
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
@@ -65,6 +67,7 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
         ? (context.request.headers['x-request-id'] as string)
         : uuidv4(),
     'Accept-Language': context.request.headers['accept-language'] as string,
+    'Enable-Simple-Sign': context.request.headers['Enable-Simple-Sign'] as string,
   }
 
   return {
