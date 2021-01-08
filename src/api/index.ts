@@ -315,8 +315,6 @@ const signStatus = async (
       response.status <= 400 || response.status === 404,
   })
 
-  console.log("Sign status response: " + data.status + " json: " + data.json())
-
   if (data.status === 404) {
     return null
   }
