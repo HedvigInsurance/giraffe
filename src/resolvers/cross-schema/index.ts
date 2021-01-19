@@ -492,14 +492,14 @@ export const getCrossSchemaResolvers = (
           info,
         ) => {
           let locale;
-          const providers = actionData.providers?.toLowerCase()
-          if (providers == null) {
+          const providers = actionData.providers ? actionData.providers.toLowerCase() : null
+          if (providers === null) {
             locale = "en_SE"
           } else if (providers === "swedish") {
             locale = "en_SE"
-          } else if (providers == "norwegian") {
+          } else if (providers === "norwegian") {
             locale = "en_NO"
-          } else if (providers == "danish") {
+          } else if (providers === "danish") {
             locale = "en_DK"
           } else {
             throw Error(`No provider matches ${providers}`)
