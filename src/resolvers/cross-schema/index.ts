@@ -27,6 +27,10 @@ export const crossSchemaExtensions = `
     termsAndConditions(locale: Locale!): InsuranceTerm!
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
+
+  extend type EmbarkPreviousInsuranceProviderActionData {
+    insuranceProviders: [InsuranceProvider!]!
+  }
 `
 
 const getCoveredIds = (category: KeyGearItemCategory) => {
@@ -478,5 +482,45 @@ export const getCrossSchemaResolvers = (
         },
       },
     },
+    EmbarkPreviousInsuranceProviderActionData: {
+      insuranceProviders: {
+        fragment: `fragment EmbarkPreviousInsuranceProviderActionDataCrossSchemaFragment on EmbarkPreviousInsuranceProviderActionData { providers }`,
+        resolve: (
+          actionData: EmbarkPreviousInsuranceProviderActionData,
+          _args: any,
+          context,
+          info,
+        ) => {
+          let locale;
+          const providers = actionData.providers?.toLowerCase()
+          if (providers == null) {
+            locale = "en_SE"
+          } else if (providers === "swedish") {
+            locale = "en_SE"
+          } else if (providers == "norwegian") {
+            locale = "en_NO"
+          } else if (providers == "danish") {
+            locale = "en_DK"
+          } else {
+            throw Error(`No provider matches ${providers}`)
+          }
+
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'insuranceProviders',
+            args: {
+              locale,
+            },
+            context,
+            info
+          })
+        }
+      }
+    }
   }
+}
+
+interface EmbarkPreviousInsuranceProviderActionData {
+  providers: string | null
 }
