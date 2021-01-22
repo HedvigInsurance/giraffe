@@ -44,7 +44,7 @@ type Mutation {
   log(input: LoggingInput!): Boolean
   bankIdAuth: BankIdAuthResponse! @deprecated(reason: "Use `swedishBankIdAuth`.")
   swedishBankIdAuth: BankIdAuthResponse!
-  norwegianBankIdAuth: NorwegianBankIdAuthResponse!
+  norwegianBankIdAuth(personalNumber: String): NorwegianBankIdAuthResponse!
   danishBankIdAuth: DanishBankIdAuthResponse!
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
