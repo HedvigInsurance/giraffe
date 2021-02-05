@@ -770,7 +770,7 @@ const norwegianAuthMember = (
       mergeOptions: {
         headers: (headers as any) as RequestInit['headers'],
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify({...body, token}),
       },
       token,
     }).then((res) => res.json())
@@ -784,7 +784,7 @@ const danishAuthMember = (
       mergeOptions: {
         headers: (headers as any) as RequestInit['headers'],
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify({...body, token}),
       },
       token,
     }).then((res) => res.json())
