@@ -12,7 +12,7 @@ type Query {
   avatars: [Avatar]
   chatActions: [ChatAction]
   geo: Geo!
-  angelStory(name: String!): AngelStory
+  angelStory(name: String!, locale: String): AngelStory
 }
 
 type Mutation {

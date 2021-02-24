@@ -39,6 +39,9 @@ const handleError = (error: GraphQLError): void => {
   )
 }
 
+logger.info('Starting Giraffe 🦒')
+logger.info('Making schema')
+
 makeSchema()
   .then(({ schema, graphCMSSchema }) => {
     logger.info('Schema initialized')
