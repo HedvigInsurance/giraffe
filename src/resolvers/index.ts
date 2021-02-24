@@ -67,6 +67,7 @@ import { selectCashbackOption } from './selectCashbackOption'
 import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
+import { createSelfChangeQuote } from './selfChange'
 
 const resolvers: Resolver = {
   Query: {
@@ -119,6 +120,7 @@ const resolvers: Resolver = {
     registerBranchCampaign,
     updateLanguage,
     updatePickedLocale,
+    createSelfChangeQuote
   },
   Subscription: {
     offer: subscribeToOffer,

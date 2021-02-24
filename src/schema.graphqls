@@ -49,6 +49,7 @@ type Mutation {
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
   updatePickedLocale(pickedLocale: Locale!): Member!
+  createSelfChangeQuote(quoteInput: SelfChangeQuoteInput!): Member!
 }
 
 enum Locale {
@@ -322,6 +323,22 @@ input CampaignInput {
   term: String
   content: String
   name: String
+}
+
+input SelfChangeQuoteInput {
+  # id: ID!
+  # currentInsurer: String
+  # startDate: LocalDate
+  # swedishApartment: CreateSwedishApartmentInput
+  # swedishHouse: CreateSwedishHouseInput
+  # norwegianHomeContents: CreateNorwegianHomeContentsInput
+  # norwegianTravel: CreateNorwegianTravelInput
+  # danishHomeContents: CreateDanishHomeContentsInput
+  # danishAccident: CreateDanishAccidentInput
+  # danishTravel: CreateDanishTravelInput
+  email: String!
+  # dataCollectionId: ID
+  # phoneNumber: String
 }
 
 enum LoggingSource {

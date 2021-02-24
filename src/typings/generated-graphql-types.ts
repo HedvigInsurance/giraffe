@@ -761,6 +761,7 @@ export interface Mutation {
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
   updatePickedLocale: Member;
+  createSelfChangeQuote: Member;
 }
 
 export interface CampaignInput {
@@ -878,6 +879,10 @@ export interface NorwegianBankIdAuthResponse {
 
 export interface DanishBankIdAuthResponse {
   redirectUrl: string;
+}
+
+export interface SelfChangeQuoteInput {
+  email: string;
 }
 
 export interface Subscription {
@@ -2304,6 +2309,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
   updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
+  createSelfChangeQuote?: MutationToCreateSelfChangeQuoteResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2501,6 +2507,13 @@ export interface MutationToUpdatePickedLocaleArgs {
 }
 export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResult = Member> {
   (parent: TParent, args: MutationToUpdatePickedLocaleArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface MutationToCreateSelfChangeQuoteArgs {
+  quoteInput: SelfChangeQuoteInput;
+}
+export interface MutationToCreateSelfChangeQuoteResolver<TParent = undefined, TResult = Member> {
+  (parent: TParent, args: MutationToCreateSelfChangeQuoteArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
