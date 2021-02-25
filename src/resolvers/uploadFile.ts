@@ -72,7 +72,7 @@ const uploadFileInner = (file: any, memberId: string) => {
     s3.upload(params, UPLOAD_OPTIONS, (err) => {
       if (err) {
         logger.error('Got error when attempting to upload error: ', err)
-        resolve(undefined)
+        throw new Error("Got error when attempting to upload error")
       } else {
         const signedUrl = s3.getSignedUrl('getObject', {
           Bucket: AWS_S3_BUCKET,
