@@ -10,6 +10,7 @@ export const crossSchemaExtensions = `
   extend type Contract {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
+    termsAndConditions(locale: Locale!): InsuranceTerm!
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
 
@@ -267,6 +268,27 @@ export const getCrossSchemaResolvers = (
             schema: contentSchema,
             operation: 'query',
             fieldName: 'insurableLimits',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      termsAndConditions: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (
+          contract: Contract,
+          args: TermsAndConditionsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: contentSchema,
+            operation: 'query',
+            fieldName: 'termsAndConditions',
             args: {
               contractType: contract.typeOfContract,
               locale: args.locale,
