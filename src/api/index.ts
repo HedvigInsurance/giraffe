@@ -168,6 +168,74 @@ interface PushTokenDto {
   token: string
 }
 
+interface CreateSelfChangeQuoteDto {
+  firstName: string
+  lastName: string
+  email?: string
+  ssn?: string
+  startDate: string
+  swedishApartment?: {
+    street: string
+    zipCode: string
+    householdSize: number
+    livingSpace: number
+    type: string
+  }
+  swedishHouse?: {
+    street: string
+    zipCode: string
+    householdSize: number
+    livingSpace: number
+    ancillarySpace: number
+    yearOfConstruction: number
+    numberOfBathrooms: number
+    isSubleted: boolean
+    extraBuildings: {
+      type: string
+      area: number
+      hasWaterConnected: boolean
+    }[]
+  }
+  norwegianHomeContents?: {
+    street: string
+    zipCode: string
+    coInsured: number
+    livingSpace: number
+    isYouth: boolean
+    type: string
+  }
+  norwegianTravel?: {
+    coInsured: number
+    isYouth: boolean
+  }
+  danishHomeContents?: {
+    street: string
+    zipCode: string
+    livingSpace: number
+    coInsured: number
+    isStudent: boolean
+    type: string
+  }
+  danishAccident?: {
+    street: string
+    zipCode: string
+    coInsured: number
+    isStudent: boolean
+  }
+  danishTravel?: {
+    street: string
+    zipCode: string
+    coInsured: number
+    isStudent: boolean
+  }
+}
+
+interface CompleteQuoteResponseDto {
+  id: string
+  price: number
+  validTo: string
+}
+
 type CallApi = (
   url: string,
   options?: {
@@ -820,6 +888,20 @@ const isEligibleForReferrals = async (
     return json.eligible
   }
 
+const postSelfChangeQuote = async (
+  body: CreateSelfChangeQuoteDto,
+  headers: ForwardHeaders,
+): Promise<CompleteQuoteResponseDto> => {
+  const data = await callApi("/underwriter/_/v1/quotes", {
+    mergeOptions: {
+      headers: (headers as any) as RequestInit['headers'],
+      method: 'POST',
+      body: JSON.stringify(body),
+    }
+  })
+  return data.json()
+}
+
 export {
   setChatResponse,
   getInsurance,
@@ -855,4 +937,5 @@ export {
   postLanguage,
   postPickedLocale,
   isEligibleForReferrals,
+  postSelfChangeQuote,
 }
