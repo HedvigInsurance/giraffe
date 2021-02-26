@@ -353,7 +353,7 @@ input SelfChangeCreateSwedishHouseInput {
     yearOfConstruction: Int!
     numberOfBathrooms: Int!
     isSubleted: Boolean!
-    extraBuildings: [ExtraBuildingInput!]! # Empty list represents no additional buildings. Hence null is not allowed.
+    extraBuildings: [SelfChangeExtraBuildingInput!]! # Empty list represents no additional buildings. Hence null is not allowed.
 }
 
 enum SelfChangeSwedishApartmentType {
@@ -363,13 +363,13 @@ enum SelfChangeSwedishApartmentType {
     BRF
 }
 
-input ExtraBuildingInput {
-    type: ExtraBuildingType!
+input SelfChangeExtraBuildingInput {
+    type: SelfChangeExtraBuildingType!
     area: Int!
     hasWaterConnected: Boolean!
 }
 
-enum ExtraBuildingType {
+enum SelfChangeExtraBuildingType {
     GARAGE
     CARPORT
     SHED

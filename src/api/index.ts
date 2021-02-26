@@ -168,28 +168,28 @@ interface PushTokenDto {
   token: string
 }
 
-interface CreateSelfChangeQuoteDto {
+interface CreateQuoteDto {
   firstName: string
   lastName: string
   email?: string
   ssn?: string
   startDate: string
-  swedishApartment?: {
+  incompleteApartmentQuoteData?: {
     street: string
     zipCode: string
     householdSize: number
     livingSpace: number
-    type: string
+    subType: string
   }
-  swedishHouse?: {
+  incompleteHouseQuoteData?: {
     street: string
     zipCode: string
     householdSize: number
     livingSpace: number
-    ancillarySpace: number
+    ancillaryArea: number
     yearOfConstruction: number
     numberOfBathrooms: number
-    isSubleted: boolean
+    subleted: boolean
     extraBuildings: {
       type: string
       area: number
@@ -201,32 +201,32 @@ interface CreateSelfChangeQuoteDto {
     zipCode: string
     coInsured: number
     livingSpace: number
-    isYouth: boolean
-    type: string
+    youth: boolean
+    subType: string
   }
   norwegianTravel?: {
     coInsured: number
-    isYouth: boolean
+    youth: boolean
   }
   danishHomeContents?: {
     street: string
     zipCode: string
     livingSpace: number
     coInsured: number
-    isStudent: boolean
-    type: string
+    student: boolean
+    subType: string
   }
   danishAccident?: {
     street: string
     zipCode: string
     coInsured: number
-    isStudent: boolean
+    student: boolean
   }
   danishTravel?: {
     street: string
     zipCode: string
     coInsured: number
-    isStudent: boolean
+    student: boolean
   }
 }
 
@@ -889,7 +889,7 @@ const isEligibleForReferrals = async (
   }
 
 const postSelfChangeQuote = async (
-  body: CreateSelfChangeQuoteDto,
+  body: CreateQuoteDto,
   headers: ForwardHeaders,
 ): Promise<CompleteQuoteResponseDto> => {
   const data = await callApi("/underwriter/_/v1/quotes", {
@@ -906,6 +906,7 @@ export {
   setChatResponse,
   getInsurance,
   getUser,
+  UserDto,
   logoutUser,
   register,
   createProduct,
@@ -938,4 +939,5 @@ export {
   postPickedLocale,
   isEligibleForReferrals,
   postSelfChangeQuote,
+  CreateQuoteDto,
 }

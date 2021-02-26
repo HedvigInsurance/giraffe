@@ -916,16 +916,16 @@ export interface SelfChangeCreateSwedishHouseInput {
   yearOfConstruction: number;
   numberOfBathrooms: number;
   isSubleted: boolean;
-  extraBuildings: Array<ExtraBuildingInput>;
+  extraBuildings: Array<SelfChangeExtraBuildingInput>;
 }
 
-export interface ExtraBuildingInput {
-  type: ExtraBuildingType;
+export interface SelfChangeExtraBuildingInput {
+  type: SelfChangeExtraBuildingType;
   area: number;
   hasWaterConnected: boolean;
 }
 
-export enum ExtraBuildingType {
+export enum SelfChangeExtraBuildingType {
   GARAGE = 'GARAGE',
   CARPORT = 'CARPORT',
   SHED = 'SHED',
