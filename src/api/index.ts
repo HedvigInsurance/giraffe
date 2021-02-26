@@ -63,6 +63,7 @@ interface UserDto {
   selectedCashback: string
   selectedCashbackImageUrl: string
   ssn: string
+  birthDate: string
 }
 
 interface SignDto {
@@ -169,19 +170,20 @@ interface PushTokenDto {
 }
 
 interface CreateQuoteDto {
+  memberId: String
   firstName: string
   lastName: string
-  email?: string
-  ssn?: string
+  ssn: string
+  birthDate: string
   startDate: string
-  incompleteApartmentQuoteData?: {
+  swedishApartmentData?: {
     street: string
     zipCode: string
     householdSize: number
     livingSpace: number
     subType: string
   }
-  incompleteHouseQuoteData?: {
+  swedishHouseData?: {
     street: string
     zipCode: string
     householdSize: number
@@ -196,7 +198,7 @@ interface CreateQuoteDto {
       hasWaterConnected: boolean
     }[]
   }
-  norwegianHomeContents?: {
+  norwegianHomeContentsData?: {
     street: string
     zipCode: string
     coInsured: number
@@ -204,11 +206,11 @@ interface CreateQuoteDto {
     youth: boolean
     subType: string
   }
-  norwegianTravel?: {
+  norwegianTravelData?: {
     coInsured: number
     youth: boolean
   }
-  danishHomeContents?: {
+  danishHomeContentsData?: {
     street: string
     zipCode: string
     livingSpace: number
@@ -216,13 +218,13 @@ interface CreateQuoteDto {
     student: boolean
     subType: string
   }
-  danishAccident?: {
+  danishAccidentData?: {
     street: string
     zipCode: string
     coInsured: number
     student: boolean
   }
-  danishTravel?: {
+  danishTravelData?: {
     street: string
     zipCode: string
     coInsured: number
