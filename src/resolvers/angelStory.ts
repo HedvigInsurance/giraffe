@@ -7,10 +7,14 @@ const logger = factory.getLogger('angelStory')
 
 export const angelStory: QueryToAngelStoryResolver = async (
   _parent,
-  { name },
+  { name, locale },
 ) => {
   try {
-    const story = await fetch(`${config.ANGEL_URL}angel-data?name=${name}`)
+    const story = await fetch(
+      `${config.ANGEL_URL}angel-data?name=${encodeURIComponent(
+        name,
+      )}&locale=${encodeURIComponent(locale || '')}`,
+    )
     return {
       content: await story.text(),
     }
