@@ -4,15 +4,14 @@ import { SelfChangeQuoteOutput, MutationToCreateSelfChangeQuoteResolver, SelfCha
 
 const createSelfChangeQuote: MutationToCreateSelfChangeQuoteResolver = async (
     _parent,
-    _args,
+    args,
     { getToken, headers },
 ): Promise<SelfChangeQuoteOutput> => {
-    const input = _args.quoteInput
     const token = getToken()
     const member = await getUser(token, headers)
-    console.log(member);
     const result = await postSelfChangeQuote(
-        buildUpstreamBody(member, input),
+        buildUpstreamBody(member, args.quoteInput),
+        token,
         headers
     )
 

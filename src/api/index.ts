@@ -892,14 +892,16 @@ const isEligibleForReferrals = async (
 
 const postSelfChangeQuote = async (
   body: CreateQuoteDto,
+  token: string,
   headers: ForwardHeaders,
 ): Promise<CompleteQuoteResponseDto> => {
-  const data = await callApi("/underwriter/_/v1/quotes", {
+  const data = await callApi("/underwriter/quotes", {
     mergeOptions: {
       headers: (headers as any) as RequestInit['headers'],
       method: 'POST',
       body: JSON.stringify(body),
-    }
+    },
+    token
   })
   return data.json()
 }
