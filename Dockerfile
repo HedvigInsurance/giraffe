@@ -1,21 +1,29 @@
-FROM node:10.12.0-alpine
+FROM node:10.12.0-alpine AS dependencies
 WORKDIR /usr/src/app
 
 ADD package.json .
 ADD yarn.lock .
 RUN yarn install
 
+
+FROM dependencies AS build
+
 ADD . .
 
 RUN yarn build
 
-FROM node:10.12.0-alpine
+
+FROM scratch AS test
+
+
+FROM node:10.12.0-alpine AS assemble
 WORKDIR /usr/src/app
 
 COPY package.json .
 COPY yarn.lock .
-COPY --from=0 /usr/src/app/dist dist
-
 RUN yarn install --production
+
+COPY --from=build /usr/src/app/dist dist
+
 
 ENTRYPOINT ["yarn", "start"]
