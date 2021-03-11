@@ -49,6 +49,7 @@ type Mutation {
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
   updatePickedLocale(pickedLocale: Locale!): Member!
+  createSelfChangeQuote(quoteInput: SelfChangeQuoteInput!): SelfChangeQuoteOutput!
 }
 
 enum Locale {
@@ -322,6 +323,120 @@ input CampaignInput {
   term: String
   content: String
   name: String
+}
+
+input SelfChangeQuoteInput {
+  startDate: LocalDate!
+  swedishApartment: SelfChangeCreateSwedishApartmentInput
+  swedishHouse: SelfChangeCreateSwedishHouseInput
+  norwegianHomeContents: SelfChangeCreateNorwegianHomeContentsInput
+  norwegianTravel: SelfChangeCreateNorwegianTravelInput
+  danishHomeContents: SelfChangeCreateDanishHomeContentsInput
+  danishAccident: SelfChangeCreateDanishAccidentInput
+  danishTravel: SelfChangeCreateDanishTravelInput
+}
+
+input SelfChangeCreateSwedishApartmentInput {
+    street: String!
+    zipCode: String!
+    householdSize: Int!
+    livingSpace: Int!
+    type: SelfChangeSwedishApartmentType!
+}
+
+input SelfChangeCreateSwedishHouseInput {
+    street: String!
+    zipCode: String!
+    householdSize: Int!
+    livingSpace: Int!
+    ancillarySpace: Int!
+    yearOfConstruction: Int!
+    numberOfBathrooms: Int!
+    isSubleted: Boolean!
+    extraBuildings: [SelfChangeExtraBuildingInput!]! # Empty list represents no additional buildings. Hence null is not allowed.
+}
+
+enum SelfChangeSwedishApartmentType {
+    STUDENT_RENT
+    RENT
+    STUDENT_BRF
+    BRF
+}
+
+input SelfChangeExtraBuildingInput {
+    type: SelfChangeExtraBuildingType!
+    area: Int!
+    hasWaterConnected: Boolean!
+}
+
+enum SelfChangeExtraBuildingType {
+    GARAGE
+    CARPORT
+    SHED
+    STOREHOUSE
+    FRIGGEBOD
+    ATTEFALL
+    OUTHOUSE
+    GUESTHOUSE
+    GAZEBO
+    GREENHOUSE
+    SAUNA
+    BARN
+    BOATHOUSE
+    OTHER
+}
+
+input SelfChangeCreateNorwegianHomeContentsInput {
+    street: String!
+    zipCode: String!
+    coInsured: Int!
+    livingSpace: Int!
+    isYouth: Boolean!
+    type: SelfChangeNorwegianHomeContentsType!
+}
+
+enum SelfChangeNorwegianHomeContentsType {
+    RENT
+    OWN
+}
+
+input SelfChangeCreateNorwegianTravelInput {
+    coInsured: Int!
+    isYouth: Boolean!
+}
+
+input SelfChangeCreateDanishHomeContentsInput {
+    street: String!
+    zipCode: String!
+    livingSpace: Int!
+    coInsured: Int!
+    isStudent: Boolean!
+    type: SelfChangeDanishHomeContentsType!
+}
+
+input SelfChangeCreateDanishAccidentInput {
+    street: String!
+    zipCode: String!
+    coInsured: Int!
+    isStudent: Boolean!
+}
+
+input SelfChangeCreateDanishTravelInput {
+    street: String!
+    zipCode: String!
+    coInsured: Int!
+    isStudent: Boolean!
+}
+
+enum SelfChangeDanishHomeContentsType {
+    RENT
+    OWN
+}
+
+type SelfChangeQuoteOutput {
+  id: ID!
+  price: Int!
+  validTo: TimeStamp!
 }
 
 enum LoggingSource {

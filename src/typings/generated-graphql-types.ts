@@ -761,6 +761,7 @@ export interface Mutation {
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
   updatePickedLocale: Member;
+  createSelfChangeQuote: SelfChangeQuoteOutput;
 }
 
 export interface CampaignInput {
@@ -878,6 +879,120 @@ export interface NorwegianBankIdAuthResponse {
 
 export interface DanishBankIdAuthResponse {
   redirectUrl: string;
+}
+
+export interface SelfChangeQuoteInput {
+  startDate: LocalDate;
+  swedishApartment?: SelfChangeCreateSwedishApartmentInput;
+  swedishHouse?: SelfChangeCreateSwedishHouseInput;
+  norwegianHomeContents?: SelfChangeCreateNorwegianHomeContentsInput;
+  norwegianTravel?: SelfChangeCreateNorwegianTravelInput;
+  danishHomeContents?: SelfChangeCreateDanishHomeContentsInput;
+  danishAccident?: SelfChangeCreateDanishAccidentInput;
+  danishTravel?: SelfChangeCreateDanishTravelInput;
+}
+
+export interface SelfChangeCreateSwedishApartmentInput {
+  street: string;
+  zipCode: string;
+  householdSize: number;
+  livingSpace: number;
+  type: SelfChangeSwedishApartmentType;
+}
+
+export enum SelfChangeSwedishApartmentType {
+  STUDENT_RENT = 'STUDENT_RENT',
+  RENT = 'RENT',
+  STUDENT_BRF = 'STUDENT_BRF',
+  BRF = 'BRF'
+}
+
+export interface SelfChangeCreateSwedishHouseInput {
+  street: string;
+  zipCode: string;
+  householdSize: number;
+  livingSpace: number;
+  ancillarySpace: number;
+  yearOfConstruction: number;
+  numberOfBathrooms: number;
+  isSubleted: boolean;
+  extraBuildings: Array<SelfChangeExtraBuildingInput>;
+}
+
+export interface SelfChangeExtraBuildingInput {
+  type: SelfChangeExtraBuildingType;
+  area: number;
+  hasWaterConnected: boolean;
+}
+
+export enum SelfChangeExtraBuildingType {
+  GARAGE = 'GARAGE',
+  CARPORT = 'CARPORT',
+  SHED = 'SHED',
+  STOREHOUSE = 'STOREHOUSE',
+  FRIGGEBOD = 'FRIGGEBOD',
+  ATTEFALL = 'ATTEFALL',
+  OUTHOUSE = 'OUTHOUSE',
+  GUESTHOUSE = 'GUESTHOUSE',
+  GAZEBO = 'GAZEBO',
+  GREENHOUSE = 'GREENHOUSE',
+  SAUNA = 'SAUNA',
+  BARN = 'BARN',
+  BOATHOUSE = 'BOATHOUSE',
+  OTHER = 'OTHER'
+}
+
+export interface SelfChangeCreateNorwegianHomeContentsInput {
+  street: string;
+  zipCode: string;
+  coInsured: number;
+  livingSpace: number;
+  isYouth: boolean;
+  type: SelfChangeNorwegianHomeContentsType;
+}
+
+export enum SelfChangeNorwegianHomeContentsType {
+  RENT = 'RENT',
+  OWN = 'OWN'
+}
+
+export interface SelfChangeCreateNorwegianTravelInput {
+  coInsured: number;
+  isYouth: boolean;
+}
+
+export interface SelfChangeCreateDanishHomeContentsInput {
+  street: string;
+  zipCode: string;
+  livingSpace: number;
+  coInsured: number;
+  isStudent: boolean;
+  type: SelfChangeDanishHomeContentsType;
+}
+
+export enum SelfChangeDanishHomeContentsType {
+  RENT = 'RENT',
+  OWN = 'OWN'
+}
+
+export interface SelfChangeCreateDanishAccidentInput {
+  street: string;
+  zipCode: string;
+  coInsured: number;
+  isStudent: boolean;
+}
+
+export interface SelfChangeCreateDanishTravelInput {
+  street: string;
+  zipCode: string;
+  coInsured: number;
+  isStudent: boolean;
+}
+
+export interface SelfChangeQuoteOutput {
+  id: string;
+  price: number;
+  validTo: TimeStamp;
 }
 
 export interface Subscription {
@@ -1025,6 +1140,7 @@ export interface Resolver {
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
   NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
   DanishBankIdAuthResponse?: DanishBankIdAuthResponseTypeResolver;
+  SelfChangeQuoteOutput?: SelfChangeQuoteOutputTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -2305,6 +2421,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
   updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
+  createSelfChangeQuote?: MutationToCreateSelfChangeQuoteResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2504,6 +2621,13 @@ export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResu
   (parent: TParent, args: MutationToUpdatePickedLocaleArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToCreateSelfChangeQuoteArgs {
+  quoteInput: SelfChangeQuoteInput;
+}
+export interface MutationToCreateSelfChangeQuoteResolver<TParent = undefined, TResult = SelfChangeQuoteOutput> {
+  (parent: TParent, args: MutationToCreateSelfChangeQuoteArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
   token?: SessionInformationToTokenResolver<TParent>;
   memberId?: SessionInformationToMemberIdResolver<TParent>;
@@ -2551,6 +2675,24 @@ export interface DanishBankIdAuthResponseTypeResolver<TParent = DanishBankIdAuth
 }
 
 export interface DanishBankIdAuthResponseToRedirectUrlResolver<TParent = DanishBankIdAuthResponse, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeQuoteOutputTypeResolver<TParent = SelfChangeQuoteOutput> {
+  id?: SelfChangeQuoteOutputToIdResolver<TParent>;
+  price?: SelfChangeQuoteOutputToPriceResolver<TParent>;
+  validTo?: SelfChangeQuoteOutputToValidToResolver<TParent>;
+}
+
+export interface SelfChangeQuoteOutputToIdResolver<TParent = SelfChangeQuoteOutput, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeQuoteOutputToPriceResolver<TParent = SelfChangeQuoteOutput, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeQuoteOutputToValidToResolver<TParent = SelfChangeQuoteOutput, TResult = TimeStamp> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
