@@ -1229,6 +1229,7 @@ export interface QueryToGeoResolver<TParent = undefined, TResult = Geo> {
 
 export interface QueryToAngelStoryArgs {
   name: string;
+  locale?: string;
 }
 export interface QueryToAngelStoryResolver<TParent = undefined, TResult = AngelStory | null> {
   (parent: TParent, args: QueryToAngelStoryArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
