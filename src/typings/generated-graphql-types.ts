@@ -2596,8 +2596,11 @@ export interface MutationToNorwegianBankIdAuthResolver<TParent = undefined, TRes
   (parent: TParent, args: MutationToNorwegianBankIdAuthArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToDanishBankIdAuthArgs {
+  personalNumber: string;
+}
 export interface MutationToDanishBankIdAuthResolver<TParent = undefined, TResult = DanishBankIdAuthResponse> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+  (parent: TParent, args: MutationToDanishBankIdAuthArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface MutationToRegisterBranchCampaignArgs {

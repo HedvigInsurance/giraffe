@@ -45,11 +45,11 @@ const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async (
 
 const danishBankIdAuth: MutationToDanishBankIdAuthResolver = async (
   _parent,
-  _args,
+  { personalNumber },
   { headers, getToken },
 ) => {
   const token = getToken()
-  const danishAuthResult = await danishAuthMember(token, headers, { personalNumber: null })
+  const danishAuthResult = await danishAuthMember(token, headers, { personalNumber: personalNumber })
   const redirectUrl = danishAuthResult.redirectUrl
 
   return {
