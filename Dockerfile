@@ -13,7 +13,7 @@ ADD . .
 RUN yarn build
 
 
-FROM scratch AS test
+FROM build AS test
 
 
 FROM node:10.12.0-alpine AS assemble
