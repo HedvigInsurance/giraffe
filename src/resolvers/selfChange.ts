@@ -1,6 +1,23 @@
 
 import { getUser, UserDto, postSelfChangeQuote, CreateQuoteDto } from '../api'
-import { SelfChangeQuoteOutput, MutationToCreateSelfChangeQuoteResolver, SelfChangeQuoteInput } from '../typings/generated-graphql-types'
+import {
+    SelfChangeQuoteOutput,
+    MutationToCreateSelfChangeQuoteResolver,
+    QueryToSelfChangeEligibilityResolver,
+    SelfChangeQuoteInput,
+    SelfChangeEligibility
+} from '../typings/generated-graphql-types'
+
+const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
+    _parent,
+    _args,
+    _context,
+): Promise<SelfChangeEligibility> => {
+    return {
+        blockers: [],
+        embarkStoryId: "Web Onboarding - Swedish Needer" // TODO use the correct one, but this is at least a real Embark story
+    }
+}
 
 const createSelfChangeQuote: MutationToCreateSelfChangeQuoteResolver = async (
     _parent,
@@ -66,4 +83,4 @@ const buildUpstreamBody = (member: UserDto, input: SelfChangeQuoteInput): Create
     }
 }
 
-export { createSelfChangeQuote };
+export { selfChangeEligibility, createSelfChangeQuote };

@@ -13,6 +13,8 @@ type Query {
   chatActions: [ChatAction]
   geo: Geo!
   angelStory(name: String!, locale: String): AngelStory
+  """Returns a type describing whether the 'Self Change' functionality is possible."""
+  selfChangeEligibility: SelfChangeEligibility!
 }
 
 type Mutation {
@@ -323,6 +325,34 @@ input CampaignInput {
   term: String
   content: String
   name: String
+}
+
+type SelfChangeEligibility {
+    """A list of reasons for why 'Self Change' is not possible - if empty 'Self Change' can be done."""
+    blockers: [SelfChangeBlocker!]! @deprecated(reason: "Use embarkStoryId to determine if it is eligible or not")
+    embarkStoryId: ID
+}
+
+"""These types represent reasons for why the self-change flow cannot be run."""
+enum SelfChangeBlocker {
+    """Member has no contracts - changing them makes no sense."""
+    NO_CONTRACTS
+    """Member has at least one contract that is not supported at this time"""
+    UNSUPPORTED_CONTRACT
+    """Contract is still pending, it can't be changed until it is active."""
+    STILL_PENDING
+    """Contract has a termination date set."""
+    HAS_TERMINATION
+    """Contract is already undergoing future changes."""
+    HAS_FUTURE_CHANGES
+    """Contract is not currently active."""
+    NOT_ACTIVE_TODAY
+    """Member has multiple contracts with mismatching number of co-insured."""
+    COINSURED_MISMATCH
+    """Member has multiple contracts with mismatching 'youth' status."""
+    YOUTH_MISMATCH
+    """Member has too many contracts."""
+    TOO_MANY_CONTRACTS
 }
 
 input SelfChangeQuoteInput {

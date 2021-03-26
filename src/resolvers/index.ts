@@ -67,7 +67,7 @@ import { selectCashbackOption } from './selectCashbackOption'
 import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
-import { createSelfChangeQuote } from './selfChange'
+import { selfChangeEligibility, createSelfChangeQuote } from './selfChange'
 
 const resolvers: Resolver = {
   Query: {
@@ -85,6 +85,7 @@ const resolvers: Resolver = {
     chatActions,
     geo,
     angelStory,
+    selfChangeEligibility,
   },
   Mutation: {
     logout,
