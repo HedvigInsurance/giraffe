@@ -32,6 +32,11 @@ export interface Query {
   chatActions?: Array<ChatAction | null>;
   geo: Geo;
   angelStory?: AngelStory;
+  
+  /**
+   * Returns a type describing whether the 'Self Change' functionality is possible.
+   */
+  selfChangeEligibility: SelfChangeEligibility;
 }
 
 export interface Insurance {
@@ -702,6 +707,67 @@ export interface AngelStory {
   content: string;
 }
 
+export interface SelfChangeEligibility {
+  
+  /**
+   * A list of reasons for why 'Self Change' is not possible - if empty 'Self Change' can be done.
+   * @deprecated Use embarkStoryId to determine if it is eligible or not
+   */
+  blockers: Array<SelfChangeBlocker>;
+  embarkStoryId?: string;
+}
+
+/**
+ * These types represent reasons for why the self-change flow cannot be run.
+ */
+export enum SelfChangeBlocker {
+  
+  /**
+   * Member has no contracts - changing them makes no sense.
+   */
+  NO_CONTRACTS = 'NO_CONTRACTS',
+  
+  /**
+   * Member has at least one contract that is not supported at this time
+   */
+  UNSUPPORTED_CONTRACT = 'UNSUPPORTED_CONTRACT',
+  
+  /**
+   * Contract is still pending, it can't be changed until it is active.
+   */
+  STILL_PENDING = 'STILL_PENDING',
+  
+  /**
+   * Contract has a termination date set.
+   */
+  HAS_TERMINATION = 'HAS_TERMINATION',
+  
+  /**
+   * Contract is already undergoing future changes.
+   */
+  HAS_FUTURE_CHANGES = 'HAS_FUTURE_CHANGES',
+  
+  /**
+   * Contract is not currently active.
+   */
+  NOT_ACTIVE_TODAY = 'NOT_ACTIVE_TODAY',
+  
+  /**
+   * Member has multiple contracts with mismatching number of co-insured.
+   */
+  COINSURED_MISMATCH = 'COINSURED_MISMATCH',
+  
+  /**
+   * Member has multiple contracts with mismatching 'youth' status.
+   */
+  YOUTH_MISMATCH = 'YOUTH_MISMATCH',
+  
+  /**
+   * Member has too many contracts.
+   */
+  TOO_MANY_CONTRACTS = 'TOO_MANY_CONTRACTS'
+}
+
 export interface Mutation {
   logout: boolean;
   createSession: string;
@@ -1130,6 +1196,7 @@ export interface Resolver {
   URL?: GraphQLScalarType;
   Geo?: GeoTypeResolver;
   AngelStory?: AngelStoryTypeResolver;
+  SelfChangeEligibility?: SelfChangeEligibilityTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
   SessionInformation?: SessionInformationTypeResolver;
@@ -1161,6 +1228,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   chatActions?: QueryToChatActionsResolver<TParent>;
   geo?: QueryToGeoResolver<TParent>;
   angelStory?: QueryToAngelStoryResolver<TParent>;
+  selfChangeEligibility?: QueryToSelfChangeEligibilityResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -1233,6 +1301,10 @@ export interface QueryToAngelStoryArgs {
 }
 export interface QueryToAngelStoryResolver<TParent = undefined, TResult = AngelStory | null> {
   (parent: TParent, args: QueryToAngelStoryArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToSelfChangeEligibilityResolver<TParent = undefined, TResult = SelfChangeEligibility> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTypeResolver<TParent = Insurance> {
@@ -2384,6 +2456,19 @@ export interface AngelStoryTypeResolver<TParent = AngelStory> {
 }
 
 export interface AngelStoryToContentResolver<TParent = AngelStory, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeEligibilityTypeResolver<TParent = SelfChangeEligibility> {
+  blockers?: SelfChangeEligibilityToBlockersResolver<TParent>;
+  embarkStoryId?: SelfChangeEligibilityToEmbarkStoryIdResolver<TParent>;
+}
+
+export interface SelfChangeEligibilityToBlockersResolver<TParent = SelfChangeEligibility, TResult = Array<SelfChangeBlocker>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeEligibilityToEmbarkStoryIdResolver<TParent = SelfChangeEligibility, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
