@@ -1,5 +1,5 @@
 
-import { getUser, UserDto, postSelfChangeQuote, CreateQuoteDto } from '../api'
+import { getUser, UserDto, getContractMarketInfo, getSelfChangeEligibility, postSelfChangeQuote, CreateQuoteDto } from '../api'
 import {
     SelfChangeQuoteOutput,
     MutationToCreateSelfChangeQuoteResolver,
@@ -11,11 +11,24 @@ import {
 const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
     _parent,
     _args,
-    _context,
+    { getToken, headers },
 ): Promise<SelfChangeEligibility> => {
+    const token = getToken()
+
+    const eligibility = await getSelfChangeEligibility(token, headers)
+    const isEligible = eligibility.blockers.length == 0
+    if (!isEligible) {
+        return { blockers: [], embarkStoryId: undefined }
+    }
+
+    const marketInfo = await getContractMarketInfo(token, headers)
+    const storiesByMarket = new Map<String, string>()
+        .set("SWEDEN", "moving-flow-SE")
+        .set("NORWAY", "moving-flow-NO")
+
     return {
-        blockers: [],
-        embarkStoryId: "Web Onboarding - Swedish Needer" // TODO use the correct one, but this is at least a real Embark story
+        blockers: [], // is deprecated
+        embarkStoryId: storiesByMarket.get(marketInfo.market.toUpperCase())
     }
 }
 
