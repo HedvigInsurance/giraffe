@@ -1,5 +1,5 @@
 
-import { getUser, UserDto, getContractMarketInfo, getSelfChangeEligibility, postSelfChangeQuote, CreateQuoteDto } from '../api'
+import { getUser, UserDto, postSelfChangeQuote, CreateQuoteDto } from '../api'
 import {
     SelfChangeQuoteOutput,
     MutationToCreateSelfChangeQuoteResolver,
@@ -11,17 +11,15 @@ import {
 const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
     _parent,
     _args,
-    { getToken, headers },
+    { upstream },
 ): Promise<SelfChangeEligibility> => {
-    const token = getToken()
-
-    const eligibility = await getSelfChangeEligibility(token, headers)
+    const eligibility = await upstream.productPricing.getSelfChangeEligibility()
     const isEligible = eligibility.blockers.length == 0
     if (!isEligible) {
         return { blockers: [], embarkStoryId: undefined }
     }
 
-    const marketInfo = await getContractMarketInfo(token, headers)
+    const marketInfo = await upstream.productPricing.getContractMarketInfo()
     const storiesByMarket = new Map<String, string>()
         .set("SWEDEN", "moving-flow-SE")
         .set("NORWAY", "moving-flow-NO")

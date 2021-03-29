@@ -169,15 +169,6 @@ interface PushTokenDto {
   token: string
 }
 
-interface ContractMarketInfoDto {
-  market: string,
-  preferredCurrency: string
-}
-
-interface SelfChangeEligibilityDto {
-  blockers: string[]
-}
-
 export interface CreateQuoteDto {
   memberId: String
   firstName: string
@@ -899,34 +890,6 @@ const isEligibleForReferrals = async (
     return json.eligible
   }
 
-const getContractMarketInfo = async (
-  token: string,
-  headers: ForwardHeaders
-): Promise<ContractMarketInfoDto> => {
-  const data = await callApi('/productPricing/contracts/market-info/', {
-    mergeOptions: {
-      headers: (headers as any) as RequestInit['headers'],
-    },
-    token,
-  })
-
-  return await data.json()
-}
-
-const getSelfChangeEligibility = async (
-  token: string,
-  headers: ForwardHeaders
-): Promise<SelfChangeEligibilityDto> => {
-  const data = await callApi('/productPricing/contracts/selfChange/eligibility', {
-    mergeOptions: {
-      headers: (headers as any) as RequestInit['headers'],
-    },
-    token,
-  })
-
-  return await data.json()
-}
-
 const postSelfChangeQuote = async (
   body: CreateQuoteDto,
   token: string,
@@ -978,7 +941,5 @@ export {
   postLanguage,
   postPickedLocale,
   isEligibleForReferrals,
-  getContractMarketInfo,
-  getSelfChangeEligibility,
   postSelfChangeQuote,
 }
