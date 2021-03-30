@@ -1,4 +1,4 @@
-import { createUpstream, Upstream } from './api/Upstream';
+import { createUpstream, Upstream } from './api/upstream';
 import { AuthenticationError } from 'apollo-server-core'
 import { GraphQLSchema } from 'graphql'
 import * as Koa from 'koa'
