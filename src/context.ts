@@ -48,7 +48,7 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
     headers,
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
-    upstream: createUpstream(getToken(), headers)
+    upstream: createUpstream(getToken, headers)
   }
 }
 
@@ -81,7 +81,7 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
     remoteIp:
       headers['X-Forwarded-For'] ||
       (context.request.connection.address() as string),
-    upstream: createUpstream(getToken(), headers)
+    upstream: createUpstream(getToken, headers)
   }
 }
 

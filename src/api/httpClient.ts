@@ -17,14 +17,14 @@ export interface HttpClient {
  */
 export const createContextfulHttpClient = (
   baseUrl: string,
-  token: string,
+  getToken: () => string,
   forwardHeaders: { [key: string]: string }
 ): HttpClient => {
   const call = async (url: string, method: string, body: any | undefined = undefined): Promise<Response> => {
     const headers: { [key: string]: string } = {
       ...forwardHeaders,
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${getToken()}`
     }
     if (body) {
       headers['Content-Type'] = 'application/json'

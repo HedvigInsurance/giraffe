@@ -19,7 +19,7 @@ export interface Upstream {
 }
 
 export const createUpstream = (
-    token: string,
+    token: () => string,
     headers: ForwardHeaders
 ): Upstream => {
 
