@@ -26,12 +26,11 @@ export const createUpstreamApi = (
     const createHttpClient = (remotePathPrefix: string, localPort: number): HttpClient => {
         const allHeaders = (headers as any) as { [key: string]: string }
 
-        let baseUrl: string = `${config.BASE_URL}${remotePathPrefix}`
-        if (config.UPSTREAM_MODE == "local") {
-            baseUrl = `http://localhost:${localPort}`
-            if (config.LOCAL_MEMBERID_OVERRIDE) {
-                allHeaders["Hedvig.token"] = config.LOCAL_MEMBERID_OVERRIDE as string
-            }
+        const baseUrl: string = config.UPSTREAM_MODE == "local"
+            ? `http://localhost:${localPort}`
+            : `${config.BASE_URL}${remotePathPrefix}`
+        if (config.UPSTREAM_MODE == "local" && config.LOCAL_MEMBERID_OVERRIDE) {
+            allHeaders["Hedvig.token"] = config.LOCAL_MEMBERID_OVERRIDE as string
         }
         return createContextfulHttpClient(baseUrl, token, allHeaders)
     }

@@ -45,7 +45,7 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
   return {
     getToken,
     graphCMSSchema,
-    headers: headers,
+    headers,
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
     upstream: createUpstreamApi(getToken(), headers)
