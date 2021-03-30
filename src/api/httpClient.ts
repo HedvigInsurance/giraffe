@@ -24,12 +24,10 @@ export const createContextfulHttpClient = (
     const headers: { [key: string]: string } = {
       ...forwardHeaders,
       Accept: 'application/json',
+      Authorization: `Bearer ${token}`
     }
     if (body) {
       headers['Content-Type'] = 'application/json'
-    }
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
     }
 
     const requestOptions: RequestInit = {
@@ -39,6 +37,13 @@ export const createContextfulHttpClient = (
     }
 
     const res = await fetch(`${baseUrl}${url}`, requestOptions)
+
+    if (res.status >= 400) { // TODO: include custom status validation when needed
+      throw new Error(
+        `API error - status: ${res.status}, body: ${JSON.stringify(await res.text(), null, 4)}`
+      )
+    }
+
     return res
   }
 
