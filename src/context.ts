@@ -1,4 +1,4 @@
-import { createUpstreamApi, UpstreamApi } from './api/upstreamApi';
+import { createUpstream, Upstream } from './api/Upstream';
 import { AuthenticationError } from 'apollo-server-core'
 import { GraphQLSchema } from 'graphql'
 import * as Koa from 'koa'
@@ -12,7 +12,7 @@ interface Context {
   headers: ForwardHeaders
   graphCMSSchema: GraphQLSchema
   remoteIp: string,
-  upstream: UpstreamApi
+  upstream: Upstream
 }
 
 interface ForwardHeaders {
@@ -48,7 +48,7 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
     headers,
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
-    upstream: createUpstreamApi(getToken(), headers)
+    upstream: createUpstream(getToken(), headers)
   }
 }
 
@@ -81,7 +81,7 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
     remoteIp:
       headers['X-Forwarded-For'] ||
       (context.request.connection.address() as string),
-    upstream: createUpstreamApi(getToken(), headers)
+    upstream: createUpstream(getToken(), headers)
   }
 }
 

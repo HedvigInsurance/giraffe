@@ -14,14 +14,14 @@ import * as config from '../config'
  * const quote = await upstream.underwriter.getQuote("id")
  * ```
  */
-export interface UpstreamApi {
+export interface Upstream {
     productPricing: ProductPricingClient
 }
 
-export const createUpstreamApi = (
+export const createUpstream = (
     token: string,
     headers: ForwardHeaders
-): UpstreamApi => {
+): Upstream => {
 
     const createHttpClient = (remotePathPrefix: string, localPort: number): HttpClient => {
         const allHeaders = (headers as any) as { [key: string]: string }
