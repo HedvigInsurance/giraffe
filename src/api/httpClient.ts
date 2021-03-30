@@ -32,7 +32,7 @@ export const createContextfulHttpClient = (
 
     const requestOptions: RequestInit = {
       method: method,
-      body: body ? JSON.stringify(body) : body,
+      body: body ? JSON.stringify(body) : undefined,
       headers: headers,
     }
 
