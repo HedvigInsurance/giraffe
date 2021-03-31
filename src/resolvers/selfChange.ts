@@ -1,5 +1,5 @@
 
-import { getUser, UserDto, getContractMarketInfo, getSelfChangeEligibility, postSelfChangeQuote, CreateQuoteDto } from '../api'
+import { getUser, UserDto, postSelfChangeQuote, CreateQuoteDto } from '../api'
 import {
     SelfChangeQuoteOutput,
     MutationToCreateSelfChangeQuoteResolver,
@@ -8,27 +8,26 @@ import {
     SelfChangeEligibility
 } from '../typings/generated-graphql-types'
 
+const storiesByMarket: { [key: string]: string } = {
+    "SWEDEN": "moving-flow-SE",
+    "NORWAY": "moving-flow-NO"
+}
+
 const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
     _parent,
     _args,
-    { getToken, headers },
+    { upstream },
 ): Promise<SelfChangeEligibility> => {
-    const token = getToken()
-
-    const eligibility = await getSelfChangeEligibility(token, headers)
+    const eligibility = await upstream.productPricing.getSelfChangeEligibility()
     const isEligible = eligibility.blockers.length == 0
     if (!isEligible) {
         return { blockers: [], embarkStoryId: undefined }
     }
 
-    const marketInfo = await getContractMarketInfo(token, headers)
-    const storiesByMarket = new Map<String, string>()
-        .set("SWEDEN", "moving-flow-SE")
-        .set("NORWAY", "moving-flow-NO")
-
+    const marketInfo = await upstream.productPricing.getContractMarketInfo()
     return {
         blockers: [], // is deprecated
-        embarkStoryId: storiesByMarket.get(marketInfo.market.toUpperCase())
+        embarkStoryId: storiesByMarket[marketInfo.market.toUpperCase()]
     }
 }
 
