@@ -26,7 +26,7 @@ export const createUpstream = (
     const createHttpClient = (remotePathPrefix: string, localPort: number): HttpClient => {
         const allHeaders = (headers as any) as { [key: string]: string }
 
-        const baseUrl: string = config.UPSTREAM_MODE == "local"
+        const baseUrl: string = config.UPSTREAM_MODE === "local"
             ? `http://localhost:${localPort}`
             : `${config.BASE_URL}${remotePathPrefix}`
         if (config.UPSTREAM_MODE == "local" && config.LOCAL_MEMBERID_OVERRIDE) {

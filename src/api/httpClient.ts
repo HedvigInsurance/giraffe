@@ -2,7 +2,8 @@
 import fetch, { RequestInit, Response } from 'node-fetch'
 
 /**
- * A client that can perform upstream HTTP calls.
+ * A client that can perform upstream HTTP calls. It can be assumed
+ * to contain the necessary headers to fire calls in the current context.
  */
 export interface HttpClient {
   get(url: string): Promise<Response>
