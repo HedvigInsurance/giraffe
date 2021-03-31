@@ -13,6 +13,13 @@ export interface HttpClient {
   delete(url: string): Promise<Response>
 }
 
+export class HttpError extends Error {
+  constructor(public statusCode: number, public body: any) {
+    super(`HTTP error - statusCode ${statusCode}`)
+    this.name = "HttpError"
+  }
+}
+
 /**
  * Create a HttpClient that comes with a pre-packaged base-url,
  * auth token and headers.
@@ -22,7 +29,7 @@ export const createContextfulHttpClient = (
   getToken: TokenProvider,
   forwardHeaders: { [key: string]: string }
 ): HttpClient => {
-  const call = async (url: string, method: string, body: any | undefined = undefined): Promise<Response> => {
+  const call = (method: RequestInit['method']) => async (url: string, body?: unknown): Promise<Response> => {
     const headers: { [key: string]: string } = {
       ...forwardHeaders,
       Accept: 'application/json',
@@ -40,19 +47,17 @@ export const createContextfulHttpClient = (
 
     const res = await fetch(`${baseUrl}${url}`, requestOptions)
 
-    if (res.status >= 400) { // TODO: include custom status validation when needed
-      throw new Error(
-        `API error - status: ${res.status}, body: ${JSON.stringify(await res.text(), null, 4)}`
-      )
+    if (res.status >= 400) {
+      throw new HttpError(res.status, await res.json())
     }
 
     return res
   }
 
   return {
-    get: (url) => call(url, "GET"),
-    post: (url, body) => call(url, "POST", body),
-    put: (url, body) => call(url, "PUT", body),
-    delete: (url) => call(url, "DELETE"),
+    get: call('GET'),
+    post: call('POST'),
+    put: call('PUT'),
+    delete: call('DELETE'),
   }
 }
