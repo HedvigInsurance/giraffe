@@ -1,5 +1,6 @@
 
 import fetch, { RequestInit, Response } from 'node-fetch'
+import { TokenProvider } from '../context'
 
 /**
  * A client that can perform upstream HTTP calls. It can be assumed
@@ -18,7 +19,7 @@ export interface HttpClient {
  */
 export const createContextfulHttpClient = (
   baseUrl: string,
-  getToken: () => string,
+  getToken: TokenProvider,
   forwardHeaders: { [key: string]: string }
 ): HttpClient => {
   const call = async (url: string, method: string, body: any | undefined = undefined): Promise<Response> => {

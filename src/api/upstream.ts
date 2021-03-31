@@ -1,6 +1,6 @@
 import { createProductPricingClient, ProductPricingClient } from './upstreams/productPricing';
 import { createContextfulHttpClient, HttpClient } from './httpClient';
-import { ForwardHeaders } from '../context';
+import { TokenProvider, ForwardHeaders } from '../context';
 import * as config from '../config'
 
 /**
@@ -19,7 +19,7 @@ export interface Upstream {
 }
 
 export const createUpstream = (
-    token: () => string,
+    token: TokenProvider,
     headers: ForwardHeaders
 ): Upstream => {
 

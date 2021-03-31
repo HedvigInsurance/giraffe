@@ -8,11 +8,15 @@ import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
 
 interface Context {
-  getToken: () => string
+  getToken: TokenProvider
   headers: ForwardHeaders
   graphCMSSchema: GraphQLSchema
   remoteIp: string,
   upstream: Upstream
+}
+
+interface TokenProvider {
+  (): string
 }
 
 interface ForwardHeaders {
@@ -85,4 +89,4 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
   }
 }
 
-export { getWebContext, getWebSocketContext, Context, ForwardHeaders }
+export { getWebContext, getWebSocketContext, Context, TokenProvider, ForwardHeaders }
