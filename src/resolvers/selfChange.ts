@@ -8,6 +8,11 @@ import {
     SelfChangeEligibility
 } from '../typings/generated-graphql-types'
 
+const storiesByMarket: { [key: string]: string } = {
+    "SWEDEN": "moving-flow-SE",
+    "NORWAY": "moving-flow-NO"
+}
+
 const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
     _parent,
     _args,
@@ -20,13 +25,9 @@ const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
     }
 
     const marketInfo = await upstream.productPricing.getContractMarketInfo()
-    const storiesByMarket = new Map<String, string>()
-        .set("SWEDEN", "moving-flow-SE")
-        .set("NORWAY", "moving-flow-NO")
-
     return {
         blockers: [], // is deprecated
-        embarkStoryId: storiesByMarket.get(marketInfo.market.toUpperCase())
+        embarkStoryId: storiesByMarket[marketInfo.market.toUpperCase()]
     }
 }
 
