@@ -36,7 +36,6 @@ export default (quoteBaseType: string) => ({
                 zipCode
                 coInsured
                 livingSpace
-                isYouth
             }
             ... on NorwegianTravelDetails {
                 coInsured
