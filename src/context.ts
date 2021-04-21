@@ -1,3 +1,4 @@
+import { createUpstream, Upstream } from './api/upstream';
 import { AuthenticationError } from 'apollo-server-core'
 import { GraphQLSchema } from 'graphql'
 import * as Koa from 'koa'
@@ -7,10 +8,15 @@ import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
 
 interface Context {
-  getToken: () => string
+  getToken: TokenProvider
   headers: ForwardHeaders
   graphCMSSchema: GraphQLSchema
-  remoteIp: string
+  remoteIp: string,
+  upstream: Upstream
+}
+
+interface TokenProvider {
+  (): string
 }
 
 interface ForwardHeaders {
@@ -33,18 +39,20 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
     }
     return checkedCtx.header.authorization
   }
+  const headers = {
+    'User-Agent': checkedCtx.get('User-Agent'),
+    'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
+    'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
+    'Accept-Language': checkedCtx.get('accept-language'),
+    'Enable-Simple-Sign': checkedCtx.get('Enable-Simple-Sign'),
+  }
   return {
     getToken,
     graphCMSSchema,
-    headers: {
-      'User-Agent': checkedCtx.get('User-Agent'),
-      'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
-      'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
-      'Accept-Language': checkedCtx.get('accept-language'),
-      'Enable-Simple-Sign': checkedCtx.get('Enable-Simple-Sign'),
-    },
+    headers,
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
+    upstream: createUpstream(getToken, headers)
   }
 }
 
@@ -77,7 +85,8 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
     remoteIp:
       headers['X-Forwarded-For'] ||
       (context.request.connection.address() as string),
+    upstream: createUpstream(getToken, headers)
   }
 }
 
-export { getWebContext, getWebSocketContext, Context, ForwardHeaders }
+export { getWebContext, getWebSocketContext, Context, TokenProvider, ForwardHeaders }

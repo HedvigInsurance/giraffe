@@ -8,14 +8,26 @@ import {
     SelfChangeEligibility
 } from '../typings/generated-graphql-types'
 
+const storiesByMarket: Record<string, string> = {
+    "SWEDEN": "moving-flow-SE",
+    "NORWAY": "moving-flow-NO"
+}
+
 const selfChangeEligibility: QueryToSelfChangeEligibilityResolver = async (
     _parent,
     _args,
-    _context,
+    { upstream },
 ): Promise<SelfChangeEligibility> => {
+    const eligibility = await upstream.productPricing.getSelfChangeEligibility()
+    const isEligible = eligibility.blockers.length == 0
+    if (!isEligible) {
+        return { blockers: [], embarkStoryId: undefined }
+    }
+
+    const marketInfo = await upstream.productPricing.getContractMarketInfo()
     return {
-        blockers: [],
-        embarkStoryId: "Web Onboarding - Swedish Needer" // TODO use the correct one, but this is at least a real Embark story
+        blockers: [], // is deprecated
+        embarkStoryId: storiesByMarket[marketInfo.market.toUpperCase()]
     }
 }
 
