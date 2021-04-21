@@ -1,0 +1,8 @@
+{
+  "DETAILS_TABLE_COINSURED_LABEL": "Insured people",
+  "DETAILS_TABLE_COINSURED_VALUE": "You + {coInsured}",
+  "DETAILS_TABLE_STREET_LABEL": "Street",
+  "DETAILS_TABLE_ZIP_CODE_LABEL": "Postal code",
+  "DETAILS_TABLE_CITY_LABEL": "City",
+  "DETAILS_TABLE_LIVING_SPACE_LABEL": "Livingspace"
+}

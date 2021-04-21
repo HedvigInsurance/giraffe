@@ -7,7 +7,8 @@
     "build": "tsc && cp src/schema.graphqls dist/schema.graphqls",
     "watch": "concurrently -n \"ts-node,graphqls\" \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate:schema-types\"",
     "lint": "tslint **/*.ts",
-    "generate:schema-types": "ts-node scripts/generate-types.ts"
+    "generate:schema-types": "ts-node scripts/generate-types.ts",
+    "download-translations": "./bin/download-translations.sh"
   },
   "license": "AGPL-3.0-only",
   "dependencies": {
