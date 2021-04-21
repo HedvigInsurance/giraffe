@@ -7,10 +7,10 @@ import { TokenProvider } from '../context'
  * to contain the necessary headers to fire calls in the current context.
  */
 export interface HttpClient {
-  get(url: string): Promise<Response>
-  post(url: string, body: any): Promise<Response>
-  put(url: string, body: any): Promise<Response>
-  delete(url: string): Promise<Response>
+  get(url: string, options?: HttpCallOptions): Promise<Response>
+  post(url: string, body: any, options?: HttpCallOptions): Promise<Response>
+  put(url: string, body: any, options?: HttpCallOptions): Promise<Response>
+  delete(url: string, options?: HttpCallOptions): Promise<Response>
 }
 
 export class HttpError extends Error {
@@ -18,6 +18,10 @@ export class HttpError extends Error {
     super(`HTTP error - statusCode ${statusCode}`)
     this.name = "HttpError"
   }
+}
+
+interface HttpCallOptions {
+  validStatusCodes?: number[]
 }
 
 /**
@@ -29,7 +33,7 @@ export const createContextfulHttpClient = (
   getToken: TokenProvider,
   forwardHeaders: { [key: string]: string }
 ): HttpClient => {
-  const call = (method: RequestInit['method']) => async (url: string, body?: unknown): Promise<Response> => {
+  const call = async (method: RequestInit['method'], url: string, body?: unknown, options?: HttpCallOptions): Promise<Response> => {
     const headers: { [key: string]: string } = {
       ...forwardHeaders,
       Accept: 'application/json',
@@ -48,16 +52,19 @@ export const createContextfulHttpClient = (
     const res = await fetch(`${baseUrl}${url}`, requestOptions)
 
     if (res.status >= 400) {
-      throw new HttpError(res.status, await res.json())
+      const isOverriddenToSucceed = options?.validStatusCodes && options.validStatusCodes.includes(res.status)
+      if (!isOverriddenToSucceed) {
+        throw new HttpError(res.status, await res.json())
+      }
     }
 
     return res
   }
 
   return {
-    get: call('GET'),
-    post: call('POST'),
-    put: call('PUT'),
-    delete: call('DELETE'),
+    get: (url, options) => call('GET', url, undefined, options),
+    post: (url, body, options) => call('POST', url, body, options),
+    put: (url, body, options) => call('PUT', url, body, options),
+    delete: (url, options) => call('DELETE', url, undefined, options),
   }
 }

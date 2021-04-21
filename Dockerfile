@@ -1,4 +1,4 @@
-FROM node:10.12.0-alpine AS dependencies
+FROM node:10.13.0-alpine AS dependencies
 WORKDIR /usr/src/app
 
 ADD package.json .
@@ -15,8 +15,9 @@ RUN yarn build
 
 FROM build AS test
 
+RUN yarn test
 
-FROM node:10.12.0-alpine AS assemble
+FROM node:10.13.0-alpine AS assemble
 WORKDIR /usr/src/app
 
 COPY package.json .
