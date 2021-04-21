@@ -715,11 +715,21 @@ export interface AngelStory {
 export interface SelfChangeEligibility {
   
   /**
-   * A list of reasons for why 'Self Change' is not possible - if empty 'Self Change' can be done.
-   * @deprecated Use embarkStoryId to determine if it is eligible or not
+   * 
+   * @deprecated Use addressChangeEmbarkStoryId instead
    */
   blockers: Array<SelfChangeBlocker>;
+  
+  /**
+   * 
+   * @deprecated Use addressChangeEmbarkStoryId instead
+   */
   embarkStoryId?: string;
+  
+  /**
+   * The ID of an embark story that contains an address change flow, if eligible.
+   */
+  addressChangeEmbarkStoryId?: string;
 }
 
 /**
@@ -832,7 +842,7 @@ export interface Mutation {
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
   updatePickedLocale: Member;
-  createSelfChangeQuote: SelfChangeQuoteOutput;
+  createAddressChangeQuotes: AddressChangeOutput;
 }
 
 export interface CampaignInput {
@@ -952,118 +962,43 @@ export interface DanishBankIdAuthResponse {
   redirectUrl: string;
 }
 
-export interface SelfChangeQuoteInput {
+export interface AddressChangeInput {
+  type: AddressHomeType;
+  street: string;
+  zip: string;
+  livingSpace: number;
+  numberCoInsured: number;
+  ownership: AddressOwnership;
   startDate: LocalDate;
-  swedishApartment?: SelfChangeCreateSwedishApartmentInput;
-  swedishHouse?: SelfChangeCreateSwedishHouseInput;
-  norwegianHomeContents?: SelfChangeCreateNorwegianHomeContentsInput;
-  norwegianTravel?: SelfChangeCreateNorwegianTravelInput;
-  danishHomeContents?: SelfChangeCreateDanishHomeContentsInput;
-  danishAccident?: SelfChangeCreateDanishAccidentInput;
-  danishTravel?: SelfChangeCreateDanishTravelInput;
+  countryCode: string;
+  isYouth?: boolean;
+  isStudent?: boolean;
+  ancillaryArea?: number;
+  yearOfConstruction?: number;
+  numberOfBathrooms?: number;
+  numberOfFloors?: number;
+  isSubleted?: boolean;
+  extraBuildings?: Array<AddressHouseExtraBuilding>;
 }
 
-export interface SelfChangeCreateSwedishApartmentInput {
-  street: string;
-  zipCode: string;
-  householdSize: number;
-  livingSpace: number;
-  type: SelfChangeSwedishApartmentType;
+export enum AddressHomeType {
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE'
 }
 
-export enum SelfChangeSwedishApartmentType {
-  STUDENT_RENT = 'STUDENT_RENT',
-  RENT = 'RENT',
-  STUDENT_BRF = 'STUDENT_BRF',
-  BRF = 'BRF'
+export enum AddressOwnership {
+  OWN = 'OWN',
+  RENT = 'RENT'
 }
 
-export interface SelfChangeCreateSwedishHouseInput {
-  street: string;
-  zipCode: string;
-  householdSize: number;
-  livingSpace: number;
-  ancillarySpace: number;
-  yearOfConstruction: number;
-  numberOfBathrooms: number;
-  isSubleted: boolean;
-  extraBuildings: Array<SelfChangeExtraBuildingInput>;
-}
-
-export interface SelfChangeExtraBuildingInput {
-  type: SelfChangeExtraBuildingType;
+export interface AddressHouseExtraBuilding {
+  type: string;
   area: number;
   hasWaterConnected: boolean;
 }
 
-export enum SelfChangeExtraBuildingType {
-  GARAGE = 'GARAGE',
-  CARPORT = 'CARPORT',
-  SHED = 'SHED',
-  STOREHOUSE = 'STOREHOUSE',
-  FRIGGEBOD = 'FRIGGEBOD',
-  ATTEFALL = 'ATTEFALL',
-  OUTHOUSE = 'OUTHOUSE',
-  GUESTHOUSE = 'GUESTHOUSE',
-  GAZEBO = 'GAZEBO',
-  GREENHOUSE = 'GREENHOUSE',
-  SAUNA = 'SAUNA',
-  BARN = 'BARN',
-  BOATHOUSE = 'BOATHOUSE',
-  OTHER = 'OTHER'
-}
-
-export interface SelfChangeCreateNorwegianHomeContentsInput {
-  street: string;
-  zipCode: string;
-  coInsured: number;
-  livingSpace: number;
-  isYouth: boolean;
-  type: SelfChangeNorwegianHomeContentsType;
-}
-
-export enum SelfChangeNorwegianHomeContentsType {
-  RENT = 'RENT',
-  OWN = 'OWN'
-}
-
-export interface SelfChangeCreateNorwegianTravelInput {
-  coInsured: number;
-  isYouth: boolean;
-}
-
-export interface SelfChangeCreateDanishHomeContentsInput {
-  street: string;
-  zipCode: string;
-  livingSpace: number;
-  coInsured: number;
-  isStudent: boolean;
-  type: SelfChangeDanishHomeContentsType;
-}
-
-export enum SelfChangeDanishHomeContentsType {
-  RENT = 'RENT',
-  OWN = 'OWN'
-}
-
-export interface SelfChangeCreateDanishAccidentInput {
-  street: string;
-  zipCode: string;
-  coInsured: number;
-  isStudent: boolean;
-}
-
-export interface SelfChangeCreateDanishTravelInput {
-  street: string;
-  zipCode: string;
-  coInsured: number;
-  isStudent: boolean;
-}
-
-export interface SelfChangeQuoteOutput {
-  id: string;
-  price: number;
-  validTo: TimeStamp;
+export interface AddressChangeOutput {
+  quoteIds: Array<string>;
 }
 
 export interface Subscription {
@@ -1212,7 +1147,7 @@ export interface Resolver {
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
   NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
   DanishBankIdAuthResponse?: DanishBankIdAuthResponseTypeResolver;
-  SelfChangeQuoteOutput?: SelfChangeQuoteOutputTypeResolver;
+  AddressChangeOutput?: AddressChangeOutputTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -2472,6 +2407,7 @@ export interface AngelStoryToContentResolver<TParent = AngelStory, TResult = str
 export interface SelfChangeEligibilityTypeResolver<TParent = SelfChangeEligibility> {
   blockers?: SelfChangeEligibilityToBlockersResolver<TParent>;
   embarkStoryId?: SelfChangeEligibilityToEmbarkStoryIdResolver<TParent>;
+  addressChangeEmbarkStoryId?: SelfChangeEligibilityToAddressChangeEmbarkStoryIdResolver<TParent>;
 }
 
 export interface SelfChangeEligibilityToBlockersResolver<TParent = SelfChangeEligibility, TResult = Array<SelfChangeBlocker>> {
@@ -2479,6 +2415,10 @@ export interface SelfChangeEligibilityToBlockersResolver<TParent = SelfChangeEli
 }
 
 export interface SelfChangeEligibilityToEmbarkStoryIdResolver<TParent = SelfChangeEligibility, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeEligibilityToAddressChangeEmbarkStoryIdResolver<TParent = SelfChangeEligibility, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -2516,7 +2456,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
   updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
-  createSelfChangeQuote?: MutationToCreateSelfChangeQuoteResolver<TParent>;
+  createAddressChangeQuotes?: MutationToCreateAddressChangeQuotesResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2719,11 +2659,11 @@ export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResu
   (parent: TParent, args: MutationToUpdatePickedLocaleArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToCreateSelfChangeQuoteArgs {
-  quoteInput: SelfChangeQuoteInput;
+export interface MutationToCreateAddressChangeQuotesArgs {
+  input: AddressChangeInput;
 }
-export interface MutationToCreateSelfChangeQuoteResolver<TParent = undefined, TResult = SelfChangeQuoteOutput> {
-  (parent: TParent, args: MutationToCreateSelfChangeQuoteArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+export interface MutationToCreateAddressChangeQuotesResolver<TParent = undefined, TResult = AddressChangeOutput> {
+  (parent: TParent, args: MutationToCreateAddressChangeQuotesArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
@@ -2776,21 +2716,11 @@ export interface DanishBankIdAuthResponseToRedirectUrlResolver<TParent = DanishB
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface SelfChangeQuoteOutputTypeResolver<TParent = SelfChangeQuoteOutput> {
-  id?: SelfChangeQuoteOutputToIdResolver<TParent>;
-  price?: SelfChangeQuoteOutputToPriceResolver<TParent>;
-  validTo?: SelfChangeQuoteOutputToValidToResolver<TParent>;
+export interface AddressChangeOutputTypeResolver<TParent = AddressChangeOutput> {
+  quoteIds?: AddressChangeOutputToQuoteIdsResolver<TParent>;
 }
 
-export interface SelfChangeQuoteOutputToIdResolver<TParent = SelfChangeQuoteOutput, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface SelfChangeQuoteOutputToPriceResolver<TParent = SelfChangeQuoteOutput, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface SelfChangeQuoteOutputToValidToResolver<TParent = SelfChangeQuoteOutput, TResult = TimeStamp> {
+export interface AddressChangeOutputToQuoteIdsResolver<TParent = AddressChangeOutput, TResult = Array<string>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
