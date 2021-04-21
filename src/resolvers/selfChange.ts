@@ -8,7 +8,7 @@ import {
     SelfChangeEligibility
 } from '../typings/generated-graphql-types'
 
-const storiesByMarket: { [key: string]: string } = {
+const storiesByMarket: Record<string, string> = {
     "SWEDEN": "moving-flow-SE",
     "NORWAY": "moving-flow-NO"
 }
