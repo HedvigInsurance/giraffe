@@ -17,7 +17,7 @@ export const crossSchemaExtensions = `
 
 export default (quoteBaseType: string) => ({
     detailsTable: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on ${quoteBaseType} {
+        fragment: `fragment QuoteDetailsCrossSchemaFragment on ${quoteBaseType} {
           quoteDetails {
             ... on SwedishApartmentQuoteDetails {
                 street
