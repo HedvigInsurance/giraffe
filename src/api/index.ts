@@ -169,75 +169,6 @@ interface PushTokenDto {
   token: string
 }
 
-export interface CreateQuoteDto {
-  memberId: String
-  firstName: string
-  lastName: string
-  ssn: string
-  birthDate: string
-  startDate: string
-  swedishApartmentData?: {
-    street: string
-    zipCode: string
-    householdSize: number
-    livingSpace: number
-    subType: string
-  }
-  swedishHouseData?: {
-    street: string
-    zipCode: string
-    householdSize: number
-    livingSpace: number
-    ancillaryArea: number
-    yearOfConstruction: number
-    numberOfBathrooms: number
-    subleted: boolean
-    extraBuildings: {
-      type: string
-      area: number
-      hasWaterConnected: boolean
-    }[]
-  }
-  norwegianHomeContentsData?: {
-    street: string
-    zipCode: string
-    coInsured: number
-    livingSpace: number
-    youth: boolean
-    subType: string
-  }
-  norwegianTravelData?: {
-    coInsured: number
-    youth: boolean
-  }
-  danishHomeContentsData?: {
-    street: string
-    zipCode: string
-    livingSpace: number
-    coInsured: number
-    student: boolean
-    subType: string
-  }
-  danishAccidentData?: {
-    street: string
-    zipCode: string
-    coInsured: number
-    student: boolean
-  }
-  danishTravelData?: {
-    street: string
-    zipCode: string
-    coInsured: number
-    student: boolean
-  }
-}
-
-interface CompleteQuoteResponseDto {
-  id: string
-  price: number
-  validTo: string
-}
-
 type CallApi = (
   url: string,
   options?: {
@@ -890,22 +821,6 @@ const isEligibleForReferrals = async (
     return json.eligible
   }
 
-const postSelfChangeQuote = async (
-  body: CreateQuoteDto,
-  token: string,
-  headers: ForwardHeaders,
-): Promise<CompleteQuoteResponseDto> => {
-  const data = await callApi("/underwriter/quotes", {
-    mergeOptions: {
-      headers: (headers as any) as RequestInit['headers'],
-      method: 'POST',
-      body: JSON.stringify(body),
-    },
-    token
-  })
-  return data.json()
-}
-
 export {
   setChatResponse,
   getInsurance,
@@ -940,6 +855,5 @@ export {
   signDetails,
   postLanguage,
   postPickedLocale,
-  isEligibleForReferrals,
-  postSelfChangeQuote,
+  isEligibleForReferrals
 }

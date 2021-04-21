@@ -1,7 +1,9 @@
-import { createProductPricingClient, ProductPricingClient } from './upstreams/productPricing';
-import { createContextfulHttpClient, HttpClient } from './httpClient';
-import { TokenProvider, ForwardHeaders } from '../context';
 import * as config from '../config'
+import { TokenProvider, ForwardHeaders } from '../context';
+import { createContextfulHttpClient, HttpClient } from './httpClient';
+import { UnderwriterClient, createUnderwriterClient } from './upstreams/underwriter';
+import { createProductPricingClient, ProductPricingClient } from './upstreams/productPricing';
+import { createMemberServiceClient, MemberServiceClient } from './upstreams/memberService';
 
 /**
  * An umbrella type that groups different upstream services, making it
@@ -15,7 +17,9 @@ import * as config from '../config'
  * ```
  */
 export interface Upstream {
-    productPricing: ProductPricingClient
+    memberService: MemberServiceClient,
+    productPricing: ProductPricingClient,
+    underwriter: UnderwriterClient
 }
 
 export const createUpstream = (
@@ -36,8 +40,14 @@ export const createUpstream = (
     }
 
     return {
+        memberService: createMemberServiceClient(
+            createHttpClient("/member", 4084)
+        ),
         productPricing: createProductPricingClient(
             createHttpClient("/productPricing", 4085)
+        ),
+        underwriter: createUnderwriterClient(
+            createHttpClient("/underwriter", 5698)
         )
     }
 }
