@@ -20,10 +20,10 @@ export default (quoteBaseType: string) => ({
         fragment: `fragment CompleteQuoteCrossSchemaFragment on ${quoteBaseType} {
           quoteDetails {
             ... on SwedishApartmentQuoteDetails {
-              street
-              zipCode
-              householdSize
-              livingSpace
+                street
+                zipCode
+                householdSize
+                livingSpace
             }
             ... on SwedishHouseQuoteDetails {
                 street
