@@ -53,7 +53,7 @@ interface ExtraBuilding {
   hasWaterConnected: boolean
 }
 
-interface UserDto {
+export interface UserDto {
   firstName: string
   lastName: string
   memberId: string
@@ -169,7 +169,7 @@ interface PushTokenDto {
   token: string
 }
 
-interface CreateQuoteDto {
+export interface CreateQuoteDto {
   memberId: String
   firstName: string
   lastName: string
@@ -910,7 +910,6 @@ export {
   setChatResponse,
   getInsurance,
   getUser,
-  UserDto,
   logoutUser,
   register,
   createProduct,
@@ -943,5 +942,4 @@ export {
   postPickedLocale,
   isEligibleForReferrals,
   postSelfChangeQuote,
-  CreateQuoteDto,
 }

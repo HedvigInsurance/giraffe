@@ -1,5 +1,7 @@
 const BASE_URL = process.env.BASE_URL || 'https://gateway.test.hedvig.com'
 const PORT = Number(process.env.PORT) || 4000
+const UPSTREAM_MODE = process.env.UPSTREAM_MODE || 'remote'
+const LOCAL_MEMBERID_OVERRIDE: string | undefined = process.env.LOCAL_MEMBERID_OVERRIDE
 const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
@@ -29,6 +31,8 @@ const ANGEL_URL = process.env.ANGEL_URL || ''
 export {
   BASE_URL,
   PORT,
+  UPSTREAM_MODE,
+  LOCAL_MEMBERID_OVERRIDE,
   PLAYGROUND_ENABLED,
   REDIS_HOSTNAME,
   REDIS_PORT,
