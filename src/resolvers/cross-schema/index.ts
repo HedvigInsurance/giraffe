@@ -1,6 +1,7 @@
 import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
+import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
 
 export const crossSchemaExtensions = `
   extend type KeyGearItem {
@@ -34,6 +35,7 @@ export const crossSchemaExtensions = `
   }
 
   ${quoteDetailsCrossSchemaExtensions}
+  ${quoteDisplayNameCrossSchemaExtensions}
 `
 
 const getCoveredIds = (category: KeyGearItemCategory) => {
@@ -403,7 +405,8 @@ export const getCrossSchemaResolvers = (
           })
         },
       },
-      ...quoteDetailsTable("CompleteQuote")
+      ...quoteDetailsTable("CompleteQuote"),
+      ...quoteDisplayName("CompleteQuote")
     },
     BundledQuote: {
       perils: {
@@ -485,7 +488,8 @@ export const getCrossSchemaResolvers = (
           })
         },
       },
-      ...quoteDetailsTable("BundledQuote")
+      ...quoteDetailsTable("BundledQuote"),
+      ...quoteDisplayName("BundledQuote")
     },
     EmbarkPreviousInsuranceProviderActionData: {
       insuranceProviders: {
