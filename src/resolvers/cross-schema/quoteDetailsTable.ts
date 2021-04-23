@@ -63,7 +63,7 @@ export default (quoteBaseType: string) => ({
           quote: any,
           args: any
         ) => {
-          const textKeyMap = require(`../../translations/${args.locale}.json`)
+          const textKeyMap = require(`${process.cwd()}/src/translations/${args.locale}.json`)
           const labelMap: Record<string, string> = {
             "coInsured": textKeyMap["DETAILS_TABLE_COINSURED_LABEL"],
             "street": textKeyMap["DETAILS_TABLE_STREET_LABEL"],
