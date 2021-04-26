@@ -136,8 +136,8 @@ export default (quoteBaseType: string) => ({
             "isSubleted": (isSubleted) => isSubleted ? textKeyMap["DETAILS_TABLE_IS_SUBLETED_YES_VALUE"] : textKeyMap["DETAILS_TABLE_IS_SUBLETED_NO_VALUE"]
           }
 
-          const sections: Record<string, () => TableSection> = {
-            "details": () => ({
+          const sections: Record<string, TableSection> = {
+            "details": {
               title: textKeyMap["DETAILS_TABLE_DETAILS_SECTION_TITLE"],
               rows: Object.keys(quote.quoteDetails).map(key => {
                 let labelMapValue = labelMap[key]
@@ -152,20 +152,20 @@ export default (quoteBaseType: string) => ({
                   value: String(valueRenderer[key](quote.quoteDetails[key]))
                 })
               }).filter(value => value) as TableRow[]
-            }),
-            "extraBuildings": () => ({
+            },
+            "extraBuildings": {
               title: textKeyMap["DETAILS_TABLE_EXTRA_BUILDING_SECTION_TITLE"],
               rows: (quote.quoteDetails.extraBuildings || []).map((extraBuilding: any) => ({
                 title: extraBuilding.displayName ?? "",
                 subtitle: extraBuilding.hasWaterConnected ? textKeyMap["DETAILS_TABLE_EXTRA_BUILDING_HAS_WATER_CONNECTED_SUBTITLE"] : null,
                 value: `${extraBuilding.area} m2`
               }))
-            })
+            }
           }
 
           return ({
             title: textKeyMap[`CONTRACT_DISPLAY_NAME_${quote.typeOfContract}`],
-            sections: Object.keys(sections).map(key => sections[key]()).filter(section => section.rows.length > 0)
+            sections: Object.keys(sections).map(key => sections[key]).filter(section => section.rows.length > 0)
           }) as Table
         },
       },
