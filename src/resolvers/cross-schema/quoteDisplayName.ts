@@ -21,7 +21,7 @@ export default (quoteBaseType: string) => ({
           quote: any,
           args: any
         ) => {
-          const textKeyMap = require(`${process.cwd()}/src/translations/${args.locale}.json`)
+          const textKeyMap = require(`${__dirname}/../../translations/${args.locale}.json`)
           return textKeyMap[`CONTRACT_DISPLAY_NAME_${quote.typeOfContract}`] ?? ""
         },
       },
