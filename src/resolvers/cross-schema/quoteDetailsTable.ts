@@ -1,3 +1,4 @@
+import { String } from 'aws-sdk/clients/cloudhsm'
 import { IResolvers } from 'graphql-tools'
 
 interface TableRow {
@@ -42,61 +43,9 @@ export const crossSchemaExtensions = `
     }
 `
 
-export default (quoteBaseType: string) => ({
+export default (fragment: string) => ({
     detailsTable: {
-        fragment: `fragment QuoteDetailsCrossSchemaFragment on ${quoteBaseType} {
-          typeOfContract
-          quoteDetails {
-            ... on SwedishApartmentQuoteDetails {
-                street
-                zipCode
-                householdSize
-                livingSpace
-                swedishApartmentType: type
-            }
-            ... on SwedishHouseQuoteDetails {
-                street
-                zipCode
-                householdSize
-                livingSpace
-                ancillarySpace
-                numberOfBathrooms
-                yearOfConstruction
-                isSubleted
-                extraBuildings {
-                  ... on ExtraBuildingCore {
-                    area
-                    displayName
-                    hasWaterConnected
-                  }
-                }
-            }
-            ... on NorwegianHomeContentsDetails {
-                street
-                zipCode
-                coInsured
-                livingSpace
-                norwegianHomeContentType: type
-            }
-            ... on NorwegianTravelDetails {
-                coInsured
-            }
-            ... on DanishHomeContentsDetails {
-                street
-                zipCode
-                city
-                livingSpace
-                coInsured
-                danishHomeContentType: type
-            }
-            ... on DanishAccidentDetails {
-                coInsured
-            }
-            ... on DanishTravelDetails {
-                coInsured
-            }
-          }
-        }`,
+        fragment: fragment,
         resolve: (
           quote: any,
           args: any
