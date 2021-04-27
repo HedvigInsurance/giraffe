@@ -375,7 +375,6 @@ const quotesExtension: CrossSchemaExtension = {
           })
         },
       },
-<<<<<<< HEAD
       ...quoteDetailsTable(getQuoteDetailsFragment("CompleteQuote")),
       ...quoteDisplayName("BundledQuote")
     }
@@ -390,11 +389,6 @@ const embarkExtension: CrossSchemaExtension = {
   }
   `,
   resolvers: (schemas) => ({
-=======
-      ...quoteDetailsTable(getQuoteDetailsFragment("BundledQuote")),
-      ...quoteDisplayName("BundledQuote")
-    },
->>>>>>> 166e6b7... fixes
     EmbarkPreviousInsuranceProviderActionData: {
       insuranceProviders: {
         fragment: `fragment EmbarkPreviousInsuranceProviderActionDataCrossSchemaFragment on EmbarkPreviousInsuranceProviderActionData { providers }`,

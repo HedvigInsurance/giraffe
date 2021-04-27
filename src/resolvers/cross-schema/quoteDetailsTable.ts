@@ -1,4 +1,3 @@
-import { String } from 'aws-sdk/clients/cloudhsm'
 import { IResolvers } from 'graphql-tools'
 
 interface TableRow {
@@ -40,6 +39,10 @@ export const crossSchemaExtensions = `
     
     extend type BundledQuote {
         detailsTable(locale: Locale!): Table!
+    }
+    
+    extend type Contract {
+      detailsTable(locale: Locale!): Table!
     }
 `
 
