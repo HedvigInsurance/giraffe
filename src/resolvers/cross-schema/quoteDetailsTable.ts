@@ -45,7 +45,7 @@ export const crossSchemaExtensions = `
 
 export default (fragment: string) => ({
     detailsTable: {
-        fragment: fragment,
+        fragment,
         resolve: (
           quote: any,
           args: any

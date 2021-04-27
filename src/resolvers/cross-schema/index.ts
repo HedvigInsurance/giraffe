@@ -1,4 +1,4 @@
-import { GraphQLSchema, SelectionSetNode } from 'graphql'
+import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
@@ -375,6 +375,7 @@ const quotesExtension: CrossSchemaExtension = {
           })
         },
       },
+<<<<<<< HEAD
       ...quoteDetailsTable(getQuoteDetailsFragment("CompleteQuote")),
       ...quoteDisplayName("BundledQuote")
     }
@@ -389,6 +390,11 @@ const embarkExtension: CrossSchemaExtension = {
   }
   `,
   resolvers: (schemas) => ({
+=======
+      ...quoteDetailsTable(getQuoteDetailsFragment("BundledQuote")),
+      ...quoteDisplayName("BundledQuote")
+    },
+>>>>>>> 166e6b7... fixes
     EmbarkPreviousInsuranceProviderActionData: {
       insuranceProviders: {
         fragment: `fragment EmbarkPreviousInsuranceProviderActionDataCrossSchemaFragment on EmbarkPreviousInsuranceProviderActionData { providers }`,
@@ -650,7 +656,7 @@ interface EmbarkPreviousInsuranceProviderActionData {
 //   }
 // }`
 
-function getQuoteDetailsFragment(quoteType:String): String {
+const getQuoteDetailsFragment = (quoteType: String) => {
   return `fragment QuoteDetailsCrossSchemaFragment on ${quoteType} {
       typeOfContract
       quoteDetails {
