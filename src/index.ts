@@ -7,7 +7,6 @@ import { ApolloServer } from 'apollo-server-koa'
 import * as Koa from 'koa'
 import * as compress from 'koa-compress'
 import * as proxy from 'koa-proxies'
-import * as route from 'koa-route'
 
 import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
@@ -90,11 +89,11 @@ makeSchema()
 
     if (process.env.EMBARK_FORMAT_ENDPOINT) {
       app.use(
-        route.get(
-          '/embark/format.js',
-          // @ts-ignore - False positive
-          proxy(process.env.EMBARK_FORMAT_ENDPOINT, {}),
-        ),
+        proxy('/embark/format.js', {
+          target: process.env.EMBARK_FORMAT_ENDPOINT,
+          logs: true,
+          rewrite: (_path) => '', // the path should always be exactly '/embark/format.js'
+        }),
       )
       logger.info('Added embark proxy middleware')
     }
