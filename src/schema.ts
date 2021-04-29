@@ -118,81 +118,120 @@ const makeSchema = async () => {
     }
   })
 
-  const apiGatewayLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
-  let apiGatewaySchema: GraphQLSchema | undefined
-  logger.info('Introspecting API Gateway schema')
-  apiGatewaySchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(apiGatewayLink),
-    link: apiGatewayLink,
-  })
-  logger.info('API Gateway schema introspected')
+  const introspectRemoteSchema = (
+    name: string,
+    source: { url?: string, authorized?: boolean, link?: ApolloLink }
+  ): Promise<GraphQLSchema> | undefined => {
+    const actuallyInstrospect = async (): Promise<GraphQLSchema> => {
+      const baseLink = source.authorized === true ? authorizationContextLink : optionalAuthorizationContextLink
+      const link = source.link || baseLink.concat(
+        createHttpLink({
+          uri: source.url!,
+          fetch: fetch as any,
+          credentials: 'include',
+        })
+      )
+      logger.info(`Introspecting GraphQL schema for: ${name}`)
+      const schema = makeRemoteExecutableSchema({
+        schema: await introspectSchema(link),
+        link: link,
+      })
+      logger.info("Success!")
+      return schema
+    }
 
-  const paymentServiceLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
-  let paymentServiceSchema: GraphQLSchema | undefined
-  logger.info('Introspecting PaymentServiceSchema')
-  paymentServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(paymentServiceLink),
-    link: paymentServiceLink,
-  })
-  logger.info('PaymentServiceSchema Introspected')
+    switch (config.GRAPHQL_SCHEMA_INTROSPECTION_MODE) {
+      case "none": return undefined
+      case "fault-tolerant": {
+        try {
+          return actuallyInstrospect()
+        } catch (e) {
+          logger.error(`Embark Introspection failed (Ignoring) for: ${name}`, e)
+          return undefined
+        }
+      }
+    }
+    return actuallyInstrospect()
+  }
 
-  const productPricingServiceLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.PRODUCT_PRICING_SERVICE_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
-  let productPricingServiceSchema: GraphQLSchema | undefined
-  logger.info('Introspecting ProductPricingServiceSchema')
-  productPricingServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(productPricingServiceLink),
-    link: productPricingServiceLink,
+  const localSchema = makeExecutableSchema<Context>({
+    typeDefs,
+    // @ts-ignore - This type is incorrect
+    resolvers: {
+      Upload: GraphQLUpload,
+      ...(resolvers as IResolvers<any, Context>),
+    },
   })
-  logger.info('ProductPricingServiceSchema Introspected')
-
-  const accountServiceLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
+  const apiGatewaySchema = await introspectRemoteSchema(
+    "api-gateway",
+    {
+      url: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
+      authorized: true
+    }
   )
-  let accountServiceSchema: GraphQLSchema | undefined
-  logger.info('Introspecting AccountServiceSchema')
-  accountServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(accountServiceLink),
-    link: accountServiceLink,
-  })
-  logger.info('AccountServiceSchema Introspected')
+  const paymentServiceSchema = await introspectRemoteSchema(
+    "payment-service",
+    {
+      url: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
+      authorized: true
+    }
+  )
+  const productPricingServiceSchema = await introspectRemoteSchema(
+    "product-pricing",
+    {
+      url: process.env.PRODUCT_PRICING_SERVICE_GRAPHQL_ENDPOINT,
+      authorized: true
+    }
+  )
+  const accountServiceSchema = await introspectRemoteSchema(
+    "account-service",
+    {
+      url: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
+      authorized: true
+    }
+  )
+  const underwriterSchema = await introspectRemoteSchema(
+    "underwriter",
+    {
+      url: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
+      authorized: false
+    }
+  )
+  const contentServiceSchema = await introspectRemoteSchema(
+    "content-service",
+    {
+      url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
+      authorized: false
+    }
+  )
+  const embarkSchema = await introspectRemoteSchema(
+    "embark",
+    {
+      url: process.env.EMBARK_GRAPHQL_ENDPOINT,
+      authorized: true
+    }
+  )
+  const keyGearSchema = await introspectRemoteSchema(
+    "key-gear",
+    {
+      url: process.env.KEY_GEAR_GRAPHQL_ENDPOINT,
+      authorized: true
+    }
+  )
 
   const lookupServiceHTTPLink = createHttpLink({
     uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
     fetch: fetch as any,
   })
-
-  const lookupServiceWSClient = new SubscriptionClient(
-    process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || '',
-    {
-      reconnect: true,
-    },
-    WebSocket,
+  const lookupServiceWSLink = new WebSocketLink(
+    new SubscriptionClient(
+      process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || '',
+      {
+        reconnect: true,
+      },
+      WebSocket,
+    )
   )
-
-  const lookupServiceWSLink = new WebSocketLink(lookupServiceWSClient)
-
   const lookupServiceLink = split(
     ({ query }) => {
       const definition = getMainDefinition(query)
@@ -204,85 +243,19 @@ const makeSchema = async () => {
     lookupServiceWSLink,
     lookupServiceHTTPLink,
   )
-
-  let lookupServiceSchema: GraphQLSchema | undefined
-  logger.info('Introspecting LookupServiceSchema')
-  lookupServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(lookupServiceLink),
-    link: lookupServiceLink,
-  })
-  logger.info('LookupServiceSchema Introspected')
-
-  const underwriterLink = optionalAuthorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
+  const lookupServiceSchema = introspectRemoteSchema(
+    "lookup-service",
+    {
+      link: lookupServiceLink
+    }
   )
-  let underwriterSchema: GraphQLSchema | undefined
-  logger.info('Introspecting UnderwriterSchema')
-  underwriterSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(underwriterLink),
-    link: underwriterLink,
-  })
-  logger.info('UnderwriterSchema Introspected')
 
-  const appContentServiceLink = optionalAuthorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
-  let appContentServiceSchema: GraphQLSchema | undefined
-  logger.info('Introspecting AppContentService')
-  appContentServiceSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(appContentServiceLink),
-    link: appContentServiceLink,
-  })
-
-  const embarkLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.EMBARK_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
-  let embarkSchema: GraphQLSchema | undefined
-  try {
-    logger.info('Introspecting Embark')
-    embarkSchema = makeRemoteExecutableSchema({
-      schema: await introspectSchema(embarkLink),
-      link: embarkLink,
-    })
-  } catch (e) {
-    logger.error('Embark Introspection failed (Ignoring)', e)
-  }
-
-  const keyGearLink = authorizationContextLink.concat(
-    createHttpLink({
-      uri: process.env.KEY_GEAR_GRAPHQL_ENDPOINT,
-      fetch: fetch as any,
-      credentials: 'include',
-    }),
-  )
-  let keyGearSchema: GraphQLSchema | undefined
-  logger.info('Introspecting KeyGear')
-  keyGearSchema = makeRemoteExecutableSchema({
-    schema: await introspectSchema(keyGearLink),
-    link: keyGearLink,
-  })
-
-  const localSchema = makeExecutableSchema<Context>({
-    typeDefs,
-    // @ts-ignore - This type is incorrect
-    resolvers: {
-      Upload: GraphQLUpload,
-      ...(resolvers as IResolvers<any, Context>),
-    },
-  })
-  logger.info('AppContentService Introspected')
+  const extensions: string | undefined = config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== "none"
+    ? crossSchemaExtensions
+    : undefined
+  const extensionResolvers: IResolvers | undefined = config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== "none"
+    ? getCrossSchemaResolvers(transformedTranslationSchema, contentServiceSchema!)
+    : undefined
 
   logger.info('Merging schemas')
   const schema = mergeSchemas({
@@ -295,15 +268,12 @@ const makeSchema = async () => {
       accountServiceSchema,
       lookupServiceSchema,
       underwriterSchema,
-      appContentServiceSchema,
+      contentServiceSchema,
       embarkSchema,
       keyGearSchema,
-      crossSchemaExtensions,
+      extensions,
     ].filter(Boolean) as GraphQLSchema[],
-    resolvers: getCrossSchemaResolvers(
-      transformedTranslationSchema,
-      appContentServiceSchema,
-    ),
+    resolvers: extensionResolvers,
   })
   logger.info('Schemas merged')
 
