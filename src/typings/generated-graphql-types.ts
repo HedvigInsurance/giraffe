@@ -37,6 +37,7 @@ export interface Query {
    * Returns a type describing whether the 'Self Change' functionality is possible.
    */
   selfChangeEligibility: SelfChangeEligibility;
+  availableLocales: Array<Locale | null>;
 }
 
 export interface Insurance {
@@ -1229,6 +1230,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   geo?: QueryToGeoResolver<TParent>;
   angelStory?: QueryToAngelStoryResolver<TParent>;
   selfChangeEligibility?: QueryToSelfChangeEligibilityResolver<TParent>;
+  availableLocales?: QueryToAvailableLocalesResolver<TParent>;
 }
 
 export interface QueryToInsuranceResolver<TParent = undefined, TResult = Insurance> {
@@ -1304,6 +1306,10 @@ export interface QueryToAngelStoryResolver<TParent = undefined, TResult = AngelS
 }
 
 export interface QueryToSelfChangeEligibilityResolver<TParent = undefined, TResult = SelfChangeEligibility> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToAvailableLocalesResolver<TParent = undefined, TResult = Array<Locale | null>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
