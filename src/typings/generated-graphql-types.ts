@@ -41,7 +41,7 @@ export interface Query {
   /**
    * All locales that are available and activated
    */
-  availableLocales: Array<Locale | null>;
+  availableLocales: Array<Locale>;
 }
 
 export interface Insurance {
@@ -1313,7 +1313,7 @@ export interface QueryToSelfChangeEligibilityResolver<TParent = undefined, TResu
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToAvailableLocalesResolver<TParent = undefined, TResult = Array<Locale | null>> {
+export interface QueryToAvailableLocalesResolver<TParent = undefined, TResult = Array<Locale>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
