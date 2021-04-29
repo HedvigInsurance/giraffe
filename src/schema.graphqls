@@ -15,6 +15,8 @@ type Query {
   angelStory(name: String!, locale: String): AngelStory
   """Returns a type describing whether the 'Self Change' functionality is possible."""
   selfChangeEligibility: SelfChangeEligibility!
+  """All locales that are available and activated"""
+  availableLocales: [Locale!]!
 }
 
 type Mutation {

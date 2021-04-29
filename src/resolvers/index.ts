@@ -68,6 +68,7 @@ import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
 import { selfChangeEligibility, createSelfChangeQuote } from './selfChange'
+import { availableLocales } from './availableLocales'
 
 const resolvers: Resolver = {
   Query: {
@@ -86,6 +87,7 @@ const resolvers: Resolver = {
     geo,
     angelStory,
     selfChangeEligibility,
+    availableLocales
   },
   Mutation: {
     logout,
