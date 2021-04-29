@@ -37,6 +37,10 @@ export interface Query {
    * Returns a type describing whether the 'Self Change' functionality is possible.
    */
   selfChangeEligibility: SelfChangeEligibility;
+  
+  /**
+   * All locales that are available and activated
+   */
   availableLocales: Array<Locale | null>;
 }
 
