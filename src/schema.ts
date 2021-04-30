@@ -158,13 +158,6 @@ const makeSchema = async () => {
       }
     ),
     introspectRemoteSchema(
-      SchemaIdentifier.CONTENT_SERVICE,
-      {
-        url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
-        authorized: false
-      }
-    ),
-    introspectRemoteSchema(
       SchemaIdentifier.API_GATEWAY,
       {
         url: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
@@ -196,6 +189,13 @@ const makeSchema = async () => {
       SchemaIdentifier.UNDERWRITER,
       {
         url: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
+        authorized: false
+      }
+    ),
+    introspectRemoteSchema(
+      SchemaIdentifier.CONTENT_SERVICE,
+      {
+        url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
         authorized: false
       }
     ),
