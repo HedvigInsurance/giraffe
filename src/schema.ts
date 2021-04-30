@@ -120,7 +120,7 @@ const makeSchema = async () => {
     },
   })
 
-  const cachedTranslationsLink = ApolloLink.from([
+  const graphCmsLink = ApolloLink.from([
     // @ts-ignore - false negative
     createCacheLink(redis),
     createHttpLink({
@@ -138,19 +138,17 @@ const makeSchema = async () => {
     'appMarketingImages',
   ]
 
-  const graphCmsSchema = introspectRemoteSchema(
-    SchemaIdentifier.GRAPH_CMS,
-    {
-      link: cachedTranslationsLink
-    }
-  )
+  const graphCmsSchema = await makeRemoteExecutableSchema({
+    schema: await introspectSchema(graphCmsLink),
+    link: graphCmsLink,
+  })
+
   const remoteSchemas = await Promise.all([
-    graphCmsSchema.then(result => {
-      if (!result.schema) return result
-      return {
-        identifier: result.identifier,
+    Promise.resolve(
+      {
+        identifier: SchemaIdentifier.GRAPH_CMS,
         schema: transformSchema(
-          result.schema,
+          graphCmsSchema,
           [
             new FilterRootFields(
               (_, name) => !!allowedRootFields.find((allowedName) => name === allowedName)
@@ -158,7 +156,7 @@ const makeSchema = async () => {
           ],
         )
       }
-    }),
+    ),
     introspectRemoteSchema(
       SchemaIdentifier.CONTENT_SERVICE,
       {
@@ -275,7 +273,7 @@ const makeSchema = async () => {
 
   return {
     schema: applyMiddleware(schema, sentryMiddleware),
-    graphCMSSchema: (await graphCmsSchema)?.schema,
+    graphCMSSchema: graphCmsSchema,
   }
 }
 
