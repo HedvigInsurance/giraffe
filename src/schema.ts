@@ -207,13 +207,6 @@ const makeSchema = async () => {
       }
     ),
     introspectRemoteSchema(
-      "content-service",
-      {
-        url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
-        authorized: false
-      }
-    ),
-    introspectRemoteSchema(
       "embark",
       {
         url: process.env.EMBARK_GRAPHQL_ENDPOINT,
