@@ -2,7 +2,10 @@ const BASE_URL = process.env.BASE_URL || 'https://gateway.test.hedvig.com'
 const PORT = Number(process.env.PORT) || 4000
 const UPSTREAM_MODE = process.env.UPSTREAM_MODE || 'remote'
 const LOCAL_MEMBERID_OVERRIDE: string | undefined = process.env.LOCAL_MEMBERID_OVERRIDE
-const GRAPHQL_SCHEMA_INTROSPECTION_MODE = process.env.GRAPHQL_SCHEMA_INTROSPECTION_MODE || 'full'
+const GRAPHQL_SCHEMA_INTROSPECTION_MODE = process.env.NODE_ENV === 'development'
+  ? process.env.GRAPHQL_SCHEMA_INTROSPECTION_MODE || 'full'
+  : 'full'
+
 const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
