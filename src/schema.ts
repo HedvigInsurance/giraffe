@@ -81,7 +81,7 @@ const makeSchema = async () => {
   const introspectRemoteSchema = async (
     identifier: SchemaIdentifier,
     source: { url?: string, authorized?: boolean, link?: ApolloLink }
-  ): Promise<{ identifier: SchemaIdentifier, schema: GraphQLSchema } | undefined> => {
+  ): Promise<{ identifier: SchemaIdentifier, schema?: GraphQLSchema }> => {
     const actuallyInstrospect = async (): Promise<{ identifier: SchemaIdentifier, schema: GraphQLSchema }> => {
       const baseLink = source.authorized === true ? authorizationContextLink : optionalAuthorizationContextLink
       const link = source.link || baseLink.concat(
@@ -91,23 +91,20 @@ const makeSchema = async () => {
           credentials: 'include',
         })
       )
-      logger.info(`Introspecting GraphQL schema for: ${identifier}`)
       const schema = makeRemoteExecutableSchema({
         schema: await introspectSchema(link),
         link: link,
       })
-      logger.info(`Introspecting GraphQL schema for: ${identifier} - Success!`)
       return { identifier, schema }
     }
 
     switch (config.GRAPHQL_SCHEMA_INTROSPECTION_MODE) {
-      case "none": return undefined
+      case "none": return { identifier }
       case "fault-tolerant": {
         try {
           return await actuallyInstrospect()
         } catch (e) {
-          logger.info(`Introspecting GraphQL schema for: ${identifier} - Failed (skipping)!`)
-          return undefined
+          return { identifier }
         }
       }
     }
@@ -149,7 +146,7 @@ const makeSchema = async () => {
   )
   const remoteSchemas = await Promise.all([
     graphCmsSchema.then(result => {
-      if (!result) return undefined
+      if (!result.schema) return result
       return {
         identifier: result.identifier,
         schema: transformSchema(
@@ -247,9 +244,21 @@ const makeSchema = async () => {
     )
   ])
 
+  if (config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== 'none') {
+    remoteSchemas.forEach(result => {
+      if (result.schema) {
+        logger.info(`Introspection of [${result.identifier}]: Success`)
+      } else {
+        logger.info(`Introspection of [${result.identifier}]: Failure (skipping)`)
+      }
+    });
+  } else {
+    logger.info("Schema introspection skipped")
+  }
+
   const schemasById: Map<SchemaIdentifier, GraphQLSchema> = new Map()
   remoteSchemas.forEach((result) => {
-    if (!result) return
+    if (!result.schema) return
     schemasById.set(result.identifier, result.schema)
   })
   const crossSchemaExtensions = getCrossSchemaExtensions(schemasById)
@@ -263,7 +272,6 @@ const makeSchema = async () => {
     ].filter(Boolean) as GraphQLSchema[],
     resolvers: crossSchemaExtensions.resolvers,
   })
-  logger.info('Schemas merged')
 
   return {
     schema: applyMiddleware(schema, sentryMiddleware),
