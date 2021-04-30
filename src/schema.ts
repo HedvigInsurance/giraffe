@@ -118,10 +118,10 @@ const makeSchema = async () => {
     }
   })
 
-  const introspectRemoteSchema = (
+  const introspectRemoteSchema = async (
     name: string,
     source: { url?: string, authorized?: boolean, link?: ApolloLink }
-  ): Promise<GraphQLSchema> | undefined => {
+  ): Promise<GraphQLSchema | undefined> => {
     const actuallyInstrospect = async (): Promise<GraphQLSchema> => {
       const baseLink = source.authorized === true ? authorizationContextLink : optionalAuthorizationContextLink
       const link = source.link || baseLink.concat(
@@ -136,7 +136,7 @@ const makeSchema = async () => {
         schema: await introspectSchema(link),
         link: link,
       })
-      logger.info("Success!")
+      logger.info(`Introspecting GraphQL schema for: ${name} - Success!`)
       return schema
     }
 
@@ -144,14 +144,14 @@ const makeSchema = async () => {
       case "none": return undefined
       case "fault-tolerant": {
         try {
-          return actuallyInstrospect()
+          return await actuallyInstrospect()
         } catch (e) {
-          logger.error(`Embark Introspection failed (Ignoring) for: ${name}`, e)
+          logger.error(`Introspection failed (Ignoring) for: ${name}`, e)
           return undefined
         }
       }
     }
-    return actuallyInstrospect()
+    return await actuallyInstrospect()
   }
 
   const localSchema = makeExecutableSchema<Context>({
@@ -162,99 +162,105 @@ const makeSchema = async () => {
       ...(resolvers as IResolvers<any, Context>),
     },
   })
-  const apiGatewaySchema = await introspectRemoteSchema(
-    "api-gateway",
-    {
-      url: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
-      authorized: true
-    }
-  )
-  const paymentServiceSchema = await introspectRemoteSchema(
-    "payment-service",
-    {
-      url: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
-      authorized: true
-    }
-  )
-  const productPricingServiceSchema = await introspectRemoteSchema(
-    "product-pricing",
-    {
-      url: process.env.PRODUCT_PRICING_SERVICE_GRAPHQL_ENDPOINT,
-      authorized: true
-    }
-  )
-  const accountServiceSchema = await introspectRemoteSchema(
-    "account-service",
-    {
-      url: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
-      authorized: true
-    }
-  )
-  const underwriterSchema = await introspectRemoteSchema(
-    "underwriter",
-    {
-      url: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
-      authorized: false
-    }
-  )
-  const contentServiceSchema = await introspectRemoteSchema(
+  const contentServiceSchema = introspectRemoteSchema(
     "content-service",
     {
       url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
       authorized: false
     }
   )
-  const embarkSchema = await introspectRemoteSchema(
-    "embark",
-    {
-      url: process.env.EMBARK_GRAPHQL_ENDPOINT,
-      authorized: true
-    }
-  )
-  const keyGearSchema = await introspectRemoteSchema(
-    "key-gear",
-    {
-      url: process.env.KEY_GEAR_GRAPHQL_ENDPOINT,
-      authorized: true
-    }
-  )
-
-  const lookupServiceHTTPLink = createHttpLink({
-    uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
-    fetch: fetch as any,
-  })
-  const lookupServiceWSLink = new WebSocketLink(
-    new SubscriptionClient(
-      process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || '',
+  const remoteSchemas = await Promise.all([
+    contentServiceSchema,
+    introspectRemoteSchema(
+      "api-gateway",
       {
-        reconnect: true,
-      },
-      WebSocket,
+        url: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
+        authorized: true
+      }
+    ),
+    introspectRemoteSchema(
+      "payment-service",
+      {
+        url: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
+        authorized: true
+      }
+    ),
+    introspectRemoteSchema(
+      "product-pricing",
+      {
+        url: process.env.PRODUCT_PRICING_SERVICE_GRAPHQL_ENDPOINT,
+        authorized: true
+      }
+    ),
+    introspectRemoteSchema(
+      "account-service",
+      {
+        url: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
+        authorized: true
+      }
+    ),
+    introspectRemoteSchema(
+      "underwriter",
+      {
+        url: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
+        authorized: false
+      }
+    ),
+    introspectRemoteSchema(
+      "content-service",
+      {
+        url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
+        authorized: false
+      }
+    ),
+    introspectRemoteSchema(
+      "embark",
+      {
+        url: process.env.EMBARK_GRAPHQL_ENDPOINT,
+        authorized: true
+      }
+    ),
+    introspectRemoteSchema(
+      "key-gear",
+      {
+        url: process.env.KEY_GEAR_GRAPHQL_ENDPOINT,
+        authorized: true
+      }
+    ),
+    introspectRemoteSchema(
+      "lookup-service",
+      {
+        link: split(
+          ({ query }) => {
+            const definition = getMainDefinition(query)
+            return (
+              definition.kind === 'OperationDefinition' &&
+              definition.operation === 'subscription'
+            )
+          },
+          new WebSocketLink(
+            new SubscriptionClient(
+              process.env.LOOKUP_SERVICE_GRAPHQL_WS_ENDPOINT || '',
+              {
+                reconnect: true,
+              },
+              WebSocket,
+            )
+          ),
+          createHttpLink({
+            uri: process.env.LOOKUP_SERVICE_GRAPHQL_ENDPOINT,
+            fetch: fetch as any,
+          }),
+        )
+      }
     )
-  )
-  const lookupServiceLink = split(
-    ({ query }) => {
-      const definition = getMainDefinition(query)
-      return (
-        definition.kind === 'OperationDefinition' &&
-        definition.operation === 'subscription'
-      )
-    },
-    lookupServiceWSLink,
-    lookupServiceHTTPLink,
-  )
-  const lookupServiceSchema = introspectRemoteSchema(
-    "lookup-service",
-    {
-      link: lookupServiceLink
-    }
-  )
+  ])
 
   const extensions: string | undefined = config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== "none"
     ? crossSchemaExtensions
     : undefined
   const extensionResolvers: IResolvers | undefined = config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== "none"
-    ? getCrossSchemaResolvers(transformedTranslationSchema, contentServiceSchema!)
+    ? getCrossSchemaResolvers(transformedTranslationSchema, (await contentServiceSchema)!)
     : undefined
 
   logger.info('Merging schemas')
@@ -262,15 +268,7 @@ const makeSchema = async () => {
     schemas: [
       transformedTranslationSchema,
       localSchema,
-      apiGatewaySchema,
-      paymentServiceSchema,
-      productPricingServiceSchema,
-      accountServiceSchema,
-      lookupServiceSchema,
-      underwriterSchema,
-      contentServiceSchema,
-      embarkSchema,
-      keyGearSchema,
+      ...remoteSchemas,
       extensions,
     ].filter(Boolean) as GraphQLSchema[],
     resolvers: extensionResolvers,
