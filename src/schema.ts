@@ -264,8 +264,8 @@ const makeSchema = async () => {
   logger.info('Merging schemas')
   const schema = mergeSchemas({
     schemas: [
-      localSchema,
       ...remoteSchemas.map(s => s?.schema),
+      localSchema,
       crossSchemaExtensions.extension,
     ].filter(Boolean) as GraphQLSchema[],
     resolvers: crossSchemaExtensions.resolvers,
