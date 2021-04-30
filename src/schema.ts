@@ -49,46 +49,6 @@ const redis = config.REDIS_CLUSTER_MODE
   : new Redis({ host: config.REDIS_HOSTNAME, port: config.REDIS_PORT })
 
 const makeSchema = async () => {
-  logger.info('Initializing schema')
-  const translationsLink = createHttpLink({
-    uri: 'https://api-eu-central-1.graphcms.com/v2/cjmawd9hw036a01cuzmjhplka/master',
-    fetch: fetch as any,
-  })
-
-  logger.info('Introspecting graphcms schema')
-  const translationSchema = await introspectSchema(translationsLink)
-  logger.info('Graphcms schema introspected')
-
-  const cachedTranslationsLink = ApolloLink.from([
-    // @ts-ignore - false negative
-    createCacheLink(redis),
-    translationsLink,
-  ])
-
-  const executableTranslationsSchema = makeRemoteExecutableSchema({
-    schema: translationSchema,
-    link: cachedTranslationsLink,
-  })
-
-  const allowedRootFields = [
-    'languages',
-    'marketingStories',
-    'coreMLModels',
-    'keyGearItemCoverages',
-    'importantMessages',
-    'appMarketingImages',
-  ]
-
-  const transformedTranslationSchema = transformSchema(
-    executableTranslationsSchema,
-    [
-      new FilterRootFields(
-        (_, name) =>
-          !!allowedRootFields.find((allowedName) => name === allowedName),
-      ),
-    ],
-  )
-
   const authorizationContextLink = setContext((_, previousContext) => ({
     headers: {
       authorization: `Bearer ${previousContext.graphqlContext &&
@@ -144,9 +104,9 @@ const makeSchema = async () => {
       case "none": return undefined
       case "fault-tolerant": {
         try {
-          logger.info(`Introspecting GraphQL schema for: ${identifier} - Failed (skipping)!`)
           return await actuallyInstrospect()
         } catch (e) {
+          logger.info(`Introspecting GraphQL schema for: ${identifier} - Failed (skipping)!`)
           return undefined
         }
       }
@@ -162,7 +122,46 @@ const makeSchema = async () => {
       ...(resolvers as IResolvers<any, Context>),
     },
   })
+
+  const cachedTranslationsLink = ApolloLink.from([
+    // @ts-ignore - false negative
+    createCacheLink(redis),
+    createHttpLink({
+      uri: 'https://api-eu-central-1.graphcms.com/v2/cjmawd9hw036a01cuzmjhplka/master',
+      fetch: fetch as any,
+    })
+  ])
+
+  const allowedRootFields = [
+    'languages',
+    'marketingStories',
+    'coreMLModels',
+    'keyGearItemCoverages',
+    'importantMessages',
+    'appMarketingImages',
+  ]
+
+  const graphCmsSchema = introspectRemoteSchema(
+    SchemaIdentifier.GRAPH_CMS,
+    {
+      link: cachedTranslationsLink
+    }
+  )
   const remoteSchemas = await Promise.all([
+    graphCmsSchema.then(result => {
+      if (!result) return undefined
+      return {
+        identifier: result.identifier,
+        schema: transformSchema(
+          result.schema,
+          [
+            new FilterRootFields(
+              (_, name) => !!allowedRootFields.find((allowedName) => name === allowedName)
+            ),
+          ],
+        )
+      }
+    }),
     introspectRemoteSchema(
       SchemaIdentifier.CONTENT_SERVICE,
       {
@@ -258,7 +257,6 @@ const makeSchema = async () => {
   logger.info('Merging schemas')
   const schema = mergeSchemas({
     schemas: [
-      transformedTranslationSchema,
       localSchema,
       ...remoteSchemas.map(s => s?.schema),
       crossSchemaExtensions.extension,
@@ -269,7 +267,7 @@ const makeSchema = async () => {
 
   return {
     schema: applyMiddleware(schema, sentryMiddleware),
-    graphCMSSchema: executableTranslationsSchema,
+    graphCMSSchema: (await graphCmsSchema)?.schema,
   }
 }
 
