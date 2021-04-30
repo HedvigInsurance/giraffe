@@ -3,7 +3,7 @@ const PORT = Number(process.env.PORT) || 4000
 const UPSTREAM_MODE = process.env.UPSTREAM_MODE || 'remote'
 const LOCAL_MEMBERID_OVERRIDE: string | undefined = process.env.LOCAL_MEMBERID_OVERRIDE
 const GRAPHQL_SCHEMA_INTROSPECTION_MODE = process.env.NODE_ENV === 'development'
-  ? process.env.GRAPHQL_SCHEMA_INTROSPECTION_MODE || 'full'
+  ? process.env.GRAPHQL_SCHEMA_INTROSPECTION_MODE || 'fault-tolerant'
   : 'full'
 
 const PLAYGROUND_ENABLED =
