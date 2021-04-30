@@ -3,7 +3,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node .",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node --transpile-only src/index.ts",
     "build": "tsc && cp src/schema.graphqls dist/schema.graphqls && mkdir dist/translations && cp -r src/translations/*.json dist/translations",
     "watch": "concurrently -n \"ts-node,graphqls\" \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate:schema-types\"",
     "lint": "tslint **/*.ts",
