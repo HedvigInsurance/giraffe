@@ -28,8 +28,8 @@ import { Context } from './context'
 import { sentryMiddleware } from './middlewares/sentry'
 import { resolvers } from './resolvers'
 import {
-  crossSchemaExtensions,
-  getCrossSchemaResolvers,
+  SchemaIdentifier,
+  getCrossSchemaExtensions,
 } from './resolvers/cross-schema'
 import { factory } from './utils/log'
 
@@ -119,10 +119,10 @@ const makeSchema = async () => {
   })
 
   const introspectRemoteSchema = async (
-    name: string,
+    identifier: SchemaIdentifier,
     source: { url?: string, authorized?: boolean, link?: ApolloLink }
-  ): Promise<GraphQLSchema | undefined> => {
-    const actuallyInstrospect = async (): Promise<GraphQLSchema> => {
+  ): Promise<{ identifier: SchemaIdentifier, schema: GraphQLSchema } | undefined> => {
+    const actuallyInstrospect = async (): Promise<{ identifier: SchemaIdentifier, schema: GraphQLSchema }> => {
       const baseLink = source.authorized === true ? authorizationContextLink : optionalAuthorizationContextLink
       const link = source.link || baseLink.concat(
         createHttpLink({
@@ -131,22 +131,22 @@ const makeSchema = async () => {
           credentials: 'include',
         })
       )
-      logger.info(`Introspecting GraphQL schema for: ${name}`)
+      logger.info(`Introspecting GraphQL schema for: ${identifier}`)
       const schema = makeRemoteExecutableSchema({
         schema: await introspectSchema(link),
         link: link,
       })
-      logger.info(`Introspecting GraphQL schema for: ${name} - Success!`)
-      return schema
+      logger.info(`Introspecting GraphQL schema for: ${identifier} - Success!`)
+      return { identifier, schema }
     }
 
     switch (config.GRAPHQL_SCHEMA_INTROSPECTION_MODE) {
       case "none": return undefined
       case "fault-tolerant": {
         try {
+          logger.info(`Introspecting GraphQL schema for: ${identifier} - Failed (skipping)!`)
           return await actuallyInstrospect()
         } catch (e) {
-          logger.error(`Introspection failed (Ignoring) for: ${name}`, e)
           return undefined
         }
       }
@@ -162,66 +162,65 @@ const makeSchema = async () => {
       ...(resolvers as IResolvers<any, Context>),
     },
   })
-  const contentServiceSchema = introspectRemoteSchema(
-    "content-service",
-    {
-      url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
-      authorized: false
-    }
-  )
   const remoteSchemas = await Promise.all([
-    contentServiceSchema,
     introspectRemoteSchema(
-      "api-gateway",
+      SchemaIdentifier.CONTENT_SERVICE,
+      {
+        url: process.env.CONTENT_SERVICE_GRAPHQL_ENDPOINT,
+        authorized: false
+      }
+    ),
+    introspectRemoteSchema(
+      SchemaIdentifier.API_GATEWAY,
       {
         url: process.env.API_GATEWAY_GRAPHQL_ENDPOINT,
         authorized: true
       }
     ),
     introspectRemoteSchema(
-      "payment-service",
+      SchemaIdentifier.PAYMENT_SERVICE,
       {
         url: process.env.PAYMENT_SERVICE_GRAPHQL_ENDPOINT,
         authorized: true
       }
     ),
     introspectRemoteSchema(
-      "product-pricing",
+      SchemaIdentifier.PRODUCT_PRICING,
       {
         url: process.env.PRODUCT_PRICING_SERVICE_GRAPHQL_ENDPOINT,
         authorized: true
       }
     ),
     introspectRemoteSchema(
-      "account-service",
+      SchemaIdentifier.ACCOUNT_SERVICE,
       {
         url: process.env.ACCOUNT_SERVICE_GRAPHQL_ENDPOINT,
         authorized: true
       }
     ),
     introspectRemoteSchema(
-      "underwriter",
+      SchemaIdentifier.UNDERWRITER,
       {
         url: process.env.UNDERWRITER_GRAPHQL_ENDPOINT,
         authorized: false
       }
     ),
     introspectRemoteSchema(
-      "embark",
+      SchemaIdentifier.EMBARK,
       {
         url: process.env.EMBARK_GRAPHQL_ENDPOINT,
         authorized: true
       }
     ),
     introspectRemoteSchema(
-      "key-gear",
+      SchemaIdentifier.KEY_GEAR,
       {
         url: process.env.KEY_GEAR_GRAPHQL_ENDPOINT,
         authorized: true
       }
     ),
     introspectRemoteSchema(
-      "lookup-service",
+      SchemaIdentifier.LOOKUP_SERVICE,
       {
         link: split(
           ({ query }) => {
@@ -249,22 +248,22 @@ const makeSchema = async () => {
     )
   ])
 
-  const extensions: string | undefined = config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== "none"
-    ? crossSchemaExtensions
-    : undefined
-  const extensionResolvers: IResolvers | undefined = config.GRAPHQL_SCHEMA_INTROSPECTION_MODE !== "none"
-    ? getCrossSchemaResolvers(transformedTranslationSchema, (await contentServiceSchema)!)
-    : undefined
+  const schemasById: Map<SchemaIdentifier, GraphQLSchema> = new Map()
+  remoteSchemas.forEach((result) => {
+    if (!result) return
+    schemasById.set(result.identifier, result.schema)
+  })
+  const crossSchemaExtensions = getCrossSchemaExtensions(schemasById)
 
   logger.info('Merging schemas')
   const schema = mergeSchemas({
     schemas: [
       transformedTranslationSchema,
       localSchema,
-      ...remoteSchemas,
-      extensions,
+      ...remoteSchemas.map(s => s?.schema),
+      crossSchemaExtensions.extension,
     ].filter(Boolean) as GraphQLSchema[],
-    resolvers: extensionResolvers,
+    resolvers: crossSchemaExtensions.resolvers,
   })
   logger.info('Schemas merged')
 
