@@ -4,19 +4,196 @@ import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExte
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
 import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
 
-export const crossSchemaExtensions = `
+export enum SchemaIdentifier {
+  GRAPH_CMS = "graph-cms",
+  CONTENT_SERVICE = "content-service",
+  API_GATEWAY = "api-gateway",
+  PAYMENT_SERVICE = "payment-service",
+  PRODUCT_PRICING = "product-pricing",
+  ACCOUNT_SERVICE = "account-service",
+  UNDERWRITER = "underwriter",
+  EMBARK = "embark",
+  KEY_GEAR = "key-gear",
+  LOOKUP_SERVICE = "lookup-service",
+}
+
+interface CrossSchemaExtension {
+  dependencies: SchemaIdentifier[]
+  content: string,
+  resolvers(schemas: (identifier: SchemaIdentifier) => GraphQLSchema): IResolvers
+}
+
+export const getCrossSchemaExtensions = (
+  schemas: Map<SchemaIdentifier, GraphQLSchema>
+): { extension: string, resolvers: IResolvers } => {
+
+  const allExtensions: CrossSchemaExtension[] = [
+    keyGearExtension,
+    contractExtension,
+    quotesExtension,
+    embarkExtension,
+    campaignExtension
+  ]
+  const applicable = allExtensions.filter(extension => {
+    const missing = extension.dependencies.filter(id => !schemas.get(id))
+    return missing.length === 0
+  })
+
+  return {
+    extension: applicable.map(ext => ext.content).join(""),
+    resolvers: applicable.reduce((acc, ext) => {
+      const res = ext.resolvers((id) => schemas.get(id)!)
+      return {...acc, ...res}
+    }, {})
+  }
+}
+
+const keyGearExtension: CrossSchemaExtension = {
+  dependencies: [SchemaIdentifier.GRAPH_CMS, SchemaIdentifier.KEY_GEAR],
+  content: `
   extend type KeyGearItem {
     covered: [KeyGearItemCoverage!]!
     exceptions: [KeyGearItemCoverage!]!
   }
+  `,
+  resolvers: (schemas) => ({
+    KeyGearItem: {
+      covered: {
+        fragment: `fragment KeyGearCrossSchemaFragment on KeyGearItem { category }`,
+        resolve: (keyGearItem: KeyGearItem, _args, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.GRAPH_CMS),
+            operation: 'query',
+            fieldName: 'keyGearItemCoverages',
+            args: {
+              where: {
+                id_in: getCoveredIds(keyGearItem.category),
+              },
+            },
+            context,
+            info,
+          })
+        },
+      },
+      exceptions: {
+        fragment: `fragment KeyGearCrossSchemaFragment on KeyGearItem { category }`,
+        resolve: (keyGearItem: KeyGearItem, _args, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.GRAPH_CMS),
+            operation: 'query',
+            fieldName: 'keyGearItemCoverages',
+            args: {
+              where: {
+                id_in: getExceptionIds(keyGearItem.category),
+              },
+            },
+            context,
+            info,
+          })
+        },
+      },
+    }
+  })
+}
 
+const contractExtension: CrossSchemaExtension = {
+  dependencies: [SchemaIdentifier.CONTENT_SERVICE, SchemaIdentifier.PRODUCT_PRICING],
+  content: `
   extend type Contract {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
     termsAndConditions(locale: Locale!): InsuranceTerm!
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
+  `,
+  resolvers: (schemas) => ({
+    Contract: {
+      perils: {
+        fragment: `fragment ContractCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (contract: Contract, args: PerilsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'perils',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      insurableLimits: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (
+          contract: Contract,
+          args: InsurableLimitArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insurableLimits',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      termsAndConditions: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (
+          contract: Contract,
+          args: TermsAndConditionsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'termsAndConditions',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      insuranceTerms: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
+        resolve: (
+          contract: Contract,
+          args: InsuranceTermsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insuranceTerms',
+            args: {
+              contractType: contract.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+    }
+  })
+}
 
+const quotesExtension: CrossSchemaExtension = {
+  dependencies: [SchemaIdentifier.CONTENT_SERVICE, SchemaIdentifier.UNDERWRITER],
+  content: `
   extend type CompleteQuote {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
@@ -31,14 +208,235 @@ export const crossSchemaExtensions = `
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
 
+  ${quoteDetailsCrossSchemaExtensions}
+  ${quoteDisplayNameCrossSchemaExtensions}
+  `,
+  resolvers: (schemas) => ({
+    CompleteQuote: {
+      perils: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (quote: CompleteQuote, args: PerilsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'perils',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      insurableLimits: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (
+          quote: CompleteQuote,
+          args: InsurableLimitArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insurableLimits',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      termsAndConditions: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (
+          quote: CompleteQuote,
+          args: TermsAndConditionsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'termsAndConditions',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      insuranceTerms: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
+        resolve: (
+          quote: CompleteQuote,
+          args: InsuranceTermsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insuranceTerms',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      ...quoteDetailsTable("CompleteQuote"),
+      ...quoteDisplayName("CompleteQuote")
+    },
+    BundledQuote: {
+      perils: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
+        resolve: (quote: BundledQuote, args: PerilsArgs, context, info) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'perils',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      insurableLimits: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
+        resolve: (
+          quote: BundledQuote,
+          args: InsurableLimitArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insurableLimits',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      termsAndConditions: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
+        resolve: (
+          quote: BundledQuote,
+          args: TermsAndConditionsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'termsAndConditions',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      insuranceTerms: {
+        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
+        resolve: (
+          quote: BundledQuote,
+          args: InsuranceTermsArgs,
+          context,
+          info,
+        ) => {
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insuranceTerms',
+            args: {
+              contractType: quote.typeOfContract,
+              locale: args.locale,
+            },
+            context,
+            info,
+          })
+        },
+      },
+      ...quoteDetailsTable("BundledQuote"),
+      ...quoteDisplayName("BundledQuote")
+    }
+  })
+}
+
+const embarkExtension: CrossSchemaExtension = {
+  dependencies: [SchemaIdentifier.CONTENT_SERVICE, SchemaIdentifier.EMBARK],
+  content: `
   extend type EmbarkPreviousInsuranceProviderActionData {
     insuranceProviders: [InsuranceProvider!]!
   }
+  `,
+  resolvers: (schemas) => ({
+    EmbarkPreviousInsuranceProviderActionData: {
+      insuranceProviders: {
+        fragment: `fragment EmbarkPreviousInsuranceProviderActionDataCrossSchemaFragment on EmbarkPreviousInsuranceProviderActionData { providers }`,
+        resolve: (
+          actionData: EmbarkPreviousInsuranceProviderActionData,
+          _args: any,
+          context,
+          info,
+        ) => {
+          let locale;
+          const providers = actionData.providers ? actionData.providers.toLowerCase() : null
+          if (providers === null) {
+            locale = "en_SE"
+          } else if (providers === "swedish") {
+            locale = "en_SE"
+          } else if (providers === "norwegian") {
+            locale = "en_NO"
+          } else if (providers === "danish") {
+            locale = "en_DK"
+          } else {
+            throw Error(`No provider matches ${providers}`)
+          }
 
-  ${quoteDetailsCrossSchemaExtensions}
-  ${quoteDisplayNameCrossSchemaExtensions}
-  ${campaignDisplayValueCrossSchemaExtensions}
-`
+          return info.mergeInfo.delegateToSchema({
+            schema: schemas(SchemaIdentifier.CONTENT_SERVICE),
+            operation: 'query',
+            fieldName: 'insuranceProviders',
+            args: {
+              locale,
+            },
+            context,
+            info
+          })
+        }
+      }
+    }
+  })
+}
+
+const campaignExtension: CrossSchemaExtension = {
+  dependencies: [SchemaIdentifier.PRODUCT_PRICING],
+  content: campaignDisplayValueCrossSchemaExtensions,
+  resolvers: () => ({
+    Campaign: {
+      ...campaignDisplayValue
+    }
+  })
+}
 
 const getCoveredIds = (category: KeyGearItemCategory) => {
   return {
@@ -203,336 +601,6 @@ enum Locale {
   en_NO = 'en_NO',
   da_DK = 'da_DK',
   en_DK = 'en_DK',
-}
-
-export const getCrossSchemaResolvers = (
-  graphcmsSchema: GraphQLSchema,
-  contentSchema: GraphQLSchema,
-): IResolvers => {
-  return {
-    KeyGearItem: {
-      covered: {
-        fragment: `fragment KeyGearCrossSchemaFragment on KeyGearItem { category }`,
-        resolve: (keyGearItem: KeyGearItem, _args, context, info) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: graphcmsSchema,
-            operation: 'query',
-            fieldName: 'keyGearItemCoverages',
-            args: {
-              where: {
-                id_in: getCoveredIds(keyGearItem.category),
-              },
-            },
-            context,
-            info,
-          })
-        },
-      },
-      exceptions: {
-        fragment: `fragment KeyGearCrossSchemaFragment on KeyGearItem { category }`,
-        resolve: (keyGearItem: KeyGearItem, _args, context, info) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: graphcmsSchema,
-            operation: 'query',
-            fieldName: 'keyGearItemCoverages',
-            args: {
-              where: {
-                id_in: getExceptionIds(keyGearItem.category),
-              },
-            },
-            context,
-            info,
-          })
-        },
-      },
-    },
-    Contract: {
-      perils: {
-        fragment: `fragment ContractCrossSchemaFragment on Contract { typeOfContract }`,
-        resolve: (contract: Contract, args: PerilsArgs, context, info) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'perils',
-            args: {
-              contractType: contract.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      insurableLimits: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
-        resolve: (
-          contract: Contract,
-          args: InsurableLimitArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insurableLimits',
-            args: {
-              contractType: contract.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      termsAndConditions: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
-        resolve: (
-          contract: Contract,
-          args: TermsAndConditionsArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'termsAndConditions',
-            args: {
-              contractType: contract.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      insuranceTerms: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on Contract { typeOfContract }`,
-        resolve: (
-          contract: Contract,
-          args: InsuranceTermsArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insuranceTerms',
-            args: {
-              contractType: contract.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-    },
-    CompleteQuote: {
-      perils: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
-        resolve: (quote: CompleteQuote, args: PerilsArgs, context, info) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'perils',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      insurableLimits: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
-        resolve: (
-          quote: CompleteQuote,
-          args: InsurableLimitArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insurableLimits',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      termsAndConditions: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
-        resolve: (
-          quote: CompleteQuote,
-          args: TermsAndConditionsArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'termsAndConditions',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      insuranceTerms: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on CompleteQuote { typeOfContract }`,
-        resolve: (
-          quote: CompleteQuote,
-          args: InsuranceTermsArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insuranceTerms',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      ...quoteDetailsTable("CompleteQuote"),
-      ...quoteDisplayName("CompleteQuote")
-    },
-    BundledQuote: {
-      perils: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
-        resolve: (quote: BundledQuote, args: PerilsArgs, context, info) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'perils',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      insurableLimits: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
-        resolve: (
-          quote: BundledQuote,
-          args: InsurableLimitArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insurableLimits',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      termsAndConditions: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
-        resolve: (
-          quote: BundledQuote,
-          args: TermsAndConditionsArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'termsAndConditions',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      insuranceTerms: {
-        fragment: `fragment CompleteQuoteCrossSchemaFragment on BundledQuote { typeOfContract }`,
-        resolve: (
-          quote: BundledQuote,
-          args: InsuranceTermsArgs,
-          context,
-          info,
-        ) => {
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insuranceTerms',
-            args: {
-              contractType: quote.typeOfContract,
-              locale: args.locale,
-            },
-            context,
-            info,
-          })
-        },
-      },
-      ...quoteDetailsTable("BundledQuote"),
-      ...quoteDisplayName("BundledQuote"),
-    },
-    EmbarkPreviousInsuranceProviderActionData: {
-      insuranceProviders: {
-        fragment: `fragment EmbarkPreviousInsuranceProviderActionDataCrossSchemaFragment on EmbarkPreviousInsuranceProviderActionData { providers }`,
-        resolve: (
-          actionData: EmbarkPreviousInsuranceProviderActionData,
-          _args: any,
-          context,
-          info,
-        ) => {
-          let locale;
-          const providers = actionData.providers ? actionData.providers.toLowerCase() : null
-          if (providers === null) {
-            locale = "en_SE"
-          } else if (providers === "swedish") {
-            locale = "en_SE"
-          } else if (providers === "norwegian") {
-            locale = "en_NO"
-          } else if (providers === "danish") {
-            locale = "en_DK"
-          } else {
-            throw Error(`No provider matches ${providers}`)
-          }
-
-          return info.mergeInfo.delegateToSchema({
-            schema: contentSchema,
-            operation: 'query',
-            fieldName: 'insuranceProviders',
-            args: {
-              locale,
-            },
-            context,
-            info
-          })
-        }
-      }
-    },
-    Campaign: {
-      ...campaignDisplayValue
-    }
-  }
 }
 
 interface EmbarkPreviousInsuranceProviderActionData {
