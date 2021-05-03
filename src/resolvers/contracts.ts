@@ -1,6 +1,6 @@
 import { LocalizedStrings } from '../translations/LocalizedStrings';
 import { ContractDto, ContractStatusDto, AgreementDto, AgreementStatusDto } from './../api/upstreams/productPricing';
-import { QueryToContractBundlesResolver, ContractBundle, QueryToContractsResolver, Contract, QueryToHasContractResolver, ContractStatus, Agreement, TypeOfContract, AgreementStatus, SwedishApartmentLineOfBusiness, SwedishApartmentAgreement } from './../typings/generated-graphql-types';
+import { QueryToContractBundlesResolver, ContractBundle, QueryToContractsResolver, Contract, QueryToHasContractResolver, ContractStatus, Agreement, TypeOfContract, AgreementStatus, SwedishApartmentLineOfBusiness, SwedishApartmentAgreement, SwedishHouseAgreement } from './../typings/generated-graphql-types';
 
 
 export const contractBundles: QueryToContractBundlesResolver = async (
@@ -87,12 +87,29 @@ const transformAgreement = (
         termsAndConditions: undefined // TODO help???
     }
     switch (agreement.type) {
-        case "SwedishApartment": return <SwedishApartmentAgreement> {
-            ...core,
-            address: agreement.address,
-            numberCoInsured: agreement.numberCoInsured,
-            squareMeters: agreement.squareMeters,
-            type: agreement.lineOfBusiness as SwedishApartmentLineOfBusiness
+        case "SwedishApartment": {
+            const result: SwedishApartmentAgreement = {
+                ...core,
+                address: agreement.address,
+                numberCoInsured: agreement.numberCoInsured,
+                squareMeters: agreement.squareMeters,
+                type: agreement.lineOfBusiness as SwedishApartmentLineOfBusiness
+            }
+            return result
+        }
+        case "SwedishHouse": {
+            const result: SwedishHouseAgreement = {
+                ...core,
+                address: agreement.address,
+                numberCoInsured: agreement.numberCoInsured,
+                squareMeters: agreement.squareMeters,
+                ancillaryArea: agreement.ancillaryArea,
+                yearOfConstruction: agreement.yearOfConstruction,
+                numberOfBathrooms: agreement.numberOfBathrooms,
+                isSubleted: agreement.isSubleted,
+                extraBuildings: agreement.extraBuildings
+            }
+            return result
         }
     }
     throw "Unhandled type: " + agreement.type

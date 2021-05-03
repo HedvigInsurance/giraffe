@@ -87,6 +87,14 @@ export interface SwedishApartmentAgreementDto extends AgreementType {
 }
 export interface SwedishHouseAgreementDto extends AgreementType {
   type: "SwedishHouse"
+  address: AddressDto,
+  numberCoInsured: number,
+  squareMeters: number,
+  ancillaryArea: number,
+  yearOfConstruction: number,
+  numberOfBathrooms: number,
+  extraBuildings: ExtraBuildingDto[],
+  isSubleted: boolean
 }
 export interface NorwegianHomeContentAgreementDto extends AgreementType {
   type: "NorwegianHomeContent"
@@ -136,6 +144,30 @@ export interface AddressDto {
   country: string
   apartment?: string
   floor?: string
+}
+
+export interface ExtraBuildingDto {
+  type: ExtraBuildingTypeDto
+  area: number
+  displayName: string
+  hasWaterConnected: boolean
+}
+
+export enum ExtraBuildingTypeDto {
+  GARAGE = 'GARAGE',
+  CARPORT = 'CARPORT',
+  SHED = 'SHED',
+  STOREHOUSE = 'STOREHOUSE',
+  FRIGGEBOD = 'FRIGGEBOD',
+  ATTEFALL = 'ATTEFALL',
+  OUTHOUSE = 'OUTHOUSE',
+  GUESTHOUSE = 'GUESTHOUSE',
+  GAZEBO = 'GAZEBO',
+  GREENHOUSE = 'GREENHOUSE',
+  SAUNA = 'SAUNA',
+  BARN = 'BARN',
+  BOATHOUSE = 'BOATHOUSE',
+  OTHER = 'OTHER'
 }
 
 export const createProductPricingClient = (client: HttpClient): ProductPricingClient => {
