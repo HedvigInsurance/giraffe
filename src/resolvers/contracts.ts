@@ -83,16 +83,43 @@ const transformContract = (
 }
 
 const transformContractStatus = (contract: ContractDto): ContractStatus => {
+  const upcomingAgreementChange = contract.upcomingAgreement
+    ? { newAgreement: transformAgreement(contract.upcomingAgreement) }
+    : undefined
   switch (contract.status) {
+    case ContractStatusDto.PENDING:
+      return {
+        pendingSince: contract.createdAt.split('T')[0], // Ugly Instant to Date transformation
+      }
+    case ContractStatusDto.ACTIVE_IN_FUTURE:
+      return {
+        futureInception: contract.masterInception,
+      }
+    case ContractStatusDto.ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE:
+      return {
+        futureInception: contract.masterInception,
+        futureTermination: contract.terminationDate,
+      }
     case ContractStatusDto.ACTIVE:
       return {
         pastInception: contract.masterInception,
-        upcomingAgreementChange: contract.upcomingAgreement
-          ? { newAgreement: transformAgreement(contract.upcomingAgreement) }
-          : undefined,
+        upcomingAgreementChange: upcomingAgreementChange,
+      }
+    case ContractStatusDto.TERMINATED_TODAY: {
+      const now = new Date()
+      return {
+        today: `${now.getFullYear}-${now.getMonth}-${now.getDay}`
+      }
+    }
+    case ContractStatusDto.TERMINATED_IN_FUTURE:
+      return {
+        futureTermination: contract.terminationDate
+      }
+    case ContractStatusDto.TERMINATED:
+      return {
+        termination: contract.terminationDate
       }
   }
-  throw 'Unhandled status: ' + contract.status
 }
 
 const transformAgreement = (agreement: AgreementDto): Agreement => {

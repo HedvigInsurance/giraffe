@@ -1,4 +1,4 @@
-import { NorwegianHomeContentLineOfBusiness, NorwegianTravelLineOfBusiness, DanishHomeContentLineOfBusiness, DanishTravelLineOfBusiness, DanishAccidentLineOfBusiness } from './../typings/generated-graphql-types';
+import { NorwegianHomeContentLineOfBusiness, NorwegianTravelLineOfBusiness, DanishHomeContentLineOfBusiness, DanishTravelLineOfBusiness, DanishAccidentLineOfBusiness, ActiveStatus, PendingStatus, ActiveInFutureStatus, TerminatedInFutureStatus, TerminatedStatus, ActiveInFutureAndTerminatedInFutureStatus } from './../typings/generated-graphql-types';
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -78,6 +78,119 @@ describe('Query.contracts', () => {
     },
     status: AgreementStatus.ACTIVE,
   }
+
+  it('works for different statuses', async () => {
+    const contract: ContractDto = {
+      ...baseContract,
+      typeOfContract: 'SE_APARTMENT_BRF',
+      upcomingAgreement: {
+        ...baseAgreement,
+        type: 'SwedishApartment',
+        lineOfBusiness: 'BRF',
+        address: address,
+        numberCoInsured: 2,
+        squareMeters: 66,
+      },
+      agreements: [
+        {
+          ...baseAgreement,
+          type: 'SwedishApartment',
+          lineOfBusiness: 'BRF',
+          address: address,
+          numberCoInsured: 1,
+          squareMeters: 44,
+        },
+      ],
+    }
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, status: ContractStatusDto.ACTIVE }
+    ])
+
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<ActiveStatus>(
+      {
+        pastInception: contract.masterInception,
+        upcomingAgreementChange: {
+          newAgreement: {
+            ...baseOutputAgreement,
+            address: address,
+            numberCoInsured: 2,
+            squareMeters: 66,
+            type: SwedishApartmentLineOfBusiness.BRF
+          }
+        }
+      }
+    )
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, status: ContractStatusDto.PENDING }
+    ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<PendingStatus>(
+      {
+        pendingSince: '2020-12-01'
+      }
+    )
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE }
+    ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<ActiveInFutureStatus>(
+      {
+        futureInception: contract.masterInception
+      }
+    )
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE }
+    ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<ActiveInFutureStatus>(
+      {
+        futureInception: contract.masterInception
+      }
+    )
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, terminationDate: '2022-01-01', status: ContractStatusDto.TERMINATED_IN_FUTURE }
+    ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<TerminatedInFutureStatus>(
+      {
+        futureTermination: '2022-01-01'
+      }
+    )
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, terminationDate: '2022-01-01', status: ContractStatusDto.TERMINATED }
+    ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<TerminatedStatus>(
+      {
+        termination: '2022-01-01'
+      }
+    )
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...contract, terminationDate: '2022-01-01', status: ContractStatusDto.ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE }
+    ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status
+    ).toMatchObject<ActiveInFutureAndTerminatedInFutureStatus>(
+      {
+        futureInception: contract.masterInception,
+        futureTermination: '2022-01-01'
+      }
+    )
+  })
+
 
   it('works for swedish apartment', async () => {
     const contract: ContractDto = {
