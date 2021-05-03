@@ -39,6 +39,7 @@ describe('Query.contracts', () => {
     id: 'cid',
     holderMemberId: 'mid',
     masterInception: '2021-03-01',
+    switchedFrom: 'IF',
     status: ContractStatusDto.ACTIVE,
     isTerminated: false,
     currentAgreementId: 'aid1',
@@ -62,6 +63,7 @@ describe('Query.contracts', () => {
   const baseOutput = {
     id: 'cid',
     holderMember: 'mid',
+    switchedFromInsuranceProvider: 'IF',
     status: {
       pastInception: baseContract.masterInception,
     },
