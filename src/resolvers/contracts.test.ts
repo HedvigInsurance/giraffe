@@ -1,4 +1,4 @@
-import { NorwegianHomeContentLineOfBusiness, NorwegianTravelLineOfBusiness } from './../typings/generated-graphql-types';
+import { NorwegianHomeContentLineOfBusiness, NorwegianTravelLineOfBusiness, DanishHomeContentLineOfBusiness, DanishTravelLineOfBusiness, DanishAccidentLineOfBusiness } from './../typings/generated-graphql-types';
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -235,6 +235,110 @@ describe('Query.contracts', () => {
           ...baseOutputAgreement,
           numberCoInsured: 2,
           type: NorwegianTravelLineOfBusiness.REGULAR
+        },
+      },
+    ])
+  })
+
+  it('works for danish home content', async () => {
+    const contract: ContractDto = {
+      ...baseContract,
+      typeOfContract: 'DK_HOME_CONTENT_OWN',
+      agreements: [
+        {
+          ...baseAgreement,
+          type: 'DanishHomeContent',
+          address: address,
+          numberCoInsured: 2,
+          squareMeters: 98,
+          lineOfBusiness: 'OWN'
+        },
+      ],
+    }
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([
+      {
+        ...baseOutput,
+        typeOfContract: TypeOfContract.DK_HOME_CONTENT_OWN,
+        displayName: 'CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN',
+        currentAgreement: {
+          ...baseOutputAgreement,
+          address: address,
+          numberCoInsured: 2,
+          squareMeters: 98,
+          type: DanishHomeContentLineOfBusiness.OWN
+        },
+      },
+    ])
+  })
+
+  it('works for danish travel', async () => {
+    const contract: ContractDto = {
+      ...baseContract,
+      typeOfContract: 'DK_TRAVEL',
+      agreements: [
+        {
+          ...baseAgreement,
+          type: 'DanishTravel',
+          address: address,
+          numberCoInsured: 2,
+          lineOfBusiness: 'REGULAR'
+        },
+      ],
+    }
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([
+      {
+        ...baseOutput,
+        typeOfContract: TypeOfContract.DK_TRAVEL,
+        displayName: 'CONTRACT_DISPLAY_NAME_DK_TRAVEL',
+        currentAgreement: {
+          ...baseOutputAgreement,
+          address: address,
+          numberCoInsured: 2,
+          type: DanishTravelLineOfBusiness.REGULAR
+        },
+      },
+    ])
+  })
+
+  it('works for danish accident', async () => {
+    const contract: ContractDto = {
+      ...baseContract,
+      typeOfContract: 'DK_ACCIDENT',
+      agreements: [
+        {
+          ...baseAgreement,
+          type: 'DanishAccident',
+          address: address,
+          numberCoInsured: 2,
+          lineOfBusiness: 'REGULAR'
+        },
+      ],
+    }
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([
+      {
+        ...baseOutput,
+        typeOfContract: TypeOfContract.DK_ACCIDENT,
+        displayName: 'CONTRACT_DISPLAY_NAME_DK_ACCIDENT',
+        currentAgreement: {
+          ...baseOutputAgreement,
+          address: address,
+          numberCoInsured: 2,
+          type: DanishAccidentLineOfBusiness.REGULAR
         },
       },
     ])

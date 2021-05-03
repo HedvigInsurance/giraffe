@@ -110,12 +110,22 @@ export interface NorwegianTravelAgreementDto extends AgreementType {
 }
 export interface DanishHomeContentAgreementDto extends AgreementType {
   type: "DanishHomeContent"
+  address: AddressDto,
+  numberCoInsured: number,
+  squareMeters: number,
+  lineOfBusiness: string
 }
 export interface DanishAccidentAgreementDto extends AgreementType {
   type: "DanishAccident"
+  address: AddressDto,
+  numberCoInsured: number,
+  lineOfBusiness: string
 }
 export interface DanishTravelAgreementDto extends AgreementType {
   type: "DanishTravel"
+  address: AddressDto,
+  numberCoInsured: number,
+  lineOfBusiness: string
 }
 
 export interface RenewalDto {
