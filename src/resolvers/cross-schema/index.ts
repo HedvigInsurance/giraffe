@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
-import { currentAgreementDetailsTable, upcomingAgreementDetailsTable } from './detailstable/contractDetailsTable'
+import { crossSchemaExtensions as contractDetailsCrossSchemaExtension, currentAgreementDetailsTable, upcomingAgreementDetailsTable } from './detailstable/contractDetailsTable'
 import { getQuoteDetailsFragment } from './detailstable/quoteDetailsFragments'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './detailstable/quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
@@ -107,6 +107,8 @@ const contractExtension: CrossSchemaExtension = {
     termsAndConditions(locale: Locale!): InsuranceTerm!
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
+  
+  ${contractDetailsCrossSchemaExtension}
   `,
   resolvers: (schemas) => ({
     Contract: {
