@@ -13,6 +13,13 @@ type Query {
   chatActions: [ChatAction]
   geo: Geo!
   angelStory(name: String!, locale: String): AngelStory
+
+  """Returns all the contracts, combined into bundles."""
+  contractBundles: [ContractBundle!]!
+  """Returns all contracts the member currently holds, regardless of activation/termination status"""
+  contracts: [Contract!]!
+  """Returns whether a member has at least one contract"""
+  hasContract: Boolean!
   """Returns a type describing whether the 'Self Change' functionality is possible."""
   selfChangeEligibility: SelfChangeEligibility!
   """All locales that are available and activated"""
@@ -518,112 +525,6 @@ type Insurance {
   isSubleted: Boolean
 }
 
-union ExtraBuilding =
-    ExtraBuildingGarage
-  | ExtraBuildingCarport
-  | ExtraBuildingShed
-  | ExtraBuildingStorehouse
-  | ExtraBuildingFriggebod
-  | ExtraBuildingAttefall
-  | ExtraBuildingOuthouse
-  | ExtraBuildingGuesthouse
-  | ExtraBuildingGazebo
-  | ExtraBuildingGreenhouse
-  | ExtraBuildingSauna
-  | ExtraBuildingBarn
-  | ExtraBuildingBoathouse
-  | ExtraBuildingOther
-
-interface ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGarage implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingCarport implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingShed implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingStorehouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingFriggebod implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingAttefall implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingOuthouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGuesthouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGazebo implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGreenhouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingSauna implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingBarn implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingBoathouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingOther implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
 type PreviousInsurer {
   displayName: String
   id: ID!
@@ -768,6 +669,8 @@ scalar URL
 # String-represented UUID.
 scalar UUID
 scalar Object
+# An ISO-8601 String representation of a `java.time.Instant`, e.g. 2019-07-03T19:07:38.494081Z
+scalar Instant
 
 type File {
   """
@@ -782,4 +685,399 @@ type File {
   S3 bucket that the file was uploaded to.
   """
   bucket: String!
+}
+
+
+#### Contracts ####
+# These will all override their duplicates inside product-pricing
+
+type ContractBundle {
+  id: ID!
+  contracts: [Contract!]!
+}
+
+type Contract {
+    id: ID!
+    holderMember: ID!
+    typeOfContract: TypeOfContract!
+    switchedFromInsuranceProvider: String
+    status: ContractStatus!
+    displayName: String!
+    """"The 'best guess' of the agreement that depicts the member's insurance, either the pending, future, current or, if terminated, past agreement"""
+    currentAgreement: Agreement!
+    """The date the contract agreement timeline begin, if it has been activated"""
+    inception: LocalDate
+    """The date the contract agreement timelinen end, on if it has been terminated"""
+    termination: LocalDate
+    """An upcoming renewal, present if the member has been notified and the renewal is within 31 days"""
+    upcomingRenewal: UpcomingRenewal
+    createdAt: Instant!
+}
+
+enum TypeOfContract {
+    SE_HOUSE
+    SE_APARTMENT_BRF
+    SE_APARTMENT_RENT
+    SE_APARTMENT_STUDENT_BRF
+    SE_APARTMENT_STUDENT_RENT
+    NO_HOME_CONTENT_OWN
+    NO_HOME_CONTENT_RENT
+    NO_HOME_CONTENT_YOUTH_OWN
+    NO_HOME_CONTENT_YOUTH_RENT
+    NO_TRAVEL
+    NO_TRAVEL_YOUTH
+    DK_HOME_CONTENT_OWN
+    DK_HOME_CONTENT_RENT
+    DK_HOME_CONTENT_STUDENT_OWN
+    DK_HOME_CONTENT_STUDENT_RENT
+    DK_ACCIDENT
+    DK_ACCIDENT_STUDENT
+    DK_TRAVEL
+    DK_TRAVEL_STUDENT
+}
+
+union ContractStatus =
+    PendingStatus
+    | ActiveInFutureStatus
+    | ActiveStatus
+    | ActiveInFutureAndTerminatedInFutureStatus
+    | TerminatedInFutureStatus
+    | TerminatedTodayStatus
+    | TerminatedStatus
+
+"""The contract is neither active or terminated, waiting to have an inception date set"""
+type PendingStatus {
+    pendingSince: LocalDate
+}
+
+"""The contract has an inception date set in the future"""
+type ActiveInFutureStatus {
+    futureInception: LocalDate
+}
+
+"""The contract has an inception date set today or in the past without a termination date set"""
+type ActiveStatus {
+    pastInception: LocalDate
+    upcomingAgreementChange: UpcomingAgreementChange
+}
+
+"""The contract has an inception date in the future and a termination date in the future"""
+type ActiveInFutureAndTerminatedInFutureStatus {
+    futureInception: LocalDate
+    futureTermination: LocalDate
+}
+
+"""The contract has been active and has its termination date set to today, i.e. today is the last day the contract is active"""
+type TerminatedTodayStatus {
+    today: LocalDate
+    upcomingAgreementChange: UpcomingAgreementChange
+}
+
+"""The contract is active today but will be terminated in the future, i.e. is active today but will not be in the future"""
+type TerminatedInFutureStatus {
+    futureTermination: LocalDate
+    upcomingAgreementChange: UpcomingAgreementChange
+}
+
+"""The contract has been terminated in the past, terminated on the same date as its start date or has never been activated and has a termination date set"""
+type TerminatedStatus {
+    termination: LocalDate
+}
+
+type UpcomingRenewal {
+    renewalDate: LocalDate!
+    draftCertificateUrl: String!
+}
+
+"""If present, the upcomingAgreementChange contains info regarding the agreement that will succeed the current one"""
+type UpcomingAgreementChange {
+    newAgreement: Agreement!
+}
+
+interface AgreementCore {
+    id: ID!
+    status: AgreementStatus!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    termsAndConditions: InsuranceTerm
+}
+
+enum AgreementStatus {
+    """An agreement with no activation date, waiting to be activated"""
+    PENDING
+    """An agreement that will be active on a future date"""
+    ACTIVE_IN_FUTURE
+    """An agreement that is active today"""
+    ACTIVE
+    """An agreement that either was never active that is now terminated or was active in the past of a now terminated contract"""
+    TERMINATED
+}
+
+union Agreement = SwedishApartmentAgreement |
+    SwedishHouseAgreement |
+    NorwegianHomeContentAgreement |
+    NorwegianTravelAgreement |
+    DanishHomeContentAgreement |
+    DanishAccidentAgreement |
+    DanishTravelAgreement
+
+type SwedishApartmentAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    address: Address!
+    numberCoInsured: Int!
+    squareMeters: Int!
+    type: SwedishApartmentLineOfBusiness!
+}
+
+enum SwedishApartmentLineOfBusiness {
+    RENT
+    BRF
+    STUDENT_RENT
+    STUDENT_BRF
+}
+
+type SwedishHouseAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    address: Address!
+    numberCoInsured: Int!
+    squareMeters: Int!
+    ancillaryArea: Int!
+    yearOfConstruction: Int!
+    numberOfBathrooms: Int!
+    extraBuildings: [ExtraBuilding]!
+    isSubleted: Boolean!
+}
+
+type NorwegianHomeContentAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    address: Address!
+    numberCoInsured: Int!
+    squareMeters: Int!
+    type: NorwegianHomeContentLineOfBusiness
+}
+
+enum NorwegianHomeContentLineOfBusiness {
+    RENT
+    OWN
+    YOUTH_RENT
+    YOUTH_OWN
+}
+
+type NorwegianTravelAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    numberCoInsured: Int!
+    type: NorwegianTravelLineOfBusiness
+}
+
+enum NorwegianTravelLineOfBusiness {
+    REGULAR
+    YOUTH
+}
+
+type DanishHomeContentAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    address: Address!
+    numberCoInsured: Int!
+    squareMeters: Int!
+    type: DanishHomeContentLineOfBusiness
+}
+
+enum DanishHomeContentLineOfBusiness {
+    RENT
+    OWN
+    STUDENT_RENT
+    STUDENT_OWN
+}
+
+type DanishAccidentAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    address: Address!
+    numberCoInsured: Int!
+    type: DanishAccidentLineOfBusiness
+}
+
+enum DanishAccidentLineOfBusiness {
+    REGULAR
+    STUDENT
+}
+
+type DanishTravelAgreement implements AgreementCore {
+    id: ID!
+    activeFrom: LocalDate
+    activeTo: LocalDate
+    premium: MonetaryAmountV2!
+    certificateUrl: String
+    status: AgreementStatus!
+    termsAndConditions: InsuranceTerm
+    address: Address!
+    numberCoInsured: Int!
+    type: DanishTravelLineOfBusiness
+}
+
+enum DanishTravelLineOfBusiness {
+    REGULAR
+    STUDENT
+}
+
+union ExtraBuilding =
+    ExtraBuildingGarage
+  | ExtraBuildingCarport
+  | ExtraBuildingShed
+  | ExtraBuildingStorehouse
+  | ExtraBuildingFriggebod
+  | ExtraBuildingAttefall
+  | ExtraBuildingOuthouse
+  | ExtraBuildingGuesthouse
+  | ExtraBuildingGazebo
+  | ExtraBuildingGreenhouse
+  | ExtraBuildingSauna
+  | ExtraBuildingBarn
+  | ExtraBuildingBoathouse
+  | ExtraBuildingOther
+
+interface ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGarage implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingCarport implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingShed implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingStorehouse implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingFriggebod implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingAttefall implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingOuthouse implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGuesthouse implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGazebo implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingGreenhouse implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingSauna implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingBarn implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingBoathouse implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingOther implements ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type Address {
+    street: String!
+    postalCode: String!
+    city: String
+    apartment: String
+    floor: String
+}
+
+type InsuranceTerm {
+    commencementDate: LocalDate!
+    displayName: String!
+    url: String!
+    type: InsuranceTermType!
+}
+
+enum InsuranceTermType {
+    TERMS_AND_CONDITIONS
 }
