@@ -1,6 +1,6 @@
 import { LocalizedStrings } from '../translations/LocalizedStrings';
 import { ContractDto, ContractStatusDto, AgreementDto, AgreementStatusDto } from './../api/upstreams/productPricing';
-import { QueryToContractBundlesResolver, ContractBundle, QueryToContractsResolver, Contract, QueryToHasContractResolver, ContractStatus, Agreement, TypeOfContract, AgreementStatus, SwedishApartmentLineOfBusiness, SwedishApartmentAgreement, SwedishHouseAgreement, NorwegianHomeContentAgreement, NorwegianHomeContentLineOfBusiness } from './../typings/generated-graphql-types';
+import { QueryToContractBundlesResolver, ContractBundle, QueryToContractsResolver, Contract, QueryToHasContractResolver, ContractStatus, Agreement, TypeOfContract, AgreementStatus, SwedishApartmentLineOfBusiness, SwedishApartmentAgreement, SwedishHouseAgreement, NorwegianHomeContentAgreement, NorwegianHomeContentLineOfBusiness, NorwegianTravelAgreement, NorwegianTravelLineOfBusiness } from './../typings/generated-graphql-types';
 
 
 export const contractBundles: QueryToContractBundlesResolver = async (
@@ -118,6 +118,14 @@ const transformAgreement = (
                 numberCoInsured: agreement.numberCoInsured,
                 squareMeters: agreement.squareMeters,
                 type: agreement.lineOfBusiness as NorwegianHomeContentLineOfBusiness
+            }
+            return result
+        }
+        case "NorwegianTravel": {
+            const result: NorwegianTravelAgreement = {
+                ...core,
+                numberCoInsured: agreement.numberCoInsured,
+                type: agreement.lineOfBusiness as NorwegianTravelLineOfBusiness
             }
             return result
         }

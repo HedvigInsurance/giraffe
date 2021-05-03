@@ -1,4 +1,4 @@
-import { NorwegianHomeContentLineOfBusiness } from './../typings/generated-graphql-types';
+import { NorwegianHomeContentLineOfBusiness, NorwegianTravelLineOfBusiness } from './../typings/generated-graphql-types';
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -80,7 +80,7 @@ describe('Query.contracts', () => {
   }
 
   it('works for swedish apartment', async () => {
-    const swedishApartment: ContractDto = {
+    const contract: ContractDto = {
       ...baseContract,
       typeOfContract: 'SE_APARTMENT_BRF',
       agreements: [
@@ -95,8 +95,7 @@ describe('Query.contracts', () => {
       ],
     }
 
-    context.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([swedishApartment])
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
 
     const result = await contracts(undefined, {}, context, info)
 
@@ -117,7 +116,7 @@ describe('Query.contracts', () => {
   })
 
   it('works for swedish houses', async () => {
-    const swedishHouse: ContractDto = {
+    const contract: ContractDto = {
       ...baseContract,
       typeOfContract: 'SE_HOUSE',
       agreements: [
@@ -143,8 +142,7 @@ describe('Query.contracts', () => {
       ],
     }
 
-    context.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([swedishHouse])
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
 
     const result = await contracts(undefined, {}, context, info)
 
@@ -175,7 +173,7 @@ describe('Query.contracts', () => {
   })
 
   it('works for norwegian home content', async () => {
-    const swedishHouse: ContractDto = {
+    const contract: ContractDto = {
       ...baseContract,
       typeOfContract: 'NO_HOME_CONTENT_OWN',
       agreements: [
@@ -190,8 +188,7 @@ describe('Query.contracts', () => {
       ],
     }
 
-    context.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([swedishHouse])
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
 
     const result = await contracts(undefined, {}, context, info)
 
@@ -206,6 +203,38 @@ describe('Query.contracts', () => {
           numberCoInsured: 2,
           squareMeters: 77,
           type: NorwegianHomeContentLineOfBusiness.RENT,
+        },
+      },
+    ])
+  })
+
+  it('works for norwegian travel', async () => {
+    const contract: ContractDto = {
+      ...baseContract,
+      typeOfContract: 'NO_TRAVEL',
+      agreements: [
+        {
+          ...baseAgreement,
+          type: 'NorwegianTravel',
+          lineOfBusiness: 'REGULAR',
+          numberCoInsured: 2,
+        },
+      ],
+    }
+
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([
+      {
+        ...baseOutput,
+        typeOfContract: TypeOfContract.NO_TRAVEL,
+        displayName: 'CONTRACT_DISPLAY_NAME_NO_TRAVEL',
+        currentAgreement: {
+          ...baseOutputAgreement,
+          numberCoInsured: 2,
+          type: NorwegianTravelLineOfBusiness.REGULAR
         },
       },
     ])

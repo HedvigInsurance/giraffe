@@ -105,6 +105,8 @@ export interface NorwegianHomeContentAgreementDto extends AgreementType {
 }
 export interface NorwegianTravelAgreementDto extends AgreementType {
   type: "NorwegianTravel"
+  lineOfBusiness: string
+  numberCoInsured: number
 }
 export interface DanishHomeContentAgreementDto extends AgreementType {
   type: "DanishHomeContent"
