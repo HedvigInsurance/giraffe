@@ -2,8 +2,8 @@ import { IResolvers } from 'graphql-tools'
 import { SchemaIdentifier, Schemas } from "./index"
 
 export const crossSchemaExtensions = `
-    """An inception where quotes are conjoined and should update in tandem"""
-    type ConjoinedInception {
+    """An inception where all quotes need to have concurrent startDates"""
+    type ConcurrentInception {
       correspondingQuotes: [Quote!]!
       startDate: LocalDate!
     }
@@ -22,7 +22,7 @@ export const crossSchemaExtensions = `
       inceptions: [IndependentInception!]!
     }
 
-    union QuoteBundleInception = ConjoinedInception | IndependentInceptions
+    union QuoteBundleInception = ConcurrentInception | IndependentInceptions
 
     extend type QuoteBundle {
       inception: QuoteBundleInception!
@@ -35,7 +35,7 @@ interface CurrentInsurer {
   switchable: string
 }
 
-interface ConjoinedInception {
+interface ConcurrentInception {
   __typename: string
   startDate: string
   correspondingQuotes: {
@@ -56,7 +56,7 @@ interface SwitchableInception {
 
 interface IndependentInceptions {
   __typename: string
-  inceptions: (ConjoinedInception | SwitchableInception)[]
+  inceptions: SwitchableInception[]
 }
 
 interface Quote {
@@ -71,8 +71,8 @@ interface QuoteBundle {
   quotes: Quote[]
 }
 
-function isConjoinedInception(object: any): object is ConjoinedInception {
-  return object?.__typename == "ConjoinedInception"
+function isConcurrentInception(object: any): object is ConcurrentInception {
+  return object?.__typename == "ConcurrentInception"
 }
 
 function isIndependentInceptions(object: any): object is IndependentInceptions {
@@ -80,9 +80,9 @@ function isIndependentInceptions(object: any): object is IndependentInceptions {
 }
 
 export default (schemas: Schemas): IResolvers => ({
-  ConjoinedInception: {
+  ConcurrentInception: {
     correspondingQuotes: {
-      resolve: async (inception: ConjoinedInception, _: any, context, info) =>
+      resolve: async (inception: ConcurrentInception, _: any, context, info) =>
         Promise.all(inception.correspondingQuotes.map((quote: any) => info.mergeInfo.delegateToSchema({
           schema: schemas(SchemaIdentifier.UNDERWRITER),
           operation: 'query',
@@ -127,9 +127,9 @@ export default (schemas: Schemas): IResolvers => ({
       resolve: async (
         quoteBundle: QuoteBundle,
       ) => {
-        return quoteBundle.quotes.reduce((acc: ConjoinedInception | IndependentInceptions | null, quote: Quote) => {
+        return quoteBundle.quotes.reduce((acc: ConcurrentInception | IndependentInceptions | null, quote: Quote) => {
           if (quote.typeOfContract.includes("DK")) {
-            if (isConjoinedInception(acc)) {
+            if (isConcurrentInception(acc)) {
               if (acc.startDate != quote.startDate) {
                 throw new Error("Invalid state, danish quotes can't have independent start dates")
               }
@@ -143,11 +143,11 @@ export default (schemas: Schemas): IResolvers => ({
                     id: quote.id,
                   }
                 ],
-              } as ConjoinedInception
+              } as ConcurrentInception
             }
 
             return {
-              __typename: "ConjoinedInception",
+              __typename: "ConcurrentInception",
               correspondingQuotes: [
                 {
                   __typename: "CompleteQuote",
@@ -155,7 +155,7 @@ export default (schemas: Schemas): IResolvers => ({
                 }
               ],
               startDate: quote.startDate
-            } as ConjoinedInception
+            } as ConcurrentInception
           }
 
           if (isIndependentInceptions(acc)) {
