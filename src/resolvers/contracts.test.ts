@@ -1,7 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { Contract } from '../api/upstreams/productPricing';
+import { ContractDto } from '../api/upstreams/productPricing';
 import { Context } from '../context';
-import { hasContract } from './contracts';
+import { contracts, hasContract } from './contracts';
 
 const context: Context = {
     upstream: {
@@ -12,9 +12,19 @@ const context: Context = {
 } as unknown as Context
 const info: GraphQLResolveInfo = {} as unknown as GraphQLResolveInfo
 
-describe('Can determine if has contracts', () => {
-
+describe('Query.contracts', () => {
     it('works when no contracts', async () => {
+        context.upstream.productPricing.getMemberContracts = () => Promise.resolve([])
+
+        const result = await contracts(undefined, {}, context, info)
+
+        expect(result).toEqual([])
+    })
+})
+
+describe('Query.hasContract', () => {
+
+    it('is false when no contracts', async () => {
         context.upstream.productPricing.getMemberContracts = () => Promise.resolve([])
 
         const result = await hasContract(undefined, {}, context, info)
@@ -22,9 +32,9 @@ describe('Can determine if has contracts', () => {
         expect(result).toBe(false)
     })
 
-    it('works when some contracts', async () => {
+    it('is true when some contracts', async () => {
         context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-            { id: "cid" } as Contract
+            { id: "cid" } as ContractDto
         ])
 
         const result = await hasContract(undefined, {}, context, info)

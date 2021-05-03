@@ -1,4 +1,4 @@
-import { Contract, ContractStatus } from './../api/upstreams/productPricing'
+import { ContractDto, ContractStatus } from './../api/upstreams/productPricing'
 import {
   AddressHomeType,
   AddressOwnership,
@@ -37,11 +37,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   }
 
   it('should be able to translate a swedish apartment', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'SE_APARTMENT',
-    }
+    } as ContractDto
 
     const seBaseInput = {
       ...baseInput,
@@ -125,11 +125,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   })
 
   it('should be able to translate a swedish house', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'SE_APARTMENT',
-    }
+    } as ContractDto
 
     const input: AddressChangeInput = {
       ...baseInput,
@@ -173,11 +173,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   })
 
   it('should be able to translate norwegian home contents', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'NO_HOME_CONTENT_OWN',
-    }
+    } as ContractDto
 
     const input: AddressChangeInput = {
       ...baseInput,
@@ -205,11 +205,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   })
 
   it('should be able to translate norwegian travel', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'NO_TRAVEL_YOUTH',
-    }
+    } as ContractDto
 
     const input: AddressChangeInput = {
       ...baseInput,
@@ -233,11 +233,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   })
 
   it('should be able to translate danish home contents', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'DK_HOME_CONTENT_STUDENT_OWN',
-    }
+    } as ContractDto
 
     const input: AddressChangeInput = {
       ...baseInput,
@@ -265,11 +265,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   })
 
   it('should be able to translate danish travel', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'DK_TRAVEL_STUDENT',
-    }
+    } as ContractDto
 
     const input: AddressChangeInput = {
       ...baseInput,
@@ -295,11 +295,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   })
 
   it('should be able to translate danish accident', () => {
-    const contract: Contract = {
+    const contract = {
       id: 'cid',
       status: ContractStatus.ACTIVE,
       typeOfContract: 'DK_ACCIDENT',
-    }
+    } as ContractDto
 
     const input: AddressChangeInput = {
       ...baseInput,

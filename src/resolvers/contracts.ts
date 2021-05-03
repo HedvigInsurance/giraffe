@@ -14,7 +14,7 @@ export const contracts: QueryToContractsResolver = async (
     _args,
     _context
 ): Promise<Contract[]> => {
-    throw "Nope"
+    return []
 }
 
 export const hasContract: QueryToHasContractResolver = async (
