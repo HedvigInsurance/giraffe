@@ -98,6 +98,10 @@ export interface SwedishHouseAgreementDto extends AgreementType {
 }
 export interface NorwegianHomeContentAgreementDto extends AgreementType {
   type: "NorwegianHomeContent"
+  lineOfBusiness: string
+  address: AddressDto
+  numberCoInsured: number
+  squareMeters: number
 }
 export interface NorwegianTravelAgreementDto extends AgreementType {
   type: "NorwegianTravel"

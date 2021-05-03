@@ -1,3 +1,4 @@
+import { NorwegianHomeContentLineOfBusiness } from './../typings/generated-graphql-types';
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -168,6 +169,43 @@ describe('Query.contracts', () => {
               hasWaterConnected: false,
             },
           ],
+        },
+      },
+    ])
+  })
+
+  it('works for norwegian home content', async () => {
+    const swedishHouse: ContractDto = {
+      ...baseContract,
+      typeOfContract: 'NO_HOME_CONTENT_OWN',
+      agreements: [
+        {
+          ...baseAgreement,
+          type: 'NorwegianHomeContent',
+          lineOfBusiness: 'RENT',
+          address: address,
+          numberCoInsured: 2,
+          squareMeters: 77
+        },
+      ],
+    }
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([swedishHouse])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([
+      {
+        ...baseOutput,
+        typeOfContract: TypeOfContract.NO_HOME_CONTENT_OWN,
+        displayName: 'CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN',
+        currentAgreement: {
+          ...baseOutputAgreement,
+          address: address,
+          numberCoInsured: 2,
+          squareMeters: 77,
+          type: NorwegianHomeContentLineOfBusiness.RENT,
         },
       },
     ])
