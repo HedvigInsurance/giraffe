@@ -22,12 +22,13 @@ export const crossSchemaExtensions = `
       inceptions: [IndependentInception!]!
     }
 
-    union QuoteBundleInception = ConjoinedInception | SwitchableInception | IndependentInceptions
+    union QuoteBundleInception = ConjoinedInception | IndependentInceptions
 
     extend type QuoteBundle {
       inception: QuoteBundleInception!
     }
 `
+
 interface CurrentInsurer {
   id: string
   displayName: string
@@ -81,8 +82,8 @@ function isIndependentInceptions(object: any): object is IndependentInceptions {
 export default (schemas: Schemas): IResolvers => ({
   ConjoinedInception: {
     correspondingQuotes: {
-      resolve: async (inception: ConjoinedInception, _: any, context, info) => {
-        return Promise.all(inception.correspondingQuotes.map((quote: any) => info.mergeInfo.delegateToSchema({
+      resolve: async (inception: ConjoinedInception, _: any, context, info) =>
+        Promise.all(inception.correspondingQuotes.map((quote: any) => info.mergeInfo.delegateToSchema({
           schema: schemas(SchemaIdentifier.UNDERWRITER),
           operation: 'query',
           fieldName: 'quote',
@@ -93,22 +94,19 @@ export default (schemas: Schemas): IResolvers => ({
           info,
         })))
       }
-    }
   },
   SwitchableInception: {
     correspondingQuote: {
-      resolve: (inception: SwitchableInception, _: any, context, info) => {
-        return info.mergeInfo.delegateToSchema({
-          schema: schemas(SchemaIdentifier.UNDERWRITER),
-          operation: 'query',
-          fieldName: 'quote',
-          args: {
-            id: inception.correspondingQuote.id,
-          },
-          context,
-          info,
-        })
-      }
+      resolve: (inception: SwitchableInception, _: any, context, info) => info.mergeInfo.delegateToSchema({
+        schema: schemas(SchemaIdentifier.UNDERWRITER),
+        operation: 'query',
+        fieldName: 'quote',
+        args: {
+          id: inception.correspondingQuote.id,
+        },
+        context,
+        info,
+      })
     }
   },
   QuoteBundle: {
@@ -129,7 +127,7 @@ export default (schemas: Schemas): IResolvers => ({
       resolve: async (
         quoteBundle: QuoteBundle,
       ) => {
-        return quoteBundle.quotes.reduce((acc: ConjoinedInception | SwitchableInception | IndependentInceptions | null, quote: Quote) => {
+        return quoteBundle.quotes.reduce((acc: ConjoinedInception | IndependentInceptions | null, quote: Quote) => {
           if (quote.typeOfContract.includes("DK")) {
             if (isConjoinedInception(acc)) {
               if (acc.startDate != quote.startDate) {
@@ -158,18 +156,6 @@ export default (schemas: Schemas): IResolvers => ({
               ],
               startDate: quote.startDate
             } as ConjoinedInception
-          }
-
-          if (quote.typeOfContract.includes("SE")) {
-            return {
-              __typename: "SwitchableInception",
-              correspondingQuote: {
-                __typename: "CompleteQuote",
-                id: quote.id,
-              },
-              startDate: quote.startDate,
-              currentInsurer: quote.currentInsurer
-            } as SwitchableInception
           }
 
           if (isIndependentInceptions(acc)) {
