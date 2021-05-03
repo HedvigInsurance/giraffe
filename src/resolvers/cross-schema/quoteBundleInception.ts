@@ -131,7 +131,7 @@ export default (schemas: Schemas): IResolvers => ({
           if (quote.typeOfContract.includes("DK")) {
             if (isConcurrentInception(acc)) {
               if (acc.startDate != quote.startDate) {
-                throw new Error("Invalid state, danish quotes can't have independent start dates")
+                throw new Error("Invalid state, DK quotes can't have independent start dates")
               }
 
               return {
