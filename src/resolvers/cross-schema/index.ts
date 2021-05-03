@@ -2,6 +2,7 @@ import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
+import quoteBundleInception, { crossSchemaExtensions as quoteBundleInceptionCrossSchemaExtensions } from './quoteBundleInception'
 
 export enum SchemaIdentifier {
   GRAPH_CMS = "graph-cms",
@@ -16,10 +17,12 @@ export enum SchemaIdentifier {
   LOOKUP_SERVICE = "lookup-service",
 }
 
+export type Schemas = (identifier: SchemaIdentifier) => GraphQLSchema
+
 interface CrossSchemaExtension {
   dependencies: SchemaIdentifier[]
   content: string,
-  resolvers(schemas: (identifier: SchemaIdentifier) => GraphQLSchema): IResolvers
+  resolvers(schemas: Schemas): IResolvers
 }
 
 export const getCrossSchemaExtensions = (
@@ -208,6 +211,7 @@ const quotesExtension: CrossSchemaExtension = {
 
   ${quoteDetailsCrossSchemaExtensions}
   ${quoteDisplayNameCrossSchemaExtensions}
+  ${quoteBundleInceptionCrossSchemaExtensions}
   `,
   resolvers: (schemas) => ({
     CompleteQuote: {
@@ -375,7 +379,8 @@ const quotesExtension: CrossSchemaExtension = {
       },
       ...quoteDetailsTable("BundledQuote"),
       ...quoteDisplayName("BundledQuote")
-    }
+    },
+    ...quoteBundleInception(schemas)
   })
 }
 
