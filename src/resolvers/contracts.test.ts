@@ -41,7 +41,7 @@ describe('Query.contracts', () => {
   const baseAgreement = {
     id: 'aid1',
     fromDate: '2020-12-01',
-    basePremium: '120SEK',
+    basePremium: { amount: '120', currency: 'SEK' },
     status: AgreementStatusDto.ACTIVE,
   }
 
@@ -78,7 +78,9 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () => Promise.resolve([swedishApartment])
 
     const result = await contracts(undefined, {}, context, info)
-    const expected: Contract = {
+
+    expect(result).toMatchObject<Contract[]>([
+      {
         ...baseOutput,
         typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
         displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
@@ -96,11 +98,10 @@ describe('Query.contracts', () => {
             type: SwedishApartmentLineOfBusiness.BRF
         },
         status: {
-
+          pastInception: swedishApartment.masterInception
         }
-    }
-
-    expect(result).toEqual([expected])
+      }
+    ])
   })
 })
 

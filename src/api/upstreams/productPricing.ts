@@ -52,6 +52,7 @@ export interface ContractDto {
   currentAgreementId: string
   hasPendingAgreement: boolean
   agreements: AgreementDto[]
+  upcomingAgreement?: AgreementDto
   renewal?: RenewalDto
   createdAt: string
 }
@@ -60,7 +61,10 @@ export interface AgreementType {
   id: string
   fromDate?: string
   toDate?: string
-  basePremium: string
+  basePremium: {
+    amount: string,
+    currency: string
+  }
   certificateUrl?: string
   status: AgreementStatusDto
 }

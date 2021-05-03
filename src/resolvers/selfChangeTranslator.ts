@@ -1,4 +1,4 @@
-import { Contract } from './../api/upstreams/productPricing'
+import { ContractDto } from './../api/upstreams/productPricing'
 import {
   AddressChangeInput,
   AddressHomeType,
@@ -11,7 +11,7 @@ import { CreateQuoteDto } from '../api/upstreams/underwriter'
 export const convertAddressChangeToSelfChangeBody = (
   input: AddressChangeInput,
   member: MemberDto,
-  contract: Contract,
+  contract: ContractDto,
 ): CreateQuoteDto => {
   const dtoBase: CreateQuoteDto = {
     memberId: member.memberId,
@@ -84,7 +84,7 @@ const toSwedishQuoteDto = (
 const toNorwegianQuoteDto = (
   input: AddressChangeInput,
   dto: CreateQuoteDto,
-  contract: Contract,
+  contract: ContractDto,
 ): CreateQuoteDto => {
   const isHomeContent = contract.typeOfContract.startsWith('NO_HOME_CONTENT')
   const isTravel = contract.typeOfContract.startsWith('NO_TRAVEL')
@@ -118,7 +118,7 @@ const toNorwegianQuoteDto = (
 const toDanishQuoteDto = (
   input: AddressChangeInput,
   dto: CreateQuoteDto,
-  contract: Contract,
+  contract: ContractDto,
 ): CreateQuoteDto => {
   const isHomeContent = contract.typeOfContract.startsWith('DK_HOME_CONTENT')
   const isTravel = contract.typeOfContract.startsWith('DK_TRAVEL')
