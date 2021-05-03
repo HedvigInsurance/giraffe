@@ -2,22 +2,21 @@ import { IResolvers } from 'graphql-tools'
 import { SchemaIdentifier, Schemas } from "./index"
 
 export const crossSchemaExtensions = `
-    """An inception where all quotes need to have concurrent startDates"""
+    """An inception where all quotes need to have the same startDate and currentInsurer"""
     type ConcurrentInception {
       correspondingQuotes: [Quote!]!
-      startDate: LocalDate!
+      startDate: LocalDate
+      currentInsurer: CurrentInsurer
     }
 
     """An inception that may be switchable and has a single date"""
-    type SwitchableInception {
+    type IndependentInception {
       correspondingQuote: Quote!
       startDate: LocalDate
       currentInsurer: CurrentInsurer
     }
 
-    union IndependentInception = SwitchableInception
-
-    """A bundle inception where each quote may have a different inception"""
+    """A bundle inception where each quote may have an inception different from the others"""
     type IndependentInceptions {
       inceptions: [IndependentInception!]!
     }
@@ -42,9 +41,10 @@ interface ConcurrentInception {
     __typename: string
     id: string
   }[]
+  currentInsurer: null | CurrentInsurer
 }
 
-interface SwitchableInception {
+interface IndependentInception {
   __typename: string
   startDate: string
   currentInsurer: null | CurrentInsurer
@@ -56,7 +56,7 @@ interface SwitchableInception {
 
 interface IndependentInceptions {
   __typename: string
-  inceptions: SwitchableInception[]
+  inceptions: IndependentInception[]
 }
 
 interface Quote {
@@ -95,9 +95,9 @@ export default (schemas: Schemas): IResolvers => ({
         })))
       }
   },
-  SwitchableInception: {
+  IndependentInception: {
     correspondingQuote: {
-      resolve: (inception: SwitchableInception, _: any, context, info) => info.mergeInfo.delegateToSchema({
+      resolve: (inception: IndependentInception, _: any, context, info) => info.mergeInfo.delegateToSchema({
         schema: schemas(SchemaIdentifier.UNDERWRITER),
         operation: 'query',
         fieldName: 'quote',
@@ -132,6 +132,8 @@ export default (schemas: Schemas): IResolvers => ({
             if (isConcurrentInception(acc)) {
               if (acc.startDate != quote.startDate) {
                 throw new Error("Invalid state, DK quotes can't have independent start dates")
+              } else if (acc.currentInsurer?.id != quote.currentInsurer?.id) {
+                throw new Error("Invalid state, DK quotes can't have independent current insurers")
               }
 
               return {
@@ -164,7 +166,7 @@ export default (schemas: Schemas): IResolvers => ({
               inceptions: [
                 ...acc.inceptions,
                 {
-                  __typename: "SwitchableInception",
+                  __typename: "IndependentInception",
                   correspondingQuote: {
                     __typename: "CompleteQuote",
                     id: quote.id,
@@ -180,7 +182,7 @@ export default (schemas: Schemas): IResolvers => ({
             __typename: "IndependentInceptions",
             inceptions: [
               {
-                __typename: "SwitchableInception",
+                __typename: "IndependentInception",
                 correspondingQuote: {
                   __typename: "CompleteQuote",
                   id: quote.id,
