@@ -1,6 +1,8 @@
 import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
-import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
+import { currentAgreementDetailsTable, upcomingAgreementDetailsTable } from './detailstable/contractDetailsTable'
+import { getQuoteDetailsFragment } from './detailstable/quoteDetailsFragments'
+import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './detailstable/quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
 import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
 
@@ -187,6 +189,8 @@ const contractExtension: CrossSchemaExtension = {
           })
         },
       },
+      ...currentAgreementDetailsTable(),
+      ...upcomingAgreementDetailsTable()
     }
   })
 }
@@ -375,7 +379,7 @@ const quotesExtension: CrossSchemaExtension = {
           })
         },
       },
-      ...quoteDetailsTable(getQuoteDetailsFragment("CompleteQuote")),
+      ...quoteDetailsTable(getQuoteDetailsFragment("BundledQuote")),
       ...quoteDisplayName("BundledQuote")
     }
   })
@@ -605,103 +609,4 @@ enum Locale {
 
 interface EmbarkPreviousInsuranceProviderActionData {
   providers: string | null
-}
-
-// const getAgreementDetailsFragmentString = `fragment AgreementCrossSchemaFragment on UpcomingAgreement {
-//   status {
-//     ... on SwedishApartmentAgreement {
-//         street
-//         zipCode
-//         householdSize
-//         livingSpace
-//     }
-//     ... on SwedishHouseAgreement{
-//         street
-//         zipCode
-//         householdSize
-//         livingSpace
-//     }
-//     ... on NorwegianHomeContentAgreement {
-//         street
-//         zipCode
-//         coInsured
-//         livingSpace
-//     }
-//     ... on NorwegianTravelAgreement {
-//         coInsured
-//     }
-//     ... on DanishHomeContentAgreement {
-//         street
-//         zipCode
-//         city
-//         livingSpace
-//         coInsured
-//     }
-//     ... on DanishAccidentAgreement{
-//         street
-//         zipCode
-//         coInsured
-//     }
-//     ... on DanishTravelAgreement {
-//         street
-//         zipCode
-//         coInsured
-//     }
-//   }
-// }`
-
-const getQuoteDetailsFragment = (quoteType: String) => {
-  return `fragment QuoteDetailsCrossSchemaFragment on ${quoteType} {
-      typeOfContract
-      quoteDetails {
-        ... on SwedishApartmentQuoteDetails {
-            street
-            zipCode
-            householdSize
-            livingSpace
-            swedishApartmentType: type
-        }
-        ... on SwedishHouseQuoteDetails {
-            street
-            zipCode
-            householdSize
-            livingSpace
-            ancillarySpace
-            numberOfBathrooms
-            yearOfConstruction
-            isSubleted
-            extraBuildings {
-              ... on ExtraBuildingCore {
-                area
-                displayName
-                hasWaterConnected
-              }
-            }
-        }
-        ... on NorwegianHomeContentsDetails {
-            street
-            zipCode
-            coInsured
-            livingSpace
-            norwegianHomeContentType: type
-        }
-        ... on NorwegianTravelDetails {
-            coInsured
-        }
-        ... on DanishHomeContentsDetails {
-            street
-            zipCode
-            city
-            livingSpace
-            coInsured
-            danishHomeContentType: type
-        }
-        ... on DanishAccidentDetails {
-            coInsured
-        }
-        ... on DanishTravelDetails {
-            coInsured
-        }
-      }
-    }`
 }
