@@ -33,9 +33,53 @@ import {
 export const contractBundles: QueryToContractBundlesResolver = async (
   _parent,
   _args,
-  _context,
+  { upstream, strings },
 ): Promise<ContractBundle[]> => {
-  throw 'Nope'
+  const contracts = await upstream.productPricing.getMemberContracts()
+
+  const norwegianBundle = [] as ContractDto[]
+  const danishBundle = [] as ContractDto[]
+  const individual = [] as ContractDto[]
+  contracts.forEach((contract) => {
+    const agreement = contract.agreements.find(
+      (ag) => ag.id === contract.currentAgreementId,
+    )!
+    switch (agreement.type) {
+      case 'NorwegianHomeContent':
+      case 'NorwegianTravel':
+        norwegianBundle.push(contract)
+        break
+      case 'DanishHomeContent':
+      case 'DanishTravel':
+      case 'DanishAccident':
+        danishBundle.push(contract)
+        break
+      default:
+        individual.push(contract)
+    }
+  })
+
+  const bundles = [] as ContractBundle[]
+  if (norwegianBundle.length) {
+    bundles.push({
+      id: `bundle:${norwegianBundle.map((c) => c.id).join(',')}`,
+      contracts: norwegianBundle.map((c) => transformContract(c, strings)),
+    })
+  }
+  if (danishBundle.length) {
+    bundles.push({
+      id: `bundle:${danishBundle.map((c) => c.id).join(',')}`,
+      contracts: danishBundle.map((c) => transformContract(c, strings)),
+    })
+  }
+  individual.forEach((contract) => {
+    bundles.push({
+      id: `bundle:${contract.id}`,
+      contracts: [transformContract(contract, strings)],
+    })
+  })
+
+  return bundles
 }
 
 export const contracts: QueryToContractsResolver = async (
@@ -108,16 +152,16 @@ const transformContractStatus = (contract: ContractDto): ContractStatus => {
     case ContractStatusDto.TERMINATED_TODAY: {
       const now = new Date()
       return {
-        today: `${now.getFullYear}-${now.getMonth}-${now.getDay}`
+        today: `${now.getFullYear}-${now.getMonth}-${now.getDay}`,
       }
     }
     case ContractStatusDto.TERMINATED_IN_FUTURE:
       return {
-        futureTermination: contract.terminationDate
+        futureTermination: contract.terminationDate,
       }
     case ContractStatusDto.TERMINATED:
       return {
-        termination: contract.terminationDate
+        termination: contract.terminationDate,
       }
   }
 }

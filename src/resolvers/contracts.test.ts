@@ -1,4 +1,17 @@
-import { NorwegianHomeContentLineOfBusiness, NorwegianTravelLineOfBusiness, DanishHomeContentLineOfBusiness, DanishTravelLineOfBusiness, DanishAccidentLineOfBusiness, ActiveStatus, PendingStatus, ActiveInFutureStatus, TerminatedInFutureStatus, TerminatedStatus, ActiveInFutureAndTerminatedInFutureStatus } from './../typings/generated-graphql-types';
+import {
+  NorwegianHomeContentLineOfBusiness,
+  NorwegianTravelLineOfBusiness,
+  DanishHomeContentLineOfBusiness,
+  DanishTravelLineOfBusiness,
+  DanishAccidentLineOfBusiness,
+  ActiveStatus,
+  PendingStatus,
+  ActiveInFutureStatus,
+  TerminatedInFutureStatus,
+  TerminatedStatus,
+  ActiveInFutureAndTerminatedInFutureStatus,
+  ContractBundle,
+} from './../typings/generated-graphql-types'
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -7,7 +20,7 @@ import {
 import { GraphQLResolveInfo } from 'graphql'
 import { ContractDto } from '../api/upstreams/productPricing'
 import { Context } from '../context'
-import { contracts, hasContract } from './contracts'
+import { contractBundles, contracts, hasContract } from './contracts'
 import {
   AgreementStatus,
   Contract,
@@ -15,15 +28,122 @@ import {
   TypeOfContract,
 } from '../typings/generated-graphql-types'
 
-const context: Context = ({
-  upstream: {
-    productPricing: {
-      getMemberContracts: () => Promise.resolve([]),
-    },
-  },
-  strings: (key: string) => key,
-} as unknown) as Context
-const info: GraphQLResolveInfo = ({} as unknown) as GraphQLResolveInfo
+describe('Query.contractBundles', () => {
+  it('works for zero contracts', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([])
+
+    const result = await contractBundles(undefined, {}, context, info)
+
+    expect(result).toEqual([])
+  })
+
+  it('becomes two bundles for two swedish contracts', async () => {
+    const apartment = {
+      ...swedishApartmentInput,
+      id: 'cid1',
+    }
+    const house = {
+      ...swedishHouseInput,
+      id: 'cid2',
+    }
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([apartment, house])
+
+    const result = await contractBundles(undefined, {}, context, info)
+
+    expect(result).toMatchObject<ContractBundle[]>([
+      {
+        id: 'bundle:cid1',
+        contracts: [
+          {
+            ...swedishApartmentOutput,
+            id: 'cid1',
+          },
+        ],
+      },
+      {
+        id: 'bundle:cid2',
+        contracts: [
+          {
+            ...swedishHouseOutput,
+            id: 'cid2',
+          },
+        ],
+      },
+    ])
+  })
+
+  it('becomes a single bundle for norwegian contracts', async () => {
+    const homeContent = {
+      ...norwegianHomeContentInput,
+      id: 'cid1',
+    }
+    const travel = {
+      ...norwegianTravelInput,
+      id: 'cid2',
+    }
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([homeContent, travel])
+
+    const result = await contractBundles(undefined, {}, context, info)
+
+    expect(result).toMatchObject<ContractBundle[]>([
+      {
+        id: 'bundle:cid1,cid2',
+        contracts: [
+          {
+            ...norwegianHomeContentOutput,
+            id: 'cid1',
+          },
+          {
+            ...norwegianTravelOutput,
+            id: 'cid2',
+          },
+        ],
+      },
+    ])
+  })
+
+  it('becomes a single bundle for danish contracts', async () => {
+    const homeContent = {
+      ...danishHomeContentInput,
+      id: 'cid1',
+    }
+    const travel = {
+      ...danishTravelInput,
+      id: 'cid2',
+    }
+    const accident = {
+      ...danishAccidentInput,
+      id: 'cid3',
+    }
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([homeContent, travel, accident])
+
+    const result = await contractBundles(undefined, {}, context, info)
+
+    expect(result).toMatchObject<ContractBundle[]>([
+      {
+        id: 'bundle:cid1,cid2,cid3',
+        contracts: [
+          {
+            ...danishHomeContentOutput,
+            id: 'cid1',
+          },
+          {
+            ...danishTravelOutput,
+            id: 'cid2',
+          },
+          {
+            ...danishAccidentOutput,
+            id: 'cid3',
+          },
+        ],
+      },
+    ])
+  })
+})
 
 describe('Query.contracts', () => {
   it('works when no contracts', async () => {
@@ -35,56 +155,9 @@ describe('Query.contracts', () => {
     expect(result).toEqual([])
   })
 
-  const baseContract = {
-    id: 'cid',
-    holderMemberId: 'mid',
-    masterInception: '2021-03-01',
-    switchedFrom: 'IF',
-    status: ContractStatusDto.ACTIVE,
-    isTerminated: false,
-    currentAgreementId: 'aid1',
-    hasPendingAgreement: false,
-    createdAt: '2020-12-01T10:00:00Z',
-  }
-
-  const baseAgreement = {
-    id: 'aid1',
-    fromDate: '2020-12-01',
-    basePremium: { amount: '120', currency: 'SEK' },
-    status: AgreementStatusDto.ACTIVE,
-  }
-
-  const address = {
-    street: 'Fakestreet 123',
-    postalCode: '12345',
-    country: 'SE',
-  }
-
-  const baseOutput = {
-    id: 'cid',
-    holderMember: 'mid',
-    switchedFromInsuranceProvider: 'IF',
-    status: {
-      pastInception: baseContract.masterInception,
-    },
-    inception: '2021-03-01',
-    createdAt: '2020-12-01T10:00:00Z',
-  }
-
-  const baseOutputAgreement = {
-    id: 'aid1',
-    activeFrom: '2020-12-01',
-    premium: {
-      amount: '120',
-      currency: 'SEK',
-    },
-    status: AgreementStatus.ACTIVE,
-  }
-
   it('works for different statuses', async () => {
     const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'SE_APARTMENT_BRF',
+      ...swedishApartmentInput,
       upcomingAgreement: {
         ...baseAgreement,
         type: 'SwedishApartment',
@@ -93,370 +166,158 @@ describe('Query.contracts', () => {
         numberCoInsured: 2,
         squareMeters: 66,
       },
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'SwedishApartment',
-          lineOfBusiness: 'BRF',
-          address: address,
-          numberCoInsured: 1,
-          squareMeters: 44,
-        },
-      ],
     }
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, status: ContractStatusDto.ACTIVE }
-    ])
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([{ ...contract, status: ContractStatusDto.ACTIVE }])
 
     expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<ActiveStatus>(
-      {
-        pastInception: contract.masterInception,
-        upcomingAgreementChange: {
-          newAgreement: {
-            ...baseOutputAgreement,
-            address: address,
-            numberCoInsured: 2,
-            squareMeters: 66,
-            type: SwedishApartmentLineOfBusiness.BRF
-          }
-        }
-      }
-    )
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, status: ContractStatusDto.PENDING }
-    ])
-    expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<PendingStatus>(
-      {
-        pendingSince: '2020-12-01'
-      }
-    )
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE }
-    ])
-    expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<ActiveInFutureStatus>(
-      {
-        futureInception: contract.masterInception
-      }
-    )
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE }
-    ])
-    expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<ActiveInFutureStatus>(
-      {
-        futureInception: contract.masterInception
-      }
-    )
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, terminationDate: '2022-01-01', status: ContractStatusDto.TERMINATED_IN_FUTURE }
-    ])
-    expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<TerminatedInFutureStatus>(
-      {
-        futureTermination: '2022-01-01'
-      }
-    )
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, terminationDate: '2022-01-01', status: ContractStatusDto.TERMINATED }
-    ])
-    expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<TerminatedStatus>(
-      {
-        termination: '2022-01-01'
-      }
-    )
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...contract, terminationDate: '2022-01-01', status: ContractStatusDto.ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE }
-    ])
-    expect(
-      (await contracts(undefined, {}, context, info))[0].status
-    ).toMatchObject<ActiveInFutureAndTerminatedInFutureStatus>(
-      {
-        futureInception: contract.masterInception,
-        futureTermination: '2022-01-01'
-      }
-    )
-  })
-
-
-  it('works for swedish apartment', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'SE_APARTMENT_BRF',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'SwedishApartment',
-          lineOfBusiness: 'BRF',
-          address: address,
-          numberCoInsured: 1,
-          squareMeters: 44,
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
-
-    const result = await contracts(undefined, {}, context, info)
-
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
-        displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
-        currentAgreement: {
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<ActiveStatus>({
+      pastInception: contract.masterInception,
+      upcomingAgreementChange: {
+        newAgreement: {
           ...baseOutputAgreement,
           address: address,
-          numberCoInsured: 1,
-          squareMeters: 44,
+          numberCoInsured: 2,
+          squareMeters: 66,
           type: SwedishApartmentLineOfBusiness.BRF,
         },
       },
-    ])
+    })
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([{ ...contract, status: ContractStatusDto.PENDING }])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<PendingStatus>({
+      pendingSince: '2020-12-01',
+    })
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([
+        { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE },
+      ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<ActiveInFutureStatus>({
+      futureInception: contract.masterInception,
+    })
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([
+        { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE },
+      ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<ActiveInFutureStatus>({
+      futureInception: contract.masterInception,
+    })
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([
+        {
+          ...contract,
+          terminationDate: '2022-01-01',
+          status: ContractStatusDto.TERMINATED_IN_FUTURE,
+        },
+      ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<TerminatedInFutureStatus>({
+      futureTermination: '2022-01-01',
+    })
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([
+        {
+          ...contract,
+          terminationDate: '2022-01-01',
+          status: ContractStatusDto.TERMINATED,
+        },
+      ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<TerminatedStatus>({
+      termination: '2022-01-01',
+    })
+
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([
+        {
+          ...contract,
+          terminationDate: '2022-01-01',
+          status: ContractStatusDto.ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE,
+        },
+      ])
+    expect(
+      (await contracts(undefined, {}, context, info))[0].status,
+    ).toMatchObject<ActiveInFutureAndTerminatedInFutureStatus>({
+      futureInception: contract.masterInception,
+      futureTermination: '2022-01-01',
+    })
   })
 
-  it('works for swedish houses', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'SE_HOUSE',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'SwedishHouse',
-          address: address,
-          numberCoInsured: 1,
-          squareMeters: 44,
-          ancillaryArea: 15,
-          numberOfBathrooms: 3,
-          yearOfConstruction: 1910,
-          isSubleted: true,
-          extraBuildings: [
-            {
-              type: ExtraBuildingTypeDto.GARAGE,
-              area: 14,
-              displayName: 'Garage',
-              hasWaterConnected: false,
-            },
-          ],
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+  it('SwedishApartment', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([swedishApartmentInput])
 
     const result = await contracts(undefined, {}, context, info)
 
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.SE_HOUSE,
-        displayName: 'CONTRACT_DISPLAY_NAME_SE_HOUSE',
-        currentAgreement: {
-          ...baseOutputAgreement,
-          address: address,
-          numberCoInsured: 1,
-          squareMeters: 44,
-          ancillaryArea: 15,
-          numberOfBathrooms: 3,
-          yearOfConstruction: 1910,
-          isSubleted: true,
-          extraBuildings: [
-            {
-              area: 14,
-              displayName: 'Garage',
-              hasWaterConnected: false,
-            },
-          ],
-        },
-      },
-    ])
+    expect(result).toMatchObject([swedishApartmentOutput])
   })
 
-  it('works for norwegian home content', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'NO_HOME_CONTENT_OWN',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'NorwegianHomeContent',
-          lineOfBusiness: 'RENT',
-          address: address,
-          numberCoInsured: 2,
-          squareMeters: 77
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+  it('SwedishHouse', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([swedishHouseInput])
 
     const result = await contracts(undefined, {}, context, info)
 
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.NO_HOME_CONTENT_OWN,
-        displayName: 'CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN',
-        currentAgreement: {
-          ...baseOutputAgreement,
-          address: address,
-          numberCoInsured: 2,
-          squareMeters: 77,
-          type: NorwegianHomeContentLineOfBusiness.RENT,
-        },
-      },
-    ])
+    expect(result).toMatchObject([swedishHouseOutput])
   })
 
-  it('works for norwegian travel', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'NO_TRAVEL',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'NorwegianTravel',
-          lineOfBusiness: 'REGULAR',
-          numberCoInsured: 2,
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+  it('NorwegianHomeContent', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([norwegianHomeContentInput])
 
     const result = await contracts(undefined, {}, context, info)
 
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.NO_TRAVEL,
-        displayName: 'CONTRACT_DISPLAY_NAME_NO_TRAVEL',
-        currentAgreement: {
-          ...baseOutputAgreement,
-          numberCoInsured: 2,
-          type: NorwegianTravelLineOfBusiness.REGULAR
-        },
-      },
-    ])
+    expect(result).toMatchObject<Contract[]>([norwegianHomeContentOutput])
   })
 
-  it('works for danish home content', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'DK_HOME_CONTENT_OWN',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'DanishHomeContent',
-          address: address,
-          numberCoInsured: 2,
-          squareMeters: 98,
-          lineOfBusiness: 'OWN'
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+  it('NorwegianTravel', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([norwegianTravelInput])
 
     const result = await contracts(undefined, {}, context, info)
 
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.DK_HOME_CONTENT_OWN,
-        displayName: 'CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN',
-        currentAgreement: {
-          ...baseOutputAgreement,
-          address: address,
-          numberCoInsured: 2,
-          squareMeters: 98,
-          type: DanishHomeContentLineOfBusiness.OWN
-        },
-      },
-    ])
+    expect(result).toMatchObject<Contract[]>([norwegianTravelOutput])
   })
 
-  it('works for danish travel', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'DK_TRAVEL',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'DanishTravel',
-          address: address,
-          numberCoInsured: 2,
-          lineOfBusiness: 'REGULAR'
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+  it('DanishHomeContent', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([danishHomeContentInput])
 
     const result = await contracts(undefined, {}, context, info)
 
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.DK_TRAVEL,
-        displayName: 'CONTRACT_DISPLAY_NAME_DK_TRAVEL',
-        currentAgreement: {
-          ...baseOutputAgreement,
-          address: address,
-          numberCoInsured: 2,
-          type: DanishTravelLineOfBusiness.REGULAR
-        },
-      },
-    ])
+    expect(result).toMatchObject<Contract[]>([danishHomeContentOutput])
   })
 
-  it('works for danish accident', async () => {
-    const contract: ContractDto = {
-      ...baseContract,
-      typeOfContract: 'DK_ACCIDENT',
-      agreements: [
-        {
-          ...baseAgreement,
-          type: 'DanishAccident',
-          address: address,
-          numberCoInsured: 2,
-          lineOfBusiness: 'REGULAR'
-        },
-      ],
-    }
-
-    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([contract])
+  it('DanishTravel', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([danishTravelInput])
 
     const result = await contracts(undefined, {}, context, info)
 
-    expect(result).toMatchObject<Contract[]>([
-      {
-        ...baseOutput,
-        typeOfContract: TypeOfContract.DK_ACCIDENT,
-        displayName: 'CONTRACT_DISPLAY_NAME_DK_ACCIDENT',
-        currentAgreement: {
-          ...baseOutputAgreement,
-          address: address,
-          numberCoInsured: 2,
-          type: DanishAccidentLineOfBusiness.REGULAR
-        },
-      },
-    ])
+    expect(result).toMatchObject<Contract[]>([danishTravelOutput])
+  })
+
+  it('DanishAccident', async () => {
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([danishAccidentInput])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([danishAccidentOutput])
   })
 })
 
@@ -479,3 +340,261 @@ describe('Query.hasContract', () => {
     expect(result).toBe(true)
   })
 })
+
+const context: Context = ({
+  upstream: {
+    productPricing: {
+      getMemberContracts: () => Promise.resolve([]),
+    },
+  },
+  strings: (key: string) => key,
+} as unknown) as Context
+const info: GraphQLResolveInfo = ({} as unknown) as GraphQLResolveInfo
+
+const baseContract = {
+  id: 'cid',
+  holderMemberId: 'mid',
+  masterInception: '2021-03-01',
+  switchedFrom: 'IF',
+  status: ContractStatusDto.ACTIVE,
+  isTerminated: false,
+  currentAgreementId: 'aid1',
+  hasPendingAgreement: false,
+  createdAt: '2020-12-01T10:00:00Z',
+}
+
+const baseAgreement = {
+  id: 'aid1',
+  fromDate: '2020-12-01',
+  basePremium: { amount: '120', currency: 'SEK' },
+  status: AgreementStatusDto.ACTIVE,
+}
+
+const address = {
+  street: 'Fakestreet 123',
+  postalCode: '12345',
+  country: 'SE',
+}
+
+const baseOutput = {
+  id: 'cid',
+  holderMember: 'mid',
+  switchedFromInsuranceProvider: 'IF',
+  status: {
+    pastInception: baseContract.masterInception,
+  },
+  inception: '2021-03-01',
+  createdAt: '2020-12-01T10:00:00Z',
+}
+
+const baseOutputAgreement = {
+  id: 'aid1',
+  activeFrom: '2020-12-01',
+  premium: {
+    amount: '120',
+    currency: 'SEK',
+  },
+  status: AgreementStatus.ACTIVE,
+}
+
+const swedishApartmentInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'SE_APARTMENT_BRF',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'SwedishApartment',
+      lineOfBusiness: 'BRF',
+      address: address,
+      numberCoInsured: 1,
+      squareMeters: 44,
+    },
+  ],
+}
+const swedishApartmentOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
+  displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    address: address,
+    numberCoInsured: 1,
+    squareMeters: 44,
+    type: SwedishApartmentLineOfBusiness.BRF,
+  },
+}
+
+const swedishHouseInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'SE_HOUSE',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'SwedishHouse',
+      address: address,
+      numberCoInsured: 1,
+      squareMeters: 44,
+      ancillaryArea: 15,
+      numberOfBathrooms: 3,
+      yearOfConstruction: 1910,
+      isSubleted: true,
+      extraBuildings: [
+        {
+          type: ExtraBuildingTypeDto.GARAGE,
+          area: 14,
+          displayName: 'Garage',
+          hasWaterConnected: false,
+        },
+      ],
+    },
+  ],
+}
+const swedishHouseOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.SE_HOUSE,
+  displayName: 'CONTRACT_DISPLAY_NAME_SE_HOUSE',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    address: address,
+    numberCoInsured: 1,
+    squareMeters: 44,
+    ancillaryArea: 15,
+    numberOfBathrooms: 3,
+    yearOfConstruction: 1910,
+    isSubleted: true,
+    extraBuildings: [
+      {
+        area: 14,
+        displayName: 'Garage',
+        hasWaterConnected: false,
+      },
+    ],
+  },
+}
+
+const norwegianHomeContentInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'NO_HOME_CONTENT_OWN',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'NorwegianHomeContent',
+      lineOfBusiness: 'RENT',
+      address: address,
+      numberCoInsured: 2,
+      squareMeters: 77,
+    },
+  ],
+}
+const norwegianHomeContentOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.NO_HOME_CONTENT_OWN,
+  displayName: 'CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    address: address,
+    numberCoInsured: 2,
+    squareMeters: 77,
+    type: NorwegianHomeContentLineOfBusiness.RENT,
+  },
+}
+
+const norwegianTravelInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'NO_TRAVEL',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'NorwegianTravel',
+      lineOfBusiness: 'REGULAR',
+      numberCoInsured: 2,
+    },
+  ],
+}
+const norwegianTravelOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.NO_TRAVEL,
+  displayName: 'CONTRACT_DISPLAY_NAME_NO_TRAVEL',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    numberCoInsured: 2,
+    type: NorwegianTravelLineOfBusiness.REGULAR,
+  },
+}
+
+const danishHomeContentInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'DK_HOME_CONTENT_OWN',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'DanishHomeContent',
+      address: address,
+      numberCoInsured: 2,
+      squareMeters: 98,
+      lineOfBusiness: 'OWN',
+    },
+  ],
+}
+const danishHomeContentOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.DK_HOME_CONTENT_OWN,
+  displayName: 'CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    address: address,
+    numberCoInsured: 2,
+    squareMeters: 98,
+    type: DanishHomeContentLineOfBusiness.OWN,
+  },
+}
+
+const danishTravelInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'DK_TRAVEL',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'DanishTravel',
+      address: address,
+      numberCoInsured: 2,
+      lineOfBusiness: 'REGULAR',
+    },
+  ],
+}
+const danishTravelOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.DK_TRAVEL,
+  displayName: 'CONTRACT_DISPLAY_NAME_DK_TRAVEL',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    address: address,
+    numberCoInsured: 2,
+    type: DanishTravelLineOfBusiness.REGULAR,
+  },
+}
+
+const danishAccidentInput: ContractDto = {
+  ...baseContract,
+  typeOfContract: 'DK_ACCIDENT',
+  agreements: [
+    {
+      ...baseAgreement,
+      type: 'DanishAccident',
+      address: address,
+      numberCoInsured: 2,
+      lineOfBusiness: 'REGULAR',
+    },
+  ],
+}
+const danishAccidentOutput: Contract = {
+  ...baseOutput,
+  typeOfContract: TypeOfContract.DK_ACCIDENT,
+  displayName: 'CONTRACT_DISPLAY_NAME_DK_ACCIDENT',
+  currentAgreement: {
+    ...baseOutputAgreement,
+    address: address,
+    numberCoInsured: 2,
+    type: DanishAccidentLineOfBusiness.REGULAR,
+  },
+}
