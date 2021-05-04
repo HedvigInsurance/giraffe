@@ -161,7 +161,7 @@ describe('Query.contractBundles', () => {
     expect(result[0].id).toBe('bundle:a,z')
   })
 
-  it('home content contracts are moved to the top', async () => {
+  it('HomeContent contracts are moved to the top', async () => {
     const travel = {
       ...norwegianTravelInput,
       id: 'cid1',
@@ -353,6 +353,20 @@ describe('Query.contracts', () => {
     const result = await contracts(undefined, {}, context, info)
 
     expect(result).toMatchObject<Contract[]>([danishAccidentOutput])
+  })
+
+  it('HomeContent contracts are moved to the top', async () => {
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
+      { ...norwegianTravelInput, id: 'cid-travel' },
+      { ...norwegianHomeContentInput, id: 'cid-hc' }
+    ])
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([
+      { ...norwegianHomeContentOutput, id: 'cid-hc' },
+      { ...norwegianTravelOutput, id: 'cid-travel' }
+    ])
   })
 })
 

@@ -36,6 +36,7 @@ export const contractBundles: QueryToContractBundlesResolver = async (
   { upstream, strings },
 ): Promise<ContractBundle[]> => {
   const contracts = await upstream.productPricing.getMemberContracts()
+  moveHomeContentsToTop(contracts)
 
   const norwegianBundle = [] as ContractDto[]
   const danishBundle = [] as ContractDto[]
@@ -59,16 +60,20 @@ export const contractBundles: QueryToContractBundlesResolver = async (
     }
   })
 
+  const bundleId = (contracts: ContractDto[]): string => {
+    return `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
+  }
+
   const bundles = [] as ContractBundle[]
   if (norwegianBundle.length) {
     bundles.push({
-      id: `bundle:${norwegianBundle.map((c) => c.id).join(',')}`,
+      id: bundleId(norwegianBundle),
       contracts: norwegianBundle.map((c) => transformContract(c, strings)),
     })
   }
   if (danishBundle.length) {
     bundles.push({
-      id: `bundle:${danishBundle.map((c) => c.id).join(',')}`,
+      id: bundleId(danishBundle),
       contracts: danishBundle.map((c) => transformContract(c, strings)),
     })
   }
@@ -88,6 +93,7 @@ export const contracts: QueryToContractsResolver = async (
   { upstream, strings },
 ): Promise<Contract[]> => {
   const contracts = await upstream.productPricing.getMemberContracts()
+  moveHomeContentsToTop(contracts)
   return contracts.map((c) => transformContract(c, strings))
 }
 
@@ -255,4 +261,14 @@ const transformAgreement = (agreement: AgreementDto): Agreement => {
       return result
     }
   }
+}
+
+const moveHomeContentsToTop = (
+  contracts: ContractDto[]
+) => {
+  contracts.sort((c1, c2) => {
+    if (c1.typeOfContract.includes('HOME_CONTENT')) return -1
+    if (c2.typeOfContract.includes('HOME_CONTENT')) return 1
+    return 0
+  })
 }
