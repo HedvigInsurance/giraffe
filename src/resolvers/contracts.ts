@@ -60,28 +60,22 @@ export const contractBundles: QueryToContractBundlesResolver = async (
     }
   })
 
-  const bundleId = (contracts: ContractDto[]): string => {
-    return `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
+  const bundle = (contracts: ContractDto[]): ContractBundle => {
+    return {
+      id: `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`,
+      contracts: contracts.map((c) => transformContract(c, strings))
+    }
   }
 
   const bundles = [] as ContractBundle[]
   if (norwegianBundle.length) {
-    bundles.push({
-      id: bundleId(norwegianBundle),
-      contracts: norwegianBundle.map((c) => transformContract(c, strings)),
-    })
+    bundles.push(bundle(norwegianBundle))
   }
   if (danishBundle.length) {
-    bundles.push({
-      id: bundleId(danishBundle),
-      contracts: danishBundle.map((c) => transformContract(c, strings)),
-    })
+    bundles.push(bundle(danishBundle))
   }
   individual.forEach((contract) => {
-    bundles.push({
-      id: `bundle:${contract.id}`,
-      contracts: [transformContract(contract, strings)],
-    })
+    bundles.push(bundle([contract]))
   })
 
   return bundles
