@@ -2,6 +2,7 @@ import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
+import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
 
 export enum SchemaIdentifier {
   GRAPH_CMS = "graph-cms",
@@ -31,6 +32,7 @@ export const getCrossSchemaExtensions = (
     contractExtension,
     quotesExtension,
     embarkExtension,
+    campaignExtension
   ]
   const applicable = allExtensions.filter(extension => {
     const missing = extension.dependencies.filter(id => !schemas.get(id))
@@ -422,6 +424,16 @@ const embarkExtension: CrossSchemaExtension = {
           })
         }
       }
+    }
+  })
+}
+
+const campaignExtension: CrossSchemaExtension = {
+  dependencies: [SchemaIdentifier.PRODUCT_PRICING],
+  content: campaignDisplayValueCrossSchemaExtensions,
+  resolvers: () => ({
+    Campaign: {
+      ...campaignDisplayValue
     }
   })
 }
