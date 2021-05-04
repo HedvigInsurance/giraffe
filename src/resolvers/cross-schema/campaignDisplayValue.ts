@@ -10,19 +10,19 @@ export const isFreeMonths = (
     incentive: any,
 ) => incentive.__typename === 'FreeMonths'
   
-  export const isVisibleNoDiscount = (
+export const isVisibleNoDiscount = (
     incentive: any,
 ) => incentive.__typename === 'VisibleNoDiscount'
   
-  export const isMonthlyCostDeduction = (
+export const isMonthlyCostDeduction = (
     incentive: any,
 ) => incentive.__typename === 'MonthlyCostDeduction'
   
-  export const isNoDiscount = (
+export const isNoDiscount = (
     incentive: any,
 ) => incentive.__typename === 'NoDiscount'
   
-  export const isPercentageDiscountMonths = (
+export const isPercentageDiscountMonths = (
     incentive: any,
 ) => incentive.__typename === 'PercentageDiscountMonths'
 
