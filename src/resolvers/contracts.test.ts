@@ -143,6 +143,41 @@ describe('Query.contractBundles', () => {
       },
     ])
   })
+
+  it('compound bundle ID is sorted alphabetically', async () => {
+    const homeContent = {
+      ...norwegianHomeContentInput,
+      id: 'z',
+    }
+    const travel = {
+      ...norwegianTravelInput,
+      id: 'a',
+    }
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([homeContent, travel])
+
+    const result = await contractBundles(undefined, {}, context, info)
+
+    expect(result[0].id).toBe('bundle:a,z')
+  })
+
+  it('home content contracts are moved to the top', async () => {
+    const travel = {
+      ...norwegianTravelInput,
+      id: 'cid1',
+    }
+    const homeContent = {
+      ...norwegianHomeContentInput,
+      id: 'cid2',
+    }
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([homeContent, travel])
+
+    const result = await contractBundles(undefined, {}, context, info)
+
+    expect(result[0].contracts[0].id).toBe('cid2')
+    expect(result[0].contracts[1].id).toBe('cid1')
+  })
 })
 
 describe('Query.contracts', () => {
