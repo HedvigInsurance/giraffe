@@ -35,7 +35,7 @@ export const getCrossSchemaExtensions = (
     contractExtension,
     quotesExtension,
     embarkExtension,
-    createQuoteBundleInceptionExtension()
+    createQuoteBundleInceptionExtension(),
     campaignExtension
   ]
   const applicable = allExtensions.filter(extension => {
