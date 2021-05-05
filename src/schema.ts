@@ -136,6 +136,7 @@ const makeSchema = async () => {
     'keyGearItemCoverages',
     'importantMessages',
     'appMarketingImages',
+    'faqs'
   ]
 
   const graphCmsSchema = await makeRemoteExecutableSchema({
