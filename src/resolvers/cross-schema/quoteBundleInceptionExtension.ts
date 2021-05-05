@@ -44,11 +44,11 @@ interface QuoteBundle {
 }
 
 function isConcurrentInception(object: any): object is ConcurrentInception {
-  return object?.__typename == "ConcurrentInception"
+  return object?.__typename === "ConcurrentInception"
 }
 
 function isIndependentInceptions(object: any): object is IndependentInceptions {
-  return object?.__typename == "IndependentInceptions"
+  return object?.__typename === "IndependentInceptions"
 }
 
 export const createQuoteBundleInceptionExtension = (): CrossSchemaExtension => ({
