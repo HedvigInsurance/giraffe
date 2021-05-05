@@ -730,6 +730,7 @@ export interface AngelStory {
 export interface ContractBundle {
   id: string;
   contracts: Array<Contract>;
+  angelStories: ContractBundleAngelStories;
 }
 
 export interface Contract {
@@ -1117,6 +1118,10 @@ export interface UpcomingRenewal {
 }
 
 export type Instant = any;
+
+export interface ContractBundleAngelStories {
+  addressChange?: string;
+}
 
 export interface SelfChangeEligibility {
   
@@ -1575,6 +1580,7 @@ export interface Resolver {
   TerminatedStatus?: TerminatedStatusTypeResolver;
   UpcomingRenewal?: UpcomingRenewalTypeResolver;
   Instant?: GraphQLScalarType;
+  ContractBundleAngelStories?: ContractBundleAngelStoriesTypeResolver;
   SelfChangeEligibility?: SelfChangeEligibilityTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
@@ -2861,6 +2867,7 @@ export interface AngelStoryToContentResolver<TParent = AngelStory, TResult = str
 export interface ContractBundleTypeResolver<TParent = ContractBundle> {
   id?: ContractBundleToIdResolver<TParent>;
   contracts?: ContractBundleToContractsResolver<TParent>;
+  angelStories?: ContractBundleToAngelStoriesResolver<TParent>;
 }
 
 export interface ContractBundleToIdResolver<TParent = ContractBundle, TResult = string> {
@@ -2868,6 +2875,10 @@ export interface ContractBundleToIdResolver<TParent = ContractBundle, TResult = 
 }
 
 export interface ContractBundleToContractsResolver<TParent = ContractBundle, TResult = Array<Contract>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractBundleToAngelStoriesResolver<TParent = ContractBundle, TResult = ContractBundleAngelStories> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -3489,6 +3500,14 @@ export interface UpcomingRenewalToRenewalDateResolver<TParent = UpcomingRenewal,
 }
 
 export interface UpcomingRenewalToDraftCertificateUrlResolver<TParent = UpcomingRenewal, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractBundleAngelStoriesTypeResolver<TParent = ContractBundleAngelStories> {
+  addressChange?: ContractBundleAngelStoriesToAddressChangeResolver<TParent>;
+}
+
+export interface ContractBundleAngelStoriesToAddressChangeResolver<TParent = ContractBundleAngelStories, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

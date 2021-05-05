@@ -63,7 +63,8 @@ export const contractBundles: QueryToContractBundlesResolver = async (
   const bundle = (contracts: ContractDto[]): ContractBundle => {
     return {
       id: `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`,
-      contracts: contracts.map((c) => transformContract(c, strings))
+      contracts: contracts.map((c) => transformContract(c, strings)),
+      angelStories: {}
     }
   }
 

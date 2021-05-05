@@ -694,6 +694,11 @@ type File {
 type ContractBundle {
   id: ID!
   contracts: [Contract!]!
+  angelStories: ContractBundleAngelStories!
+}
+
+type ContractBundleAngelStories {
+  addressChange: ID
 }
 
 type Contract {
