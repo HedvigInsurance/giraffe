@@ -3,6 +3,7 @@ import { IResolvers } from 'graphql-tools'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
 import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
+import { createQuoteFaqsExtension } from "./quoteFaqs"
 
 export enum SchemaIdentifier {
   GRAPH_CMS = "graph-cms",
@@ -17,7 +18,7 @@ export enum SchemaIdentifier {
   LOOKUP_SERVICE = "lookup-service",
 }
 
-interface CrossSchemaExtension {
+export interface CrossSchemaExtension {
   dependencies: SchemaIdentifier[]
   content: string,
   resolvers(schemas: (identifier: SchemaIdentifier) => GraphQLSchema): IResolvers
@@ -32,7 +33,8 @@ export const getCrossSchemaExtensions = (
     contractExtension,
     quotesExtension,
     embarkExtension,
-    campaignExtension
+    campaignExtension,
+    createQuoteFaqsExtension()
   ]
   const applicable = allExtensions.filter(extension => {
     const missing = extension.dependencies.filter(id => !schemas.get(id))
