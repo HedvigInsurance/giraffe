@@ -1,11 +1,26 @@
 import { readFileSync, readdirSync } from 'fs'
 
+/**
+ * A type that is injected into the context of GrahQL resolvers, and
+ * contains localized string lookups based on key.
+ * 
+ * If the string is missing, the input key will be returned.
+ */
+export type LocalizedStrings = {
+    (key: string): string
+}
+
 export type LocalizedStringsProvider = {
     (key: string): LocalizedStrings
 }
 
-export type LocalizedStrings = {
-    (key: string): string
+export const localizedStringsProvider: LocalizedStringsProvider = (
+    locale: string
+): LocalizedStrings => {
+    locale = locale.replace('-', '_')
+    const match = files[locale] || files[localeTranslator[locale]]
+    if (!match) return (key) => key
+    return (key: string) => match[key] || key
 }
 
 const localeTranslator: Record<string, string> = {
@@ -13,6 +28,12 @@ const localeTranslator: Record<string, string> = {
     'da': 'da_DK',
     'nb': 'nb_NO',
     'nn': 'nb_NO'
+}
+
+type LanguageFiles = {
+    [locale:string] : { 
+        [key:string] : string | undefined 
+    } | undefined
 }
 
 const readFiles = (): LanguageFiles => {
@@ -30,19 +51,3 @@ const readFiles = (): LanguageFiles => {
 }
 
 const files = readFiles()
-
-
-export const localizedStringsProvider: LocalizedStringsProvider = (
-    locale: string
-): LocalizedStrings => {
-    locale = locale.replace('-', '_')
-    const match = files[locale] || files[localeTranslator[locale]]
-    if (!match) return (key) => key
-    return (key: string) => match[key] || key
-}
-
-type LanguageFiles = {
-    [locale:string] : { 
-        [key:string] : string | undefined 
-    } | undefined
-}
