@@ -1,4 +1,4 @@
-FROM node:10.12.0-alpine AS dependencies
+FROM node:10.13.0-alpine AS dependencies
 WORKDIR /usr/src/app
 
 ADD package.json .
