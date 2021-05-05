@@ -2,7 +2,7 @@ import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
-import quoteBundleInception, { crossSchemaExtensions as quoteBundleInceptionCrossSchemaExtensions } from './quoteBundleInception'
+import { createQuoteBundleInceptionExtension } from './quoteBundleInceptionExtension'
 
 export enum SchemaIdentifier {
   GRAPH_CMS = "graph-cms",
@@ -19,7 +19,7 @@ export enum SchemaIdentifier {
 
 export type Schemas = (identifier: SchemaIdentifier) => GraphQLSchema
 
-interface CrossSchemaExtension {
+export interface CrossSchemaExtension {
   dependencies: SchemaIdentifier[]
   content: string,
   resolvers(schemas: Schemas): IResolvers
@@ -34,6 +34,7 @@ export const getCrossSchemaExtensions = (
     contractExtension,
     quotesExtension,
     embarkExtension,
+    createQuoteBundleInceptionExtension()
   ]
   const applicable = allExtensions.filter(extension => {
     const missing = extension.dependencies.filter(id => !schemas.get(id))
@@ -211,7 +212,6 @@ const quotesExtension: CrossSchemaExtension = {
 
   ${quoteDetailsCrossSchemaExtensions}
   ${quoteDisplayNameCrossSchemaExtensions}
-  ${quoteBundleInceptionCrossSchemaExtensions}
   `,
   resolvers: (schemas) => ({
     CompleteQuote: {
@@ -379,8 +379,7 @@ const quotesExtension: CrossSchemaExtension = {
       },
       ...quoteDetailsTable("BundledQuote"),
       ...quoteDisplayName("BundledQuote")
-    },
-    ...quoteBundleInception(schemas)
+    }
   })
 }
 
