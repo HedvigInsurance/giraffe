@@ -1,6 +1,8 @@
 import { GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
-import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './quoteDetailsTable'
+import { crossSchemaExtensions as contractDetailsCrossSchemaExtension, currentAgreementDetailsTable, upcomingAgreementDetailsTable } from './detailstable/contractDetailsTable'
+import { getQuoteDetailsFragment } from './detailstable/quoteDetailsFragments'
+import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './detailstable/quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
 import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
 
@@ -105,6 +107,8 @@ const contractExtension: CrossSchemaExtension = {
     termsAndConditions(locale: Locale!): InsuranceTerm!
     insuranceTerms(locale: Locale!): [InsuranceTerm!]!
   }
+  
+  ${contractDetailsCrossSchemaExtension}
   `,
   resolvers: (schemas) => ({
     Contract: {
@@ -187,6 +191,8 @@ const contractExtension: CrossSchemaExtension = {
           })
         },
       },
+      ...currentAgreementDetailsTable(),
+      ...upcomingAgreementDetailsTable()
     }
   })
 }
@@ -292,7 +298,7 @@ const quotesExtension: CrossSchemaExtension = {
           })
         },
       },
-      ...quoteDetailsTable("CompleteQuote"),
+      ...quoteDetailsTable(getQuoteDetailsFragment("CompleteQuote")),
       ...quoteDisplayName("CompleteQuote")
     },
     BundledQuote: {
@@ -375,7 +381,7 @@ const quotesExtension: CrossSchemaExtension = {
           })
         },
       },
-      ...quoteDetailsTable("BundledQuote"),
+      ...quoteDetailsTable(getQuoteDetailsFragment("BundledQuote")),
       ...quoteDisplayName("BundledQuote")
     }
   })
