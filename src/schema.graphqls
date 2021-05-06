@@ -14,8 +14,8 @@ type Query {
   geo: Geo!
   angelStory(name: String!, locale: String): AngelStory
 
-  """Returns all the contracts, combined into bundles."""
-  contractBundles: [ContractBundle!]!
+  """Returns all the currently active contracts, combined into bundles."""
+  activeContractBundles: [ContractBundle!]!
   """Returns all contracts the member currently holds, regardless of activation/termination status"""
   contracts: [Contract!]!
   """Returns whether a member has at least one contract"""

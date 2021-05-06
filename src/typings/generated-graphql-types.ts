@@ -34,9 +34,9 @@ export interface Query {
   angelStory?: AngelStory;
   
   /**
-   * Returns all the contracts, combined into bundles.
+   * Returns all the currently active contracts, combined into bundles.
    */
-  contractBundles: Array<ContractBundle>;
+  activeContractBundles: Array<ContractBundle>;
   
   /**
    * Returns all contracts the member currently holds, regardless of activation/termination status
@@ -895,6 +895,11 @@ export interface AgreementCore {
   activeTo?: LocalDate;
   premium: MonetaryAmountV2;
   certificateUrl?: string;
+  
+  /**
+   * 
+   * @deprecated Use Contract.termsAndConditions(locale: Locale!): InsuranceTerm! instead
+   */
   termsAndConditions?: InsuranceTerm;
 }
 
@@ -943,7 +948,6 @@ export enum AgreementStatus {
 }
 
 export interface InsuranceTerm {
-  commencementDate: LocalDate;
   displayName: string;
   url: string;
   type: InsuranceTermType;
@@ -1613,7 +1617,7 @@ export interface QueryTypeResolver<TParent = undefined> {
   chatActions?: QueryToChatActionsResolver<TParent>;
   geo?: QueryToGeoResolver<TParent>;
   angelStory?: QueryToAngelStoryResolver<TParent>;
-  contractBundles?: QueryToContractBundlesResolver<TParent>;
+  activeContractBundles?: QueryToActiveContractBundlesResolver<TParent>;
   contracts?: QueryToContractsResolver<TParent>;
   hasContract?: QueryToHasContractResolver<TParent>;
   selfChangeEligibility?: QueryToSelfChangeEligibilityResolver<TParent>;
@@ -1692,7 +1696,7 @@ export interface QueryToAngelStoryResolver<TParent = undefined, TResult = AngelS
   (parent: TParent, args: QueryToAngelStoryArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface QueryToContractBundlesResolver<TParent = undefined, TResult = Array<ContractBundle>> {
+export interface QueryToActiveContractBundlesResolver<TParent = undefined, TResult = Array<ContractBundle>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -3045,14 +3049,9 @@ export interface AgreementCoreTypeResolver<TParent = AgreementCore> {
   (parent: TParent, context: Context, info: GraphQLResolveInfo): 'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement';
 }
 export interface InsuranceTermTypeResolver<TParent = InsuranceTerm> {
-  commencementDate?: InsuranceTermToCommencementDateResolver<TParent>;
   displayName?: InsuranceTermToDisplayNameResolver<TParent>;
   url?: InsuranceTermToUrlResolver<TParent>;
   type?: InsuranceTermToTypeResolver<TParent>;
-}
-
-export interface InsuranceTermToCommencementDateResolver<TParent = InsuranceTerm, TResult = LocalDate> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface InsuranceTermToDisplayNameResolver<TParent = InsuranceTerm, TResult = string> {

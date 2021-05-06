@@ -20,7 +20,7 @@ import {
 import { GraphQLResolveInfo } from 'graphql'
 import { ContractDto } from '../api/upstreams/productPricing'
 import { Context } from '../context'
-import { contractBundles, contracts, hasContract } from './contracts'
+import { activeContractBundles, contracts, hasContract } from './contracts'
 import {
   AgreementStatus,
   Contract,
@@ -28,12 +28,12 @@ import {
   TypeOfContract,
 } from '../typings/generated-graphql-types'
 
-describe('Query.contractBundles', () => {
+describe('Query.activeContractBundles', () => {
   it('works for zero contracts', async () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result).toEqual([])
   })
@@ -50,7 +50,7 @@ describe('Query.contractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([apartment, house])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -88,7 +88,7 @@ describe('Query.contractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -124,7 +124,7 @@ describe('Query.contractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel, accident])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -148,6 +148,36 @@ describe('Query.contractBundles', () => {
     ])
   })
 
+  it('non-active contracts are ignored', async () => {
+    const homeContent = {
+      ...norwegianHomeContentInput,
+      id: 'cid1',
+      status: ContractStatusDto.ACTIVE
+    }
+    const travel = {
+      ...norwegianTravelInput,
+      id: 'cid2',
+      status: ContractStatusDto.TERMINATED
+    }
+    context.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([homeContent, travel])
+
+    const result = await activeContractBundles(undefined, {}, context, info)
+
+    expect(result).toMatchObject<ContractBundle[]>([
+      {
+        id: 'bundle:cid1',
+        contracts: [
+          {
+            ...norwegianHomeContentOutput,
+            id: 'cid1',
+          }
+        ],
+        angelStories: {}
+      }
+    ])
+  })
+
   it('compound bundle ID is sorted alphabetically', async () => {
     const homeContent = {
       ...norwegianHomeContentInput,
@@ -160,7 +190,7 @@ describe('Query.contractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result[0].id).toBe('bundle:a,z')
   })
@@ -177,7 +207,7 @@ describe('Query.contractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result[0].contracts[0].id).toBe('cid2')
     expect(result[0].contracts[1].id).toBe('cid1')
@@ -195,7 +225,7 @@ describe('Query.contractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await contractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles(undefined, {}, context, info)
 
     expect(result[0].contracts[0].id).toBe('cid2')
     expect(result[0].contracts[1].id).toBe('cid1')

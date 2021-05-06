@@ -6,7 +6,7 @@ import {
   AgreementStatusDto,
 } from './../api/upstreams/productPricing'
 import {
-  QueryToContractBundlesResolver,
+  QueryToActiveContractBundlesResolver,
   ContractBundle,
   QueryToContractsResolver,
   Contract,
@@ -30,18 +30,19 @@ import {
   DanishAccidentLineOfBusiness,
 } from './../typings/generated-graphql-types'
 
-export const contractBundles: QueryToContractBundlesResolver = async (
+export const activeContractBundles: QueryToActiveContractBundlesResolver = async (
   _parent,
   _args,
   { upstream, strings },
 ): Promise<ContractBundle[]> => {
   const contracts = await upstream.productPricing.getMemberContracts()
-  moveHomeContentsToTop(contracts)
+  const active = contracts.filter(c => c.status == ContractStatusDto.ACTIVE)
+  moveHomeContentsToTop(active)
 
   const norwegianBundle = [] as ContractDto[]
   const danishBundle = [] as ContractDto[]
   const individual = [] as ContractDto[]
-  contracts.forEach((contract) => {
+  active.forEach((contract) => {
     const agreement = contract.agreements.find(
       (ag) => ag.id === contract.currentAgreementId,
     )!
