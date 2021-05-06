@@ -85,7 +85,7 @@ export const activeContractBundles: QueryToActiveContractBundlesResolver = async
       id: bundleId,
       contracts: contracts.map((c) => transformContract(c, strings)),
       angelStories: {
-        addressChange: addressChangeAngelStoryId ? `${addressChangeAngelStoryId}?contractBundleId=${bundleId}` : undefined
+        addressChange: addressChangeAngelStoryId && `${addressChangeAngelStoryId}?contractBundleId=${bundleId}`
       }
     }
   }
@@ -138,12 +138,10 @@ const transformContract = (
     ),
     inception: contract.masterInception,
     termination: contract.terminationDate,
-    upcomingRenewal: contract.renewal
-      ? {
-          renewalDate: contract.renewal.renewalDate,
-          draftCertificateUrl: contract.renewal.draftCertificateUrl!, // this is nullable in the API but non-null in the Schema
-        }
-      : undefined,
+    upcomingRenewal: contract.renewal && {
+      renewalDate: contract.renewal.renewalDate,
+      draftCertificateUrl: contract.renewal.draftCertificateUrl!, // this is nullable in the API but non-null in the Schema
+    },
     typeOfContract: contract.typeOfContract as TypeOfContract,
     createdAt: contract.createdAt,
   }
