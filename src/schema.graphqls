@@ -806,7 +806,7 @@ interface AgreementCore {
     activeTo: LocalDate
     premium: MonetaryAmountV2!
     certificateUrl: String
-    termsAndConditions: InsuranceTerm
+    termsAndConditions: InsuranceTerm @deprecated(reason: "Use Contract.termsAndConditions(locale: Locale!): InsuranceTerm! instead")
 }
 
 enum AgreementStatus {
@@ -1077,7 +1077,6 @@ type Address {
 }
 
 type InsuranceTerm {
-    commencementDate: LocalDate!
     displayName: String!
     url: String!
     type: InsuranceTermType!
