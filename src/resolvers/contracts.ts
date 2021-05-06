@@ -30,12 +30,24 @@ import {
   DanishAccidentLineOfBusiness,
 } from './../typings/generated-graphql-types'
 
+const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
+  SWEDEN: 'moving-flow-SE',
+  NORWAY: 'moving-flow-NO',
+}
+
 export const activeContractBundles: QueryToActiveContractBundlesResolver = async (
   _parent,
   _args,
   { upstream, strings },
 ): Promise<ContractBundle[]> => {
-  const contracts = await upstream.productPricing.getMemberContracts()
+  const [
+    contracts,
+    selfChangeEligibility
+  ] = await Promise.all([
+    upstream.productPricing.getMemberContracts(),
+    upstream.productPricing.getSelfChangeEligibility()
+  ])
+
   const active = contracts.filter(c => c.status == ContractStatusDto.ACTIVE)
   moveHomeContentsToTop(active)
 
@@ -61,11 +73,20 @@ export const activeContractBundles: QueryToActiveContractBundlesResolver = async
     }
   })
 
+  let addressChangeAngelStoryId: string | undefined = undefined
+  if (selfChangeEligibility.blockers.length === 0) {
+    const marketInfo = await upstream.productPricing.getContractMarketInfo()
+    addressChangeAngelStoryId = ADDRESS_CHANGE_STORIES_BY_MARKET[marketInfo.market.toUpperCase()]
+  }
+
   const bundle = (contracts: ContractDto[]): ContractBundle => {
+    const bundleId = `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
     return {
-      id: `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`,
+      id: bundleId,
       contracts: contracts.map((c) => transformContract(c, strings)),
-      angelStories: {}
+      angelStories: {
+        addressChange: addressChangeAngelStoryId ? `${addressChangeAngelStoryId}?contractBundleId=${bundleId}` : undefined
+      }
     }
   }
 

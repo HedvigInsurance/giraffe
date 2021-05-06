@@ -213,22 +213,24 @@ describe('Query.activeContractBundles', () => {
     expect(result[0].contracts[1].id).toBe('cid1')
   })
 
-  it('HomeContent contracts are moved to the top', async () => {
-    const travel = {
-      ...norwegianTravelInput,
+  it('Moving flow story is visible if there are no blockers', async () => {
+    const apartment = {
+      ...swedishApartmentInput,
       id: 'cid1',
     }
-    const homeContent = {
-      ...norwegianHomeContentInput,
-      id: 'cid2',
-    }
     context.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([homeContent, travel])
+      Promise.resolve([apartment])
+    context.upstream.productPricing.getSelfChangeEligibility = () => Promise.resolve({ 
+      blockers: []
+    })
+    context.upstream.productPricing.getContractMarketInfo = () => Promise.resolve({ 
+      market: 'SWEDEN',
+      preferredCurrency: 'SEK'
+    })
 
     const result = await activeContractBundles(undefined, {}, context, info)
 
-    expect(result[0].contracts[0].id).toBe('cid2')
-    expect(result[0].contracts[1].id).toBe('cid1')
+    expect(result[0].angelStories.addressChange).toBe('moving-flow-SE?contractBundleId=bundle:cid1')
   })
 })
 
@@ -446,6 +448,9 @@ const context: Context = ({
   upstream: {
     productPricing: {
       getMemberContracts: () => Promise.resolve([]),
+      getSelfChangeEligibility: () => Promise.resolve(
+        { blockers: [ "FAKE" ] }
+      )
     },
   },
   strings: (key: string) => key,
