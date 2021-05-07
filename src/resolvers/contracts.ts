@@ -28,6 +28,7 @@ import {
   DanishTravelLineOfBusiness,
   DanishAccidentAgreement,
   DanishAccidentLineOfBusiness,
+  PossibleContractStatusTypeNames,
 } from './../typings/generated-graphql-types'
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
@@ -147,41 +148,50 @@ const transformContract = (
   }
 }
 
-const transformContractStatus = (contract: ContractDto): ContractStatus => {
+const transformContractStatus = (
+  contract: ContractDto
+): Typenamed<ContractStatus, PossibleContractStatusTypeNames> => {
   const upcomingAgreementChange = contract.upcomingAgreement
     ? { newAgreement: transformAgreement(contract.upcomingAgreement) }
     : undefined
   switch (contract.status) {
     case ContractStatusDto.PENDING:
       return {
+        __typename: 'PendingStatus',
         pendingSince: contract.createdAt.split('T')[0], // Ugly Instant to Date transformation
       }
     case ContractStatusDto.ACTIVE_IN_FUTURE:
       return {
+        __typename: 'ActiveInFutureStatus',
         futureInception: contract.masterInception,
       }
     case ContractStatusDto.ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE:
       return {
+        __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
         futureInception: contract.masterInception,
         futureTermination: contract.terminationDate,
       }
     case ContractStatusDto.ACTIVE:
       return {
+        __typename: 'ActiveStatus',
         pastInception: contract.masterInception,
         upcomingAgreementChange: upcomingAgreementChange,
       }
     case ContractStatusDto.TERMINATED_TODAY: {
       const now = new Date()
       return {
+        __typename: 'TerminatedTodayStatus',
         today: `${now.getFullYear}-${now.getMonth}-${now.getDay}`,
       }
     }
     case ContractStatusDto.TERMINATED_IN_FUTURE:
       return {
+        __typename: 'TerminatedInFutureStatus',
         futureTermination: contract.terminationDate,
       }
     case ContractStatusDto.TERMINATED:
       return {
+        __typename: 'TerminatedStatus',
         termination: contract.terminationDate,
       }
   }
