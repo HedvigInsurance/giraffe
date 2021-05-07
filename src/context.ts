@@ -11,7 +11,7 @@ import { LocalizedStrings, localizedStringsProvider } from './translations/Local
 interface Context {
   getToken: TokenProvider
   headers: ForwardHeaders
-  graphCMSSchema: GraphQLSchema
+  graphCMSSchema?: GraphQLSchema
   remoteIp: string,
   upstream: Upstream,
   strings: LocalizedStrings
@@ -29,7 +29,7 @@ interface ForwardHeaders {
   'Enable-Simple-Sign': string
 }
 
-const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
+const getWebContext = (graphCMSSchema?: GraphQLSchema) => async ({
   ctx,
 }: {
   ctx: Koa.Context
@@ -60,7 +60,7 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
   }
 }
 
-const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
+const getWebSocketContext = (graphCMSSchema?: GraphQLSchema) => (
   connectionParams: { Authorization: string },
   _webSocket: any,
   context: ConnectionContext,
