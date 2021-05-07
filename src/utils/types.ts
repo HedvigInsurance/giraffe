@@ -35,4 +35,4 @@
  * }
  * ``` 
  */
-type Typenamed<T, N> = T & { __typename: N }
+export type Typenamed<T, N> = T & { __typename: N }

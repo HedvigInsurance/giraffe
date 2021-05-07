@@ -1,3 +1,4 @@
+import { Typenamed } from './../utils/types';
 import { LocalizedStrings } from '../translations/LocalizedStrings'
 import {
   ContractDto,
