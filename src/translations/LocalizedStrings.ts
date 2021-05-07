@@ -11,7 +11,7 @@ export type LocalizedStrings = {
 }
 
 export type LocalizedStringsProvider = {
-    (key: string): LocalizedStrings
+    (locale: string): LocalizedStrings
 }
 
 export const localizedStringsProvider: LocalizedStringsProvider = (
