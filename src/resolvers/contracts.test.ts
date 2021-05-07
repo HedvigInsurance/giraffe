@@ -1,3 +1,4 @@
+import { Testing } from './../test-utils/test-server';
 import {
   NorwegianHomeContentLineOfBusiness,
   NorwegianTravelLineOfBusiness,
@@ -441,6 +442,19 @@ describe('Query.hasContract', () => {
     const result = await hasContract(undefined, {}, context, info)
 
     expect(result).toBe(true)
+  })
+
+  it('can be queried', async () => {
+    Testing.upstream.productPricing.getMemberContracts = () =>
+      Promise.resolve([{ id: 'cid' } as ContractDto])
+
+    const { query } = Testing.apollo()
+
+    const result = await query({
+      query: `query { hasContract }`
+    })
+
+    expect(result.data.hasContract).toBe(true)
   })
 })
 
