@@ -1,3 +1,4 @@
+import { gql } from 'apollo-server-koa';
 import { startApolloTesting } from './../test-utils/test-server';
 import {
   NorwegianHomeContentLineOfBusiness,
@@ -428,13 +429,17 @@ describe('Query.contracts', () => {
 })
 
 describe('Query.hasContract', () => {
+  const GQL_QUERY = gql`
+  query {
+    hasContract
+  }
+  `
+
   it('is false when no contracts', async () => {
     apollo.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await apollo.query({
-      query: `query { hasContract }`
-    })
+    const result = await apollo.query({ query: GQL_QUERY })
 
     expect(result.data.hasContract).toBe(false)
   })
@@ -443,9 +448,7 @@ describe('Query.hasContract', () => {
     apollo.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([{ id: 'cid' } as ContractDto])
 
-    const result = await apollo.query({
-      query: `query { hasContract }`
-    })
+    const result = await apollo.query({ query: GQL_QUERY })
 
     expect(result.data.hasContract).toBe(true)
   })
