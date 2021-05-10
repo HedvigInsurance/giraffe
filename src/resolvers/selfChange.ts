@@ -42,13 +42,20 @@ const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = a
   args,
   { upstream },
 ): Promise<AddressChangeOutput> => {
-  const member = await upstream.memberService.getSelfMember()
-  const contracts = await upstream.productPricing.getMemberContracts()
+  const [
+    member,
+    contracts,
+    marketInfo
+  ] = await Promise.all([
+    upstream.memberService.getSelfMember(),
+    upstream.productPricing.getMemberContracts(),
+    upstream.productPricing.getContractMarketInfo()
+  ])
 
   const tasks = contracts
     .filter((c) => c.status == ContractStatusDto.ACTIVE)
     .map((contract) => {
-      const body = convertAddressChangeToSelfChangeBody(args.input, member, contract)
+      const body = convertAddressChangeToSelfChangeBody(args.input, member, contract, marketInfo)
       return upstream.underwriter.createQuote(body)
     })
 

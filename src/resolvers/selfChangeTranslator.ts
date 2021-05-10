@@ -1,4 +1,4 @@
-import { ContractDto } from './../api/upstreams/productPricing'
+import { ContractDto, ContractMarketInfoDto } from './../api/upstreams/productPricing'
 import {
   AddressChangeInput,
   AddressHomeType,
@@ -12,6 +12,7 @@ export const convertAddressChangeToSelfChangeBody = (
   input: AddressChangeInput,
   member: MemberDto,
   contract: ContractDto,
+  marketInfo: ContractMarketInfoDto
 ): CreateQuoteDto => {
   const dtoBase: CreateQuoteDto = {
     memberId: member.memberId,
@@ -22,16 +23,16 @@ export const convertAddressChangeToSelfChangeBody = (
     startDate: input.startDate,
   }
 
-  switch (input.countryCode) {
-    case 'SE':
+  switch (marketInfo.market) {
+    case 'SWEDEN':
       return toSwedishQuoteDto(input, dtoBase)
-    case 'NO':
+    case 'NORWAY':
       return toNorwegianQuoteDto(input, dtoBase, contract)
-    case 'DK':
+    case 'DENMARK':
       return toDanishQuoteDto(input, dtoBase, contract)
   }
 
-  throw `Unhandled country: ${input.countryCode}`
+  throw `Unhandled market: ${marketInfo.market}`
 }
 
 const toSwedishQuoteDto = (

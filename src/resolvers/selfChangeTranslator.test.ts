@@ -1,4 +1,4 @@
-import { ContractDto, ContractStatusDto } from './../api/upstreams/productPricing'
+import { ContractDto, ContractMarketInfoDto, ContractStatusDto } from './../api/upstreams/productPricing'
 import {
   AddressHomeType,
   AddressOwnership,
@@ -17,6 +17,11 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     phoneNumber: '070123456789',
     ssn: '201212121212',
     birthDate: '1991-07-27',
+  }
+
+  const marketInfo: ContractMarketInfoDto = {
+    market: 'UNKNOWN',
+    preferredCurrency: 'UNKNOWN'
   }
 
   const baseInput = {
@@ -45,7 +50,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const seBaseInput = {
       ...baseInput,
-      countryCode: 'SE',
       type: AddressHomeType.APARTMENT,
     }
 
@@ -66,7 +70,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(nonStudentRental, member, contract),
+      convertAddressChangeToSelfChangeBody(nonStudentRental, member, contract, {...marketInfo, market: 'SWEDEN'}),
     ).toEqual({
       ...seBaseOutput,
       swedishApartmentData: {
@@ -82,7 +86,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(studentRental, member, contract),
+      convertAddressChangeToSelfChangeBody(studentRental, member, contract, {...marketInfo, market: 'SWEDEN'}),
     ).toEqual({
       ...seBaseOutput,
       swedishApartmentData: {
@@ -98,7 +102,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(nonStudentOwned, member, contract),
+      convertAddressChangeToSelfChangeBody(nonStudentOwned, member, contract, {...marketInfo, market: 'SWEDEN'}),
     ).toEqual({
       ...seBaseOutput,
       swedishApartmentData: {
@@ -114,7 +118,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(studentOwned, member, contract),
+      convertAddressChangeToSelfChangeBody(studentOwned, member, contract, {...marketInfo, market: 'SWEDEN'}),
     ).toEqual({
       ...seBaseOutput,
       swedishApartmentData: {
@@ -133,7 +137,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const input: AddressChangeInput = {
       ...baseInput,
-      countryCode: 'SE',
       type: AddressHomeType.HOUSE,
       ancillaryArea: 28,
       yearOfConstruction: 1912,
@@ -168,7 +171,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(input, member, contract),
+      convertAddressChangeToSelfChangeBody(input, member, contract, {...marketInfo, market: 'SWEDEN'}),
     ).toEqual(output)
   })
 
@@ -181,7 +184,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const input: AddressChangeInput = {
       ...baseInput,
-      countryCode: 'NO',
       type: AddressHomeType.APARTMENT,
       ownership: AddressOwnership.OWN,
       isYouth: true,
@@ -200,7 +202,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(input, member, contract),
+      convertAddressChangeToSelfChangeBody(input, member, contract, {...marketInfo, market: 'NORWAY'}),
     ).toEqual(output)
   })
 
@@ -213,7 +215,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const input: AddressChangeInput = {
       ...baseInput,
-      countryCode: 'NO',
       type: AddressHomeType.APARTMENT,
       ownership: AddressOwnership.OWN,
       isYouth: true,
@@ -228,7 +229,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(input, member, contract),
+      convertAddressChangeToSelfChangeBody(input, member, contract, {...marketInfo, market: 'NORWAY'}),
     ).toEqual(output)
   })
 
@@ -241,7 +242,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const input: AddressChangeInput = {
       ...baseInput,
-      countryCode: 'DK',
       type: AddressHomeType.APARTMENT,
       ownership: AddressOwnership.OWN,
       isStudent: true,
@@ -260,7 +260,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(input, member, contract),
+      convertAddressChangeToSelfChangeBody(input, member, contract, {...marketInfo, market: 'DENMARK'}),
     ).toEqual(output)
   })
 
@@ -273,7 +273,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const input: AddressChangeInput = {
       ...baseInput,
-      countryCode: 'DK',
       type: AddressHomeType.APARTMENT,
       ownership: AddressOwnership.OWN,
       isStudent: true,
@@ -290,7 +289,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(input, member, contract),
+      convertAddressChangeToSelfChangeBody(input, member, contract, {...marketInfo, market: 'DENMARK'}),
     ).toEqual(output)
   })
 
@@ -303,7 +302,6 @@ describe('convertAddressChangeToSelfChangeBody', () => {
 
     const input: AddressChangeInput = {
       ...baseInput,
-      countryCode: 'DK',
       type: AddressHomeType.APARTMENT,
       ownership: AddressOwnership.OWN,
       isStudent: false,
@@ -320,7 +318,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
     }
 
     expect(
-      convertAddressChangeToSelfChangeBody(input, member, contract),
+      convertAddressChangeToSelfChangeBody(input, member, contract, {...marketInfo, market: 'DENMARK'}),
     ).toEqual(output)
   })
 })

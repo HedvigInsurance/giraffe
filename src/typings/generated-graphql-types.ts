@@ -1258,6 +1258,10 @@ export interface Mutation {
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
   updatePickedLocale: Member;
+  
+  /**
+   * Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance.
+   */
   createAddressChangeQuotes: AddressChangeOutput;
 }
 
@@ -1378,22 +1382,84 @@ export interface DanishBankIdAuthResponse {
   redirectUrl: string;
 }
 
+/**
+ * A quote-agnostic payload type for changing the addess.
+ */
 export interface AddressChangeInput {
+  
+  /**
+   * Is this an apartment or a house.
+   */
   type: AddressHomeType;
+  
+  /**
+   * Street value, including number.
+   */
   street: string;
+  
+  /**
+   * Zip code.
+   */
   zip: string;
+  
+  /**
+   * The total living space, in square meters.
+   */
   livingSpace: number;
+  
+  /**
+   * Number co-insured, the number of people on the contract except for the policy holder.
+   */
   numberCoInsured: number;
+  
+  /**
+   * Is this a rental or do does the policy holder own it?
+   */
   ownership: AddressOwnership;
+  
+  /**
+   * The date the member gets access to this new home.
+   */
   startDate: LocalDate;
-  countryCode: string;
+  
+  /**
+   * Set to true if the insurance is concerning a youth. Concept used in Norway
+   */
   isYouth?: boolean;
+  
+  /**
+   * Set to true if the insurance is concerning a student. Concept used in Sweden, Denmark
+   */
   isStudent?: boolean;
+  
+  /**
+   * Ancillary area. Required if type == HOUSE.
+   */
   ancillaryArea?: number;
+  
+  /**
+   * Year of construction. Required if type == HOUSE.
+   */
   yearOfConstruction?: number;
+  
+  /**
+   * Number of bathrooms. Required if type == HOUSE.
+   */
   numberOfBathrooms?: number;
+  
+  /**
+   * Number of floors. Required if type == HOUSE.
+   */
   numberOfFloors?: number;
+  
+  /**
+   * Is this property subleted? Required if type == HOUSE.
+   */
   isSubleted?: boolean;
+  
+  /**
+   * A list of extra buildings outside of the main property. Required if type == HOUSE.
+   */
   extraBuildings?: Array<AddressHouseExtraBuilding>;
 }
 
