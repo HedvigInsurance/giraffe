@@ -1,4 +1,4 @@
-import { Testing } from './../test-utils/test-server';
+import { startApolloTesting } from './../test-utils/test-server';
 import {
   NorwegianHomeContentLineOfBusiness,
   NorwegianTravelLineOfBusiness,
@@ -21,13 +21,15 @@ import {
 import { GraphQLResolveInfo } from 'graphql'
 import { ContractDto } from '../api/upstreams/productPricing'
 import { Context } from '../context'
-import { activeContractBundles, contracts, hasContract } from './contracts'
+import { activeContractBundles, contracts } from './contracts'
 import {
   AgreementStatus,
   Contract,
   SwedishApartmentLineOfBusiness,
   TypeOfContract,
 } from '../typings/generated-graphql-types'
+
+const apollo = startApolloTesting()
 
 describe('Query.activeContractBundles', () => {
   it('works for zero contracts', async () => {
@@ -427,30 +429,21 @@ describe('Query.contracts', () => {
 
 describe('Query.hasContract', () => {
   it('is false when no contracts', async () => {
-    context.upstream.productPricing.getMemberContracts = () =>
+    apollo.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await hasContract(undefined, {}, context, info)
+    const result = await apollo.query({
+      query: `query { hasContract }`
+    })
 
-    expect(result).toBe(false)
+    expect(result.data.hasContract).toBe(false)
   })
 
   it('is true when some contracts', async () => {
-    context.upstream.productPricing.getMemberContracts = () =>
+    apollo.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([{ id: 'cid' } as ContractDto])
 
-    const result = await hasContract(undefined, {}, context, info)
-
-    expect(result).toBe(true)
-  })
-
-  it('can be queried', async () => {
-    Testing.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([{ id: 'cid' } as ContractDto])
-
-    const { query } = Testing.apollo()
-
-    const result = await query({
+    const result = await apollo.query({
       query: `query { hasContract }`
     })
 
