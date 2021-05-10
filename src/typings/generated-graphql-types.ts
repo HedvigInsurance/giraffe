@@ -973,6 +973,11 @@ export interface DanishBankIdAuthResponse {
 export interface AddressChangeInput {
   
   /**
+   * The target bundle that should have its address changed.
+   */
+  contractBundleId: string;
+  
+  /**
    * Is this an apartment or a house.
    */
   type: AddressHomeType;

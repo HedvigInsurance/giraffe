@@ -45,13 +45,14 @@ const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = a
   args,
   { upstream },
 ): Promise<AddressChangeQuoteResult> => {
+  const contractIds = args.input.contractBundleId.replace('bundle:', '').split(',')
   const [
     member,
     contracts,
     marketInfo
   ] = await Promise.all([
     upstream.memberService.getSelfMember(),
-    upstream.productPricing.getMemberContracts(),
+    Promise.all(contractIds.map(upstream.productPricing.getContract)),
     upstream.productPricing.getContractMarketInfo()
   ])
 
