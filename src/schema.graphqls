@@ -60,6 +60,7 @@ type Mutation {
   registerBranchCampaign(campaign: CampaignInput!): Boolean
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
   updatePickedLocale(pickedLocale: Locale!): Member!
+  """Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance."""
   createAddressChangeQuotes(input: AddressChangeInput!): AddressChangeOutput!
 }
 
@@ -365,25 +366,40 @@ enum SelfChangeBlocker {
     TOO_MANY_CONTRACTS
 }
 
+"""A quote-agnostic payload type for changing the addess."""
 input AddressChangeInput {
+  """Is this an apartment or a house."""
   type: AddressHomeType!
+  """Street value, including number."""
   street: String!
+  """Zip code."""
   zip: String!
+  """The total living space, in square meters."""
   livingSpace: Int!
+  """Number co-insured, the number of people on the contract except for the policy holder."""
   numberCoInsured: Int!
+  """Is this a rental or do does the policy holder own it?"""
   ownership: AddressOwnership!
+  """The date the member gets access to this new home."""
   startDate: LocalDate!
-  countryCode: String!
 
+  """Set to true if the insurance is concerning a youth. Concept used in Norway"""
   isYouth: Boolean
+  """Set to true if the insurance is concerning a student. Concept used in Sweden, Denmark"""
   isStudent: Boolean
 
   # house data
+  """Ancillary area. Required if type == HOUSE."""
   ancillaryArea: Int
+  """Year of construction. Required if type == HOUSE."""
   yearOfConstruction: Int
+  """Number of bathrooms. Required if type == HOUSE."""
   numberOfBathrooms: Int
+  """Number of floors. Required if type == HOUSE."""
   numberOfFloors: Int
+  """Is this property subleted? Required if type == HOUSE."""
   isSubleted: Boolean
+  """A list of extra buildings outside of the main property. Required if type == HOUSE."""
   extraBuildings: [AddressHouseExtraBuilding!]
 }
 
