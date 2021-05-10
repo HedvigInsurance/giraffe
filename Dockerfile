@@ -16,7 +16,7 @@ RUN yarn build
 FROM build AS test
 
 
-FROM node:10.12.0-alpine AS assemble
+FROM node:10.13.0-alpine AS assemble
 WORKDIR /usr/src/app
 
 COPY package.json .
