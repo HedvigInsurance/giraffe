@@ -1,7 +1,9 @@
+import { QuoteCreationResult } from './../api/upstreams/underwriter';
 import { convertAddressChangeToSelfChangeBody } from './selfChangeTranslator'
 import {
   MutationToCreateAddressChangeQuotesResolver,
-  AddressChangeOutput,
+  AddressChangeQuoteResult,
+  PossibleAddressChangeQuoteResultTypeNames,
 } from './../typings/generated-graphql-types'
 
 import {
@@ -9,6 +11,7 @@ import {
   SelfChangeEligibility,
 } from '../typings/generated-graphql-types'
 import { ContractStatus } from '../api/upstreams/productPricing'
+import { Typenamed } from '../utils/types';
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
   SWEDEN: 'moving-flow-SE',
@@ -41,7 +44,7 @@ const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = a
   _parent,
   args,
   { upstream },
-): Promise<AddressChangeOutput> => {
+): Promise<AddressChangeQuoteResult> => {
   const [
     member,
     contracts,
@@ -60,8 +63,33 @@ const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = a
     })
 
   const responses = await Promise.all(tasks)
+  return transformResult(responses)
+}
+
+const transformResult = (
+  responses: QuoteCreationResult[]
+): Typenamed<AddressChangeQuoteResult, PossibleAddressChangeQuoteResultTypeNames> => {
+  const quoteIds: string[] = []
+  const breachedUnderwritingGuidelines: string[] = []
+  responses.forEach(response => {
+    switch (response.status) {
+      case 'success':
+        quoteIds.push(response.id)
+        break
+      case 'failure':
+        response.breachedUnderwritingGuidelines.forEach(g => breachedUnderwritingGuidelines.push(g.code))
+        break
+    }
+  })
+  if (breachedUnderwritingGuidelines.length === 0) {
+    return {
+      __typename: 'AddressChangeQuoteFailure',
+      breachedUnderwritingGuidelines: breachedUnderwritingGuidelines
+    }
+  }
   return {
-    quoteIds: responses.map((response) => response.id),
+    __typename: 'AddressChangeQuoteSuccess',
+    quoteIds: quoteIds
   }
 }
 
