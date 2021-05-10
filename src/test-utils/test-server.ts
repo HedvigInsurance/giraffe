@@ -8,6 +8,7 @@ import { IResolvers, makeExecutableSchema } from 'graphql-tools';
 import { Context } from '../context';
 import { resolvers } from '../resolvers'
 import { ApolloServerTestClient, createTestClient } from 'apollo-server-testing'
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 const typeDefs = gql(
   readFileSync(resolve(__dirname, '../schema.graphqls'), 'utf8'),
@@ -38,6 +39,7 @@ const context: Context = {
     },
     remoteIp: '127.0.0.1',
     upstream: upstream,
+    pubsub: {} as RedisPubSub, // fake this at some point
     strings: (key) => key
 }
 

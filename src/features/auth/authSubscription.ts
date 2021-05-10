@@ -1,12 +1,11 @@
 import { getUser } from '../../api'
-import { pubsub } from '../../pubsub'
 import {
   AuthEvent,
   SubscriptionToAuthStatusResolver,
 } from '../../typings/generated-graphql-types'
 
 const subscribeToAuthStatus: SubscriptionToAuthStatusResolver = {
-  subscribe: async (_parent, _args, { getToken, headers }) => {
+  subscribe: async (_parent, _args, { getToken, headers, pubsub }) => {
     const token = getToken()
     const user = await getUser(token, headers)
 
