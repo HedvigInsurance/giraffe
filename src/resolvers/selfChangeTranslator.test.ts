@@ -25,6 +25,7 @@ describe('convertAddressChangeToSelfChangeBody', () => {
   }
 
   const baseInput = {
+    contractBundleId: 'bundle:abc',
     startDate: '2021-06-01',
     street: 'Fakestreet 123',
     zip: '12345',

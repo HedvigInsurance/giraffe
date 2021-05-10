@@ -1,14 +1,26 @@
-
 import { HttpClient } from '../httpClient'
 
 export interface ProductPricingClient {
+  /**
+   * Get a contract by ID.
+   */
+  getContract(id: string): Promise<ContractDto>
+  /**
+   * Get all the contracts tied to the user with the current session.
+   */
   getMemberContracts(): Promise<ContractDto[]>
+  /**
+   * Get the Contract Market Info for the current user session.
+   */
   getContractMarketInfo(): Promise<ContractMarketInfoDto>
+  /**
+   * Get the data related to whether the 'self change' functionality of contracts is available.
+   */
   getSelfChangeEligibility(): Promise<SelfChangeEligibilityDto>
 }
 
 export interface ContractMarketInfoDto {
-  market: string,
+  market: string
   preferredCurrency: string
 }
 
@@ -117,7 +129,7 @@ export enum ContractStatusDto {
   ACTIVE = 'ACTIVE',
   TERMINATED_TODAY = 'TERMINATED_TODAY',
   TERMINATED_IN_FUTURE = 'TERMINATED_IN_FUTURE',
-  TERMINATED = 'TERMINATED'
+  TERMINATED = 'TERMINATED',
 }
 
 export enum AgreementStatusDto {
@@ -162,19 +174,25 @@ export enum ExtraBuildingTypeDto {
   OTHER = 'OTHER'
 }
 
-export const createProductPricingClient = (client: HttpClient): ProductPricingClient => {
+export const createProductPricingClient = (
+  client: HttpClient,
+): ProductPricingClient => {
   return {
+    getContract: async (id) => {
+      const res = await client.get(`/contracts/${id}`)
+      return res.json()
+    },
     getMemberContracts: async () => {
-      const res = await client.get("/contracts")
+      const res = await client.get('/contracts')
       return res.json()
     },
     getContractMarketInfo: async () => {
-      const res = await client.get("/contracts/market-info")
+      const res = await client.get('/contracts/market-info')
       return res.json()
     },
     getSelfChangeEligibility: async () => {
-      const res = await client.get("/contracts/selfChange/eligibility")
+      const res = await client.get('/contracts/selfChange/eligibility')
       return res.json()
-    }
+    },
   }
 }

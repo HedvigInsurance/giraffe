@@ -368,6 +368,8 @@ enum SelfChangeBlocker {
 
 """A quote-agnostic payload type for changing the addess."""
 input AddressChangeInput {
+  """The target bundle that should have its address changed."""
+  contractBundleId: ID!
   """Is this an apartment or a house."""
   type: AddressHomeType!
   """Street value, including number."""
