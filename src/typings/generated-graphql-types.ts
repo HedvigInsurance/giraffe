@@ -1262,7 +1262,7 @@ export interface Mutation {
   /**
    * Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance.
    */
-  createAddressChangeQuotes: AddressChangeOutput;
+  createAddressChangeQuotes: AddressChangeQuoteResult;
 }
 
 export interface CampaignInput {
@@ -1479,8 +1479,27 @@ export interface AddressHouseExtraBuilding {
   hasWaterConnected: boolean;
 }
 
-export interface AddressChangeOutput {
+export type AddressChangeQuoteResult =
+AddressChangeQuoteSuccess |
+AddressChangeQuoteFailure;
+
+/** Use this to resolve union type AddressChangeQuoteResult */
+export type PossibleAddressChangeQuoteResultTypeNames =
+'AddressChangeQuoteSuccess' |
+'AddressChangeQuoteFailure';
+
+export interface AddressChangeQuoteResultNameMap {
+  AddressChangeQuoteResult: AddressChangeQuoteResult;
+  AddressChangeQuoteSuccess: AddressChangeQuoteSuccess;
+  AddressChangeQuoteFailure: AddressChangeQuoteFailure;
+}
+
+export interface AddressChangeQuoteSuccess {
   quoteIds: Array<string>;
+}
+
+export interface AddressChangeQuoteFailure {
+  breachedUnderwritingGuidelines: Array<string>;
 }
 
 export interface Subscription {
@@ -1663,7 +1682,12 @@ export interface Resolver {
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
   NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
   DanishBankIdAuthResponse?: DanishBankIdAuthResponseTypeResolver;
-  AddressChangeOutput?: AddressChangeOutputTypeResolver;
+  AddressChangeQuoteResult?: {
+    __resolveType: AddressChangeQuoteResultTypeResolver
+  };
+  
+  AddressChangeQuoteSuccess?: AddressChangeQuoteSuccessTypeResolver;
+  AddressChangeQuoteFailure?: AddressChangeQuoteFailureTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -3835,7 +3859,7 @@ export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResu
 export interface MutationToCreateAddressChangeQuotesArgs {
   input: AddressChangeInput;
 }
-export interface MutationToCreateAddressChangeQuotesResolver<TParent = undefined, TResult = AddressChangeOutput> {
+export interface MutationToCreateAddressChangeQuotesResolver<TParent = undefined, TResult = AddressChangeQuoteResult> {
   (parent: TParent, args: MutationToCreateAddressChangeQuotesArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -3889,11 +3913,22 @@ export interface DanishBankIdAuthResponseToRedirectUrlResolver<TParent = DanishB
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface AddressChangeOutputTypeResolver<TParent = AddressChangeOutput> {
-  quoteIds?: AddressChangeOutputToQuoteIdsResolver<TParent>;
+export interface AddressChangeQuoteResultTypeResolver<TParent = AddressChangeQuoteResult> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'AddressChangeQuoteSuccess' | 'AddressChangeQuoteFailure' | Promise<'AddressChangeQuoteSuccess' | 'AddressChangeQuoteFailure'>;
+}
+export interface AddressChangeQuoteSuccessTypeResolver<TParent = AddressChangeQuoteSuccess> {
+  quoteIds?: AddressChangeQuoteSuccessToQuoteIdsResolver<TParent>;
 }
 
-export interface AddressChangeOutputToQuoteIdsResolver<TParent = AddressChangeOutput, TResult = Array<string>> {
+export interface AddressChangeQuoteSuccessToQuoteIdsResolver<TParent = AddressChangeQuoteSuccess, TResult = Array<string>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AddressChangeQuoteFailureTypeResolver<TParent = AddressChangeQuoteFailure> {
+  breachedUnderwritingGuidelines?: AddressChangeQuoteFailureToBreachedUnderwritingGuidelinesResolver<TParent>;
+}
+
+export interface AddressChangeQuoteFailureToBreachedUnderwritingGuidelinesResolver<TParent = AddressChangeQuoteFailure, TResult = Array<string>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

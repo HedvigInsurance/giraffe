@@ -61,7 +61,7 @@ type Mutation {
   updateLanguage(input: String!): Boolean! # input should be in the format as Accept-Language header
   updatePickedLocale(pickedLocale: Locale!): Member!
   """Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance."""
-  createAddressChangeQuotes(input: AddressChangeInput!): AddressChangeOutput!
+  createAddressChangeQuotes(input: AddressChangeInput!): AddressChangeQuoteResult!
 }
 
 enum Locale {
@@ -419,8 +419,14 @@ input AddressHouseExtraBuilding {
     hasWaterConnected: Boolean!
 }
 
-type AddressChangeOutput {
+union AddressChangeQuoteResult = AddressChangeQuoteSuccess | AddressChangeQuoteFailure
+
+type AddressChangeQuoteSuccess {
   quoteIds: [ID!]!
+}
+
+type AddressChangeQuoteFailure {
+  breachedUnderwritingGuidelines: [String!]!
 }
 
 enum LoggingSource {

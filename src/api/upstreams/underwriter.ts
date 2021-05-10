@@ -2,7 +2,7 @@
 import { HttpClient } from '../httpClient'
 
 export interface UnderwriterClient {
-  createQuote(body: CreateQuoteDto): Promise<CompleteQuoteResponseDto>
+  createQuote(body: CreateQuoteDto): Promise<QuoteCreationResult>
 }
 
 export interface CreateQuoteDto {
@@ -69,17 +69,34 @@ export interface CreateQuoteDto {
   }
 }
 
-interface CompleteQuoteResponseDto {
+export type QuoteCreationResult = QuoteCreationSuccessDto | QuoteCreationFailureDto
+
+export interface QuoteCreationSuccessDto {
+  status: 'success',
   id: string
   price: number
   validTo: string
 }
 
+export interface QuoteCreationFailureDto {
+  status: 'failure',
+  breachedUnderwritingGuidelines: BreachedGuidelineDto[]
+}
+
+export interface BreachedGuidelineDto {
+  code: string
+}
+
 export const createUnderwriterClient = (client: HttpClient): UnderwriterClient => {
   return {
     createQuote: async (body) => {
-      const res = await client.post("/quotes", body)
-      return res.json()
+      // 422 means underwriting guidelines breached, and we should read the body
+      const res = await client.post("/quotes", body, { validStatusCodes: [422] })
+      const result = await res.json()
+      if (res.status === 422) {
+        return { status: 'failure', ...result}
+      }
+      return { status: 'success', ...result}
     }
   }
 }
