@@ -15,6 +15,7 @@ const typeDefs = gql(
 
 const upstream: Upstream = {
   productPricing: {
+    getContract: () => Promise.reject("getContract Not implemented"),
     getMemberContracts: () => Promise.reject("getMemberContracts Not implemented"),
     getContractMarketInfo: () => Promise.reject("getContractMarketInfo Not implemented"),
     getSelfChangeEligibility: () => Promise.reject("getSelfChangeEligibility Not implemented")
