@@ -2,8 +2,7 @@
 import { Upstream } from './../api/upstream';
 import { resolve } from 'path';
 import { readFileSync } from 'fs'
-import { ApolloServer } from 'apollo-server';
-import { gql, GraphQLUpload } from 'apollo-server-koa';
+import { gql, GraphQLUpload, ApolloServer } from 'apollo-server-koa';
 import { IResolvers, makeExecutableSchema } from 'graphql-tools';
 import { Context } from '../context';
 import { resolvers } from '../resolvers'
