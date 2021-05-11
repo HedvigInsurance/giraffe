@@ -8,6 +8,7 @@ import * as Koa from 'koa'
 import * as compress from 'koa-compress'
 import * as proxy from 'koa-proxies'
 
+import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { execute, GraphQLError, subscribe } from 'graphql'
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
@@ -44,9 +45,18 @@ logger.info('Making schema')
 makeSchema()
   .then(({ schema, graphCMSSchema }) => {
     logger.info('Schema initialized')
+
+    const pubsub = new RedisPubSub({
+      connection: {
+        host: config.REDIS_HOSTNAME,
+        port: config.REDIS_PORT,
+      },
+    })
+    logger.info('RedisPubSub started')
+
     const server = new ApolloServer({
       schema,
-      context: getWebContext(graphCMSSchema),
+      context: getWebContext(pubsub, graphCMSSchema),
       playground: config.PLAYGROUND_ENABLED && {
         subscriptionEndpoint: '/subscriptions',
       },
@@ -109,7 +119,7 @@ makeSchema()
           execute,
           subscribe,
           schema,
-          onConnect: getWebSocketContext(graphCMSSchema),
+          onConnect: getWebSocketContext(pubsub, graphCMSSchema),
           onOperation: (_msg: any, params: any) => {
             params.formatResponse = (response: any) => {
               if (response.errors) {

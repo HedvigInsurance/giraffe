@@ -10,7 +10,7 @@ import {
   QueryToSelfChangeEligibilityResolver,
   SelfChangeEligibility,
 } from '../typings/generated-graphql-types'
-import { ContractStatus } from '../api/upstreams/productPricing'
+import { ContractStatusDto } from '../api/upstreams/productPricing'
 import { Typenamed } from '../utils/types';
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
@@ -57,7 +57,7 @@ const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = a
   ])
 
   const tasks = contracts
-    .filter((c) => c.status == ContractStatus.ACTIVE)
+    .filter((c) => c.status == ContractStatusDto.ACTIVE)
     .map((contract) => {
       const body = convertAddressChangeToSelfChangeBody(args.input, member, contract, marketInfo)
       return upstream.underwriter.createQuote(body)

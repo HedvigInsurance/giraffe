@@ -37,7 +37,7 @@ export const memberFeatures: MemberToFeaturesResolver = async (
   const token = getToken()
   const user = await getUser(token, headers)
 
-  const result = await graphql(graphCMSSchema, `
+  const result = graphCMSSchema && await graphql(graphCMSSchema, `
     query Features($memberId: String!) {
       userFeatures(where: { memberId: $memberId }) {
         feature
@@ -45,7 +45,7 @@ export const memberFeatures: MemberToFeaturesResolver = async (
     }
   `, null, null, {
     memberId: user.memberId
-  })
+  }) || {}
 
   if (!result.data) {
     throw new Error("failed to fetch member features")
