@@ -986,107 +986,12 @@ enum DanishTravelLineOfBusiness {
     STUDENT
 }
 
-union ExtraBuilding =
-    ExtraBuildingGarage
-  | ExtraBuildingCarport
-  | ExtraBuildingShed
-  | ExtraBuildingStorehouse
-  | ExtraBuildingFriggebod
-  | ExtraBuildingAttefall
-  | ExtraBuildingOuthouse
-  | ExtraBuildingGuesthouse
-  | ExtraBuildingGazebo
-  | ExtraBuildingGreenhouse
-  | ExtraBuildingSauna
-  | ExtraBuildingBarn
-  | ExtraBuildingBoathouse
-  | ExtraBuildingOther
+# These look this way because they used to be a large union type, but are now
+# stripped down to this.
+union ExtraBuilding = ExtraBuildingCore
 
-interface ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGarage implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingCarport implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingShed implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingStorehouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingFriggebod implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingAttefall implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingOuthouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGuesthouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGazebo implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingGreenhouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingSauna implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingBarn implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingBoathouse implements ExtraBuildingCore {
-  area: Int!
-  displayName: String!
-  hasWaterConnected: Boolean!
-}
-
-type ExtraBuildingOther implements ExtraBuildingCore {
+type ExtraBuildingCore {
+  type: String!
   area: Int!
   displayName: String!
   hasWaterConnected: Boolean!
