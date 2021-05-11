@@ -32,6 +32,7 @@ import {
   getCrossSchemaExtensions,
 } from './resolvers/cross-schema'
 import { factory } from './utils/log'
+import { GraphQLSchemaWithFragmentReplacements } from 'graphql-middleware/dist/types'
 
 const logger = factory.getLogger('schemaLogger')
 
@@ -48,7 +49,12 @@ const redis = config.REDIS_CLUSTER_MODE
     ])
   : new Redis({ host: config.REDIS_HOSTNAME, port: config.REDIS_PORT })
 
-const makeSchema = async () => {
+export interface SchemaIntrospectionResult {
+  schema: GraphQLSchemaWithFragmentReplacements,
+  graphCMSSchema?: GraphQLSchema
+}
+
+const makeSchema = async (): Promise<SchemaIntrospectionResult> => {
   const authorizationContextLink = setContext((_, previousContext) => ({
     headers: {
       authorization: `Bearer ${previousContext.graphqlContext &&
@@ -120,15 +126,6 @@ const makeSchema = async () => {
     },
   })
 
-  const graphCmsLink = ApolloLink.from([
-    // @ts-ignore - false negative
-    createCacheLink(redis),
-    createHttpLink({
-      uri: 'https://api-eu-central-1.graphcms.com/v2/cjmawd9hw036a01cuzmjhplka/master',
-      fetch: fetch as any,
-    })
-  ])
-
   const allowedRootFields = [
     'languages',
     'marketingStories',
@@ -138,25 +135,32 @@ const makeSchema = async () => {
     'appMarketingImages',
   ]
 
-  const graphCmsSchema = await makeRemoteExecutableSchema({
-    schema: await introspectSchema(graphCmsLink),
-    link: graphCmsLink,
-  })
+  const graphCmsSchema = introspectRemoteSchema(
+    SchemaIdentifier.GRAPH_CMS,
+    {
+      link: ApolloLink.from([
+        // @ts-ignore - false negative
+        createCacheLink(redis),
+        createHttpLink({
+          uri: 'https://api-eu-central-1.graphcms.com/v2/cjmawd9hw036a01cuzmjhplka/master',
+          fetch: fetch as any,
+        })
+      ])
+    }
+  )
 
   const remoteSchemas = await Promise.all([
-    Promise.resolve(
-      {
-        identifier: SchemaIdentifier.GRAPH_CMS,
-        schema: transformSchema(
-          graphCmsSchema,
-          [
-            new FilterRootFields(
-              (_, name) => !!allowedRootFields.find((allowedName) => name === allowedName)
-            ),
-          ],
-        )
-      }
-    ),
+    graphCmsSchema.then(result => ({
+      identifier: result.identifier,
+      schema: result.schema && transformSchema(
+        result.schema,
+        [
+          new FilterRootFields(
+            (_, name) => !!allowedRootFields.find((allowedName) => name === allowedName)
+          ),
+        ]
+      )
+    })),
     introspectRemoteSchema(
       SchemaIdentifier.API_GATEWAY,
       {
@@ -273,7 +277,7 @@ const makeSchema = async () => {
 
   return {
     schema: applyMiddleware(schema, sentryMiddleware),
-    graphCMSSchema: graphCmsSchema,
+    graphCMSSchema: (await graphCmsSchema).schema,
   }
 }
 

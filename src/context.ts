@@ -7,13 +7,15 @@ import * as uuidv4 from 'uuid/v4'
 import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
 import { LocalizedStrings, localizedStringsProvider } from './translations/LocalizedStrings';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 interface Context {
   getToken: TokenProvider
   headers: ForwardHeaders
-  graphCMSSchema: GraphQLSchema
+  graphCMSSchema?: GraphQLSchema
   remoteIp: string,
   upstream: Upstream,
+  pubsub: RedisPubSub,
   strings: LocalizedStrings
 }
 
@@ -29,7 +31,7 @@ interface ForwardHeaders {
   'Enable-Simple-Sign': string
 }
 
-const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
+const getWebContext = (pubsub: RedisPubSub, graphCMSSchema?: GraphQLSchema) => async ({
   ctx,
 }: {
   ctx: Koa.Context
@@ -56,11 +58,12 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
     upstream: createUpstream(getToken, headers),
+    pubsub,
     strings: localizedStringsProvider(locale)
   }
 }
 
-const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
+const getWebSocketContext = (pubsub: RedisPubSub, graphCMSSchema?: GraphQLSchema) => (
   connectionParams: { Authorization: string },
   _webSocket: any,
   context: ConnectionContext,
@@ -91,6 +94,7 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
       headers['X-Forwarded-For'] ||
       (context.request.connection.address() as string),
     upstream: createUpstream(getToken, headers),
+    pubsub,
     strings: localizedStringsProvider(locale)
   }
 }
