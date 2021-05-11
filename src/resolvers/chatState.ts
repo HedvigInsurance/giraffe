@@ -1,6 +1,5 @@
 import { equals } from 'ramda'
 import { ChatDto, getChat, getUser } from '../api'
-import { pubsub } from '../pubsub'
 import {
   ChatState,
   QueryToChatStateResolver,
@@ -22,7 +21,7 @@ export const subscribeToChatState: SubscriptionToChatStateResolver = {
   subscribe: async (
     _parent,
     { mostRecentTimestamp },
-    { getToken, headers },
+    { getToken, headers, pubsub },
   ) => {
     const token = getToken()
     const user = await getUser(token, headers)

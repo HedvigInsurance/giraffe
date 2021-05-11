@@ -1,5 +1,4 @@
 import { createProduct, getUser } from '../../api'
-import { pubsub } from '../../pubsub'
 import {
   MutationToCreateOfferResolver,
   OfferEvent,
@@ -31,7 +30,7 @@ const createOffer: MutationToCreateOfferResolver = async (
 }
 
 const subscribeToOffer: SubscriptionToOfferResolver = {
-  subscribe: async (_parent, _args, { getToken, headers }) => {
+  subscribe: async (_parent, _args, { getToken, headers, pubsub }) => {
     const token = getToken()
     const user = await getUser(token, headers)
 

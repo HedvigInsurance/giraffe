@@ -1,6 +1,5 @@
 import { getUser, signStatus, websign, signDetails } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { pubsub } from '../../pubsub'
 import {
   MutationToSignOfferResolver,
   MutationToSignOfferV2Resolver,
@@ -103,7 +102,7 @@ const loadSignStatus = async (
 }
 
 const subscribeToSignStatus: SubscriptionToSignStatusResolver = {
-  subscribe: async (_parent, _args, { getToken, headers }) => {
+  subscribe: async (_parent, _args, { getToken, headers, pubsub }) => {
     const token = getToken()
     const user = await getUser(token, headers)
 

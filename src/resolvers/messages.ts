@@ -6,7 +6,6 @@ import {
   markMessageAsRead as markMessageAsReadAPI,
   resetConversation as resetMessages,
 } from '../api'
-import { pubsub } from '../pubsub'
 import {
   MessageBody,
   MessageBodyChoices,
@@ -93,7 +92,7 @@ export const withMessageTransform = (
 })
 
 export const subscribeToMessage: SubscriptionToMessageResolver = {
-  subscribe: async (_parent, {}, { getToken, headers }) => {
+  subscribe: async (_parent, {}, { getToken, headers, pubsub }) => {
     const token = getToken()
     const user = await getUser(token, headers)
     return withMessageTransform(
