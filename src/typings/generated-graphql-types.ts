@@ -184,7 +184,6 @@ export interface ExtraBuildingNameMap {
 }
 
 export interface ExtraBuildingValue extends ExtraBuildingCore {
-  type: string;
   area: number;
   displayName: string;
   hasWaterConnected: boolean;
@@ -737,7 +736,6 @@ export interface SwedishApartmentAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   address: Address;
   numberCoInsured: number;
   squareMeters: number;
@@ -751,12 +749,6 @@ export interface AgreementCore {
   activeTo?: LocalDate;
   premium: MonetaryAmountV2;
   certificateUrl?: string;
-  
-  /**
-   * 
-   * @deprecated Use Contract.termsAndConditions(locale: Locale!): InsuranceTerm! instead
-   */
-  termsAndConditions?: InsuranceTerm;
 }
 
 /** Use this to resolve interface type AgreementCore */
@@ -803,16 +795,6 @@ export enum AgreementStatus {
   TERMINATED = 'TERMINATED'
 }
 
-export interface InsuranceTerm {
-  displayName: string;
-  url: string;
-  type: InsuranceTermType;
-}
-
-export enum InsuranceTermType {
-  TERMS_AND_CONDITIONS = 'TERMS_AND_CONDITIONS'
-}
-
 export interface Address {
   street: string;
   postalCode: string;
@@ -835,7 +817,6 @@ export interface SwedishHouseAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   address: Address;
   numberCoInsured: number;
   squareMeters: number;
@@ -853,7 +834,6 @@ export interface NorwegianHomeContentAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   address: Address;
   numberCoInsured: number;
   squareMeters: number;
@@ -874,7 +854,6 @@ export interface NorwegianTravelAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   numberCoInsured: number;
   type?: NorwegianTravelLineOfBusiness;
 }
@@ -891,7 +870,6 @@ export interface DanishHomeContentAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   address: Address;
   numberCoInsured: number;
   squareMeters: number;
@@ -912,7 +890,6 @@ export interface DanishAccidentAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   address: Address;
   numberCoInsured: number;
   type?: DanishAccidentLineOfBusiness;
@@ -930,7 +907,6 @@ export interface DanishTravelAgreement extends AgreementCore {
   premium: MonetaryAmountV2;
   certificateUrl?: string;
   status: AgreementStatus;
-  termsAndConditions?: InsuranceTerm;
   address: Address;
   numberCoInsured: number;
   type?: DanishTravelLineOfBusiness;
@@ -1503,7 +1479,6 @@ export interface Resolver {
     __resolveType: AgreementCoreTypeResolver
   };
   
-  InsuranceTerm?: InsuranceTermTypeResolver;
   Address?: AddressTypeResolver;
   SwedishHouseAgreement?: SwedishHouseAgreementTypeResolver;
   NorwegianHomeContentAgreement?: NorwegianHomeContentAgreementTypeResolver;
@@ -1912,14 +1887,9 @@ export interface ExtraBuildingTypeResolver<TParent = ExtraBuilding> {
   (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingValue' | Promise<'ExtraBuildingValue'>;
 }
 export interface ExtraBuildingValueTypeResolver<TParent = ExtraBuildingValue> {
-  type?: ExtraBuildingValueToTypeResolver<TParent>;
   area?: ExtraBuildingValueToAreaResolver<TParent>;
   displayName?: ExtraBuildingValueToDisplayNameResolver<TParent>;
   hasWaterConnected?: ExtraBuildingValueToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingValueToTypeResolver<TParent = ExtraBuildingValue, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface ExtraBuildingValueToAreaResolver<TParent = ExtraBuildingValue, TResult = number> {
@@ -2703,7 +2673,6 @@ export interface SwedishApartmentAgreementTypeResolver<TParent = SwedishApartmen
   premium?: SwedishApartmentAgreementToPremiumResolver<TParent>;
   certificateUrl?: SwedishApartmentAgreementToCertificateUrlResolver<TParent>;
   status?: SwedishApartmentAgreementToStatusResolver<TParent>;
-  termsAndConditions?: SwedishApartmentAgreementToTermsAndConditionsResolver<TParent>;
   address?: SwedishApartmentAgreementToAddressResolver<TParent>;
   numberCoInsured?: SwedishApartmentAgreementToNumberCoInsuredResolver<TParent>;
   squareMeters?: SwedishApartmentAgreementToSquareMetersResolver<TParent>;
@@ -2734,10 +2703,6 @@ export interface SwedishApartmentAgreementToStatusResolver<TParent = SwedishApar
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface SwedishApartmentAgreementToTermsAndConditionsResolver<TParent = SwedishApartmentAgreement, TResult = InsuranceTerm | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface SwedishApartmentAgreementToAddressResolver<TParent = SwedishApartmentAgreement, TResult = Address> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
@@ -2757,24 +2722,6 @@ export interface SwedishApartmentAgreementToTypeResolver<TParent = SwedishApartm
 export interface AgreementCoreTypeResolver<TParent = AgreementCore> {
   (parent: TParent, context: Context, info: GraphQLResolveInfo): 'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement' | Promise<'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement'>;
 }
-export interface InsuranceTermTypeResolver<TParent = InsuranceTerm> {
-  displayName?: InsuranceTermToDisplayNameResolver<TParent>;
-  url?: InsuranceTermToUrlResolver<TParent>;
-  type?: InsuranceTermToTypeResolver<TParent>;
-}
-
-export interface InsuranceTermToDisplayNameResolver<TParent = InsuranceTerm, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface InsuranceTermToUrlResolver<TParent = InsuranceTerm, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface InsuranceTermToTypeResolver<TParent = InsuranceTerm, TResult = InsuranceTermType> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface AddressTypeResolver<TParent = Address> {
   street?: AddressToStreetResolver<TParent>;
   postalCode?: AddressToPostalCodeResolver<TParent>;
@@ -2810,7 +2757,6 @@ export interface SwedishHouseAgreementTypeResolver<TParent = SwedishHouseAgreeme
   premium?: SwedishHouseAgreementToPremiumResolver<TParent>;
   certificateUrl?: SwedishHouseAgreementToCertificateUrlResolver<TParent>;
   status?: SwedishHouseAgreementToStatusResolver<TParent>;
-  termsAndConditions?: SwedishHouseAgreementToTermsAndConditionsResolver<TParent>;
   address?: SwedishHouseAgreementToAddressResolver<TParent>;
   numberCoInsured?: SwedishHouseAgreementToNumberCoInsuredResolver<TParent>;
   squareMeters?: SwedishHouseAgreementToSquareMetersResolver<TParent>;
@@ -2842,10 +2788,6 @@ export interface SwedishHouseAgreementToCertificateUrlResolver<TParent = Swedish
 }
 
 export interface SwedishHouseAgreementToStatusResolver<TParent = SwedishHouseAgreement, TResult = AgreementStatus> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface SwedishHouseAgreementToTermsAndConditionsResolver<TParent = SwedishHouseAgreement, TResult = InsuranceTerm | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -2888,7 +2830,6 @@ export interface NorwegianHomeContentAgreementTypeResolver<TParent = NorwegianHo
   premium?: NorwegianHomeContentAgreementToPremiumResolver<TParent>;
   certificateUrl?: NorwegianHomeContentAgreementToCertificateUrlResolver<TParent>;
   status?: NorwegianHomeContentAgreementToStatusResolver<TParent>;
-  termsAndConditions?: NorwegianHomeContentAgreementToTermsAndConditionsResolver<TParent>;
   address?: NorwegianHomeContentAgreementToAddressResolver<TParent>;
   numberCoInsured?: NorwegianHomeContentAgreementToNumberCoInsuredResolver<TParent>;
   squareMeters?: NorwegianHomeContentAgreementToSquareMetersResolver<TParent>;
@@ -2919,10 +2860,6 @@ export interface NorwegianHomeContentAgreementToStatusResolver<TParent = Norwegi
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface NorwegianHomeContentAgreementToTermsAndConditionsResolver<TParent = NorwegianHomeContentAgreement, TResult = InsuranceTerm | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface NorwegianHomeContentAgreementToAddressResolver<TParent = NorwegianHomeContentAgreement, TResult = Address> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
@@ -2946,7 +2883,6 @@ export interface NorwegianTravelAgreementTypeResolver<TParent = NorwegianTravelA
   premium?: NorwegianTravelAgreementToPremiumResolver<TParent>;
   certificateUrl?: NorwegianTravelAgreementToCertificateUrlResolver<TParent>;
   status?: NorwegianTravelAgreementToStatusResolver<TParent>;
-  termsAndConditions?: NorwegianTravelAgreementToTermsAndConditionsResolver<TParent>;
   numberCoInsured?: NorwegianTravelAgreementToNumberCoInsuredResolver<TParent>;
   type?: NorwegianTravelAgreementToTypeResolver<TParent>;
 }
@@ -2975,10 +2911,6 @@ export interface NorwegianTravelAgreementToStatusResolver<TParent = NorwegianTra
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface NorwegianTravelAgreementToTermsAndConditionsResolver<TParent = NorwegianTravelAgreement, TResult = InsuranceTerm | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface NorwegianTravelAgreementToNumberCoInsuredResolver<TParent = NorwegianTravelAgreement, TResult = number> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
@@ -2994,7 +2926,6 @@ export interface DanishHomeContentAgreementTypeResolver<TParent = DanishHomeCont
   premium?: DanishHomeContentAgreementToPremiumResolver<TParent>;
   certificateUrl?: DanishHomeContentAgreementToCertificateUrlResolver<TParent>;
   status?: DanishHomeContentAgreementToStatusResolver<TParent>;
-  termsAndConditions?: DanishHomeContentAgreementToTermsAndConditionsResolver<TParent>;
   address?: DanishHomeContentAgreementToAddressResolver<TParent>;
   numberCoInsured?: DanishHomeContentAgreementToNumberCoInsuredResolver<TParent>;
   squareMeters?: DanishHomeContentAgreementToSquareMetersResolver<TParent>;
@@ -3025,10 +2956,6 @@ export interface DanishHomeContentAgreementToStatusResolver<TParent = DanishHome
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface DanishHomeContentAgreementToTermsAndConditionsResolver<TParent = DanishHomeContentAgreement, TResult = InsuranceTerm | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface DanishHomeContentAgreementToAddressResolver<TParent = DanishHomeContentAgreement, TResult = Address> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
@@ -3052,7 +2979,6 @@ export interface DanishAccidentAgreementTypeResolver<TParent = DanishAccidentAgr
   premium?: DanishAccidentAgreementToPremiumResolver<TParent>;
   certificateUrl?: DanishAccidentAgreementToCertificateUrlResolver<TParent>;
   status?: DanishAccidentAgreementToStatusResolver<TParent>;
-  termsAndConditions?: DanishAccidentAgreementToTermsAndConditionsResolver<TParent>;
   address?: DanishAccidentAgreementToAddressResolver<TParent>;
   numberCoInsured?: DanishAccidentAgreementToNumberCoInsuredResolver<TParent>;
   type?: DanishAccidentAgreementToTypeResolver<TParent>;
@@ -3082,10 +3008,6 @@ export interface DanishAccidentAgreementToStatusResolver<TParent = DanishAcciden
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface DanishAccidentAgreementToTermsAndConditionsResolver<TParent = DanishAccidentAgreement, TResult = InsuranceTerm | null> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface DanishAccidentAgreementToAddressResolver<TParent = DanishAccidentAgreement, TResult = Address> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
@@ -3105,7 +3027,6 @@ export interface DanishTravelAgreementTypeResolver<TParent = DanishTravelAgreeme
   premium?: DanishTravelAgreementToPremiumResolver<TParent>;
   certificateUrl?: DanishTravelAgreementToCertificateUrlResolver<TParent>;
   status?: DanishTravelAgreementToStatusResolver<TParent>;
-  termsAndConditions?: DanishTravelAgreementToTermsAndConditionsResolver<TParent>;
   address?: DanishTravelAgreementToAddressResolver<TParent>;
   numberCoInsured?: DanishTravelAgreementToNumberCoInsuredResolver<TParent>;
   type?: DanishTravelAgreementToTypeResolver<TParent>;
@@ -3132,10 +3053,6 @@ export interface DanishTravelAgreementToCertificateUrlResolver<TParent = DanishT
 }
 
 export interface DanishTravelAgreementToStatusResolver<TParent = DanishTravelAgreement, TResult = AgreementStatus> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface DanishTravelAgreementToTermsAndConditionsResolver<TParent = DanishTravelAgreement, TResult = InsuranceTerm | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

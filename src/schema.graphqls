@@ -830,7 +830,6 @@ interface AgreementCore {
     activeTo: LocalDate
     premium: MonetaryAmountV2!
     certificateUrl: String
-    termsAndConditions: InsuranceTerm @deprecated(reason: "Use Contract.termsAndConditions(locale: Locale!): InsuranceTerm! instead")
 }
 
 enum AgreementStatus {
@@ -859,7 +858,6 @@ type SwedishApartmentAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     address: Address!
     numberCoInsured: Int!
     squareMeters: Int!
@@ -880,7 +878,6 @@ type SwedishHouseAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     address: Address!
     numberCoInsured: Int!
     squareMeters: Int!
@@ -898,7 +895,6 @@ type NorwegianHomeContentAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     address: Address!
     numberCoInsured: Int!
     squareMeters: Int!
@@ -919,7 +915,6 @@ type NorwegianTravelAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     numberCoInsured: Int!
     type: NorwegianTravelLineOfBusiness
 }
@@ -936,7 +931,6 @@ type DanishHomeContentAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     address: Address!
     numberCoInsured: Int!
     squareMeters: Int!
@@ -957,7 +951,6 @@ type DanishAccidentAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     address: Address!
     numberCoInsured: Int!
     type: DanishAccidentLineOfBusiness
@@ -975,7 +968,6 @@ type DanishTravelAgreement implements AgreementCore {
     premium: MonetaryAmountV2!
     certificateUrl: String
     status: AgreementStatus!
-    termsAndConditions: InsuranceTerm
     address: Address!
     numberCoInsured: Int!
     type: DanishTravelLineOfBusiness
@@ -997,7 +989,6 @@ interface ExtraBuildingCore {
 }
 
 type ExtraBuildingValue implements ExtraBuildingCore {
-  type: String!
   area: Int!
   displayName: String!
   hasWaterConnected: Boolean!
@@ -1009,14 +1000,4 @@ type Address {
     city: String
     apartment: String
     floor: String
-}
-
-type InsuranceTerm {
-    displayName: String!
-    url: String!
-    type: InsuranceTermType!
-}
-
-enum InsuranceTermType {
-    TERMS_AND_CONDITIONS
 }

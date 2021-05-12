@@ -213,7 +213,6 @@ const transformAgreement = (agreement: AgreementDto): Agreement => {
     activeTo: agreement.toDate,
     premium: agreement.basePremium,
     certificateUrl: agreement.certificateUrl,
-    termsAndConditions: undefined, // deprecated
   }
   switch (agreement.type) {
     case 'SwedishApartment': {
