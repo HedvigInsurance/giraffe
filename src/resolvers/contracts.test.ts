@@ -580,7 +580,6 @@ const swedishHouseOutput: Contract = {
     isSubleted: true,
     extraBuildings: [
       {
-        type: 'GARAGE',
         area: 14,
         displayName: 'Garage',
         hasWaterConnected: false,
