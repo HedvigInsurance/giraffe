@@ -30,6 +30,7 @@ import {
   DanishAccidentAgreement,
   DanishAccidentLineOfBusiness,
   PossibleContractStatusTypeNames,
+  PossibleAgreementTypeNames,
 } from './../typings/generated-graphql-types'
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
@@ -142,7 +143,7 @@ const transformContract = (
     termination: contract.terminationDate,
     upcomingRenewal: contract.renewal && {
       renewalDate: contract.renewal.renewalDate,
-      draftCertificateUrl: contract.renewal.draftCertificateUrl!, // this is nullable in the API but non-null in the Schema
+      draftCertificateUrl: contract.renewal.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
     },
     typeOfContract: contract.typeOfContract as TypeOfContract,
     createdAt: contract.createdAt,
@@ -198,7 +199,7 @@ const transformContractStatus = (
   }
 }
 
-const transformAgreement = (agreement: AgreementDto): Agreement => {
+const transformAgreement = (agreement: AgreementDto): Typenamed<Agreement, PossibleAgreementTypeNames> => {
   const statusMap = {
     [AgreementStatusDto.ACTIVE]: AgreementStatus.ACTIVE,
     [AgreementStatusDto.ACTIVE_IN_FUTURE]: AgreementStatus.ACTIVE_IN_FUTURE,
@@ -216,17 +217,18 @@ const transformAgreement = (agreement: AgreementDto): Agreement => {
   }
   switch (agreement.type) {
     case 'SwedishApartment': {
-      const result: SwedishApartmentAgreement = {
+      return {
+        __typename: 'SwedishApartmentAgreement',
         ...core,
         address: agreement.address,
         numberCoInsured: agreement.numberCoInsured,
         squareMeters: agreement.squareMeters,
         type: agreement.lineOfBusiness as SwedishApartmentLineOfBusiness,
       }
-      return result
     }
     case 'SwedishHouse': {
-      const result: SwedishHouseAgreement = {
+      return {
+        __typename: 'SwedishHouseAgreement',
         ...core,
         address: agreement.address,
         numberCoInsured: agreement.numberCoInsured,
@@ -237,53 +239,52 @@ const transformAgreement = (agreement: AgreementDto): Agreement => {
         isSubleted: agreement.isSubleted,
         extraBuildings: agreement.extraBuildings,
       }
-      return result
     }
     case 'NorwegianHomeContent': {
-      const result: NorwegianHomeContentAgreement = {
+      return {
+        __typename: 'NorwegianHomeContentAgreement',
         ...core,
         address: agreement.address,
         numberCoInsured: agreement.numberCoInsured,
         squareMeters: agreement.squareMeters,
         type: agreement.lineOfBusiness as NorwegianHomeContentLineOfBusiness,
       }
-      return result
     }
     case 'NorwegianTravel': {
-      const result: NorwegianTravelAgreement = {
+      return {
+        __typename: 'NorwegianTravelAgreement',
         ...core,
         numberCoInsured: agreement.numberCoInsured,
         type: agreement.lineOfBusiness as NorwegianTravelLineOfBusiness,
       }
-      return result
     }
     case 'DanishHomeContent': {
-      const result: DanishHomeContentAgreement = {
+      return {
+        __typename: 'DanishHomeContentAgreement',
         ...core,
         address: agreement.address,
         numberCoInsured: agreement.numberCoInsured,
         squareMeters: agreement.squareMeters,
         type: agreement.lineOfBusiness as DanishHomeContentLineOfBusiness,
       }
-      return result
     }
     case 'DanishTravel': {
-      const result: DanishTravelAgreement = {
+      return {
+        __typename: 'DanishTravelAgreement',
         ...core,
         address: agreement.address,
         numberCoInsured: agreement.numberCoInsured,
         type: agreement.lineOfBusiness as DanishTravelLineOfBusiness,
       }
-      return result
     }
     case 'DanishAccident': {
-      const result: DanishAccidentAgreement = {
+      return {
+        __typename: 'DanishAccidentAgreement',
         ...core,
         address: agreement.address,
         numberCoInsured: agreement.numberCoInsured,
         type: agreement.lineOfBusiness as DanishAccidentLineOfBusiness,
       }
-      return result
     }
   }
 }
