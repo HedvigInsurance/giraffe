@@ -173,21 +173,35 @@ export interface PreviousInsurer {
   switchable: boolean;
 }
 
-export type ExtraBuilding = ExtraBuildingCore;
+export type ExtraBuilding = ExtraBuildingValue;
 
 /** Use this to resolve union type ExtraBuilding */
-export type PossibleExtraBuildingTypeNames = 'ExtraBuildingCore';
+export type PossibleExtraBuildingTypeNames = 'ExtraBuildingValue';
 
 export interface ExtraBuildingNameMap {
   ExtraBuilding: ExtraBuilding;
-  ExtraBuildingCore: ExtraBuildingCore;
+  ExtraBuildingValue: ExtraBuildingValue;
 }
 
-export interface ExtraBuildingCore {
+export interface ExtraBuildingValue extends ExtraBuildingCore {
   type: string;
   area: number;
   displayName: string;
   hasWaterConnected: boolean;
+}
+
+export interface ExtraBuildingCore {
+  area: number;
+  displayName: string;
+  hasWaterConnected: boolean;
+}
+
+/** Use this to resolve interface type ExtraBuildingCore */
+export type PossibleExtraBuildingCoreTypeNames = 'ExtraBuildingValue';
+
+export interface ExtraBuildingCoreNameMap {
+  ExtraBuildingCore: ExtraBuildingCore;
+  ExtraBuildingValue: ExtraBuildingValue;
 }
 
 export enum Locale {
@@ -1421,7 +1435,11 @@ export interface Resolver {
     __resolveType: ExtraBuildingTypeResolver
   };
   
-  ExtraBuildingCore?: ExtraBuildingCoreTypeResolver;
+  ExtraBuildingValue?: ExtraBuildingValueTypeResolver;
+  ExtraBuildingCore?: {
+    __resolveType: ExtraBuildingCoreTypeResolver
+  };
+  
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
@@ -1891,31 +1909,34 @@ export interface PreviousInsurerToSwitchableResolver<TParent = PreviousInsurer, 
 }
 
 export interface ExtraBuildingTypeResolver<TParent = ExtraBuilding> {
-  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingCore' | Promise<'ExtraBuildingCore'>;
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingValue' | Promise<'ExtraBuildingValue'>;
 }
+export interface ExtraBuildingValueTypeResolver<TParent = ExtraBuildingValue> {
+  type?: ExtraBuildingValueToTypeResolver<TParent>;
+  area?: ExtraBuildingValueToAreaResolver<TParent>;
+  displayName?: ExtraBuildingValueToDisplayNameResolver<TParent>;
+  hasWaterConnected?: ExtraBuildingValueToHasWaterConnectedResolver<TParent>;
+}
+
+export interface ExtraBuildingValueToTypeResolver<TParent = ExtraBuildingValue, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingValueToAreaResolver<TParent = ExtraBuildingValue, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingValueToDisplayNameResolver<TParent = ExtraBuildingValue, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingValueToHasWaterConnectedResolver<TParent = ExtraBuildingValue, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface ExtraBuildingCoreTypeResolver<TParent = ExtraBuildingCore> {
-  type?: ExtraBuildingCoreToTypeResolver<TParent>;
-  area?: ExtraBuildingCoreToAreaResolver<TParent>;
-  displayName?: ExtraBuildingCoreToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingCoreToHasWaterConnectedResolver<TParent>;
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingValue' | Promise<'ExtraBuildingValue'>;
 }
-
-export interface ExtraBuildingCoreToTypeResolver<TParent = ExtraBuildingCore, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingCoreToAreaResolver<TParent = ExtraBuildingCore, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingCoreToDisplayNameResolver<TParent = ExtraBuildingCore, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingCoreToHasWaterConnectedResolver<TParent = ExtraBuildingCore, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface CashbackTypeResolver<TParent = Cashback> {
   id?: CashbackToIdResolver<TParent>;
   name?: CashbackToNameResolver<TParent>;

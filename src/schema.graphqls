@@ -988,9 +988,15 @@ enum DanishTravelLineOfBusiness {
 
 # These look this way because they used to be a large union type, but are now
 # stripped down to this.
-union ExtraBuilding = ExtraBuildingCore
+union ExtraBuilding = ExtraBuildingValue
 
-type ExtraBuildingCore {
+interface ExtraBuildingCore {
+  area: Int!
+  displayName: String!
+  hasWaterConnected: Boolean!
+}
+
+type ExtraBuildingValue implements ExtraBuildingCore {
   type: String!
   area: Int!
   displayName: String!

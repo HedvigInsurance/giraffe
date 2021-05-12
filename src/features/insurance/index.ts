@@ -46,7 +46,7 @@ const loadInsurance = async (
 
   const extraBuildings = insuranceResponse.extraBuildings?.map(building => ({
     ...building,
-    __typename: 'ExtraBuildingCore'
+    __typename: 'ExtraBuildingValue'
   }))
 
   return {
