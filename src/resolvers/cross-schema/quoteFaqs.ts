@@ -1,8 +1,9 @@
+import gql from "graphql-tag"
 import { CrossSchemaExtension, SchemaIdentifier } from "./index"
 
 export const createQuoteFaqsExtension = (): CrossSchemaExtension => ({
     dependencies: [SchemaIdentifier.GRAPH_CMS, SchemaIdentifier.UNDERWRITER],
-    content: `
+    content: gql`
         extend type QuoteBundle {
             frequentlyAskedQuestions(locale: Locale!): [Faq!]!
         }
