@@ -1,6 +1,7 @@
+import gql from 'graphql-tag'
 import { IResolvers } from 'graphql-tools'
 
-export const crossSchemaExtensions = `
+export const crossSchemaExtensions = gql`
     extend type Campaign {
         displayValue(locale: Locale!): String
     }

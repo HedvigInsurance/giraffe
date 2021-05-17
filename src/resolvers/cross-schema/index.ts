@@ -1,4 +1,5 @@
-import { GraphQLSchema } from 'graphql'
+import { gql } from 'apollo-server-koa';
+import { DocumentNode, GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
 import { crossSchemaExtensions as contractDetailsCrossSchemaExtension, currentAgreementDetailsTable, upcomingAgreementDetailsTable } from './detailstable/contractDetailsTable'
 import { getQuoteDetailsFragment } from './detailstable/quoteDetailsFragments'
@@ -22,13 +23,13 @@ export enum SchemaIdentifier {
 
 export interface CrossSchemaExtension {
   dependencies: SchemaIdentifier[]
-  content: string,
+  content: DocumentNode,
   resolvers(schemas: (identifier: SchemaIdentifier) => GraphQLSchema): IResolvers
 }
 
 export const getCrossSchemaExtensions = (
   schemas: Map<SchemaIdentifier, GraphQLSchema>
-): { extension: string, resolvers: IResolvers } => {
+): { extensions: DocumentNode[], resolvers: IResolvers } => {
 
   const allExtensions: CrossSchemaExtension[] = [
     keyGearExtension,
@@ -44,7 +45,7 @@ export const getCrossSchemaExtensions = (
   })
 
   return {
-    extension: applicable.map(ext => ext.content).join(""),
+    extensions: applicable.map(ext => ext.content),
     resolvers: applicable.reduce((acc, ext) => {
       const res = ext.resolvers((id) => schemas.get(id)!)
       return {...acc, ...res}
@@ -54,7 +55,7 @@ export const getCrossSchemaExtensions = (
 
 const keyGearExtension: CrossSchemaExtension = {
   dependencies: [SchemaIdentifier.GRAPH_CMS, SchemaIdentifier.KEY_GEAR],
-  content: `
+  content: gql`
   extend type KeyGearItem {
     covered: [KeyGearItemCoverage!]!
     exceptions: [KeyGearItemCoverage!]!
@@ -102,7 +103,7 @@ const keyGearExtension: CrossSchemaExtension = {
 
 const contractExtension: CrossSchemaExtension = {
   dependencies: [SchemaIdentifier.CONTENT_SERVICE, SchemaIdentifier.PRODUCT_PRICING],
-  content: `
+  content: gql`
   extend type Contract {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
@@ -201,7 +202,7 @@ const contractExtension: CrossSchemaExtension = {
 
 const quotesExtension: CrossSchemaExtension = {
   dependencies: [SchemaIdentifier.CONTENT_SERVICE, SchemaIdentifier.UNDERWRITER],
-  content: `
+  content: gql`
   extend type CompleteQuote {
     perils(locale: Locale!): [PerilV2!]!
     insurableLimits(locale: Locale!): [InsurableLimit!]!
@@ -391,7 +392,7 @@ const quotesExtension: CrossSchemaExtension = {
 
 const embarkExtension: CrossSchemaExtension = {
   dependencies: [SchemaIdentifier.CONTENT_SERVICE, SchemaIdentifier.EMBARK],
-  content: `
+  content: gql`
   extend type EmbarkPreviousInsuranceProviderActionData {
     insuranceProviders: [InsuranceProvider!]!
   }
