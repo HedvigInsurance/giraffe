@@ -37,13 +37,14 @@ type LanguageFiles = {
 }
 
 const readFiles = (): LanguageFiles => {
-    const files = readdirSync(".")
+    const files = readdirSync(__dirname)
         .filter(file => file.endsWith('.json'))
 
     const result: LanguageFiles = {}
     files.forEach(file => {
+        const path = `${__dirname}/${file}`
         const language = file.replace('.json', '')
-        const content = JSON.parse(readFileSync(file, 'utf8'))
+        const content = JSON.parse(readFileSync(path, 'utf8'))
         result[language] = content
     })
 
