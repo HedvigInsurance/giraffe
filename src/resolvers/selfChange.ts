@@ -82,7 +82,7 @@ const transformResult = (
         break
     }
   })
-  if (breachedUnderwritingGuidelines.length === 0) {
+  if (breachedUnderwritingGuidelines.length > 0) {
     return {
       __typename: 'AddressChangeQuoteFailure',
       breachedUnderwritingGuidelines: breachedUnderwritingGuidelines
