@@ -477,6 +477,7 @@ const baseContract = {
   currentAgreementId: 'aid1',
   hasPendingAgreement: false,
   createdAt: '2020-12-01T10:00:00Z',
+  hasQueuedRenewal: false
 }
 
 const baseAgreement = {
