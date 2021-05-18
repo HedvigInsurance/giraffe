@@ -51,6 +51,7 @@ export interface Query {
   
   /**
    * Returns a type describing whether the 'Self Change' functionality is possible.
+   * @deprecated Use angelStories in `activeContractBundles` instead
    */
   selfChangeEligibility: SelfChangeEligibility;
   
@@ -1094,6 +1095,11 @@ export interface Mutation {
    * Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance.
    */
   createAddressChangeQuotes: AddressChangeQuoteResult;
+  
+  /**
+   * Commit the address change quotes, installing them as the .
+   */
+  commitAddressChangeQuotes: AddressChangeCommitResult;
 }
 
 export interface CampaignInput {
@@ -1284,11 +1290,6 @@ export interface AddressChangeInput {
   numberOfBathrooms?: number;
   
   /**
-   * Number of floors. Required if type == HOUSE.
-   */
-  numberOfFloors?: number;
-  
-  /**
    * Is this property subleted? Required if type == HOUSE.
    */
   isSubleted?: boolean;
@@ -1336,6 +1337,10 @@ export interface AddressChangeQuoteSuccess {
 
 export interface AddressChangeQuoteFailure {
   breachedUnderwritingGuidelines: Array<string>;
+}
+
+export interface AddressChangeCommitResult {
+  newContractBundle: ContractBundle;
 }
 
 export interface Subscription {
@@ -1510,6 +1515,7 @@ export interface Resolver {
   
   AddressChangeQuoteSuccess?: AddressChangeQuoteSuccessTypeResolver;
   AddressChangeQuoteFailure?: AddressChangeQuoteFailureTypeResolver;
+  AddressChangeCommitResult?: AddressChangeCommitResultTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -3189,6 +3195,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
   updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
   createAddressChangeQuotes?: MutationToCreateAddressChangeQuotesResolver<TParent>;
+  commitAddressChangeQuotes?: MutationToCommitAddressChangeQuotesResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -3398,6 +3405,14 @@ export interface MutationToCreateAddressChangeQuotesResolver<TParent = undefined
   (parent: TParent, args: MutationToCreateAddressChangeQuotesArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface MutationToCommitAddressChangeQuotesArgs {
+  contractBundleId: string;
+  quoteIds: Array<string>;
+}
+export interface MutationToCommitAddressChangeQuotesResolver<TParent = undefined, TResult = AddressChangeCommitResult> {
+  (parent: TParent, args: MutationToCommitAddressChangeQuotesArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
   token?: SessionInformationToTokenResolver<TParent>;
   memberId?: SessionInformationToMemberIdResolver<TParent>;
@@ -3464,6 +3479,14 @@ export interface AddressChangeQuoteFailureTypeResolver<TParent = AddressChangeQu
 }
 
 export interface AddressChangeQuoteFailureToBreachedUnderwritingGuidelinesResolver<TParent = AddressChangeQuoteFailure, TResult = Array<string>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AddressChangeCommitResultTypeResolver<TParent = AddressChangeCommitResult> {
+  newContractBundle?: AddressChangeCommitResultToNewContractBundleResolver<TParent>;
+}
+
+export interface AddressChangeCommitResultToNewContractBundleResolver<TParent = AddressChangeCommitResult, TResult = ContractBundle> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

@@ -1,0 +1,233 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`commitAddressChangeQuotes works 1`] = `
+Object {
+  "commitAddressChangeQuotes": Object {
+    "newContractBundle": Object {
+      "contracts": Array [
+        Object {
+          "id": "cid1",
+          "typeOfContract": "NO_HOME_CONTENT_RENT",
+        },
+        Object {
+          "id": "cid3",
+          "typeOfContract": "NO_TRAVEL",
+        },
+      ],
+      "id": "bundle:cid1,cid3",
+    },
+  },
+}
+`;
+
+exports[`createAddressChangeQuotes - Denmark works 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "danishHomeContentsData": Object {
+        "coInsured": 2,
+        "livingSpace": 44,
+        "street": "Fakestreet 123",
+        "student": false,
+        "subType": "OWN",
+        "zipCode": "12345",
+      },
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+    },
+  ],
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "danishTravelData": Object {
+        "coInsured": 2,
+        "street": "Fakestreet 123",
+        "student": false,
+        "zipCode": "12345",
+      },
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+    },
+  ],
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "danishAccidentData": Object {
+        "coInsured": 2,
+        "street": "Fakestreet 123",
+        "student": false,
+        "zipCode": "12345",
+      },
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+    },
+  ],
+]
+`;
+
+exports[`createAddressChangeQuotes - Norway works 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "norwegianHomeContentsData": Object {
+        "coInsured": 2,
+        "livingSpace": 44,
+        "street": "Fakestreet 123",
+        "subType": "OWN",
+        "youth": true,
+        "zipCode": "12345",
+      },
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+    },
+  ],
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "norwegianTravelData": Object {
+        "coInsured": 2,
+        "youth": true,
+      },
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+    },
+  ],
+]
+`;
+
+exports[`createAddressChangeQuotes - SE_APARTMENT non student owned 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+      "swedishApartmentData": Object {
+        "householdSize": 3,
+        "livingSpace": 44,
+        "street": "Fakestreet 123",
+        "subType": "BRF",
+        "zipCode": "12345",
+      },
+    },
+  ],
+]
+`;
+
+exports[`createAddressChangeQuotes - SE_APARTMENT non student rental 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+      "swedishApartmentData": Object {
+        "householdSize": 3,
+        "livingSpace": 44,
+        "street": "Fakestreet 123",
+        "subType": "RENT",
+        "zipCode": "12345",
+      },
+    },
+  ],
+]
+`;
+
+exports[`createAddressChangeQuotes - SE_APARTMENT student owned 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+      "swedishApartmentData": Object {
+        "householdSize": 3,
+        "livingSpace": 44,
+        "street": "Fakestreet 123",
+        "subType": "BRF_STUDENT",
+        "zipCode": "12345",
+      },
+    },
+  ],
+]
+`;
+
+exports[`createAddressChangeQuotes - SE_APARTMENT student rental 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+      "swedishApartmentData": Object {
+        "householdSize": 3,
+        "livingSpace": 44,
+        "street": "Fakestreet 123",
+        "subType": "RENT_STUDENT",
+        "zipCode": "12345",
+      },
+    },
+  ],
+]
+`;
+
+exports[`createAddressChangeQuotes - SE_HOUSE works 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+      "swedishHouseData": Object {
+        "ancillaryArea": 28,
+        "extraBuildings": Array [
+          Object {
+            "area": 12,
+            "hasWaterConnected": false,
+            "type": "GARAGE",
+          },
+        ],
+        "householdSize": 3,
+        "livingSpace": 44,
+        "numberOfBathrooms": 3,
+        "street": "Fakestreet 123",
+        "subleted": true,
+        "yearOfConstruction": 1912,
+        "zipCode": "12345",
+      },
+    },
+  ],
+]
+`;
