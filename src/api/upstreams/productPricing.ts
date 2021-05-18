@@ -41,6 +41,7 @@ export interface ContractDto {
   hasPendingAgreement: boolean
   agreements: AgreementDto[]
   upcomingAgreement?: AgreementDto
+  hasQueuedRenewal: boolean
   renewal?: RenewalDto
   createdAt: string
 }

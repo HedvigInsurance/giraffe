@@ -123,6 +123,9 @@ const transformContract = (
   contract: ContractDto,
   strings: LocalizedStrings,
 ): Contract => {
+  const hasUpcomingRenewal = contract.hasQueuedRenewal && 
+    contract.renewal &&
+    new Date(contract.renewal.renewalDate) > new Date()
   return {
     id: contract.id,
     holderMember: contract.holderMemberId,
@@ -134,10 +137,10 @@ const transformContract = (
     ),
     inception: contract.masterInception,
     termination: contract.terminationDate,
-    upcomingRenewal: contract.renewal && {
-      renewalDate: contract.renewal.renewalDate,
-      draftCertificateUrl: contract.renewal.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
-    },
+    upcomingRenewal: hasUpcomingRenewal ? {
+      renewalDate: contract.renewal!.renewalDate,
+      draftCertificateUrl: contract.renewal!.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
+    } : undefined,
     typeOfContract: contract.typeOfContract as TypeOfContract,
     createdAt: contract.createdAt,
   }
