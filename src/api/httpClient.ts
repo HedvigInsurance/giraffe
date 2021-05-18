@@ -14,8 +14,8 @@ export interface HttpClient {
 }
 
 export class HttpError extends Error {
-  constructor(public statusCode: number, public body: any) {
-    super(`HTTP error - statusCode ${statusCode}`)
+  constructor(public statusCode: number, public url: string, public body: any) {
+    super(`HTTP error - statusCode ${statusCode}, url: ${url}`)
     this.name = "HttpError"
   }
 }
@@ -49,12 +49,13 @@ export const createContextfulHttpClient = (
       headers: headers,
     }
 
-    const res = await fetch(`${baseUrl}${url}`, requestOptions)
+    const fullUrl = `${baseUrl}${url}`
+    const res = await fetch(fullUrl, requestOptions)
 
     if (res.status >= 400) {
       const isOverriddenToSucceed = options?.validStatusCodes && options.validStatusCodes.includes(res.status)
       if (!isOverriddenToSucceed) {
-        throw new HttpError(res.status, await res.json())
+        throw new HttpError(res.status, fullUrl, await res.json())
       }
     }
 
