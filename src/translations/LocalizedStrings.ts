@@ -17,7 +17,6 @@ export type LocalizedStringsProvider = {
 export const localizedStringsProvider: LocalizedStringsProvider = (
     locale: string
 ): LocalizedStrings => {
-    console.log('Context loading with accept-language: ' + locale)
     locale = locale.replace('-', '_')
     const match = files[locale] || files[localeTranslator[locale]]
     if (!match) return (key) => key

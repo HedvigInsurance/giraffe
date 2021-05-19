@@ -43,7 +43,7 @@ const getWebContext = (pubsub: RedisPubSub, graphCMSSchema?: GraphQLSchema) => a
     }
     return checkedCtx.header.authorization
   }
-  const locale = checkedCtx.get('accept-language')
+  const locale = checkedCtx.get('accept-language') ?? 'en'
   const headers = {
     'User-Agent': checkedCtx.get('User-Agent'),
     'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
@@ -74,7 +74,7 @@ const getWebSocketContext = (pubsub: RedisPubSub, graphCMSSchema?: GraphQLSchema
     }
     return connectionParams.Authorization
   }
-  const locale = context.request.headers['accept-language'] as string
+  const locale = context.request.headers['accept-language'] as string ?? 'en'
   const headers: ForwardHeaders = {
     'User-Agent': context.request.headers['User-Agent'] as string,
     'X-Forwarded-For': context.request.headers['x-forwarded-for'] as string,
