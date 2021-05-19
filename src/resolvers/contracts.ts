@@ -24,6 +24,7 @@ import {
   DanishAccidentLineOfBusiness,
   PossibleContractStatusTypeNames,
   PossibleAgreementTypeNames,
+  ExtraBuildingType,
 } from './../typings/generated-graphql-types'
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
@@ -233,7 +234,11 @@ const transformAgreement = (agreement: AgreementDto): Typenamed<Agreement, Possi
         yearOfConstruction: agreement.yearOfConstruction,
         numberOfBathrooms: agreement.numberOfBathrooms,
         isSubleted: agreement.isSubleted,
-        extraBuildings: agreement.extraBuildings,
+        extraBuildings: agreement.extraBuildings.map(building => ({
+          ...building,
+          type: building.type as ExtraBuildingType,
+          __typename: 'ExtraBuildingValue'
+        })),
       }
     }
     case 'NorwegianHomeContent': {
