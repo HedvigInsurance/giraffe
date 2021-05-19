@@ -184,12 +184,14 @@ export interface ExtraBuildingNameMap {
 }
 
 export interface ExtraBuildingValue extends ExtraBuildingCore {
+  type: ExtraBuildingType;
   area: number;
   displayName: string;
   hasWaterConnected: boolean;
 }
 
 export interface ExtraBuildingCore {
+  type: ExtraBuildingType;
   area: number;
   displayName: string;
   hasWaterConnected: boolean;
@@ -201,6 +203,23 @@ export type PossibleExtraBuildingCoreTypeNames = 'ExtraBuildingValue';
 export interface ExtraBuildingCoreNameMap {
   ExtraBuildingCore: ExtraBuildingCore;
   ExtraBuildingValue: ExtraBuildingValue;
+}
+
+export enum ExtraBuildingType {
+  GARAGE = 'GARAGE',
+  CARPORT = 'CARPORT',
+  SHED = 'SHED',
+  STOREHOUSE = 'STOREHOUSE',
+  FRIGGEBOD = 'FRIGGEBOD',
+  ATTEFALL = 'ATTEFALL',
+  OUTHOUSE = 'OUTHOUSE',
+  GUESTHOUSE = 'GUESTHOUSE',
+  GAZEBO = 'GAZEBO',
+  GREENHOUSE = 'GREENHOUSE',
+  SAUNA = 'SAUNA',
+  BARN = 'BARN',
+  BOATHOUSE = 'BOATHOUSE',
+  OTHER = 'OTHER'
 }
 
 export enum Locale {
@@ -1887,9 +1906,14 @@ export interface ExtraBuildingTypeResolver<TParent = ExtraBuilding> {
   (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingValue' | Promise<'ExtraBuildingValue'>;
 }
 export interface ExtraBuildingValueTypeResolver<TParent = ExtraBuildingValue> {
+  type?: ExtraBuildingValueToTypeResolver<TParent>;
   area?: ExtraBuildingValueToAreaResolver<TParent>;
   displayName?: ExtraBuildingValueToDisplayNameResolver<TParent>;
   hasWaterConnected?: ExtraBuildingValueToHasWaterConnectedResolver<TParent>;
+}
+
+export interface ExtraBuildingValueToTypeResolver<TParent = ExtraBuildingValue, TResult = ExtraBuildingType> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface ExtraBuildingValueToAreaResolver<TParent = ExtraBuildingValue, TResult = number> {

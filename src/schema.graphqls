@@ -983,15 +983,34 @@ enum DanishTravelLineOfBusiness {
 union ExtraBuilding = ExtraBuildingValue
 
 interface ExtraBuildingCore {
+  type: ExtraBuildingType!
   area: Int!
   displayName: String!
   hasWaterConnected: Boolean!
 }
 
 type ExtraBuildingValue implements ExtraBuildingCore {
+  type: ExtraBuildingType!
   area: Int!
   displayName: String!
   hasWaterConnected: Boolean!
+}
+
+enum ExtraBuildingType {
+    GARAGE
+    CARPORT
+    SHED
+    STOREHOUSE
+    FRIGGEBOD
+    ATTEFALL
+    OUTHOUSE
+    GUESTHOUSE
+    GAZEBO
+    GREENHOUSE
+    SAUNA
+    BARN
+    BOATHOUSE
+    OTHER
 }
 
 type Address {

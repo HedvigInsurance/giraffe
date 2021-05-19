@@ -13,11 +13,11 @@ import {
   TerminatedStatus,
   ActiveInFutureAndTerminatedInFutureStatus,
   ContractBundle,
+  ExtraBuildingType
 } from './../typings/generated-graphql-types'
 import {
   AgreementStatusDto,
   ContractStatusDto,
-  ExtraBuildingTypeDto,
 } from './../api/upstreams/productPricing'
 import { GraphQLResolveInfo } from 'graphql'
 import { ContractDto } from '../api/upstreams/productPricing'
@@ -557,7 +557,7 @@ const swedishHouseInput: ContractDto = {
       isSubleted: true,
       extraBuildings: [
         {
-          type: ExtraBuildingTypeDto.GARAGE,
+          type: 'GARAGE',
           area: 14,
           displayName: 'Garage',
           hasWaterConnected: false,
@@ -581,6 +581,7 @@ const swedishHouseOutput: Contract = {
     isSubleted: true,
     extraBuildings: [
       {
+        type: ExtraBuildingType.GARAGE,
         area: 14,
         displayName: 'Garage',
         hasWaterConnected: false,
