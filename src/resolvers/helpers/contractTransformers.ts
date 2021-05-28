@@ -20,6 +20,7 @@ import {
   DanishTravelLineOfBusiness,
   DanishAccidentLineOfBusiness,
   ContractBundle,
+  ExtraBuildingType,
 } from './../../typings/generated-graphql-types'
 import { Typenamed } from './../../utils/types'
 
@@ -197,7 +198,11 @@ const transformAgreement = (
         yearOfConstruction: agreement.yearOfConstruction,
         numberOfBathrooms: agreement.numberOfBathrooms,
         isSubleted: agreement.isSubleted,
-        extraBuildings: agreement.extraBuildings,
+        extraBuildings: agreement.extraBuildings.map(building => ({
+          ...building,
+          type: building.type as ExtraBuildingType,
+          __typename: 'ExtraBuildingValue'
+        })),
       }
     }
     case 'NorwegianHomeContent': {

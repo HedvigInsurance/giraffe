@@ -152,27 +152,10 @@ export interface AddressDto {
 }
 
 export interface ExtraBuildingDto {
-  type: ExtraBuildingTypeDto
+  type: string
   area: number
   displayName: string
   hasWaterConnected: boolean
-}
-
-export enum ExtraBuildingTypeDto {
-  GARAGE = 'GARAGE',
-  CARPORT = 'CARPORT',
-  SHED = 'SHED',
-  STOREHOUSE = 'STOREHOUSE',
-  FRIGGEBOD = 'FRIGGEBOD',
-  ATTEFALL = 'ATTEFALL',
-  OUTHOUSE = 'OUTHOUSE',
-  GUESTHOUSE = 'GUESTHOUSE',
-  GAZEBO = 'GAZEBO',
-  GREENHOUSE = 'GREENHOUSE',
-  SAUNA = 'SAUNA',
-  BARN = 'BARN',
-  BOATHOUSE = 'BOATHOUSE',
-  OTHER = 'OTHER'
 }
 
 export const createProductPricingClient = (

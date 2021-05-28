@@ -5,6 +5,7 @@ import { crossSchemaExtensions as contractDetailsCrossSchemaExtension, currentAg
 import { getQuoteDetailsFragment } from './detailstable/quoteDetailsFragments'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './detailstable/quoteDetailsTable'
 import quoteDisplayName, { crossSchemaExtensions as quoteDisplayNameCrossSchemaExtensions } from './quoteDisplayName'
+import { createQuoteBundleInceptionExtension } from './quoteBundleInceptionExtension'
 import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
 import { createQuoteFaqsExtension } from "./quoteFaqs"
 
@@ -36,9 +37,11 @@ export const getCrossSchemaExtensions = (
     contractExtension,
     quotesExtension,
     embarkExtension,
+    createQuoteBundleInceptionExtension(),
     campaignExtension,
     createQuoteFaqsExtension()
   ]
+
   const applicable = allExtensions.filter(extension => {
     const missing = extension.dependencies.filter(id => !schemas.get(id))
     return missing.length === 0
