@@ -1,4 +1,4 @@
-import { ContractStatusDto } from './../api/upstreams/productPricing'
+import { ContractStatusDto } from '../api/upstreams/productPricing'
 import gql from 'graphql-tag'
 import { ContractMarketInfoDto } from '../api/upstreams/productPricing'
 import {
@@ -6,8 +6,8 @@ import {
   AddressHomeType,
   AddressOwnership,
 } from '../typings/generated-graphql-types'
-import { MemberDto } from './../api/upstreams/memberService'
-import { startApolloTesting } from './../test-utils/test-server'
+import { MemberDto } from '../api/upstreams/memberService'
+import { startApolloTesting } from '../test-utils/test-server'
 
 const { mutate, upstream } = startApolloTesting()
 
