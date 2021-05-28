@@ -2,10 +2,6 @@ import { HttpClient } from '../httpClient'
 
 export interface UnderwriterClient {
   createQuote(body: CreateQuoteDto): Promise<QuoteCreationResult>
-  changeToQuotes(
-    contractIds: string[],
-    quoteIds: string[],
-  ): Promise<QuoteChangingResult>
 }
 
 export interface CreateQuoteDto {
@@ -91,12 +87,6 @@ export interface BreachedGuidelineDto {
   code: string
 }
 
-export interface QuoteChangingResult {
-  updatedContractIds: string[]
-  createdContractIds: string[]
-  terminatedContractIds: string[]
-}
-
 export const createUnderwriterClient = (
   client: HttpClient,
 ): UnderwriterClient => {
@@ -111,11 +101,6 @@ export const createUnderwriterClient = (
         return { status: 'failure', ...result }
       }
       return { status: 'success', ...result }
-    },
-    changeToQuotes: async (contractIds, quoteIds) => {
-      const body = { contractIds, quoteIds }
-      const result = await client.post('/quotes/selfChange', body)
-      return await result.json()
-    },
+    }
   }
 }

@@ -22,7 +22,6 @@ const upstream: Upstream = {
   },
   underwriter: {
     createQuote: () => Promise.reject("createQuote Not implemented"),
-    changeToQuotes: () => Promise.reject("changeToQuotes Not implemented")
   },
   memberService: {
     getSelfMember: () => Promise.reject("getSelfMember Not implemented")
