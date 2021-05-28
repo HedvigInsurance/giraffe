@@ -1,6 +1,6 @@
 import { getInsurance, getUser } from '../../api'
 import { ForwardHeaders } from '../../context'
-import { Insurance } from '../../typings/generated-graphql-types'
+import { ExtraBuildingType, Insurance } from '../../typings/generated-graphql-types'
 import { PreviousInsurer } from './../../typings/generated-graphql-types'
 
 const switchableInsuranceProviders = [
@@ -44,128 +44,11 @@ const loadInsurance = async (
       } as PreviousInsurer)
     : undefined
 
-  const extraBuildings = insuranceResponse.extraBuildings
-    ? insuranceResponse.extraBuildings.map((extraBuilding) => {
-        if (extraBuilding.type === 'GARAGE') {
-          return {
-            __typename: 'ExtraBuildingGarage',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'CARPORT') {
-          return {
-            __typename: 'ExtraBuildingCarport',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'SHED') {
-          return {
-            __typename: 'ExtraBuildingShed',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'STOREHOUSE') {
-          return {
-            __typename: 'ExtraBuildingStorehouse',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'FRIGGEBOD') {
-          return {
-            __typename: 'ExtraBuildingFriggebod',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'ATTEFALL') {
-          return {
-            __typename: 'ExtraBuildingAttefall',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-
-        if (extraBuilding.type === 'OUTHOUSE') {
-          return {
-            __typename: 'ExtraBuildingOuthouse',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'GUESTHOUSE') {
-          return {
-            __typename: 'ExtraBuildingGuesthouse',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'GAZEBO') {
-          return {
-            __typename: 'ExtraBuildingGazebo',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'GREENHOUSE') {
-          return {
-            __typename: 'ExtraBuildingGreenhouse',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'SAUNA') {
-          return {
-            __typename: 'ExtraBuildingSauna',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'BARN') {
-          return {
-            __typename: 'ExtraBuildingBarn',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'BOATHOUSE') {
-          return {
-            __typename: 'ExtraBuildingBoathouse',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        if (extraBuilding.type === 'OTHER') {
-          return {
-            __typename: 'ExtraBuildingOther',
-            area: extraBuilding.area,
-            displayName: extraBuilding.displayName,
-            hasWaterConnected: extraBuilding.hasWaterConnected,
-          }
-        }
-        return {
-          area: extraBuilding.area,
-          displayName: extraBuilding.displayName,
-          hasWaterConnected: extraBuilding.hasWaterConnected,
-        }
-      })
-    : undefined
+  const extraBuildings = insuranceResponse.extraBuildings?.map(building => ({
+    ...building,
+    type: building.type as ExtraBuildingType,
+    __typename: 'ExtraBuildingValue'
+  }))
 
   return {
     insuredAtOtherCompany: insuranceResponse.insuredAtOtherCompany,

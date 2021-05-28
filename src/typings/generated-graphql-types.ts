@@ -34,6 +34,21 @@ export interface Query {
   angelStory?: AngelStory;
   
   /**
+   * Returns all the currently active contracts, combined into bundles.
+   */
+  activeContractBundles: Array<ContractBundle>;
+  
+  /**
+   * Returns all contracts the member currently holds, regardless of activation/termination status
+   */
+  contracts: Array<Contract>;
+  
+  /**
+   * Returns whether a member has at least one contract
+   */
+  hasContract: boolean;
+  
+  /**
    * Returns a type describing whether the 'Self Change' functionality is possible.
    */
   selfChangeEligibility: SelfChangeEligibility;
@@ -157,180 +172,53 @@ export interface PreviousInsurer {
   switchable: boolean;
 }
 
-export type ExtraBuilding =
-ExtraBuildingGarage |
-ExtraBuildingCarport |
-ExtraBuildingShed |
-ExtraBuildingStorehouse |
-ExtraBuildingFriggebod |
-ExtraBuildingAttefall |
-ExtraBuildingOuthouse |
-ExtraBuildingGuesthouse |
-ExtraBuildingGazebo |
-ExtraBuildingGreenhouse |
-ExtraBuildingSauna |
-ExtraBuildingBarn |
-ExtraBuildingBoathouse |
-ExtraBuildingOther;
+export type ExtraBuilding = ExtraBuildingValue;
 
 /** Use this to resolve union type ExtraBuilding */
-export type PossibleExtraBuildingTypeNames =
-'ExtraBuildingGarage' |
-'ExtraBuildingCarport' |
-'ExtraBuildingShed' |
-'ExtraBuildingStorehouse' |
-'ExtraBuildingFriggebod' |
-'ExtraBuildingAttefall' |
-'ExtraBuildingOuthouse' |
-'ExtraBuildingGuesthouse' |
-'ExtraBuildingGazebo' |
-'ExtraBuildingGreenhouse' |
-'ExtraBuildingSauna' |
-'ExtraBuildingBarn' |
-'ExtraBuildingBoathouse' |
-'ExtraBuildingOther';
+export type PossibleExtraBuildingTypeNames = 'ExtraBuildingValue';
 
 export interface ExtraBuildingNameMap {
   ExtraBuilding: ExtraBuilding;
-  ExtraBuildingGarage: ExtraBuildingGarage;
-  ExtraBuildingCarport: ExtraBuildingCarport;
-  ExtraBuildingShed: ExtraBuildingShed;
-  ExtraBuildingStorehouse: ExtraBuildingStorehouse;
-  ExtraBuildingFriggebod: ExtraBuildingFriggebod;
-  ExtraBuildingAttefall: ExtraBuildingAttefall;
-  ExtraBuildingOuthouse: ExtraBuildingOuthouse;
-  ExtraBuildingGuesthouse: ExtraBuildingGuesthouse;
-  ExtraBuildingGazebo: ExtraBuildingGazebo;
-  ExtraBuildingGreenhouse: ExtraBuildingGreenhouse;
-  ExtraBuildingSauna: ExtraBuildingSauna;
-  ExtraBuildingBarn: ExtraBuildingBarn;
-  ExtraBuildingBoathouse: ExtraBuildingBoathouse;
-  ExtraBuildingOther: ExtraBuildingOther;
+  ExtraBuildingValue: ExtraBuildingValue;
 }
 
-export interface ExtraBuildingGarage extends ExtraBuildingCore {
+export interface ExtraBuildingValue extends ExtraBuildingCore {
+  type: ExtraBuildingType;
   area: number;
   displayName: string;
   hasWaterConnected: boolean;
 }
 
 export interface ExtraBuildingCore {
+  type: ExtraBuildingType;
   area: number;
   displayName: string;
   hasWaterConnected: boolean;
 }
 
 /** Use this to resolve interface type ExtraBuildingCore */
-export type PossibleExtraBuildingCoreTypeNames =
-'ExtraBuildingGarage' |
-'ExtraBuildingCarport' |
-'ExtraBuildingShed' |
-'ExtraBuildingStorehouse' |
-'ExtraBuildingFriggebod' |
-'ExtraBuildingAttefall' |
-'ExtraBuildingOuthouse' |
-'ExtraBuildingGuesthouse' |
-'ExtraBuildingGazebo' |
-'ExtraBuildingGreenhouse' |
-'ExtraBuildingSauna' |
-'ExtraBuildingBarn' |
-'ExtraBuildingBoathouse' |
-'ExtraBuildingOther';
+export type PossibleExtraBuildingCoreTypeNames = 'ExtraBuildingValue';
 
 export interface ExtraBuildingCoreNameMap {
   ExtraBuildingCore: ExtraBuildingCore;
-  ExtraBuildingGarage: ExtraBuildingGarage;
-  ExtraBuildingCarport: ExtraBuildingCarport;
-  ExtraBuildingShed: ExtraBuildingShed;
-  ExtraBuildingStorehouse: ExtraBuildingStorehouse;
-  ExtraBuildingFriggebod: ExtraBuildingFriggebod;
-  ExtraBuildingAttefall: ExtraBuildingAttefall;
-  ExtraBuildingOuthouse: ExtraBuildingOuthouse;
-  ExtraBuildingGuesthouse: ExtraBuildingGuesthouse;
-  ExtraBuildingGazebo: ExtraBuildingGazebo;
-  ExtraBuildingGreenhouse: ExtraBuildingGreenhouse;
-  ExtraBuildingSauna: ExtraBuildingSauna;
-  ExtraBuildingBarn: ExtraBuildingBarn;
-  ExtraBuildingBoathouse: ExtraBuildingBoathouse;
-  ExtraBuildingOther: ExtraBuildingOther;
+  ExtraBuildingValue: ExtraBuildingValue;
 }
 
-export interface ExtraBuildingCarport extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingShed extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingStorehouse extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingFriggebod extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingAttefall extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingOuthouse extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingGuesthouse extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingGazebo extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingGreenhouse extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingSauna extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingBarn extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingBoathouse extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
-}
-
-export interface ExtraBuildingOther extends ExtraBuildingCore {
-  area: number;
-  displayName: string;
-  hasWaterConnected: boolean;
+export enum ExtraBuildingType {
+  GARAGE = 'GARAGE',
+  CARPORT = 'CARPORT',
+  SHED = 'SHED',
+  STOREHOUSE = 'STOREHOUSE',
+  FRIGGEBOD = 'FRIGGEBOD',
+  ATTEFALL = 'ATTEFALL',
+  OUTHOUSE = 'OUTHOUSE',
+  GUESTHOUSE = 'GUESTHOUSE',
+  GAZEBO = 'GAZEBO',
+  GREENHOUSE = 'GREENHOUSE',
+  SAUNA = 'SAUNA',
+  BARN = 'BARN',
+  BOATHOUSE = 'BOATHOUSE',
+  OTHER = 'OTHER'
 }
 
 export enum Locale {
@@ -712,14 +600,401 @@ export interface AngelStory {
   content: string;
 }
 
+export interface ContractBundle {
+  id: string;
+  contracts: Array<Contract>;
+  angelStories: ContractBundleAngelStories;
+}
+
+export interface Contract {
+  id: string;
+  holderMember: string;
+  typeOfContract: TypeOfContract;
+  switchedFromInsuranceProvider?: string;
+  status: ContractStatus;
+  displayName: string;
+  
+  /**
+   * "The 'best guess' of the agreement that depicts the member's insurance, either the pending, future, current or, if terminated, past agreement
+   */
+  currentAgreement: Agreement;
+  
+  /**
+   * The date the contract agreement timeline begin, if it has been activated
+   */
+  inception?: LocalDate;
+  
+  /**
+   * The date the contract agreement timelinen end, on if it has been terminated
+   */
+  termination?: LocalDate;
+  
+  /**
+   * An upcoming renewal, present if the member has been notified and the renewal is within 31 days
+   */
+  upcomingRenewal?: UpcomingRenewal;
+  createdAt: Instant;
+}
+
+export enum TypeOfContract {
+  SE_HOUSE = 'SE_HOUSE',
+  SE_APARTMENT_BRF = 'SE_APARTMENT_BRF',
+  SE_APARTMENT_RENT = 'SE_APARTMENT_RENT',
+  SE_APARTMENT_STUDENT_BRF = 'SE_APARTMENT_STUDENT_BRF',
+  SE_APARTMENT_STUDENT_RENT = 'SE_APARTMENT_STUDENT_RENT',
+  NO_HOME_CONTENT_OWN = 'NO_HOME_CONTENT_OWN',
+  NO_HOME_CONTENT_RENT = 'NO_HOME_CONTENT_RENT',
+  NO_HOME_CONTENT_YOUTH_OWN = 'NO_HOME_CONTENT_YOUTH_OWN',
+  NO_HOME_CONTENT_YOUTH_RENT = 'NO_HOME_CONTENT_YOUTH_RENT',
+  NO_TRAVEL = 'NO_TRAVEL',
+  NO_TRAVEL_YOUTH = 'NO_TRAVEL_YOUTH',
+  DK_HOME_CONTENT_OWN = 'DK_HOME_CONTENT_OWN',
+  DK_HOME_CONTENT_RENT = 'DK_HOME_CONTENT_RENT',
+  DK_HOME_CONTENT_STUDENT_OWN = 'DK_HOME_CONTENT_STUDENT_OWN',
+  DK_HOME_CONTENT_STUDENT_RENT = 'DK_HOME_CONTENT_STUDENT_RENT',
+  DK_ACCIDENT = 'DK_ACCIDENT',
+  DK_ACCIDENT_STUDENT = 'DK_ACCIDENT_STUDENT',
+  DK_TRAVEL = 'DK_TRAVEL',
+  DK_TRAVEL_STUDENT = 'DK_TRAVEL_STUDENT'
+}
+
+export type ContractStatus =
+PendingStatus |
+ActiveInFutureStatus |
+ActiveStatus |
+ActiveInFutureAndTerminatedInFutureStatus |
+TerminatedInFutureStatus |
+TerminatedTodayStatus |
+TerminatedStatus;
+
+/** Use this to resolve union type ContractStatus */
+export type PossibleContractStatusTypeNames =
+'PendingStatus' |
+'ActiveInFutureStatus' |
+'ActiveStatus' |
+'ActiveInFutureAndTerminatedInFutureStatus' |
+'TerminatedInFutureStatus' |
+'TerminatedTodayStatus' |
+'TerminatedStatus';
+
+export interface ContractStatusNameMap {
+  ContractStatus: ContractStatus;
+  PendingStatus: PendingStatus;
+  ActiveInFutureStatus: ActiveInFutureStatus;
+  ActiveStatus: ActiveStatus;
+  ActiveInFutureAndTerminatedInFutureStatus: ActiveInFutureAndTerminatedInFutureStatus;
+  TerminatedInFutureStatus: TerminatedInFutureStatus;
+  TerminatedTodayStatus: TerminatedTodayStatus;
+  TerminatedStatus: TerminatedStatus;
+}
+
+/**
+ * The contract is neither active or terminated, waiting to have an inception date set
+ */
+export interface PendingStatus {
+  pendingSince?: LocalDate;
+}
+
+/**
+ * The contract has an inception date set in the future
+ */
+export interface ActiveInFutureStatus {
+  futureInception?: LocalDate;
+}
+
+/**
+ * The contract has an inception date set today or in the past without a termination date set
+ */
+export interface ActiveStatus {
+  pastInception?: LocalDate;
+  upcomingAgreementChange?: UpcomingAgreementChange;
+}
+
+/**
+ * If present, the upcomingAgreementChange contains info regarding the agreement that will succeed the current one
+ */
+export interface UpcomingAgreementChange {
+  newAgreement: Agreement;
+}
+
+export type Agreement =
+SwedishApartmentAgreement |
+SwedishHouseAgreement |
+NorwegianHomeContentAgreement |
+NorwegianTravelAgreement |
+DanishHomeContentAgreement |
+DanishAccidentAgreement |
+DanishTravelAgreement;
+
+/** Use this to resolve union type Agreement */
+export type PossibleAgreementTypeNames =
+'SwedishApartmentAgreement' |
+'SwedishHouseAgreement' |
+'NorwegianHomeContentAgreement' |
+'NorwegianTravelAgreement' |
+'DanishHomeContentAgreement' |
+'DanishAccidentAgreement' |
+'DanishTravelAgreement';
+
+export interface AgreementNameMap {
+  Agreement: Agreement;
+  SwedishApartmentAgreement: SwedishApartmentAgreement;
+  SwedishHouseAgreement: SwedishHouseAgreement;
+  NorwegianHomeContentAgreement: NorwegianHomeContentAgreement;
+  NorwegianTravelAgreement: NorwegianTravelAgreement;
+  DanishHomeContentAgreement: DanishHomeContentAgreement;
+  DanishAccidentAgreement: DanishAccidentAgreement;
+  DanishTravelAgreement: DanishTravelAgreement;
+}
+
+export interface SwedishApartmentAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  address: Address;
+  numberCoInsured: number;
+  squareMeters: number;
+  type: SwedishApartmentLineOfBusiness;
+}
+
+export interface AgreementCore {
+  id: string;
+  status: AgreementStatus;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+}
+
+/** Use this to resolve interface type AgreementCore */
+export type PossibleAgreementCoreTypeNames =
+'SwedishApartmentAgreement' |
+'SwedishHouseAgreement' |
+'NorwegianHomeContentAgreement' |
+'NorwegianTravelAgreement' |
+'DanishHomeContentAgreement' |
+'DanishAccidentAgreement' |
+'DanishTravelAgreement';
+
+export interface AgreementCoreNameMap {
+  AgreementCore: AgreementCore;
+  SwedishApartmentAgreement: SwedishApartmentAgreement;
+  SwedishHouseAgreement: SwedishHouseAgreement;
+  NorwegianHomeContentAgreement: NorwegianHomeContentAgreement;
+  NorwegianTravelAgreement: NorwegianTravelAgreement;
+  DanishHomeContentAgreement: DanishHomeContentAgreement;
+  DanishAccidentAgreement: DanishAccidentAgreement;
+  DanishTravelAgreement: DanishTravelAgreement;
+}
+
+export enum AgreementStatus {
+  
+  /**
+   * An agreement with no activation date, waiting to be activated
+   */
+  PENDING = 'PENDING',
+  
+  /**
+   * An agreement that will be active on a future date
+   */
+  ACTIVE_IN_FUTURE = 'ACTIVE_IN_FUTURE',
+  
+  /**
+   * An agreement that is active today
+   */
+  ACTIVE = 'ACTIVE',
+  
+  /**
+   * An agreement that either was never active that is now terminated or was active in the past of a now terminated contract
+   */
+  TERMINATED = 'TERMINATED'
+}
+
+export interface Address {
+  street: string;
+  postalCode: string;
+  city?: string;
+  apartment?: string;
+  floor?: string;
+}
+
+export enum SwedishApartmentLineOfBusiness {
+  RENT = 'RENT',
+  BRF = 'BRF',
+  STUDENT_RENT = 'STUDENT_RENT',
+  STUDENT_BRF = 'STUDENT_BRF'
+}
+
+export interface SwedishHouseAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  address: Address;
+  numberCoInsured: number;
+  squareMeters: number;
+  ancillaryArea: number;
+  yearOfConstruction: number;
+  numberOfBathrooms: number;
+  extraBuildings: Array<ExtraBuilding | null>;
+  isSubleted: boolean;
+}
+
+export interface NorwegianHomeContentAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  address: Address;
+  numberCoInsured: number;
+  squareMeters: number;
+  type?: NorwegianHomeContentLineOfBusiness;
+}
+
+export enum NorwegianHomeContentLineOfBusiness {
+  RENT = 'RENT',
+  OWN = 'OWN',
+  YOUTH_RENT = 'YOUTH_RENT',
+  YOUTH_OWN = 'YOUTH_OWN'
+}
+
+export interface NorwegianTravelAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  numberCoInsured: number;
+  type?: NorwegianTravelLineOfBusiness;
+}
+
+export enum NorwegianTravelLineOfBusiness {
+  REGULAR = 'REGULAR',
+  YOUTH = 'YOUTH'
+}
+
+export interface DanishHomeContentAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  address: Address;
+  numberCoInsured: number;
+  squareMeters: number;
+  type?: DanishHomeContentLineOfBusiness;
+}
+
+export enum DanishHomeContentLineOfBusiness {
+  RENT = 'RENT',
+  OWN = 'OWN',
+  STUDENT_RENT = 'STUDENT_RENT',
+  STUDENT_OWN = 'STUDENT_OWN'
+}
+
+export interface DanishAccidentAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  address: Address;
+  numberCoInsured: number;
+  type?: DanishAccidentLineOfBusiness;
+}
+
+export enum DanishAccidentLineOfBusiness {
+  REGULAR = 'REGULAR',
+  STUDENT = 'STUDENT'
+}
+
+export interface DanishTravelAgreement extends AgreementCore {
+  id: string;
+  activeFrom?: LocalDate;
+  activeTo?: LocalDate;
+  premium: MonetaryAmountV2;
+  certificateUrl?: string;
+  status: AgreementStatus;
+  address: Address;
+  numberCoInsured: number;
+  type?: DanishTravelLineOfBusiness;
+}
+
+export enum DanishTravelLineOfBusiness {
+  REGULAR = 'REGULAR',
+  STUDENT = 'STUDENT'
+}
+
+/**
+ * The contract has an inception date in the future and a termination date in the future
+ */
+export interface ActiveInFutureAndTerminatedInFutureStatus {
+  futureInception?: LocalDate;
+  futureTermination?: LocalDate;
+}
+
+/**
+ * The contract is active today but will be terminated in the future, i.e. is active today but will not be in the future
+ */
+export interface TerminatedInFutureStatus {
+  futureTermination?: LocalDate;
+  upcomingAgreementChange?: UpcomingAgreementChange;
+}
+
+/**
+ * The contract has been active and has its termination date set to today, i.e. today is the last day the contract is active
+ */
+export interface TerminatedTodayStatus {
+  today?: LocalDate;
+  upcomingAgreementChange?: UpcomingAgreementChange;
+}
+
+/**
+ * The contract has been terminated in the past, terminated on the same date as its start date or has never been activated and has a termination date set
+ */
+export interface TerminatedStatus {
+  termination?: LocalDate;
+}
+
+export interface UpcomingRenewal {
+  renewalDate: LocalDate;
+  draftCertificateUrl: string;
+}
+
+export type Instant = any;
+
+export interface ContractBundleAngelStories {
+  addressChange?: string;
+}
+
 export interface SelfChangeEligibility {
   
   /**
-   * A list of reasons for why 'Self Change' is not possible - if empty 'Self Change' can be done.
-   * @deprecated Use embarkStoryId to determine if it is eligible or not
+   * 
+   * @deprecated Use addressChangeEmbarkStoryId instead
    */
   blockers: Array<SelfChangeBlocker>;
+  
+  /**
+   * 
+   * @deprecated Use addressChangeEmbarkStoryId instead
+   */
   embarkStoryId?: string;
+  
+  /**
+   * The ID of an embark story that contains an address change flow, if eligible.
+   */
+  addressChangeEmbarkStoryId?: string;
 }
 
 /**
@@ -832,7 +1107,11 @@ export interface Mutation {
   registerBranchCampaign?: boolean;
   updateLanguage: boolean;
   updatePickedLocale: Member;
-  createSelfChangeQuote: SelfChangeQuoteOutput;
+  
+  /**
+   * Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance.
+   */
+  createAddressChangeQuotes: AddressChangeQuoteResult;
 }
 
 export interface CampaignInput {
@@ -952,118 +1231,129 @@ export interface DanishBankIdAuthResponse {
   redirectUrl: string;
 }
 
-export interface SelfChangeQuoteInput {
+/**
+ * A quote-agnostic payload type for changing the addess.
+ */
+export interface AddressChangeInput {
+  
+  /**
+   * The target bundle that should have its address changed.
+   */
+  contractBundleId: string;
+  
+  /**
+   * Is this an apartment or a house.
+   */
+  type: AddressHomeType;
+  
+  /**
+   * Street value, including number.
+   */
+  street: string;
+  
+  /**
+   * Zip code.
+   */
+  zip: string;
+  
+  /**
+   * The total living space, in square meters.
+   */
+  livingSpace: number;
+  
+  /**
+   * Number co-insured, the number of people on the contract except for the policy holder.
+   */
+  numberCoInsured: number;
+  
+  /**
+   * Is this a rental or do does the policy holder own it?
+   */
+  ownership: AddressOwnership;
+  
+  /**
+   * The date the member gets access to this new home.
+   */
   startDate: LocalDate;
-  swedishApartment?: SelfChangeCreateSwedishApartmentInput;
-  swedishHouse?: SelfChangeCreateSwedishHouseInput;
-  norwegianHomeContents?: SelfChangeCreateNorwegianHomeContentsInput;
-  norwegianTravel?: SelfChangeCreateNorwegianTravelInput;
-  danishHomeContents?: SelfChangeCreateDanishHomeContentsInput;
-  danishAccident?: SelfChangeCreateDanishAccidentInput;
-  danishTravel?: SelfChangeCreateDanishTravelInput;
+  
+  /**
+   * Set to true if the insurance is concerning a youth. Concept used in Norway
+   */
+  isYouth?: boolean;
+  
+  /**
+   * Set to true if the insurance is concerning a student. Concept used in Sweden, Denmark
+   */
+  isStudent?: boolean;
+  
+  /**
+   * Ancillary area. Required if type == HOUSE.
+   */
+  ancillaryArea?: number;
+  
+  /**
+   * Year of construction. Required if type == HOUSE.
+   */
+  yearOfConstruction?: number;
+  
+  /**
+   * Number of bathrooms. Required if type == HOUSE.
+   */
+  numberOfBathrooms?: number;
+  
+  /**
+   * Number of floors. Required if type == HOUSE.
+   */
+  numberOfFloors?: number;
+  
+  /**
+   * Is this property subleted? Required if type == HOUSE.
+   */
+  isSubleted?: boolean;
+  
+  /**
+   * A list of extra buildings outside of the main property. Required if type == HOUSE.
+   */
+  extraBuildings?: Array<AddressHouseExtraBuilding>;
 }
 
-export interface SelfChangeCreateSwedishApartmentInput {
-  street: string;
-  zipCode: string;
-  householdSize: number;
-  livingSpace: number;
-  type: SelfChangeSwedishApartmentType;
+export enum AddressHomeType {
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE'
 }
 
-export enum SelfChangeSwedishApartmentType {
-  STUDENT_RENT = 'STUDENT_RENT',
-  RENT = 'RENT',
-  STUDENT_BRF = 'STUDENT_BRF',
-  BRF = 'BRF'
+export enum AddressOwnership {
+  OWN = 'OWN',
+  RENT = 'RENT'
 }
 
-export interface SelfChangeCreateSwedishHouseInput {
-  street: string;
-  zipCode: string;
-  householdSize: number;
-  livingSpace: number;
-  ancillarySpace: number;
-  yearOfConstruction: number;
-  numberOfBathrooms: number;
-  isSubleted: boolean;
-  extraBuildings: Array<SelfChangeExtraBuildingInput>;
-}
-
-export interface SelfChangeExtraBuildingInput {
-  type: SelfChangeExtraBuildingType;
+export interface AddressHouseExtraBuilding {
+  type: string;
   area: number;
   hasWaterConnected: boolean;
 }
 
-export enum SelfChangeExtraBuildingType {
-  GARAGE = 'GARAGE',
-  CARPORT = 'CARPORT',
-  SHED = 'SHED',
-  STOREHOUSE = 'STOREHOUSE',
-  FRIGGEBOD = 'FRIGGEBOD',
-  ATTEFALL = 'ATTEFALL',
-  OUTHOUSE = 'OUTHOUSE',
-  GUESTHOUSE = 'GUESTHOUSE',
-  GAZEBO = 'GAZEBO',
-  GREENHOUSE = 'GREENHOUSE',
-  SAUNA = 'SAUNA',
-  BARN = 'BARN',
-  BOATHOUSE = 'BOATHOUSE',
-  OTHER = 'OTHER'
+export type AddressChangeQuoteResult =
+AddressChangeQuoteSuccess |
+AddressChangeQuoteFailure;
+
+/** Use this to resolve union type AddressChangeQuoteResult */
+export type PossibleAddressChangeQuoteResultTypeNames =
+'AddressChangeQuoteSuccess' |
+'AddressChangeQuoteFailure';
+
+export interface AddressChangeQuoteResultNameMap {
+  AddressChangeQuoteResult: AddressChangeQuoteResult;
+  AddressChangeQuoteSuccess: AddressChangeQuoteSuccess;
+  AddressChangeQuoteFailure: AddressChangeQuoteFailure;
 }
 
-export interface SelfChangeCreateNorwegianHomeContentsInput {
-  street: string;
-  zipCode: string;
-  coInsured: number;
-  livingSpace: number;
-  isYouth: boolean;
-  type: SelfChangeNorwegianHomeContentsType;
+export interface AddressChangeQuoteSuccess {
+  quoteIds: Array<string>;
 }
 
-export enum SelfChangeNorwegianHomeContentsType {
-  RENT = 'RENT',
-  OWN = 'OWN'
-}
-
-export interface SelfChangeCreateNorwegianTravelInput {
-  coInsured: number;
-  isYouth: boolean;
-}
-
-export interface SelfChangeCreateDanishHomeContentsInput {
-  street: string;
-  zipCode: string;
-  livingSpace: number;
-  coInsured: number;
-  isStudent: boolean;
-  type: SelfChangeDanishHomeContentsType;
-}
-
-export enum SelfChangeDanishHomeContentsType {
-  RENT = 'RENT',
-  OWN = 'OWN'
-}
-
-export interface SelfChangeCreateDanishAccidentInput {
-  street: string;
-  zipCode: string;
-  coInsured: number;
-  isStudent: boolean;
-}
-
-export interface SelfChangeCreateDanishTravelInput {
-  street: string;
-  zipCode: string;
-  coInsured: number;
-  isStudent: boolean;
-}
-
-export interface SelfChangeQuoteOutput {
-  id: string;
-  price: number;
-  validTo: TimeStamp;
+export interface AddressChangeQuoteFailure {
+  breachedUnderwritingGuidelines: Array<string>;
 }
 
 export interface Subscription {
@@ -1139,24 +1429,11 @@ export interface Resolver {
     __resolveType: ExtraBuildingTypeResolver
   };
   
-  ExtraBuildingGarage?: ExtraBuildingGarageTypeResolver;
+  ExtraBuildingValue?: ExtraBuildingValueTypeResolver;
   ExtraBuildingCore?: {
     __resolveType: ExtraBuildingCoreTypeResolver
   };
   
-  ExtraBuildingCarport?: ExtraBuildingCarportTypeResolver;
-  ExtraBuildingShed?: ExtraBuildingShedTypeResolver;
-  ExtraBuildingStorehouse?: ExtraBuildingStorehouseTypeResolver;
-  ExtraBuildingFriggebod?: ExtraBuildingFriggebodTypeResolver;
-  ExtraBuildingAttefall?: ExtraBuildingAttefallTypeResolver;
-  ExtraBuildingOuthouse?: ExtraBuildingOuthouseTypeResolver;
-  ExtraBuildingGuesthouse?: ExtraBuildingGuesthouseTypeResolver;
-  ExtraBuildingGazebo?: ExtraBuildingGazeboTypeResolver;
-  ExtraBuildingGreenhouse?: ExtraBuildingGreenhouseTypeResolver;
-  ExtraBuildingSauna?: ExtraBuildingSaunaTypeResolver;
-  ExtraBuildingBarn?: ExtraBuildingBarnTypeResolver;
-  ExtraBuildingBoathouse?: ExtraBuildingBoathouseTypeResolver;
-  ExtraBuildingOther?: ExtraBuildingOtherTypeResolver;
   Cashback?: CashbackTypeResolver;
   SignStatus?: SignStatusTypeResolver;
   CollectStatus?: CollectStatusTypeResolver;
@@ -1201,6 +1478,39 @@ export interface Resolver {
   URL?: GraphQLScalarType;
   Geo?: GeoTypeResolver;
   AngelStory?: AngelStoryTypeResolver;
+  ContractBundle?: ContractBundleTypeResolver;
+  Contract?: ContractTypeResolver;
+  ContractStatus?: {
+    __resolveType: ContractStatusTypeResolver
+  };
+  
+  PendingStatus?: PendingStatusTypeResolver;
+  ActiveInFutureStatus?: ActiveInFutureStatusTypeResolver;
+  ActiveStatus?: ActiveStatusTypeResolver;
+  UpcomingAgreementChange?: UpcomingAgreementChangeTypeResolver;
+  Agreement?: {
+    __resolveType: AgreementTypeResolver
+  };
+  
+  SwedishApartmentAgreement?: SwedishApartmentAgreementTypeResolver;
+  AgreementCore?: {
+    __resolveType: AgreementCoreTypeResolver
+  };
+  
+  Address?: AddressTypeResolver;
+  SwedishHouseAgreement?: SwedishHouseAgreementTypeResolver;
+  NorwegianHomeContentAgreement?: NorwegianHomeContentAgreementTypeResolver;
+  NorwegianTravelAgreement?: NorwegianTravelAgreementTypeResolver;
+  DanishHomeContentAgreement?: DanishHomeContentAgreementTypeResolver;
+  DanishAccidentAgreement?: DanishAccidentAgreementTypeResolver;
+  DanishTravelAgreement?: DanishTravelAgreementTypeResolver;
+  ActiveInFutureAndTerminatedInFutureStatus?: ActiveInFutureAndTerminatedInFutureStatusTypeResolver;
+  TerminatedInFutureStatus?: TerminatedInFutureStatusTypeResolver;
+  TerminatedTodayStatus?: TerminatedTodayStatusTypeResolver;
+  TerminatedStatus?: TerminatedStatusTypeResolver;
+  UpcomingRenewal?: UpcomingRenewalTypeResolver;
+  Instant?: GraphQLScalarType;
+  ContractBundleAngelStories?: ContractBundleAngelStoriesTypeResolver;
   SelfChangeEligibility?: SelfChangeEligibilityTypeResolver;
   Mutation?: MutationTypeResolver;
   UUID?: GraphQLScalarType;
@@ -1212,7 +1522,12 @@ export interface Resolver {
   BankIdAuthResponse?: BankIdAuthResponseTypeResolver;
   NorwegianBankIdAuthResponse?: NorwegianBankIdAuthResponseTypeResolver;
   DanishBankIdAuthResponse?: DanishBankIdAuthResponseTypeResolver;
-  SelfChangeQuoteOutput?: SelfChangeQuoteOutputTypeResolver;
+  AddressChangeQuoteResult?: {
+    __resolveType: AddressChangeQuoteResultTypeResolver
+  };
+  
+  AddressChangeQuoteSuccess?: AddressChangeQuoteSuccessTypeResolver;
+  AddressChangeQuoteFailure?: AddressChangeQuoteFailureTypeResolver;
   Subscription?: SubscriptionTypeResolver;
   OfferEvent?: OfferEventTypeResolver;
   SignEvent?: SignEventTypeResolver;
@@ -1233,6 +1548,9 @@ export interface QueryTypeResolver<TParent = undefined> {
   chatActions?: QueryToChatActionsResolver<TParent>;
   geo?: QueryToGeoResolver<TParent>;
   angelStory?: QueryToAngelStoryResolver<TParent>;
+  activeContractBundles?: QueryToActiveContractBundlesResolver<TParent>;
+  contracts?: QueryToContractsResolver<TParent>;
+  hasContract?: QueryToHasContractResolver<TParent>;
   selfChangeEligibility?: QueryToSelfChangeEligibilityResolver<TParent>;
   availableLocales?: QueryToAvailableLocalesResolver<TParent>;
 }
@@ -1307,6 +1625,18 @@ export interface QueryToAngelStoryArgs {
 }
 export interface QueryToAngelStoryResolver<TParent = undefined, TResult = AngelStory | null> {
   (parent: TParent, args: QueryToAngelStoryArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToActiveContractBundlesResolver<TParent = undefined, TResult = Array<ContractBundle>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToContractsResolver<TParent = undefined, TResult = Array<Contract>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface QueryToHasContractResolver<TParent = undefined, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface QueryToSelfChangeEligibilityResolver<TParent = undefined, TResult = SelfChangeEligibility> {
@@ -1572,263 +1902,34 @@ export interface PreviousInsurerToSwitchableResolver<TParent = PreviousInsurer, 
 }
 
 export interface ExtraBuildingTypeResolver<TParent = ExtraBuilding> {
-  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingGarage' | 'ExtraBuildingCarport' | 'ExtraBuildingShed' | 'ExtraBuildingStorehouse' | 'ExtraBuildingFriggebod' | 'ExtraBuildingAttefall' | 'ExtraBuildingOuthouse' | 'ExtraBuildingGuesthouse' | 'ExtraBuildingGazebo' | 'ExtraBuildingGreenhouse' | 'ExtraBuildingSauna' | 'ExtraBuildingBarn' | 'ExtraBuildingBoathouse' | 'ExtraBuildingOther';
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingValue';
 }
-export interface ExtraBuildingGarageTypeResolver<TParent = ExtraBuildingGarage> {
-  area?: ExtraBuildingGarageToAreaResolver<TParent>;
-  displayName?: ExtraBuildingGarageToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingGarageToHasWaterConnectedResolver<TParent>;
+export interface ExtraBuildingValueTypeResolver<TParent = ExtraBuildingValue> {
+  type?: ExtraBuildingValueToTypeResolver<TParent>;
+  area?: ExtraBuildingValueToAreaResolver<TParent>;
+  displayName?: ExtraBuildingValueToDisplayNameResolver<TParent>;
+  hasWaterConnected?: ExtraBuildingValueToHasWaterConnectedResolver<TParent>;
 }
 
-export interface ExtraBuildingGarageToAreaResolver<TParent = ExtraBuildingGarage, TResult = number> {
+export interface ExtraBuildingValueToTypeResolver<TParent = ExtraBuildingValue, TResult = ExtraBuildingType> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ExtraBuildingGarageToDisplayNameResolver<TParent = ExtraBuildingGarage, TResult = string> {
+export interface ExtraBuildingValueToAreaResolver<TParent = ExtraBuildingValue, TResult = number> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface ExtraBuildingGarageToHasWaterConnectedResolver<TParent = ExtraBuildingGarage, TResult = boolean> {
+export interface ExtraBuildingValueToDisplayNameResolver<TParent = ExtraBuildingValue, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ExtraBuildingValueToHasWaterConnectedResolver<TParent = ExtraBuildingValue, TResult = boolean> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface ExtraBuildingCoreTypeResolver<TParent = ExtraBuildingCore> {
-  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingGarage' | 'ExtraBuildingCarport' | 'ExtraBuildingShed' | 'ExtraBuildingStorehouse' | 'ExtraBuildingFriggebod' | 'ExtraBuildingAttefall' | 'ExtraBuildingOuthouse' | 'ExtraBuildingGuesthouse' | 'ExtraBuildingGazebo' | 'ExtraBuildingGreenhouse' | 'ExtraBuildingSauna' | 'ExtraBuildingBarn' | 'ExtraBuildingBoathouse' | 'ExtraBuildingOther';
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'ExtraBuildingValue';
 }
-export interface ExtraBuildingCarportTypeResolver<TParent = ExtraBuildingCarport> {
-  area?: ExtraBuildingCarportToAreaResolver<TParent>;
-  displayName?: ExtraBuildingCarportToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingCarportToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingCarportToAreaResolver<TParent = ExtraBuildingCarport, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingCarportToDisplayNameResolver<TParent = ExtraBuildingCarport, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingCarportToHasWaterConnectedResolver<TParent = ExtraBuildingCarport, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingShedTypeResolver<TParent = ExtraBuildingShed> {
-  area?: ExtraBuildingShedToAreaResolver<TParent>;
-  displayName?: ExtraBuildingShedToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingShedToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingShedToAreaResolver<TParent = ExtraBuildingShed, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingShedToDisplayNameResolver<TParent = ExtraBuildingShed, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingShedToHasWaterConnectedResolver<TParent = ExtraBuildingShed, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingStorehouseTypeResolver<TParent = ExtraBuildingStorehouse> {
-  area?: ExtraBuildingStorehouseToAreaResolver<TParent>;
-  displayName?: ExtraBuildingStorehouseToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingStorehouseToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingStorehouseToAreaResolver<TParent = ExtraBuildingStorehouse, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingStorehouseToDisplayNameResolver<TParent = ExtraBuildingStorehouse, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingStorehouseToHasWaterConnectedResolver<TParent = ExtraBuildingStorehouse, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingFriggebodTypeResolver<TParent = ExtraBuildingFriggebod> {
-  area?: ExtraBuildingFriggebodToAreaResolver<TParent>;
-  displayName?: ExtraBuildingFriggebodToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingFriggebodToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingFriggebodToAreaResolver<TParent = ExtraBuildingFriggebod, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingFriggebodToDisplayNameResolver<TParent = ExtraBuildingFriggebod, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingFriggebodToHasWaterConnectedResolver<TParent = ExtraBuildingFriggebod, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingAttefallTypeResolver<TParent = ExtraBuildingAttefall> {
-  area?: ExtraBuildingAttefallToAreaResolver<TParent>;
-  displayName?: ExtraBuildingAttefallToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingAttefallToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingAttefallToAreaResolver<TParent = ExtraBuildingAttefall, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingAttefallToDisplayNameResolver<TParent = ExtraBuildingAttefall, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingAttefallToHasWaterConnectedResolver<TParent = ExtraBuildingAttefall, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingOuthouseTypeResolver<TParent = ExtraBuildingOuthouse> {
-  area?: ExtraBuildingOuthouseToAreaResolver<TParent>;
-  displayName?: ExtraBuildingOuthouseToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingOuthouseToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingOuthouseToAreaResolver<TParent = ExtraBuildingOuthouse, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingOuthouseToDisplayNameResolver<TParent = ExtraBuildingOuthouse, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingOuthouseToHasWaterConnectedResolver<TParent = ExtraBuildingOuthouse, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGuesthouseTypeResolver<TParent = ExtraBuildingGuesthouse> {
-  area?: ExtraBuildingGuesthouseToAreaResolver<TParent>;
-  displayName?: ExtraBuildingGuesthouseToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingGuesthouseToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingGuesthouseToAreaResolver<TParent = ExtraBuildingGuesthouse, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGuesthouseToDisplayNameResolver<TParent = ExtraBuildingGuesthouse, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGuesthouseToHasWaterConnectedResolver<TParent = ExtraBuildingGuesthouse, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGazeboTypeResolver<TParent = ExtraBuildingGazebo> {
-  area?: ExtraBuildingGazeboToAreaResolver<TParent>;
-  displayName?: ExtraBuildingGazeboToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingGazeboToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingGazeboToAreaResolver<TParent = ExtraBuildingGazebo, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGazeboToDisplayNameResolver<TParent = ExtraBuildingGazebo, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGazeboToHasWaterConnectedResolver<TParent = ExtraBuildingGazebo, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGreenhouseTypeResolver<TParent = ExtraBuildingGreenhouse> {
-  area?: ExtraBuildingGreenhouseToAreaResolver<TParent>;
-  displayName?: ExtraBuildingGreenhouseToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingGreenhouseToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingGreenhouseToAreaResolver<TParent = ExtraBuildingGreenhouse, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGreenhouseToDisplayNameResolver<TParent = ExtraBuildingGreenhouse, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingGreenhouseToHasWaterConnectedResolver<TParent = ExtraBuildingGreenhouse, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingSaunaTypeResolver<TParent = ExtraBuildingSauna> {
-  area?: ExtraBuildingSaunaToAreaResolver<TParent>;
-  displayName?: ExtraBuildingSaunaToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingSaunaToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingSaunaToAreaResolver<TParent = ExtraBuildingSauna, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingSaunaToDisplayNameResolver<TParent = ExtraBuildingSauna, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingSaunaToHasWaterConnectedResolver<TParent = ExtraBuildingSauna, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingBarnTypeResolver<TParent = ExtraBuildingBarn> {
-  area?: ExtraBuildingBarnToAreaResolver<TParent>;
-  displayName?: ExtraBuildingBarnToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingBarnToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingBarnToAreaResolver<TParent = ExtraBuildingBarn, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingBarnToDisplayNameResolver<TParent = ExtraBuildingBarn, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingBarnToHasWaterConnectedResolver<TParent = ExtraBuildingBarn, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingBoathouseTypeResolver<TParent = ExtraBuildingBoathouse> {
-  area?: ExtraBuildingBoathouseToAreaResolver<TParent>;
-  displayName?: ExtraBuildingBoathouseToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingBoathouseToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingBoathouseToAreaResolver<TParent = ExtraBuildingBoathouse, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingBoathouseToDisplayNameResolver<TParent = ExtraBuildingBoathouse, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingBoathouseToHasWaterConnectedResolver<TParent = ExtraBuildingBoathouse, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingOtherTypeResolver<TParent = ExtraBuildingOther> {
-  area?: ExtraBuildingOtherToAreaResolver<TParent>;
-  displayName?: ExtraBuildingOtherToDisplayNameResolver<TParent>;
-  hasWaterConnected?: ExtraBuildingOtherToHasWaterConnectedResolver<TParent>;
-}
-
-export interface ExtraBuildingOtherToAreaResolver<TParent = ExtraBuildingOther, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingOtherToDisplayNameResolver<TParent = ExtraBuildingOther, TResult = string> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
-export interface ExtraBuildingOtherToHasWaterConnectedResolver<TParent = ExtraBuildingOther, TResult = boolean> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
-}
-
 export interface CashbackTypeResolver<TParent = Cashback> {
   id?: CashbackToIdResolver<TParent>;
   name?: CashbackToNameResolver<TParent>;
@@ -2469,9 +2570,599 @@ export interface AngelStoryToContentResolver<TParent = AngelStory, TResult = str
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
+export interface ContractBundleTypeResolver<TParent = ContractBundle> {
+  id?: ContractBundleToIdResolver<TParent>;
+  contracts?: ContractBundleToContractsResolver<TParent>;
+  angelStories?: ContractBundleToAngelStoriesResolver<TParent>;
+}
+
+export interface ContractBundleToIdResolver<TParent = ContractBundle, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractBundleToContractsResolver<TParent = ContractBundle, TResult = Array<Contract>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractBundleToAngelStoriesResolver<TParent = ContractBundle, TResult = ContractBundleAngelStories> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractTypeResolver<TParent = Contract> {
+  id?: ContractToIdResolver<TParent>;
+  holderMember?: ContractToHolderMemberResolver<TParent>;
+  typeOfContract?: ContractToTypeOfContractResolver<TParent>;
+  switchedFromInsuranceProvider?: ContractToSwitchedFromInsuranceProviderResolver<TParent>;
+  status?: ContractToStatusResolver<TParent>;
+  displayName?: ContractToDisplayNameResolver<TParent>;
+  currentAgreement?: ContractToCurrentAgreementResolver<TParent>;
+  inception?: ContractToInceptionResolver<TParent>;
+  termination?: ContractToTerminationResolver<TParent>;
+  upcomingRenewal?: ContractToUpcomingRenewalResolver<TParent>;
+  createdAt?: ContractToCreatedAtResolver<TParent>;
+}
+
+export interface ContractToIdResolver<TParent = Contract, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToHolderMemberResolver<TParent = Contract, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToTypeOfContractResolver<TParent = Contract, TResult = TypeOfContract> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToSwitchedFromInsuranceProviderResolver<TParent = Contract, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToStatusResolver<TParent = Contract, TResult = ContractStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToDisplayNameResolver<TParent = Contract, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToCurrentAgreementResolver<TParent = Contract, TResult = Agreement> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToInceptionResolver<TParent = Contract, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToTerminationResolver<TParent = Contract, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToUpcomingRenewalResolver<TParent = Contract, TResult = UpcomingRenewal | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractToCreatedAtResolver<TParent = Contract, TResult = Instant> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractStatusTypeResolver<TParent = ContractStatus> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'PendingStatus' | 'ActiveInFutureStatus' | 'ActiveStatus' | 'ActiveInFutureAndTerminatedInFutureStatus' | 'TerminatedInFutureStatus' | 'TerminatedTodayStatus' | 'TerminatedStatus';
+}
+export interface PendingStatusTypeResolver<TParent = PendingStatus> {
+  pendingSince?: PendingStatusToPendingSinceResolver<TParent>;
+}
+
+export interface PendingStatusToPendingSinceResolver<TParent = PendingStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ActiveInFutureStatusTypeResolver<TParent = ActiveInFutureStatus> {
+  futureInception?: ActiveInFutureStatusToFutureInceptionResolver<TParent>;
+}
+
+export interface ActiveInFutureStatusToFutureInceptionResolver<TParent = ActiveInFutureStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ActiveStatusTypeResolver<TParent = ActiveStatus> {
+  pastInception?: ActiveStatusToPastInceptionResolver<TParent>;
+  upcomingAgreementChange?: ActiveStatusToUpcomingAgreementChangeResolver<TParent>;
+}
+
+export interface ActiveStatusToPastInceptionResolver<TParent = ActiveStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ActiveStatusToUpcomingAgreementChangeResolver<TParent = ActiveStatus, TResult = UpcomingAgreementChange | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface UpcomingAgreementChangeTypeResolver<TParent = UpcomingAgreementChange> {
+  newAgreement?: UpcomingAgreementChangeToNewAgreementResolver<TParent>;
+}
+
+export interface UpcomingAgreementChangeToNewAgreementResolver<TParent = UpcomingAgreementChange, TResult = Agreement> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AgreementTypeResolver<TParent = Agreement> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement';
+}
+export interface SwedishApartmentAgreementTypeResolver<TParent = SwedishApartmentAgreement> {
+  id?: SwedishApartmentAgreementToIdResolver<TParent>;
+  activeFrom?: SwedishApartmentAgreementToActiveFromResolver<TParent>;
+  activeTo?: SwedishApartmentAgreementToActiveToResolver<TParent>;
+  premium?: SwedishApartmentAgreementToPremiumResolver<TParent>;
+  certificateUrl?: SwedishApartmentAgreementToCertificateUrlResolver<TParent>;
+  status?: SwedishApartmentAgreementToStatusResolver<TParent>;
+  address?: SwedishApartmentAgreementToAddressResolver<TParent>;
+  numberCoInsured?: SwedishApartmentAgreementToNumberCoInsuredResolver<TParent>;
+  squareMeters?: SwedishApartmentAgreementToSquareMetersResolver<TParent>;
+  type?: SwedishApartmentAgreementToTypeResolver<TParent>;
+}
+
+export interface SwedishApartmentAgreementToIdResolver<TParent = SwedishApartmentAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToActiveFromResolver<TParent = SwedishApartmentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToActiveToResolver<TParent = SwedishApartmentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToPremiumResolver<TParent = SwedishApartmentAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToCertificateUrlResolver<TParent = SwedishApartmentAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToStatusResolver<TParent = SwedishApartmentAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToAddressResolver<TParent = SwedishApartmentAgreement, TResult = Address> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToNumberCoInsuredResolver<TParent = SwedishApartmentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToSquareMetersResolver<TParent = SwedishApartmentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishApartmentAgreementToTypeResolver<TParent = SwedishApartmentAgreement, TResult = SwedishApartmentLineOfBusiness> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AgreementCoreTypeResolver<TParent = AgreementCore> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement';
+}
+export interface AddressTypeResolver<TParent = Address> {
+  street?: AddressToStreetResolver<TParent>;
+  postalCode?: AddressToPostalCodeResolver<TParent>;
+  city?: AddressToCityResolver<TParent>;
+  apartment?: AddressToApartmentResolver<TParent>;
+  floor?: AddressToFloorResolver<TParent>;
+}
+
+export interface AddressToStreetResolver<TParent = Address, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AddressToPostalCodeResolver<TParent = Address, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AddressToCityResolver<TParent = Address, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AddressToApartmentResolver<TParent = Address, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface AddressToFloorResolver<TParent = Address, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementTypeResolver<TParent = SwedishHouseAgreement> {
+  id?: SwedishHouseAgreementToIdResolver<TParent>;
+  activeFrom?: SwedishHouseAgreementToActiveFromResolver<TParent>;
+  activeTo?: SwedishHouseAgreementToActiveToResolver<TParent>;
+  premium?: SwedishHouseAgreementToPremiumResolver<TParent>;
+  certificateUrl?: SwedishHouseAgreementToCertificateUrlResolver<TParent>;
+  status?: SwedishHouseAgreementToStatusResolver<TParent>;
+  address?: SwedishHouseAgreementToAddressResolver<TParent>;
+  numberCoInsured?: SwedishHouseAgreementToNumberCoInsuredResolver<TParent>;
+  squareMeters?: SwedishHouseAgreementToSquareMetersResolver<TParent>;
+  ancillaryArea?: SwedishHouseAgreementToAncillaryAreaResolver<TParent>;
+  yearOfConstruction?: SwedishHouseAgreementToYearOfConstructionResolver<TParent>;
+  numberOfBathrooms?: SwedishHouseAgreementToNumberOfBathroomsResolver<TParent>;
+  extraBuildings?: SwedishHouseAgreementToExtraBuildingsResolver<TParent>;
+  isSubleted?: SwedishHouseAgreementToIsSubletedResolver<TParent>;
+}
+
+export interface SwedishHouseAgreementToIdResolver<TParent = SwedishHouseAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToActiveFromResolver<TParent = SwedishHouseAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToActiveToResolver<TParent = SwedishHouseAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToPremiumResolver<TParent = SwedishHouseAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToCertificateUrlResolver<TParent = SwedishHouseAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToStatusResolver<TParent = SwedishHouseAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToAddressResolver<TParent = SwedishHouseAgreement, TResult = Address> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToNumberCoInsuredResolver<TParent = SwedishHouseAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToSquareMetersResolver<TParent = SwedishHouseAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToAncillaryAreaResolver<TParent = SwedishHouseAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToYearOfConstructionResolver<TParent = SwedishHouseAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToNumberOfBathroomsResolver<TParent = SwedishHouseAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToExtraBuildingsResolver<TParent = SwedishHouseAgreement, TResult = Array<ExtraBuilding | null>> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SwedishHouseAgreementToIsSubletedResolver<TParent = SwedishHouseAgreement, TResult = boolean> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementTypeResolver<TParent = NorwegianHomeContentAgreement> {
+  id?: NorwegianHomeContentAgreementToIdResolver<TParent>;
+  activeFrom?: NorwegianHomeContentAgreementToActiveFromResolver<TParent>;
+  activeTo?: NorwegianHomeContentAgreementToActiveToResolver<TParent>;
+  premium?: NorwegianHomeContentAgreementToPremiumResolver<TParent>;
+  certificateUrl?: NorwegianHomeContentAgreementToCertificateUrlResolver<TParent>;
+  status?: NorwegianHomeContentAgreementToStatusResolver<TParent>;
+  address?: NorwegianHomeContentAgreementToAddressResolver<TParent>;
+  numberCoInsured?: NorwegianHomeContentAgreementToNumberCoInsuredResolver<TParent>;
+  squareMeters?: NorwegianHomeContentAgreementToSquareMetersResolver<TParent>;
+  type?: NorwegianHomeContentAgreementToTypeResolver<TParent>;
+}
+
+export interface NorwegianHomeContentAgreementToIdResolver<TParent = NorwegianHomeContentAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToActiveFromResolver<TParent = NorwegianHomeContentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToActiveToResolver<TParent = NorwegianHomeContentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToPremiumResolver<TParent = NorwegianHomeContentAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToCertificateUrlResolver<TParent = NorwegianHomeContentAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToStatusResolver<TParent = NorwegianHomeContentAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToAddressResolver<TParent = NorwegianHomeContentAgreement, TResult = Address> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToNumberCoInsuredResolver<TParent = NorwegianHomeContentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToSquareMetersResolver<TParent = NorwegianHomeContentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianHomeContentAgreementToTypeResolver<TParent = NorwegianHomeContentAgreement, TResult = NorwegianHomeContentLineOfBusiness | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementTypeResolver<TParent = NorwegianTravelAgreement> {
+  id?: NorwegianTravelAgreementToIdResolver<TParent>;
+  activeFrom?: NorwegianTravelAgreementToActiveFromResolver<TParent>;
+  activeTo?: NorwegianTravelAgreementToActiveToResolver<TParent>;
+  premium?: NorwegianTravelAgreementToPremiumResolver<TParent>;
+  certificateUrl?: NorwegianTravelAgreementToCertificateUrlResolver<TParent>;
+  status?: NorwegianTravelAgreementToStatusResolver<TParent>;
+  numberCoInsured?: NorwegianTravelAgreementToNumberCoInsuredResolver<TParent>;
+  type?: NorwegianTravelAgreementToTypeResolver<TParent>;
+}
+
+export interface NorwegianTravelAgreementToIdResolver<TParent = NorwegianTravelAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToActiveFromResolver<TParent = NorwegianTravelAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToActiveToResolver<TParent = NorwegianTravelAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToPremiumResolver<TParent = NorwegianTravelAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToCertificateUrlResolver<TParent = NorwegianTravelAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToStatusResolver<TParent = NorwegianTravelAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToNumberCoInsuredResolver<TParent = NorwegianTravelAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface NorwegianTravelAgreementToTypeResolver<TParent = NorwegianTravelAgreement, TResult = NorwegianTravelLineOfBusiness | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementTypeResolver<TParent = DanishHomeContentAgreement> {
+  id?: DanishHomeContentAgreementToIdResolver<TParent>;
+  activeFrom?: DanishHomeContentAgreementToActiveFromResolver<TParent>;
+  activeTo?: DanishHomeContentAgreementToActiveToResolver<TParent>;
+  premium?: DanishHomeContentAgreementToPremiumResolver<TParent>;
+  certificateUrl?: DanishHomeContentAgreementToCertificateUrlResolver<TParent>;
+  status?: DanishHomeContentAgreementToStatusResolver<TParent>;
+  address?: DanishHomeContentAgreementToAddressResolver<TParent>;
+  numberCoInsured?: DanishHomeContentAgreementToNumberCoInsuredResolver<TParent>;
+  squareMeters?: DanishHomeContentAgreementToSquareMetersResolver<TParent>;
+  type?: DanishHomeContentAgreementToTypeResolver<TParent>;
+}
+
+export interface DanishHomeContentAgreementToIdResolver<TParent = DanishHomeContentAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToActiveFromResolver<TParent = DanishHomeContentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToActiveToResolver<TParent = DanishHomeContentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToPremiumResolver<TParent = DanishHomeContentAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToCertificateUrlResolver<TParent = DanishHomeContentAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToStatusResolver<TParent = DanishHomeContentAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToAddressResolver<TParent = DanishHomeContentAgreement, TResult = Address> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToNumberCoInsuredResolver<TParent = DanishHomeContentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToSquareMetersResolver<TParent = DanishHomeContentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishHomeContentAgreementToTypeResolver<TParent = DanishHomeContentAgreement, TResult = DanishHomeContentLineOfBusiness | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementTypeResolver<TParent = DanishAccidentAgreement> {
+  id?: DanishAccidentAgreementToIdResolver<TParent>;
+  activeFrom?: DanishAccidentAgreementToActiveFromResolver<TParent>;
+  activeTo?: DanishAccidentAgreementToActiveToResolver<TParent>;
+  premium?: DanishAccidentAgreementToPremiumResolver<TParent>;
+  certificateUrl?: DanishAccidentAgreementToCertificateUrlResolver<TParent>;
+  status?: DanishAccidentAgreementToStatusResolver<TParent>;
+  address?: DanishAccidentAgreementToAddressResolver<TParent>;
+  numberCoInsured?: DanishAccidentAgreementToNumberCoInsuredResolver<TParent>;
+  type?: DanishAccidentAgreementToTypeResolver<TParent>;
+}
+
+export interface DanishAccidentAgreementToIdResolver<TParent = DanishAccidentAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToActiveFromResolver<TParent = DanishAccidentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToActiveToResolver<TParent = DanishAccidentAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToPremiumResolver<TParent = DanishAccidentAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToCertificateUrlResolver<TParent = DanishAccidentAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToStatusResolver<TParent = DanishAccidentAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToAddressResolver<TParent = DanishAccidentAgreement, TResult = Address> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToNumberCoInsuredResolver<TParent = DanishAccidentAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishAccidentAgreementToTypeResolver<TParent = DanishAccidentAgreement, TResult = DanishAccidentLineOfBusiness | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementTypeResolver<TParent = DanishTravelAgreement> {
+  id?: DanishTravelAgreementToIdResolver<TParent>;
+  activeFrom?: DanishTravelAgreementToActiveFromResolver<TParent>;
+  activeTo?: DanishTravelAgreementToActiveToResolver<TParent>;
+  premium?: DanishTravelAgreementToPremiumResolver<TParent>;
+  certificateUrl?: DanishTravelAgreementToCertificateUrlResolver<TParent>;
+  status?: DanishTravelAgreementToStatusResolver<TParent>;
+  address?: DanishTravelAgreementToAddressResolver<TParent>;
+  numberCoInsured?: DanishTravelAgreementToNumberCoInsuredResolver<TParent>;
+  type?: DanishTravelAgreementToTypeResolver<TParent>;
+}
+
+export interface DanishTravelAgreementToIdResolver<TParent = DanishTravelAgreement, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToActiveFromResolver<TParent = DanishTravelAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToActiveToResolver<TParent = DanishTravelAgreement, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToPremiumResolver<TParent = DanishTravelAgreement, TResult = MonetaryAmountV2> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToCertificateUrlResolver<TParent = DanishTravelAgreement, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToStatusResolver<TParent = DanishTravelAgreement, TResult = AgreementStatus> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToAddressResolver<TParent = DanishTravelAgreement, TResult = Address> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToNumberCoInsuredResolver<TParent = DanishTravelAgreement, TResult = number> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface DanishTravelAgreementToTypeResolver<TParent = DanishTravelAgreement, TResult = DanishTravelLineOfBusiness | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ActiveInFutureAndTerminatedInFutureStatusTypeResolver<TParent = ActiveInFutureAndTerminatedInFutureStatus> {
+  futureInception?: ActiveInFutureAndTerminatedInFutureStatusToFutureInceptionResolver<TParent>;
+  futureTermination?: ActiveInFutureAndTerminatedInFutureStatusToFutureTerminationResolver<TParent>;
+}
+
+export interface ActiveInFutureAndTerminatedInFutureStatusToFutureInceptionResolver<TParent = ActiveInFutureAndTerminatedInFutureStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ActiveInFutureAndTerminatedInFutureStatusToFutureTerminationResolver<TParent = ActiveInFutureAndTerminatedInFutureStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TerminatedInFutureStatusTypeResolver<TParent = TerminatedInFutureStatus> {
+  futureTermination?: TerminatedInFutureStatusToFutureTerminationResolver<TParent>;
+  upcomingAgreementChange?: TerminatedInFutureStatusToUpcomingAgreementChangeResolver<TParent>;
+}
+
+export interface TerminatedInFutureStatusToFutureTerminationResolver<TParent = TerminatedInFutureStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TerminatedInFutureStatusToUpcomingAgreementChangeResolver<TParent = TerminatedInFutureStatus, TResult = UpcomingAgreementChange | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TerminatedTodayStatusTypeResolver<TParent = TerminatedTodayStatus> {
+  today?: TerminatedTodayStatusToTodayResolver<TParent>;
+  upcomingAgreementChange?: TerminatedTodayStatusToUpcomingAgreementChangeResolver<TParent>;
+}
+
+export interface TerminatedTodayStatusToTodayResolver<TParent = TerminatedTodayStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TerminatedTodayStatusToUpcomingAgreementChangeResolver<TParent = TerminatedTodayStatus, TResult = UpcomingAgreementChange | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface TerminatedStatusTypeResolver<TParent = TerminatedStatus> {
+  termination?: TerminatedStatusToTerminationResolver<TParent>;
+}
+
+export interface TerminatedStatusToTerminationResolver<TParent = TerminatedStatus, TResult = LocalDate | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface UpcomingRenewalTypeResolver<TParent = UpcomingRenewal> {
+  renewalDate?: UpcomingRenewalToRenewalDateResolver<TParent>;
+  draftCertificateUrl?: UpcomingRenewalToDraftCertificateUrlResolver<TParent>;
+}
+
+export interface UpcomingRenewalToRenewalDateResolver<TParent = UpcomingRenewal, TResult = LocalDate> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface UpcomingRenewalToDraftCertificateUrlResolver<TParent = UpcomingRenewal, TResult = string> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface ContractBundleAngelStoriesTypeResolver<TParent = ContractBundleAngelStories> {
+  addressChange?: ContractBundleAngelStoriesToAddressChangeResolver<TParent>;
+}
+
+export interface ContractBundleAngelStoriesToAddressChangeResolver<TParent = ContractBundleAngelStories, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
 export interface SelfChangeEligibilityTypeResolver<TParent = SelfChangeEligibility> {
   blockers?: SelfChangeEligibilityToBlockersResolver<TParent>;
   embarkStoryId?: SelfChangeEligibilityToEmbarkStoryIdResolver<TParent>;
+  addressChangeEmbarkStoryId?: SelfChangeEligibilityToAddressChangeEmbarkStoryIdResolver<TParent>;
 }
 
 export interface SelfChangeEligibilityToBlockersResolver<TParent = SelfChangeEligibility, TResult = Array<SelfChangeBlocker>> {
@@ -2479,6 +3170,10 @@ export interface SelfChangeEligibilityToBlockersResolver<TParent = SelfChangeEli
 }
 
 export interface SelfChangeEligibilityToEmbarkStoryIdResolver<TParent = SelfChangeEligibility, TResult = string | null> {
+  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+}
+
+export interface SelfChangeEligibilityToAddressChangeEmbarkStoryIdResolver<TParent = SelfChangeEligibility, TResult = string | null> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
@@ -2516,7 +3211,7 @@ export interface MutationTypeResolver<TParent = undefined> {
   registerBranchCampaign?: MutationToRegisterBranchCampaignResolver<TParent>;
   updateLanguage?: MutationToUpdateLanguageResolver<TParent>;
   updatePickedLocale?: MutationToUpdatePickedLocaleResolver<TParent>;
-  createSelfChangeQuote?: MutationToCreateSelfChangeQuoteResolver<TParent>;
+  createAddressChangeQuotes?: MutationToCreateAddressChangeQuotesResolver<TParent>;
 }
 
 export interface MutationToLogoutResolver<TParent = undefined, TResult = boolean> {
@@ -2719,11 +3414,11 @@ export interface MutationToUpdatePickedLocaleResolver<TParent = undefined, TResu
   (parent: TParent, args: MutationToUpdatePickedLocaleArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface MutationToCreateSelfChangeQuoteArgs {
-  quoteInput: SelfChangeQuoteInput;
+export interface MutationToCreateAddressChangeQuotesArgs {
+  input: AddressChangeInput;
 }
-export interface MutationToCreateSelfChangeQuoteResolver<TParent = undefined, TResult = SelfChangeQuoteOutput> {
-  (parent: TParent, args: MutationToCreateSelfChangeQuoteArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+export interface MutationToCreateAddressChangeQuotesResolver<TParent = undefined, TResult = AddressChangeQuoteResult> {
+  (parent: TParent, args: MutationToCreateAddressChangeQuotesArgs, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
 export interface SessionInformationTypeResolver<TParent = SessionInformation> {
@@ -2776,21 +3471,22 @@ export interface DanishBankIdAuthResponseToRedirectUrlResolver<TParent = DanishB
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface SelfChangeQuoteOutputTypeResolver<TParent = SelfChangeQuoteOutput> {
-  id?: SelfChangeQuoteOutputToIdResolver<TParent>;
-  price?: SelfChangeQuoteOutputToPriceResolver<TParent>;
-  validTo?: SelfChangeQuoteOutputToValidToResolver<TParent>;
+export interface AddressChangeQuoteResultTypeResolver<TParent = AddressChangeQuoteResult> {
+  (parent: TParent, context: Context, info: GraphQLResolveInfo): 'AddressChangeQuoteSuccess' | 'AddressChangeQuoteFailure';
+}
+export interface AddressChangeQuoteSuccessTypeResolver<TParent = AddressChangeQuoteSuccess> {
+  quoteIds?: AddressChangeQuoteSuccessToQuoteIdsResolver<TParent>;
 }
 
-export interface SelfChangeQuoteOutputToIdResolver<TParent = SelfChangeQuoteOutput, TResult = string> {
+export interface AddressChangeQuoteSuccessToQuoteIdsResolver<TParent = AddressChangeQuoteSuccess, TResult = Array<string>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 
-export interface SelfChangeQuoteOutputToPriceResolver<TParent = SelfChangeQuoteOutput, TResult = number> {
-  (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
+export interface AddressChangeQuoteFailureTypeResolver<TParent = AddressChangeQuoteFailure> {
+  breachedUnderwritingGuidelines?: AddressChangeQuoteFailureToBreachedUnderwritingGuidelinesResolver<TParent>;
 }
 
-export interface SelfChangeQuoteOutputToValidToResolver<TParent = SelfChangeQuoteOutput, TResult = TimeStamp> {
+export interface AddressChangeQuoteFailureToBreachedUnderwritingGuidelinesResolver<TParent = AddressChangeQuoteFailure, TResult = Array<string>> {
   (parent: TParent, args: {}, context: Context, info: GraphQLResolveInfo): TResult | Promise<TResult>;
 }
 

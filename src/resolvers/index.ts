@@ -67,7 +67,8 @@ import { selectCashbackOption } from './selectCashbackOption'
 import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
-import { selfChangeEligibility, createSelfChangeQuote } from './selfChange'
+import { activeContractBundles, contracts, hasContract } from './contracts'
+import { selfChangeEligibility, createAddressChangeQuotes } from './selfChange'
 import { availableLocales } from './availableLocales'
 
 const resolvers: Resolver = {
@@ -86,6 +87,9 @@ const resolvers: Resolver = {
     chatActions,
     geo,
     angelStory,
+    activeContractBundles,
+    contracts,
+    hasContract,
     selfChangeEligibility,
     availableLocales
   },
@@ -123,7 +127,7 @@ const resolvers: Resolver = {
     registerBranchCampaign,
     updateLanguage,
     updatePickedLocale,
-    createSelfChangeQuote
+    createAddressChangeQuotes
   },
   Subscription: {
     offer: subscribeToOffer,

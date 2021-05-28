@@ -1,4 +1,5 @@
-import { SchemaIdentifier, Schemas, CrossSchemaExtension } from "./index"
+import { gql } from 'apollo-server-koa';
+import { SchemaIdentifier, CrossSchemaExtension } from "./index"
 
 interface CurrentInsurer {
   id: string
@@ -53,7 +54,7 @@ function isIndependentInceptions(object: any): object is IndependentInceptions {
 
 export const createQuoteBundleInceptionExtension = (): CrossSchemaExtension => ({
   dependencies: [SchemaIdentifier.GRAPH_CMS, SchemaIdentifier.KEY_GEAR],
-  content: `
+  content: gql`
     """An inception where all quotes need to have the same startDate and currentInsurer"""
     type ConcurrentInception {
       correspondingQuotes: [Quote!]!
@@ -79,7 +80,7 @@ export const createQuoteBundleInceptionExtension = (): CrossSchemaExtension => (
       inception: QuoteBundleInception!
     }
   `,
-  resolvers: (schemas: Schemas) => ({
+  resolvers: (schemas) => ({
       ConcurrentInception: {
         correspondingQuotes: {
           resolve: async (inception: ConcurrentInception, _: any, context, info) =>

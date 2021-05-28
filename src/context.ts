@@ -6,13 +6,17 @@ import { ConnectionContext } from 'subscriptions-transport-ws'
 import * as uuidv4 from 'uuid/v4'
 import { ipv6toipv4 } from './utils/ip'
 import { notNullable } from './utils/nullables'
+import { LocalizedStrings, localizedStringsProvider } from './translations/LocalizedStrings';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
 
 interface Context {
   getToken: TokenProvider
   headers: ForwardHeaders
-  graphCMSSchema: GraphQLSchema
+  graphCMSSchema?: GraphQLSchema
   remoteIp: string,
-  upstream: Upstream
+  upstream: Upstream,
+  pubsub: RedisPubSub,
+  strings: LocalizedStrings
 }
 
 interface TokenProvider {
@@ -27,7 +31,7 @@ interface ForwardHeaders {
   'Enable-Simple-Sign': string
 }
 
-const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
+const getWebContext = (pubsub: RedisPubSub, graphCMSSchema?: GraphQLSchema) => async ({
   ctx,
 }: {
   ctx: Koa.Context
@@ -39,11 +43,12 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
     }
     return checkedCtx.header.authorization
   }
+  const locale = checkedCtx.get('accept-language') ?? 'en'
   const headers = {
     'User-Agent': checkedCtx.get('User-Agent'),
     'X-Forwarded-For': checkedCtx.get('x-forwarded-for'),
     'X-Request-Id': checkedCtx.get('x-request-id') || uuidv4(),
-    'Accept-Language': checkedCtx.get('accept-language'),
+    'Accept-Language': locale,
     'Enable-Simple-Sign': checkedCtx.get('Enable-Simple-Sign'),
   }
   return {
@@ -52,11 +57,13 @@ const getWebContext = (graphCMSSchema: GraphQLSchema) => async ({
     headers,
     remoteIp:
       checkedCtx.get('x-forwarded-for') || ipv6toipv4(checkedCtx.request.ip),
-    upstream: createUpstream(getToken, headers)
+    upstream: createUpstream(getToken, headers),
+    pubsub,
+    strings: localizedStringsProvider(locale)
   }
 }
 
-const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
+const getWebSocketContext = (pubsub: RedisPubSub, graphCMSSchema?: GraphQLSchema) => (
   connectionParams: { Authorization: string },
   _webSocket: any,
   context: ConnectionContext,
@@ -67,6 +74,7 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
     }
     return connectionParams.Authorization
   }
+  const locale = context.request.headers['accept-language'] as string ?? 'en'
   const headers: ForwardHeaders = {
     'User-Agent': context.request.headers['User-Agent'] as string,
     'X-Forwarded-For': context.request.headers['x-forwarded-for'] as string,
@@ -74,7 +82,7 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
       typeof context.request.headers['x-request-id'] === 'string'
         ? (context.request.headers['x-request-id'] as string)
         : uuidv4(),
-    'Accept-Language': context.request.headers['accept-language'] as string,
+    'Accept-Language': locale,
     'Enable-Simple-Sign': context.request.headers['Enable-Simple-Sign'] as string,
   }
 
@@ -85,7 +93,9 @@ const getWebSocketContext = (graphCMSSchema: GraphQLSchema) => (
     remoteIp:
       headers['X-Forwarded-For'] ||
       (context.request.connection.address() as string),
-    upstream: createUpstream(getToken, headers)
+    upstream: createUpstream(getToken, headers),
+    pubsub,
+    strings: localizedStringsProvider(locale)
   }
 }
 
