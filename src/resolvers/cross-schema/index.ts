@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server-koa';
 import { DocumentNode, GraphQLSchema } from 'graphql'
 import { IResolvers } from 'graphql-tools'
+import * as deepmerge from "deepmerge"
 import { crossSchemaExtensions as contractDetailsCrossSchemaExtension, currentAgreementDetailsTable, upcomingAgreementDetailsTable } from './detailstable/contractDetailsTable'
 import { getQuoteDetailsFragment } from './detailstable/quoteDetailsFragments'
 import quoteDetailsTable, { crossSchemaExtensions as quoteDetailsCrossSchemaExtensions } from './detailstable/quoteDetailsTable'
@@ -51,7 +52,7 @@ export const getCrossSchemaExtensions = (
     extensions: applicable.map(ext => ext.content),
     resolvers: applicable.reduce((acc, ext) => {
       const res = ext.resolvers((id) => schemas.get(id)!)
-      return {...acc, ...res}
+      return deepmerge(acc, res)
     }, {})
   }
 }
