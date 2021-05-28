@@ -6,14 +6,11 @@ import {
   PossibleAddressChangeQuoteResultTypeNames,
   AddressChangeInput,
   AddressOwnership,
-  AddressHomeType,
-  MutationToCommitAddressChangeQuotesResolver,
-  AddressChangeCommitResult,
+  AddressHomeType
 } from './../typings/generated-graphql-types'
 
 import { ContractDto, ContractMarketInfoDto, ContractStatusDto } from '../api/upstreams/productPricing'
 import { Typenamed } from '../utils/types';
-import { bundleContracts } from './helpers/contractTransformers';
 
 export const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = async (
   _parent,
@@ -40,30 +37,6 @@ export const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResol
 
   const responses = await Promise.all(tasks)
   return transformResult(responses)
-}
-
-export const commitAddressChangeQuotes: MutationToCommitAddressChangeQuotesResolver = async (
-  _parent,
-  args,
-  { upstream, strings }
-): Promise<AddressChangeCommitResult> => {
-  const contractIds = args.contractBundleId.replace('bundle:', '').split(',')
-  const result = await upstream.underwriter.changeToQuotes(contractIds, args.quoteIds)
-  const [
-    createdContracts,
-    updatedContracts
-  ] = await Promise.all([
-    Promise.all(result.createdContractIds.map(upstream.productPricing.getContract)),
-    Promise.all(result.updatedContractIds.map(upstream.productPricing.getContract))
-  ])
-
-  const bundle = bundleContracts(strings, createdContracts.concat(updatedContracts))
-  if (bundle.length !== 1) {
-    throw `Unexpected bundle size after self changed address, ids: ${bundle.map(b => b.id)}`
-  }
-  return {
-    newContractBundle: bundle[0]
-  }
 }
 
 const convertAddressChangeToSelfChangeBody = (

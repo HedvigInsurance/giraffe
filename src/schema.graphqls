@@ -62,8 +62,6 @@ type Mutation {
   updatePickedLocale(pickedLocale: Locale!): Member!
   """Create all the quotes needed in relation to a change of address, based on the current state of the member's insurance."""
   createAddressChangeQuotes(input: AddressChangeInput!): AddressChangeQuoteResult!
-  """Commit the address change quotes, installing them as the ."""
-  commitAddressChangeQuotes(contractBundleId: ID!, quoteIds: [ID!]!): AddressChangeCommitResult!
 }
 
 enum Locale {
@@ -429,10 +427,6 @@ type AddressChangeQuoteSuccess {
 
 type AddressChangeQuoteFailure {
   breachedUnderwritingGuidelines: [String!]!
-}
-
-type AddressChangeCommitResult {
-  newContractBundle: ContractBundle!
 }
 
 enum LoggingSource {

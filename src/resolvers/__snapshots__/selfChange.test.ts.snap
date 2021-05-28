@@ -1,25 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`commitAddressChangeQuotes works 1`] = `
-Object {
-  "commitAddressChangeQuotes": Object {
-    "newContractBundle": Object {
-      "contracts": Array [
-        Object {
-          "id": "cid1",
-          "typeOfContract": "NO_HOME_CONTENT_RENT",
-        },
-        Object {
-          "id": "cid3",
-          "typeOfContract": "NO_TRAVEL",
-        },
-      ],
-      "id": "bundle:cid1,cid3",
-    },
-  },
-}
-`;
-
 exports[`createAddressChangeQuotes - Denmark works 1`] = `
 Array [
   Array [

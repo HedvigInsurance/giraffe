@@ -68,7 +68,7 @@ import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
 import { activeContractBundles, contracts, hasContract } from './contracts'
-import { createAddressChangeQuotes, commitAddressChangeQuotes } from './selfChange'
+import { createAddressChangeQuotes } from './selfChange'
 import { availableLocales } from './availableLocales'
 
 const resolvers: Resolver = {
@@ -126,8 +126,7 @@ const resolvers: Resolver = {
     registerBranchCampaign,
     updateLanguage,
     updatePickedLocale,
-    createAddressChangeQuotes,
-    commitAddressChangeQuotes
+    createAddressChangeQuotes
   },
   Subscription: {
     offer: subscribeToOffer,

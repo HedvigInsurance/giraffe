@@ -1,4 +1,4 @@
-import { AgreementStatusDto, ContractDto, ContractStatusDto } from './../api/upstreams/productPricing'
+import { ContractStatusDto } from './../api/upstreams/productPricing'
 import gql from 'graphql-tag'
 import { ContractMarketInfoDto } from '../api/upstreams/productPricing'
 import {
@@ -82,37 +82,6 @@ describe('createAddressChangeQuotes - Denmark', () => {
   })
 })
 
-describe('commitAddressChangeQuotes', () => {
-  it('works', async () => {
-    const changeToQuotes = jest.fn().mockResolvedValue({
-      updatedContractIds: ["cid1"],
-      createdContractIds: ["cid3"],
-      terminatedContractIds: ["cid2"],
-    })
-    upstream.underwriter.changeToQuotes = changeToQuotes
-    upstream.productPricing.getContract = jest.fn()
-      .mockResolvedValueOnce({
-        ...baseContract,
-        id: "cid1",
-        typeOfContract: 'NO_HOME_CONTENT_RENT',
-        agreements: [{...baseContract.agreements[0], type: 'NorwegianHomeContent'}]
-      })
-      .mockResolvedValueOnce({
-        ...baseContract,
-        id: "cid3",
-        typeOfContract: 'NO_TRAVEL',
-        agreements: [{...baseContract.agreements[0], type: 'NorwegianTravel'}]
-      })
-
-    const output = await MUTATIONS.commitAddressChangeQuotes("bundle:cid1,cid2", ["q1", "q2"])
-    expect(changeToQuotes.mock.calls[0]).toMatchObject([
-      ["cid1", "cid2"], // contract ids
-      ["q1", "q2"] // quote IDs
-    ])
-    expect(output.data).toMatchSnapshot()
-  })
-})
-
 // Helpers
 
 const MUTATIONS = {
@@ -131,23 +100,6 @@ const MUTATIONS = {
         }
       `,
       variables: { input },
-    }),
-  commitAddressChangeQuotes: async (contractBundleId: string, quoteIds: string[]) =>
-    await mutate({
-      mutation: gql`
-        mutation($contractBundleId: ID!, $quoteIds: [ID!]!) {
-          commitAddressChangeQuotes(contractBundleId: $contractBundleId, quoteIds: $quoteIds) {
-            newContractBundle {
-              id
-              contracts {
-                id
-                typeOfContract
-              }
-            }
-          }
-        }
-      `,
-      variables: { contractBundleId, quoteIds },
     }),
 }
 
@@ -254,34 +206,4 @@ const dkHomeContent: AddressChangeInput = {
   type: AddressHomeType.APARTMENT,
   ownership: AddressOwnership.OWN,
   isStudent: false,
-}
-
-const baseContract: ContractDto = {
-  id: 'cid1',
-  holderMemberId: 'mid1',
-  status: ContractStatusDto.ACTIVE,
-  typeOfContract: 'TODO',
-  isTerminated: false,
-  currentAgreementId: 'aid1',
-  hasPendingAgreement: false,
-  agreements: [{
-    id: 'aid1',
-    type: 'NorwegianHomeContent',
-    lineOfBusiness: 'RENT',
-    address: {
-      street: 'Fakestreet 123',
-      postalCode: '12345',
-      city: 'City',
-      country: 'SE',
-    },
-    numberCoInsured: 0,
-    squareMeters: 44,
-    basePremium: {
-      amount: '100',
-      currency: 'SEK'
-    },
-    status: AgreementStatusDto.ACTIVE
-  }],
-  hasQueuedRenewal: false,
-  createdAt: '2020-01-01'
 }
