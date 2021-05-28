@@ -53,7 +53,7 @@ function isIndependentInceptions(object: any): object is IndependentInceptions {
 }
 
 export const createQuoteBundleInceptionExtension = (): CrossSchemaExtension => ({
-  dependencies: [SchemaIdentifier.GRAPH_CMS, SchemaIdentifier.KEY_GEAR],
+  dependencies: [SchemaIdentifier.UNDERWRITER],
   content: gql`
     """An inception where all quotes need to have the same startDate and currentInsurer"""
     type ConcurrentInception {
@@ -125,7 +125,7 @@ export const createQuoteBundleInceptionExtension = (): CrossSchemaExtension => (
               }
             }
           }`,
-          resolve: async (
+          resolve: (
             quoteBundle: QuoteBundle,
           ) => {
             return quoteBundle.quotes.reduce((acc: ConcurrentInception | IndependentInceptions | null, quote: Quote) => {
