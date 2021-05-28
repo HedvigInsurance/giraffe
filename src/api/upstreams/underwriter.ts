@@ -1,4 +1,3 @@
-
 import { HttpClient } from '../httpClient'
 
 export interface UnderwriterClient {
@@ -27,7 +26,6 @@ export interface CreateQuoteDto {
     ancillaryArea: number
     yearOfConstruction: number
     numberOfBathrooms: number
-    floor: number
     subleted: boolean
     extraBuildings: {
       type: string
@@ -69,17 +67,19 @@ export interface CreateQuoteDto {
   }
 }
 
-export type QuoteCreationResult = QuoteCreationSuccessDto | QuoteCreationFailureDto
+export type QuoteCreationResult =
+  | QuoteCreationSuccessDto
+  | QuoteCreationFailureDto
 
 export interface QuoteCreationSuccessDto {
-  status: 'success',
+  status: 'success'
   id: string
   price: number
   validTo: string
 }
 
 export interface QuoteCreationFailureDto {
-  status: 'failure',
+  status: 'failure'
   breachedUnderwritingGuidelines: BreachedGuidelineDto[]
 }
 
@@ -87,16 +87,20 @@ export interface BreachedGuidelineDto {
   code: string
 }
 
-export const createUnderwriterClient = (client: HttpClient): UnderwriterClient => {
+export const createUnderwriterClient = (
+  client: HttpClient,
+): UnderwriterClient => {
   return {
     createQuote: async (body) => {
       // 422 means underwriting guidelines breached, and we should read the body
-      const res = await client.post("/quotes", body, { validStatusCodes: [422] })
+      const res = await client.post('/quotes', body, {
+        validStatusCodes: [422],
+      })
       const result = await res.json()
       if (res.status === 422) {
-        return { status: 'failure', ...result}
+        return { status: 'failure', ...result }
       }
-      return { status: 'success', ...result}
+      return { status: 'success', ...result }
     }
   }
 }

@@ -1,31 +1,32 @@
-import { Typenamed } from './../utils/types';
-import { LocalizedStrings } from '../translations/LocalizedStrings'
 import {
-  ContractDto,
-  ContractStatusDto,
   AgreementDto,
   AgreementStatusDto,
-} from './../api/upstreams/productPricing'
+  ContractDto,
+  ContractStatusDto
+} from './../api/upstreams/productPricing';
+import { LocalizedStrings } from './../translations/LocalizedStrings';
 import {
-  QueryToActiveContractBundlesResolver,
-  ContractBundle,
-  QueryToContractsResolver,
-  Contract,
-  QueryToHasContractResolver,
-  ContractStatus,
   Agreement,
-  TypeOfContract,
   AgreementStatus,
-  SwedishApartmentLineOfBusiness,
-  NorwegianHomeContentLineOfBusiness,
-  NorwegianTravelLineOfBusiness,
+  Contract,
+  ContractBundle,
+  ContractStatus,
+  DanishAccidentLineOfBusiness,
   DanishHomeContentLineOfBusiness,
   DanishTravelLineOfBusiness,
-  DanishAccidentLineOfBusiness,
-  PossibleContractStatusTypeNames,
-  PossibleAgreementTypeNames,
   ExtraBuildingType,
-} from './../typings/generated-graphql-types'
+  NorwegianHomeContentLineOfBusiness,
+  NorwegianTravelLineOfBusiness,
+  PossibleAgreementTypeNames,
+  PossibleContractStatusTypeNames,
+  QueryToActiveContractBundlesResolver,
+  QueryToContractsResolver,
+  QueryToHasContractResolver,
+  SwedishApartmentLineOfBusiness,
+  TypeOfContract
+} from './../typings/generated-graphql-types';
+import { Typenamed } from './../utils/types';
+
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
   SWEDEN: 'moving-flow-SE',
@@ -45,60 +46,14 @@ export const activeContractBundles: QueryToActiveContractBundlesResolver = async
     upstream.productPricing.getSelfChangeEligibility()
   ])
 
-  const active = contracts.filter(c => c.status == ContractStatusDto.ACTIVE)
-  moveHomeContentsToTop(active)
-
-  const norwegianBundle = [] as ContractDto[]
-  const danishBundle = [] as ContractDto[]
-  const individual = [] as ContractDto[]
-  active.forEach((contract) => {
-    const agreement = contract.agreements.find(
-      (ag) => ag.id === contract.currentAgreementId,
-    )!
-    switch (agreement.type) {
-      case 'NorwegianHomeContent':
-      case 'NorwegianTravel':
-        norwegianBundle.push(contract)
-        break
-      case 'DanishHomeContent':
-      case 'DanishTravel':
-      case 'DanishAccident':
-        danishBundle.push(contract)
-        break
-      default:
-        individual.push(contract)
-    }
-  })
-
   let addressChangeAngelStoryId: string | undefined = undefined
   if (selfChangeEligibility.blockers.length === 0) {
     const marketInfo = await upstream.productPricing.getContractMarketInfo()
     addressChangeAngelStoryId = ADDRESS_CHANGE_STORIES_BY_MARKET[marketInfo.market.toUpperCase()]
   }
 
-  const bundle = (contracts: ContractDto[]): ContractBundle => {
-    const bundleId = `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
-    return {
-      id: bundleId,
-      contracts: contracts.map((c) => transformContract(c, strings)),
-      angelStories: {
-        addressChange: addressChangeAngelStoryId && `${addressChangeAngelStoryId}?contractBundleId=${bundleId}`
-      }
-    }
-  }
-
-  const bundles = [] as ContractBundle[]
-  if (norwegianBundle.length) {
-    bundles.push(bundle(norwegianBundle))
-  }
-  if (danishBundle.length) {
-    bundles.push(bundle(danishBundle))
-  }
-  individual.forEach((contract) => {
-    bundles.push(bundle([contract]))
-  })
-
-  return bundles
+  const active = contracts.filter(c => c.status == ContractStatusDto.ACTIVE)
+  return bundleContracts(strings, active, addressChangeAngelStoryId)
 }
 
 export const contracts: QueryToContractsResolver = async (
@@ -120,11 +75,69 @@ export const hasContract: QueryToHasContractResolver = async (
   return contracts.length > 0
 }
 
+
+// helpers
+
+export const bundleContracts = (
+  strings: LocalizedStrings,
+  contracts: ContractDto[],
+  addressChangeAngelStoryId?: string,
+): ContractBundle[] => {
+    moveHomeContentsToTop(contracts)
+
+    const norwegianBundle = [] as ContractDto[]
+    const danishBundle = [] as ContractDto[]
+    const individual = [] as ContractDto[]
+    contracts.forEach((contract) => {
+      const agreement = contract.agreements.find(
+        (ag) => ag.id === contract.currentAgreementId,
+      )!
+      switch (agreement.type) {
+        case 'NorwegianHomeContent':
+        case 'NorwegianTravel':
+          norwegianBundle.push(contract)
+          break
+        case 'DanishHomeContent':
+        case 'DanishTravel':
+        case 'DanishAccident':
+          danishBundle.push(contract)
+          break
+        default:
+          individual.push(contract)
+      }
+    })
+
+    const bundle = (contracts: ContractDto[]): ContractBundle => {
+      const bundleId = `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
+      return {
+        id: bundleId,
+        contracts: contracts.map((c) => transformContract(c, strings)),
+        angelStories: {
+          addressChange: addressChangeAngelStoryId && `${addressChangeAngelStoryId}?contractBundleId=${bundleId}`
+        }
+      }
+    }
+
+    const bundles = [] as ContractBundle[]
+    if (norwegianBundle.length) {
+      bundles.push(bundle(norwegianBundle))
+    }
+    if (danishBundle.length) {
+      bundles.push(bundle(danishBundle))
+    }
+    individual.forEach((contract) => {
+      bundles.push(bundle([contract]))
+    })
+
+    return bundles
+}
+
 const transformContract = (
   contract: ContractDto,
   strings: LocalizedStrings,
 ): Contract => {
-  const hasUpcomingRenewal = contract.hasQueuedRenewal && 
+  const hasUpcomingRenewal =
+    contract.hasQueuedRenewal &&
     contract.renewal &&
     new Date(contract.renewal.renewalDate) > new Date()
   return {
@@ -138,17 +151,20 @@ const transformContract = (
     ),
     inception: contract.masterInception,
     termination: contract.terminationDate,
-    upcomingRenewal: hasUpcomingRenewal ? {
-      renewalDate: contract.renewal!.renewalDate,
-      draftCertificateUrl: contract.renewal!.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
-    } : undefined,
+    upcomingRenewal: hasUpcomingRenewal
+      ? {
+          renewalDate: contract.renewal!.renewalDate,
+          draftCertificateUrl:
+            contract.renewal!.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
+        }
+      : undefined,
     typeOfContract: contract.typeOfContract as TypeOfContract,
     createdAt: contract.createdAt,
   }
 }
 
 const transformContractStatus = (
-  contract: ContractDto
+  contract: ContractDto,
 ): Typenamed<ContractStatus, PossibleContractStatusTypeNames> => {
   const upcomingAgreementChange = contract.upcomingAgreement
     ? { newAgreement: transformAgreement(contract.upcomingAgreement) }
@@ -196,7 +212,9 @@ const transformContractStatus = (
   }
 }
 
-const transformAgreement = (agreement: AgreementDto): Typenamed<Agreement, PossibleAgreementTypeNames> => {
+const transformAgreement = (
+  agreement: AgreementDto,
+): Typenamed<Agreement, PossibleAgreementTypeNames> => {
   const statusMap = {
     [AgreementStatusDto.ACTIVE]: AgreementStatus.ACTIVE,
     [AgreementStatusDto.ACTIVE_IN_FUTURE]: AgreementStatus.ACTIVE_IN_FUTURE,
@@ -290,9 +308,7 @@ const transformAgreement = (agreement: AgreementDto): Typenamed<Agreement, Possi
   }
 }
 
-const moveHomeContentsToTop = (
-  contracts: ContractDto[]
-) => {
+const moveHomeContentsToTop = (contracts: ContractDto[]) => {
   contracts.sort((c1, c2) => {
     if (c1.typeOfContract.includes('HOME_CONTENT')) return -1
     if (c2.typeOfContract.includes('HOME_CONTENT')) return 1

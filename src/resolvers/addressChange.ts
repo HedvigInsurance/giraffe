@@ -1,14 +1,45 @@
-import { ContractDto, ContractMarketInfoDto } from './../api/upstreams/productPricing'
+import { MemberDto } from './../api/upstreams/memberService';
+import { QuoteCreationResult, CreateQuoteDto } from './../api/upstreams/underwriter';
 import {
+  MutationToCreateAddressChangeQuotesResolver,
+  AddressChangeQuoteResult,
+  PossibleAddressChangeQuoteResultTypeNames,
   AddressChangeInput,
-  AddressHomeType,
   AddressOwnership,
+  AddressHomeType
 } from './../typings/generated-graphql-types'
-import { MemberDto } from './../api/upstreams/memberService'
 
-import { CreateQuoteDto } from '../api/upstreams/underwriter'
+import { ContractDto, ContractMarketInfoDto, ContractStatusDto } from '../api/upstreams/productPricing'
+import { Typenamed } from '../utils/types';
 
-export const convertAddressChangeToSelfChangeBody = (
+export const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = async (
+  _parent,
+  args,
+  { upstream },
+): Promise<AddressChangeQuoteResult> => {
+  const contractIds = args.input.contractBundleId.replace('bundle:', '').split(',')
+  const [
+    member,
+    contracts,
+    marketInfo
+  ] = await Promise.all([
+    upstream.memberService.getSelfMember(),
+    Promise.all(contractIds.map(upstream.productPricing.getContract)),
+    upstream.productPricing.getContractMarketInfo()
+  ])
+
+  const tasks = contracts
+    .filter((c) => c.status == ContractStatusDto.ACTIVE)
+    .map((contract) => {
+      const body = convertAddressChangeToSelfChangeBody(args.input, member, contract, marketInfo)
+      return upstream.underwriter.createQuote(body)
+    })
+
+  const responses = await Promise.all(tasks)
+  return transformResult(responses)
+}
+
+const convertAddressChangeToSelfChangeBody = (
   input: AddressChangeInput,
   member: MemberDto,
   contract: ContractDto,
@@ -74,7 +105,6 @@ const toSwedishQuoteDto = (
           ancillaryArea: input.ancillaryArea!!,
           yearOfConstruction: input.yearOfConstruction!!,
           numberOfBathrooms: input.numberOfBathrooms!!,
-          floor: input.numberOfFloors!!,
           subleted: input.isSubleted!!,
           extraBuildings: input.extraBuildings!!,
         },
@@ -162,4 +192,31 @@ const toDanishQuoteDto = (
   }
 
   throw `Unhandled type of contract: ${contract.typeOfContract}`
+}
+
+const transformResult = (
+  responses: QuoteCreationResult[]
+): Typenamed<AddressChangeQuoteResult, PossibleAddressChangeQuoteResultTypeNames> => {
+  const quoteIds: string[] = []
+  const breachedUnderwritingGuidelines: string[] = []
+  responses.forEach(response => {
+    switch (response.status) {
+      case 'success':
+        quoteIds.push(response.id)
+        break
+      case 'failure':
+        response.breachedUnderwritingGuidelines.forEach(g => breachedUnderwritingGuidelines.push(g.code))
+        break
+    }
+  })
+  if (breachedUnderwritingGuidelines.length > 0) {
+    return {
+      __typename: 'AddressChangeQuoteFailure',
+      breachedUnderwritingGuidelines: breachedUnderwritingGuidelines
+    }
+  }
+  return {
+    __typename: 'AddressChangeQuoteSuccess',
+    quoteIds: quoteIds
+  }
 }

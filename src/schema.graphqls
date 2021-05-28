@@ -21,7 +21,7 @@ type Query {
   """Returns whether a member has at least one contract"""
   hasContract: Boolean!
   """Returns a type describing whether the 'Self Change' functionality is possible."""
-  selfChangeEligibility: SelfChangeEligibility!
+  selfChangeEligibility: SelfChangeEligibility! @deprecated(reason: "Use angelStories in `activeContractBundles` instead")
   """All locales that are available and activated"""
   availableLocales: [Locale!]!
 }
@@ -397,8 +397,6 @@ input AddressChangeInput {
   yearOfConstruction: Int
   """Number of bathrooms. Required if type == HOUSE."""
   numberOfBathrooms: Int
-  """Number of floors. Required if type == HOUSE."""
-  numberOfFloors: Int
   """Is this property subleted? Required if type == HOUSE."""
   isSubleted: Boolean
   """A list of extra buildings outside of the main property. Required if type == HOUSE."""

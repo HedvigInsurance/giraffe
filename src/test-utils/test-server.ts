@@ -21,7 +21,7 @@ const upstream: Upstream = {
     getSelfChangeEligibility: () => Promise.reject("getSelfChangeEligibility Not implemented")
   },
   underwriter: {
-    createQuote: (_) => Promise.reject("createQuote Not implemented")
+    createQuote: () => Promise.reject("createQuote Not implemented"),
   },
   memberService: {
     getSelfMember: () => Promise.reject("getSelfMember Not implemented")
@@ -49,6 +49,9 @@ const localSchema = makeExecutableSchema<Context>({
   resolvers: {
     Upload: GraphQLUpload,
     ...(resolvers as IResolvers<any, Context>),
+  },
+  resolverValidationOptions: {
+    requireResolversForResolveType: false
   },
 })
 

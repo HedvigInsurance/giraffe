@@ -68,7 +68,7 @@ import { geo } from './geo'
 import { startDirectDebitRegistration } from './trustly'
 import { uploadFile, uploadFiles } from './uploadFile'
 import { activeContractBundles, contracts, hasContract } from './contracts'
-import { selfChangeEligibility, createAddressChangeQuotes } from './selfChange'
+import { createAddressChangeQuotes } from './addressChange'
 import { availableLocales } from './availableLocales'
 
 const resolvers: Resolver = {
@@ -90,7 +90,6 @@ const resolvers: Resolver = {
     activeContractBundles,
     contracts,
     hasContract,
-    selfChangeEligibility,
     availableLocales
   },
   Mutation: {
