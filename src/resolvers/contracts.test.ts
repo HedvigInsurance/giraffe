@@ -58,7 +58,7 @@ describe('Query.activeContractBundles', () => {
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
-        id: 'bundle:cid1',
+        id: 'bundle-cid1',
         contracts: [
           {
             ...swedishApartmentOutput,
@@ -68,7 +68,7 @@ describe('Query.activeContractBundles', () => {
         angelStories: {}
       },
       {
-        id: 'bundle:cid2',
+        id: 'bundle-cid2',
         contracts: [
           {
             ...swedishHouseOutput,
@@ -96,7 +96,7 @@ describe('Query.activeContractBundles', () => {
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
-        id: 'bundle:cid1,cid2',
+        id: 'bundle-cid1,cid2',
         contracts: [
           {
             ...norwegianHomeContentOutput,
@@ -132,7 +132,7 @@ describe('Query.activeContractBundles', () => {
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
-        id: 'bundle:cid1,cid2,cid3',
+        id: 'bundle-cid1,cid2,cid3',
         contracts: [
           {
             ...danishHomeContentOutput,
@@ -170,7 +170,7 @@ describe('Query.activeContractBundles', () => {
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
-        id: 'bundle:cid1',
+        id: 'bundle-cid1',
         contracts: [
           {
             ...norwegianHomeContentOutput,
@@ -196,7 +196,7 @@ describe('Query.activeContractBundles', () => {
 
     const result = await activeContractBundles(undefined, {}, context, info)
 
-    expect(result[0].id).toBe('bundle:a,z')
+    expect(result[0].id).toBe('bundle-a,z')
   })
 
   it('HomeContent contracts are moved to the top', async () => {
@@ -234,7 +234,7 @@ describe('Query.activeContractBundles', () => {
 
     const result = await activeContractBundles(undefined, {}, context, info)
 
-    expect(result[0].angelStories.addressChange).toBe('moving-flow-SE?contractBundleId=bundle:cid1')
+    expect(result[0].angelStories.addressChange).toBe('moving-flow-SE?contractBundleId=bundle-cid1')
   })
 })
 

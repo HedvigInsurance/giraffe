@@ -17,7 +17,7 @@ export const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResol
   args,
   { upstream },
 ): Promise<AddressChangeQuoteResult> => {
-  const contractIds = args.input.contractBundleId.replace('bundle:', '').split(',')
+  const contractIds = args.input.contractBundleId.replace('bundle-', '').split(',')
   const [
     member,
     contracts,
