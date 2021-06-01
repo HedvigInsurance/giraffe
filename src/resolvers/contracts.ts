@@ -108,7 +108,7 @@ export const bundleContracts = (
     })
 
     const bundle = (contracts: ContractDto[]): ContractBundle => {
-      const bundleId = `bundle:${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
+      const bundleId = `bundle-${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
       return {
         id: bundleId,
         contracts: contracts.map((c) => transformContract(c, strings)),

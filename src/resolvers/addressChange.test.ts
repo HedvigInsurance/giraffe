@@ -138,7 +138,7 @@ const marketInfo: ContractMarketInfoDto = {
 }
 
 const baseInput = {
-  contractBundleId: 'bundle:abc',
+  contractBundleId: 'bundle-abc',
   startDate: '2021-06-01',
   street: 'Fakestreet 123',
   zip: '12345',
@@ -194,7 +194,7 @@ const seHouse: AddressChangeInput = {
 
 const noHomeContent: AddressChangeInput = {
   ...baseInput,
-  contractBundleId: 'bundle:abc,def', // two contracts
+  contractBundleId: 'bundle-abc,def', // two contracts
   type: AddressHomeType.APARTMENT,
   ownership: AddressOwnership.OWN,
   isYouth: true,
@@ -202,7 +202,7 @@ const noHomeContent: AddressChangeInput = {
 
 const dkHomeContent: AddressChangeInput = {
   ...baseInput,
-  contractBundleId: 'bundle:abc,def,ghi', // three contracts
+  contractBundleId: 'bundle-abc,def,ghi', // three contracts
   type: AddressHomeType.APARTMENT,
   ownership: AddressOwnership.OWN,
   isStudent: false,
