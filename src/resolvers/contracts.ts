@@ -26,6 +26,7 @@ import {
   TypeOfContract
 } from './../typings/generated-graphql-types';
 import { Typenamed } from './../utils/types';
+import { format } from 'date-fns'
 
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
@@ -196,7 +197,7 @@ const transformContractStatus = (
       const now = new Date()
       return {
         __typename: 'TerminatedTodayStatus',
-        today: `${now.getFullYear()}-${now.getMonth()}-${now.getDay()}`,
+        today: format(now, 'YYYY-MM-DD'),
       }
     }
     case ContractStatusDto.TERMINATED_IN_FUTURE:
