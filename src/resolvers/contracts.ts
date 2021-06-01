@@ -196,7 +196,7 @@ const transformContractStatus = (
       const now = new Date()
       return {
         __typename: 'TerminatedTodayStatus',
-        today: `${now.getFullYear}-${now.getMonth}-${now.getDay}`,
+        today: `${now.getFullYear()}-${now.getMonth()}-${now.getDay()}`,
       }
     }
     case ContractStatusDto.TERMINATED_IN_FUTURE:
