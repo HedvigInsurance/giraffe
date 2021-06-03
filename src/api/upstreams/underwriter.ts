@@ -11,6 +11,7 @@ export interface CreateQuoteDto {
   ssn: string
   birthDate: string
   startDate: string
+  initiatedFrom: QuoteInitiatedFromDto,
   swedishApartmentData?: {
     street: string
     zipCode: string
@@ -66,6 +67,17 @@ export interface CreateQuoteDto {
     student: boolean
   }
 }
+
+export enum QuoteInitiatedFromDto {
+  Rapio = 'RAPIO',
+  WebOnboarding = 'WEBONBOARDING',
+  App = 'APP',
+  Ios = 'IOS',
+  Android = 'ANDROID',
+  Hope = 'HOPE',
+  SelfChange = 'SELF_CHANGE'
+}
+
 
 export type QuoteCreationResult =
   | QuoteCreationSuccessDto
