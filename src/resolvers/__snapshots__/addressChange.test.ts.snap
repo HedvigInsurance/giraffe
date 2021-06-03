@@ -14,6 +14,7 @@ Array [
         "zipCode": "12345",
       },
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -30,6 +31,7 @@ Array [
         "zipCode": "12345",
       },
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -46,6 +48,7 @@ Array [
         "zipCode": "12345",
       },
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -61,6 +64,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "norwegianHomeContentsData": Object {
@@ -79,6 +83,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "norwegianTravelData": Object {
@@ -98,6 +103,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -120,6 +126,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -142,6 +149,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -164,6 +172,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",
@@ -186,6 +195,7 @@ Array [
     Object {
       "birthDate": "1991-07-27",
       "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
       "lastName": "Testsson",
       "memberId": "123",
       "ssn": "201212121212",

@@ -1,5 +1,5 @@
 import { MemberDto } from './../api/upstreams/memberService';
-import { QuoteCreationResult, CreateQuoteDto } from './../api/upstreams/underwriter';
+import { QuoteCreationResult, CreateQuoteDto, QuoteInitiatedFromDto } from './../api/upstreams/underwriter';
 import {
   MutationToCreateAddressChangeQuotesResolver,
   AddressChangeQuoteResult,
@@ -52,6 +52,7 @@ const convertAddressChangeToSelfChangeBody = (
     ssn: member.ssn,
     birthDate: member.birthDate,
     startDate: input.startDate,
+    initiatedFrom: QuoteInitiatedFromDto.SelfChange
   }
 
   switch (marketInfo.market) {
