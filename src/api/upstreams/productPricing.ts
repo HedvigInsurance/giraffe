@@ -17,6 +17,10 @@ export interface ProductPricingClient {
    * Get the data related to whether the 'self change' functionality of contracts is available.
    */
   getSelfChangeEligibility(): Promise<SelfChangeEligibilityDto>
+  /**
+   * Get the "trial insurances" for this member, if there are any.
+   */
+  getTrials(): Promise<TrialDto[]>
 }
 
 export interface ContractMarketInfoDto {
@@ -158,6 +162,26 @@ export interface ExtraBuildingDto {
   hasWaterConnected: boolean
 }
 
+export interface TrialDto {
+  id: string
+  memberId: string
+  fromDate: string
+  toDate: string
+  type: string
+  partner: string
+  address: TrialAddressDto
+  createdAt: string
+}
+
+export interface TrialAddressDto {
+  street: string
+  city: string
+  zipCode: string
+  livingSpace?: number
+  apartmentNo?: string
+  floor?: string
+}
+
 export const createProductPricingClient = (
   client: HttpClient,
 ): ProductPricingClient => {
@@ -176,6 +200,10 @@ export const createProductPricingClient = (
     },
     getSelfChangeEligibility: async () => {
       const res = await client.get('/contracts/selfChange/eligibility')
+      return res.json()
+    },
+    getTrials: async () => {
+      const res = await client.get('/trial')
       return res.json()
     },
   }

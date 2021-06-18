@@ -2,7 +2,8 @@ import {
   AgreementDto,
   AgreementStatusDto,
   ContractDto,
-  ContractStatusDto
+  ContractStatusDto,
+  TrialDto
 } from './../api/upstreams/productPricing';
 import { LocalizedStrings } from './../translations/LocalizedStrings';
 import {
@@ -62,9 +63,14 @@ export const contracts: QueryToContractsResolver = async (
   _args,
   { upstream, strings },
 ): Promise<Contract[]> => {
-  const contracts = await upstream.productPricing.getMemberContracts()
+  const [contracts, trials] = await Promise.all([
+    upstream.productPricing.getMemberContracts(),
+    upstream.productPricing.getTrials()
+  ])
   moveHomeContentsToTop(contracts)
-  return contracts.map((c) => transformContract(c, strings))
+  const mappedContracts = contracts.map((c) => transformContract(c, strings))
+  const fakeContracts = trials.map((t) => transformTrialToFakeContract(t, strings))
+  return mappedContracts.concat(fakeContracts)
 }
 
 export const hasContract: QueryToHasContractResolver = async (
@@ -315,4 +321,48 @@ const moveHomeContentsToTop = (contracts: ContractDto[]) => {
     if (c2.typeOfContract.includes('HOME_CONTENT')) return 1
     return 0
   })
+}
+
+const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings): Contract => {
+  const typeTransformation: Record<string, TypeOfContract> = {
+    'SE_APARTMENT_BRF': TypeOfContract.SE_APARTMENT_BRF,
+    'SE_APARTMENT_RENT': TypeOfContract.SE_APARTMENT_RENT,
+  }
+  const lineOfBusinessTransformation: Record<string, SwedishApartmentLineOfBusiness> = {
+    'SE_APARTMENT_BRF': SwedishApartmentLineOfBusiness.BRF,
+    'SE_APARTMENT_RENT': SwedishApartmentLineOfBusiness.RENT,
+  }
+  const typeOfContract = typeTransformation[trial.type]
+
+  return {
+    id: `fakecontract:${trial.id}`,
+    holderMember: trial.memberId,
+    typeOfContract,
+    status: {
+      __typename: 'ActiveStatus',
+      pastInception: trial.fromDate
+    } as ContractStatus,
+    displayName: strings(`CONTRACT_DISPLAY_NAME_${typeOfContract}`),
+    createdAt: trial.createdAt,
+    currentAgreement: {
+      __typename: 'SwedishApartmentAgreement',
+      id: `fakeagreement:${trial.id}`,
+      activeFrom: trial.fromDate,
+      activeTo: trial.toDate,
+
+      premium: {
+        amount: '0',
+        currency: 'SEK'
+      },
+      status: AgreementStatus.ACTIVE,
+      address: {
+        street: trial.address.street,
+        postalCode: trial.address.zipCode,
+      },
+      squareMeters: trial.address.livingSpace ?? 0,
+      numberCoInsured: 0,
+      type: lineOfBusinessTransformation[trial.type],
+      certificateUrl: 'http://TODO'
+    } as Agreement
+  }
 }

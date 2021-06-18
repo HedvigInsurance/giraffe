@@ -11,13 +11,13 @@ import { startApolloTesting } from '../test-utils/test-server'
 
 const { mutate, upstream } = startApolloTesting()
 
-upstream.memberService.getSelfMember = () => Promise.resolve(member)
-
 const createQuote = jest.fn().mockResolvedValue('qid1')
-upstream.underwriter.createQuote = createQuote
 beforeEach(() => {
   createQuote.mockClear()
   createQuote.mockResolvedValue('qid1')
+
+  upstream.memberService.getSelfMember = () => Promise.resolve(member)
+  upstream.underwriter.createQuote = createQuote
 })
 
 // Tests
