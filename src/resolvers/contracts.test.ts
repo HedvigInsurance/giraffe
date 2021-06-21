@@ -13,7 +13,9 @@ import {
   TerminatedStatus,
   ActiveInFutureAndTerminatedInFutureStatus,
   ContractBundle,
-  ExtraBuildingType
+  ExtraBuildingType,
+  ContractStatus,
+  Agreement
 } from './../typings/generated-graphql-types'
 import {
   AgreementStatusDto,
@@ -426,6 +428,64 @@ describe('Query.contracts', () => {
       { ...norwegianTravelOutput, id: 'cid-travel' }
     ])
   })
+
+  it('Trial is turned into a fake swedish apartment contract', async () => {
+    context.upstream.productPricing.getMemberContracts = () => Promise.resolve([])
+    context.upstream.productPricing.getTrials = () => Promise.resolve([
+      {
+        id: 'tid1',
+        memberId: 'mid1',
+        fromDate: '2021-06-01',
+        toDate: '2021-07-01',
+        type: 'SE_APARTMENT_BRF',
+        status: 'TERMINATED_IN_FUTURE',
+        partner: 'AVY',
+        address: {
+          street: 'Fakestreet 123',
+          zipCode: '12345',
+          city: 'Atlantis',
+          livingSpace: 44
+        },
+        createdAt: '2021-05-31T10:00:00Z',
+        certificateUrl: 'https://hedvig.com/cert',
+      }
+    ])
+    const fakeContract: Contract = {
+      id: 'fakecontract:tid1',
+      holderMember: 'mid1',
+      typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
+      status: {
+        __typename: 'TerminatedInFutureStatus',
+        futureTermination: '2021-07-01'
+      } as ContractStatus,
+      displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
+      createdAt: '2021-05-31T10:00:00Z',
+      currentAgreement: {
+        __typename: 'SwedishApartmentAgreement',
+        id: 'fakeagreement:tid1',
+        activeFrom: '2021-06-01',
+        activeTo: '2021-07-01',
+        premium: {
+          amount: '0',
+          currency: 'SEK'
+        },
+        certificateUrl: 'https://hedvig.com/cert',
+        status: AgreementStatus.ACTIVE,
+        address: {
+          street: 'Fakestreet 123',
+          postalCode: '12345'
+        },
+        numberCoInsured: 0,
+        squareMeters: 44,
+        type: SwedishApartmentLineOfBusiness.BRF,
+      } as Agreement
+    }
+
+    const result = await contracts(undefined, {}, context, info)
+
+    expect(result).toMatchObject<Contract[]>([fakeContract])
+  })
+
 })
 
 describe('Query.hasContract', () => {
@@ -458,6 +518,7 @@ const context: Context = ({
   upstream: {
     productPricing: {
       getMemberContracts: () => Promise.resolve([]),
+      getTrials: () => Promise.resolve([]),
       getSelfChangeEligibility: () => Promise.resolve(
         { blockers: [ "FAKE" ] }
       )

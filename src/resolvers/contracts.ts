@@ -2,7 +2,8 @@ import {
   AgreementDto,
   AgreementStatusDto,
   ContractDto,
-  ContractStatusDto
+  ContractStatusDto,
+  TrialDto
 } from './../api/upstreams/productPricing';
 import { LocalizedStrings } from './../translations/LocalizedStrings';
 import {
@@ -62,9 +63,14 @@ export const contracts: QueryToContractsResolver = async (
   _args,
   { upstream, strings },
 ): Promise<Contract[]> => {
-  const contracts = await upstream.productPricing.getMemberContracts()
+  const [contracts, trials] = await Promise.all([
+    upstream.productPricing.getMemberContracts(),
+    upstream.productPricing.getTrials()
+  ])
   moveHomeContentsToTop(contracts)
-  return contracts.map((c) => transformContract(c, strings))
+  const mappedContracts = contracts.map((c) => transformContract(c, strings))
+  const fakeContracts = trials.map((t) => transformTrialToFakeContract(t, strings))
+  return mappedContracts.concat(fakeContracts)
 }
 
 export const hasContract: QueryToHasContractResolver = async (
@@ -315,4 +321,70 @@ const moveHomeContentsToTop = (contracts: ContractDto[]) => {
     if (c2.typeOfContract.includes('HOME_CONTENT')) return 1
     return 0
   })
+}
+
+const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings): Contract => {
+  const typeTransformation: Record<string, TypeOfContract> = {
+    'SE_APARTMENT_BRF': TypeOfContract.SE_APARTMENT_BRF,
+    'SE_APARTMENT_RENT': TypeOfContract.SE_APARTMENT_RENT,
+  }
+  const lineOfBusinessTransformation: Record<string, SwedishApartmentLineOfBusiness> = {
+    'SE_APARTMENT_BRF': SwedishApartmentLineOfBusiness.BRF,
+    'SE_APARTMENT_RENT': SwedishApartmentLineOfBusiness.RENT,
+  }
+  const agreementStatusTransformation: Record<string, AgreementStatus> = {
+    'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': AgreementStatus.ACTIVE_IN_FUTURE,
+    'TERMINATED_IN_FUTURE': AgreementStatus.ACTIVE,
+    'TERMINATED_TODAY': AgreementStatus.ACTIVE,
+    'TERMINATED': AgreementStatus.TERMINATED,
+  }
+  const contractStatusTransformation: Record<string, Typenamed<ContractStatus, PossibleContractStatusTypeNames>> = {
+    'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': {
+        __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
+        futureInception: trial.fromDate,
+        futureTermination: trial.toDate
+      },
+    'TERMINATED_IN_FUTURE': {
+        __typename: 'TerminatedInFutureStatus',
+        futureTermination: trial.toDate
+      },
+    'TERMINATED_TODAY': {
+        __typename: 'TerminatedTodayStatus',
+        today: trial.toDate
+      },
+    'TERMINATED': {
+        __typename: 'TerminatedStatus',
+        termination: trial.toDate
+      }
+  }
+
+  const typeOfContract = typeTransformation[trial.type]
+  return {
+    id: `fakecontract:${trial.id}`,
+    holderMember: trial.memberId,
+    typeOfContract,
+    status: contractStatusTransformation[trial.status],
+    displayName: strings(`CONTRACT_DISPLAY_NAME_${typeOfContract}`),
+    createdAt: trial.createdAt,
+    currentAgreement: {
+      __typename: 'SwedishApartmentAgreement',
+      id: `fakeagreement:${trial.id}`,
+      activeFrom: trial.fromDate,
+      activeTo: trial.toDate,
+
+      premium: {
+        amount: '0',
+        currency: 'SEK'
+      },
+      status: agreementStatusTransformation[trial.status],
+      address: {
+        street: trial.address.street,
+        postalCode: trial.address.zipCode,
+      },
+      squareMeters: trial.address.livingSpace ?? 0,
+      numberCoInsured: 0,
+      type: lineOfBusinessTransformation[trial.type],
+      certificateUrl: trial.certificateUrl
+    } as Agreement
+  }
 }

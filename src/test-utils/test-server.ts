@@ -13,12 +13,13 @@ const typeDefs = gql(
   readFileSync(resolve(__dirname, '../schema.graphqls'), 'utf8'),
 )
 
-const upstream: Upstream = {
+const fakeUpstream = (): Upstream => ({
   productPricing: {
     getContract: () => Promise.reject("getContract Not implemented"),
     getMemberContracts: () => Promise.reject("getMemberContracts Not implemented"),
     getContractMarketInfo: () => Promise.reject("getContractMarketInfo Not implemented"),
-    getSelfChangeEligibility: () => Promise.reject("getSelfChangeEligibility Not implemented")
+    getSelfChangeEligibility: () => Promise.reject("getSelfChangeEligibility Not implemented"),
+    getTrials: () => Promise.reject("getTrials Not implemented"),
   },
   underwriter: {
     createQuote: () => Promise.reject("createQuote Not implemented"),
@@ -26,7 +27,9 @@ const upstream: Upstream = {
   memberService: {
     getSelfMember: () => Promise.reject("getSelfMember Not implemented")
   }
-}
+})
+
+const upstream = fakeUpstream()
 
 const context: Context = {
     getToken: () => 'test-token',
@@ -63,6 +66,11 @@ export interface TestingContext {
 }
 
 export const startApolloTesting = (): TestingContext => {
+  afterEach(() => {
+    // Reset upstream mocks between tests
+    Object.assign(upstream, fakeUpstream())
+  })
+
   const server = new ApolloServer({
     schema: localSchema,
     context: context
