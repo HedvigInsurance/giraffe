@@ -338,33 +338,24 @@ const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings
     'TERMINATED_TODAY': AgreementStatus.ACTIVE,
     'TERMINATED': AgreementStatus.TERMINATED,
   }
-  let status: Typenamed<ContractStatus, PossibleContractStatusTypeNames>
-  if (trial.status === 'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE') {
-    status = {
-      __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
-      futureInception: trial.fromDate,
-      futureTermination: trial.toDate
-    }
-  } else if (trial.status === 'TERMINATED_IN_FUTURE') {
-    status = {
-      __typename: 'TerminatedInFutureStatus',
-      futureTermination: trial.toDate
-    }
-  } else if (trial.status === 'TERMINATED_TODAY') {
-    status = {
-      __typename: 'TerminatedTodayStatus',
-      today: trial.toDate
-    }
-  } else if (trial.status === 'TERMINATED') {
-    status = {
-      __typename: 'TerminatedStatus',
-      termination: trial.toDate
-    }
-  } else {
-    status = {
-      __typename: 'ActiveStatus',
-      pastInception: trial.fromDate,
-    }
+  const contractStatusTransformation: Record<string, Typenamed<ContractStatus, PossibleContractStatusTypeNames>> = {
+    'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': {
+        __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
+        futureInception: trial.fromDate,
+        futureTermination: trial.toDate
+      },
+    'TERMINATED_IN_FUTURE': {
+        __typename: 'TerminatedInFutureStatus',
+        futureTermination: trial.toDate
+      },
+    'TERMINATED_TODAY': {
+        __typename: 'TerminatedTodayStatus',
+        today: trial.toDate
+      },
+    'TERMINATED': {
+        __typename: 'TerminatedStatus',
+        termination: trial.toDate
+      }
   }
 
   const typeOfContract = typeTransformation[trial.type]
@@ -372,7 +363,7 @@ const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings
     id: `fakecontract:${trial.id}`,
     holderMember: trial.memberId,
     typeOfContract,
-    status,
+    status: contractStatusTransformation[trial.status],
     displayName: strings(`CONTRACT_DISPLAY_NAME_${typeOfContract}`),
     createdAt: trial.createdAt,
     currentAgreement: {
