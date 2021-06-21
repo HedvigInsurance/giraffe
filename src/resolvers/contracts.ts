@@ -332,16 +332,47 @@ const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings
     'SE_APARTMENT_BRF': SwedishApartmentLineOfBusiness.BRF,
     'SE_APARTMENT_RENT': SwedishApartmentLineOfBusiness.RENT,
   }
-  const typeOfContract = typeTransformation[trial.type]
+  const agreementStatusTransformation: Record<string, AgreementStatus> = {
+    'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': AgreementStatus.ACTIVE_IN_FUTURE,
+    'TERMINATED_IN_FUTURE': AgreementStatus.ACTIVE,
+    'TERMINATED_TODAY': AgreementStatus.ACTIVE,
+    'TERMINATED': AgreementStatus.TERMINATED,
+  }
+  let status: Typenamed<ContractStatus, PossibleContractStatusTypeNames>
+  if (trial.status === 'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE') {
+    status = {
+      __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
+      futureInception: trial.fromDate,
+      futureTermination: trial.toDate
+    }
+  } else if (trial.status === 'TERMINATED_IN_FUTURE') {
+    status = {
+      __typename: 'TerminatedInFutureStatus',
+      futureTermination: trial.toDate
+    }
+  } else if (trial.status === 'TERMINATED_TODAY') {
+    status = {
+      __typename: 'TerminatedTodayStatus',
+      today: trial.toDate
+    }
+  } else if (trial.status === 'TERMINATED') {
+    status = {
+      __typename: 'TerminatedStatus',
+      termination: trial.toDate
+    }
+  } else {
+    status = {
+      __typename: 'ActiveStatus',
+      pastInception: trial.fromDate,
+    }
+  }
 
+  const typeOfContract = typeTransformation[trial.type]
   return {
     id: `fakecontract:${trial.id}`,
     holderMember: trial.memberId,
     typeOfContract,
-    status: {
-      __typename: 'ActiveStatus',
-      pastInception: trial.fromDate
-    } as ContractStatus,
+    status,
     displayName: strings(`CONTRACT_DISPLAY_NAME_${typeOfContract}`),
     createdAt: trial.createdAt,
     currentAgreement: {
@@ -354,7 +385,7 @@ const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings
         amount: '0',
         currency: 'SEK'
       },
-      status: AgreementStatus.ACTIVE,
+      status: agreementStatusTransformation[trial.status],
       address: {
         street: trial.address.street,
         postalCode: trial.address.zipCode,
@@ -362,7 +393,7 @@ const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings
       squareMeters: trial.address.livingSpace ?? 0,
       numberCoInsured: 0,
       type: lineOfBusinessTransformation[trial.type],
-      certificateUrl: 'http://TODO'
+      certificateUrl: trial.certificateUrl
     } as Agreement
   }
 }

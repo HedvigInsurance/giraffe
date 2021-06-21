@@ -168,9 +168,11 @@ export interface TrialDto {
   fromDate: string
   toDate: string
   type: string
+  status: string
   partner: string
   address: TrialAddressDto
   createdAt: string
+  certificateUrl?: string
 }
 
 export interface TrialAddressDto {

@@ -438,6 +438,7 @@ describe('Query.contracts', () => {
         fromDate: '2021-06-01',
         toDate: '2021-07-01',
         type: 'SE_APARTMENT_BRF',
+        status: 'TERMINATED_IN_FUTURE',
         partner: 'AVY',
         address: {
           street: 'Fakestreet 123',
@@ -445,7 +446,8 @@ describe('Query.contracts', () => {
           city: 'Atlantis',
           livingSpace: 44
         },
-        createdAt: '2021-05-31T10:00:00Z'
+        createdAt: '2021-05-31T10:00:00Z',
+        certificateUrl: 'https://hedvig.com/cert',
       }
     ])
     const fakeContract: Contract = {
@@ -453,8 +455,8 @@ describe('Query.contracts', () => {
       holderMember: 'mid1',
       typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
       status: {
-        __typename: 'ActiveStatus',
-        pastInception: '2021-06-01'
+        __typename: 'TerminatedInFutureStatus',
+        futureTermination: '2021-07-01'
       } as ContractStatus,
       displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
       createdAt: '2021-05-31T10:00:00Z',
@@ -467,7 +469,7 @@ describe('Query.contracts', () => {
           amount: '0',
           currency: 'SEK'
         },
-        certificateUrl: 'http://TODO',
+        certificateUrl: 'https://hedvig.com/cert',
         status: AgreementStatus.ACTIVE,
         address: {
           street: 'Fakestreet 123',
