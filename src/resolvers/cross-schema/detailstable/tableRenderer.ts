@@ -33,6 +33,7 @@ export class TableRenderer {
             "householdSize": (householdSize) =>
                 this.textKeyMap["DETAILS_TABLE_COINSURED_VALUE"].replace("{coInsured}", householdSize - 1),
             "city": (city) => city,
+            "livingSpace": (livingSpace) => `${livingSpace} m2`,
             "ancillaryArea": (livingSpace) => `${livingSpace} m2`,
             "swedishApartmentType": (swedishApartmentType) => this.textKeyMap[`DETAILS_TABLE_SWEDISH_APARTMENT_TYPE_${swedishApartmentType}_VALUE`],
             "danishHomeContentType": (danishHomeContentType) => this.textKeyMap[`DETAILS_TABLE_DANISH_HOME_CONTENT_TYPE_${danishHomeContentType}_VALUE`],
