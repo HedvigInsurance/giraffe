@@ -6,6 +6,8 @@ const GRAPHQL_SCHEMA_INTROSPECTION_MODE = process.env.NODE_ENV === 'development'
   ? process.env.GRAPHQL_SCHEMA_INTROSPECTION_MODE || 'fault-tolerant'
   : 'full'
 
+const JSON_LOGGING = process.env.NODE_ENV !== 'development'
+
 const PLAYGROUND_ENABLED =
   (process.env.PLAYGROUND_ENABLED &&
     process.env.PLAYGROUND_ENABLED === 'true') ||
@@ -54,4 +56,5 @@ export {
   ANGEL_URL,
   AVAILABLE_LOCALES,
   GRAPHQL_SCHEMA_INTROSPECTION_MODE,
+  JSON_LOGGING,
 }
