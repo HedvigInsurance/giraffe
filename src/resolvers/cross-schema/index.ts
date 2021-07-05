@@ -10,6 +10,7 @@ import { createQuoteBundleInceptionExtension } from './quoteBundleInceptionExten
 import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCrossSchemaExtensions } from './campaignDisplayValue'
 import { createQuoteFaqsExtension } from "./quoteFaqs"
 import { createQuoteBundleAppConfigurationExtension } from './quoteBundleAppConfiguration';
+import { createQuoteBundleDisplayNameExtension } from './quoteBundleDisplayName';
 
 export enum SchemaIdentifier {
   GRAPH_CMS = "graph-cms",
@@ -42,7 +43,8 @@ export const getCrossSchemaExtensions = (
     createQuoteBundleInceptionExtension(),
     campaignExtension,
     createQuoteFaqsExtension(),
-    createQuoteBundleAppConfigurationExtension()
+    createQuoteBundleAppConfigurationExtension(),
+    createQuoteBundleDisplayNameExtension()
   ]
 
   const applicable = allExtensions.filter(extension => {
