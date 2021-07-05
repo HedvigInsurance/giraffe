@@ -30,17 +30,17 @@ export const createQuoteBundleDisplayNameExtension = (): CrossSchemaExtension =>
                   locale: string
               }
             ) => {
-                const textKeyMap = require(`${__dirname}/../../translations/${args.locale}.json`)
+                    const textKeyMap = require(`${__dirname}/../../translations/${args.locale}.json`)
 
-                if (quoteBundle.quotes.length > 1) {
-                    return textKeyMap["CONTRACT_BUNDLE"] ?? ""
+                    if (quoteBundle.quotes.length > 1) {
+                        return textKeyMap["CONTRACT_BUNDLE"] ?? ""
+                    }
+
+                    const quote = quoteBundle.quotes[0]
+
+                    return textKeyMap[`CONTRACT_DISPLAY_NAME_${quote.typeOfContract}`] ?? ""
                 }
-
-                const quote = quoteBundle.quotes[0]
-
-                return textKeyMap[`CONTRACT_DISPLAY_NAME_${quote.typeOfContract}`] ?? ""
-          }
-        }
+            }
         }
     })
   })
