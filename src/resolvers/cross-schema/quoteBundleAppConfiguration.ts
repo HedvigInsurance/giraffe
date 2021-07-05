@@ -3,6 +3,7 @@ import { SchemaIdentifier, CrossSchemaExtension } from "./index"
 
 interface Quote {
   initiatedFrom: String
+  typeOfContract: String
 }
 
 interface QuoteBundle {
@@ -17,9 +18,16 @@ export const createQuoteBundleAppConfigurationExtension = (): CrossSchemaExtensi
         UPDATE_SUMMARY
     }
 
+    enum QuoteBundleAppConfigurationGradientOption {
+        GRADIENT_ONE
+        GRADIENT_TWO
+        GRADIENT_THREE
+    }
+
     type QuoteBundleAppConfiguration {
         showCampaignManagement: Boolean!
         title: QuoteBundleAppConfigurationTitle!
+        gradientOption: QuoteBundleAppConfigurationGradientOption!
     }
 
     extend type QuoteBundle {
@@ -32,6 +40,7 @@ export const createQuoteBundleAppConfigurationExtension = (): CrossSchemaExtensi
           fragment: `fragment QuoteBundleAppConfigurationCrossSchemaFragment on QuoteBundle {
             quotes {
               initiatedFrom
+              typeOfContract
             }
           }`,
           resolve: (
@@ -40,12 +49,28 @@ export const createQuoteBundleAppConfigurationExtension = (): CrossSchemaExtensi
             const firstQuote = quoteBundle.quotes[0]
             const isSelfChangeQuote = firstQuote.initiatedFrom == "SELF_CHANGE"
 
+            const gradientOptionMap: ((quotes: Quote[]) => string | null)[] = [
+              (quotes) => quotes.find(quote => quote.typeOfContract.includes("SE_HOUSE")) ? "GRADIENT_TWO" : null,
+              (quotes) => quotes.find(quote => quote.typeOfContract.includes("SE_APARTMENT")) ? "GRADIENT_ONE" : null,
+              (quotes) => {
+                if (quotes.length > 1) {
+                  return "GRADIENT_ONE"
+                }
+
+                return quotes.find(quote => quote.typeOfContract.includes("HOME_CONTENT")) ? "GRADIENT_TWO" : "GRADIENT_THREE"
+              }
+            ]
+
+            const gradientOption = gradientOptionMap.map(mapper => mapper(quoteBundle.quotes)).find(item => item)
+
             return isSelfChangeQuote ? {
                 showCampaignManagement: false,
-                title: "UPDATE_SUMMARY"
+                title: "UPDATE_SUMMARY",
+                gradientOption
             } : {
                 showCampaignManagement: true,
-                title: "LOGO"
+                title: "LOGO",
+                gradientOption
             }
             }
         },
