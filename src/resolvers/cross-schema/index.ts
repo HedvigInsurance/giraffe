@@ -11,6 +11,7 @@ import campaignDisplayValue, { crossSchemaExtensions as campaignDisplayValueCros
 import { createQuoteFaqsExtension } from "./quoteFaqs"
 import { createQuoteBundleAppConfigurationExtension } from './quoteBundleAppConfiguration';
 import { createQuoteBundleDisplayNameExtension } from './quoteBundleDisplayName';
+import { createQuoteBundleOrderedQuotesExtension } from './quoteBundleOrderedQuotesExtension';
 
 export enum SchemaIdentifier {
   GRAPH_CMS = "graph-cms",
@@ -27,7 +28,7 @@ export enum SchemaIdentifier {
 
 export interface CrossSchemaExtension {
   dependencies: SchemaIdentifier[]
-  content: DocumentNode,
+  content: DocumentNode | null,
   resolvers(schemas: (identifier: SchemaIdentifier) => GraphQLSchema): IResolvers
 }
 
@@ -44,7 +45,8 @@ export const getCrossSchemaExtensions = (
     campaignExtension,
     createQuoteFaqsExtension(),
     createQuoteBundleAppConfigurationExtension(),
-    createQuoteBundleDisplayNameExtension()
+    createQuoteBundleDisplayNameExtension(),
+    createQuoteBundleOrderedQuotesExtension()
   ]
 
   const applicable = allExtensions.filter(extension => {
@@ -53,7 +55,7 @@ export const getCrossSchemaExtensions = (
   })
 
   return {
-    extensions: applicable.map(ext => ext.content),
+    extensions: applicable.map(ext => ext.content).filter((content): content is DocumentNode => content !== null),
     resolvers: applicable.reduce((acc, ext) => {
       const res = ext.resolvers((id) => schemas.get(id)!)
       return deepmerge(acc, res)
