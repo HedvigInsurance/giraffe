@@ -5,13 +5,18 @@ import { SchemaIdentifier, CrossSchemaExtension } from "./index"
 export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
   dependencies: [SchemaIdentifier.UNDERWRITER],
   content: gql`
-      type SignOrApprove {
-        signResponse: StartSignResponse
-        approved: Boolean
+      union SignOrApprove = SignQuoteResponse | ApproveQuoteResponse
+
+      type SignQuoteResponse {
+        signResponse: StartSignResponse!
+      }
+
+      type ApproveQuoteResponse {
+        approved: Boolean!
       }
 
       extend type Mutation {
-          signOrApproveQuotes(quoteIds: [ID!]!): SignOrApprove
+          signOrApproveQuotes(quoteIds: [ID!]!): SignOrApprove!
       }
     `,
   resolvers: (schemas) => ({
@@ -67,7 +72,7 @@ export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
                     })
                   ]
                 }).then((approved: boolean) => ({
-                  signResponse: null,
+                  __typename: "ApproveQuoteResponse",
                   approved
                 }))
               default:
@@ -89,8 +94,8 @@ export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
                     })
                   ]
                 }).then((startSignResponse: any) => ({
-                  signResponse: startSignResponse,
-                  approved: null
+                  __typename: "SignQuoteResponse",
+                  signResponse: startSignResponse
                 }))
             }
           })
