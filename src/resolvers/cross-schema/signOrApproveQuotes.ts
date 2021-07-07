@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-koa';
-import {  ExtractField } from "graphql-tools"
+import { ExtractField } from "graphql-tools"
 import { SchemaIdentifier, CrossSchemaExtension } from "./index"
 
 export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
@@ -39,7 +39,8 @@ export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
             transforms: [
               {
                 transformRequest: (originalRequest: any) => {
-                  return { ...originalRequest, document: gql`
+                  return {
+                    ...originalRequest, document: gql`
                     query ($input: [ID!]!) {
                       signMethodForQuotes(input: $input)
                     }
@@ -48,7 +49,6 @@ export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
               }
             ]
           }).then((signMethod: string) => {
-            console.log(signMethod)
             switch (signMethod) {
               case "APPROVE_ONLY":
                 return info.mergeInfo.delegateToSchema({
