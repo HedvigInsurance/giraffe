@@ -80,6 +80,7 @@ const newQueryResolvers: QueryResolvers = {
 }
 
 const newMutationResolvers: MutationResolvers = {
+  createAddressChangeQuotes
 }
 
 const resolvers: Resolver = {
@@ -136,7 +137,6 @@ const resolvers: Resolver = {
     registerBranchCampaign,
     updateLanguage,
     updatePickedLocale,
-    createAddressChangeQuotes
   },
   Subscription: {
     offer: subscribeToOffer,
