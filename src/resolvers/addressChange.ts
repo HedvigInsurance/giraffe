@@ -1,18 +1,16 @@
 import { MemberDto } from './../api/upstreams/memberService';
 import { QuoteCreationResult, CreateQuoteDto, QuoteInitiatedFromDto } from './../api/upstreams/underwriter';
 import {
-  MutationToCreateAddressChangeQuotesResolver,
+  MutationResolvers,
   AddressChangeQuoteResult,
-  PossibleAddressChangeQuoteResultTypeNames,
   AddressChangeInput,
   AddressOwnership,
   AddressHomeType
-} from './../typings/generated-graphql-types'
+} from './../generated/graphql'
 
 import { ContractDto, ContractMarketInfoDto, ContractStatusDto } from '../api/upstreams/productPricing'
-import { Typenamed } from '../utils/types';
 
-export const createAddressChangeQuotes: MutationToCreateAddressChangeQuotesResolver = async (
+export const createAddressChangeQuotes: MutationResolvers['createAddressChangeQuotes'] = async (
   _parent,
   args,
   { upstream },
@@ -76,15 +74,15 @@ const toSwedishQuoteDto = (
     isStudent: boolean,
   ): string => {
     switch (ownership) {
-      case AddressOwnership.OWN:
+      case AddressOwnership.Own:
         return isStudent ? 'BRF_STUDENT' : 'BRF'
-      case AddressOwnership.RENT:
+      case AddressOwnership.Rent:
         return isStudent ? 'RENT_STUDENT' : 'RENT'
     }
   }
 
   switch (input.type) {
-    case AddressHomeType.APARTMENT:
+    case AddressHomeType.Apartment:
       return {
         ...dto,
         swedishApartmentData: {
@@ -95,7 +93,7 @@ const toSwedishQuoteDto = (
           subType: subtypeMapper(input.ownership, input.isStudent!!),
         },
       }
-    case AddressHomeType.HOUSE:
+    case AddressHomeType.House:
       return {
         ...dto,
         swedishHouseData: {
@@ -197,7 +195,7 @@ const toDanishQuoteDto = (
 
 const transformResult = (
   responses: QuoteCreationResult[]
-): Typenamed<AddressChangeQuoteResult, PossibleAddressChangeQuoteResultTypeNames> => {
+): AddressChangeQuoteResult => {
   const quoteIds: string[] = []
   const breachedUnderwritingGuidelines: string[] = []
   responses.forEach(response => {
