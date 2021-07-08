@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { Context } from '../context';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -1236,20 +1237,7 @@ export type UpcomingRenewal = {
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -1553,24 +1541,24 @@ export type ResolversParentTypes = {
   ChatResponseBodyAudioInput: ChatResponseBodyAudioInput;
 };
 
-export type ActiveInFutureAndTerminatedInFutureStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActiveInFutureAndTerminatedInFutureStatus'] = ResolversParentTypes['ActiveInFutureAndTerminatedInFutureStatus']> = {
+export type ActiveInFutureAndTerminatedInFutureStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActiveInFutureAndTerminatedInFutureStatus'] = ResolversParentTypes['ActiveInFutureAndTerminatedInFutureStatus']> = {
   futureInception?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   futureTermination?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ActiveInFutureStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActiveInFutureStatus'] = ResolversParentTypes['ActiveInFutureStatus']> = {
+export type ActiveInFutureStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActiveInFutureStatus'] = ResolversParentTypes['ActiveInFutureStatus']> = {
   futureInception?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ActiveStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActiveStatus'] = ResolversParentTypes['ActiveStatus']> = {
+export type ActiveStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActiveStatus'] = ResolversParentTypes['ActiveStatus']> = {
   pastInception?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   upcomingAgreementChange?: Resolver<Maybe<ResolversTypes['UpcomingAgreementChange']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AddressResolvers<ContextType = any, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = {
+export type AddressResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = {
   street?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   postalCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1579,25 +1567,25 @@ export type AddressResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AddressChangeQuoteFailureResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressChangeQuoteFailure'] = ResolversParentTypes['AddressChangeQuoteFailure']> = {
+export type AddressChangeQuoteFailureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AddressChangeQuoteFailure'] = ResolversParentTypes['AddressChangeQuoteFailure']> = {
   breachedUnderwritingGuidelines?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AddressChangeQuoteResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressChangeQuoteResult'] = ResolversParentTypes['AddressChangeQuoteResult']> = {
+export type AddressChangeQuoteResultResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AddressChangeQuoteResult'] = ResolversParentTypes['AddressChangeQuoteResult']> = {
   __resolveType: TypeResolveFn<'AddressChangeQuoteSuccess' | 'AddressChangeQuoteFailure', ParentType, ContextType>;
 };
 
-export type AddressChangeQuoteSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressChangeQuoteSuccess'] = ResolversParentTypes['AddressChangeQuoteSuccess']> = {
+export type AddressChangeQuoteSuccessResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AddressChangeQuoteSuccess'] = ResolversParentTypes['AddressChangeQuoteSuccess']> = {
   quoteIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['Agreement'] = ResolversParentTypes['Agreement']> = {
+export type AgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Agreement'] = ResolversParentTypes['Agreement']> = {
   __resolveType: TypeResolveFn<'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement', ParentType, ContextType>;
 };
 
-export type AgreementCoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['AgreementCore'] = ResolversParentTypes['AgreementCore']> = {
+export type AgreementCoreResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AgreementCore'] = ResolversParentTypes['AgreementCore']> = {
   __resolveType: TypeResolveFn<'SwedishApartmentAgreement' | 'SwedishHouseAgreement' | 'NorwegianHomeContentAgreement' | 'NorwegianTravelAgreement' | 'DanishHomeContentAgreement' | 'DanishAccidentAgreement' | 'DanishTravelAgreement', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['AgreementStatus'], ParentType, ContextType>;
@@ -1607,24 +1595,24 @@ export type AgreementCoreResolvers<ContextType = any, ParentType extends Resolve
   certificateUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type AngelStoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['AngelStory'] = ResolversParentTypes['AngelStory']> = {
+export type AngelStoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AngelStory'] = ResolversParentTypes['AngelStory']> = {
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ArrangedPerilCategoriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['ArrangedPerilCategories'] = ResolversParentTypes['ArrangedPerilCategories']> = {
+export type ArrangedPerilCategoriesResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ArrangedPerilCategories'] = ResolversParentTypes['ArrangedPerilCategories']> = {
   me?: Resolver<Maybe<ResolversTypes['PerilCategory']>, ParentType, ContextType>;
   home?: Resolver<Maybe<ResolversTypes['PerilCategory']>, ParentType, ContextType>;
   stuff?: Resolver<Maybe<ResolversTypes['PerilCategory']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AuthEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthEvent'] = ResolversParentTypes['AuthEvent']> = {
+export type AuthEventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AuthEvent'] = ResolversParentTypes['AuthEvent']> = {
   status?: Resolver<Maybe<ResolversTypes['AuthState']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AvatarResolvers<ContextType = any, ParentType extends ResolversParentTypes['Avatar'] = ResolversParentTypes['Avatar']> = {
+export type AvatarResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Avatar'] = ResolversParentTypes['Avatar']> = {
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   URL?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   width?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1634,18 +1622,18 @@ export type AvatarResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type BankIdAuthResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BankIdAuthResponse'] = ResolversParentTypes['BankIdAuthResponse']> = {
+export type BankIdAuthResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['BankIdAuthResponse'] = ResolversParentTypes['BankIdAuthResponse']> = {
   autoStartToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type BankIdSignResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['BankIdSignResponse'] = ResolversParentTypes['BankIdSignResponse']> = {
+export type BankIdSignResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['BankIdSignResponse'] = ResolversParentTypes['BankIdSignResponse']> = {
   autoStartToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   redirectUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CashbackResolvers<ContextType = any, ParentType extends ResolversParentTypes['Cashback'] = ResolversParentTypes['Cashback']> = {
+export type CashbackResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Cashback'] = ResolversParentTypes['Cashback']> = {
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1656,14 +1644,14 @@ export type CashbackResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ChatActionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChatAction'] = ResolversParentTypes['ChatAction']> = {
+export type ChatActionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChatAction'] = ResolversParentTypes['ChatAction']> = {
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   triggerUrl?: Resolver<Maybe<ResolversTypes['URL']>, ParentType, ContextType>;
   enabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ChatResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChatResponse'] = ResolversParentTypes['ChatResponse']> = {
+export type ChatResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChatResponse'] = ResolversParentTypes['ChatResponse']> = {
   globalId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['MessageBody'], ParentType, ContextType>;
@@ -1671,20 +1659,20 @@ export type ChatResponseResolvers<ContextType = any, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ChatStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChatState'] = ResolversParentTypes['ChatState']> = {
+export type ChatStateResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChatState'] = ResolversParentTypes['ChatState']> = {
   ongoingClaim?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   showOfferScreen?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   onboardingDone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CollectStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['CollectStatus'] = ResolversParentTypes['CollectStatus']> = {
+export type CollectStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CollectStatus'] = ResolversParentTypes['CollectStatus']> = {
   status?: Resolver<Maybe<ResolversTypes['BankIdStatus']>, ParentType, ContextType>;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ContractResolvers<ContextType = any, ParentType extends ResolversParentTypes['Contract'] = ResolversParentTypes['Contract']> = {
+export type ContractResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Contract'] = ResolversParentTypes['Contract']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   holderMember?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   typeOfContract?: Resolver<ResolversTypes['TypeOfContract'], ParentType, ContextType>;
@@ -1699,23 +1687,23 @@ export type ContractResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ContractBundleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContractBundle'] = ResolversParentTypes['ContractBundle']> = {
+export type ContractBundleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ContractBundle'] = ResolversParentTypes['ContractBundle']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   contracts?: Resolver<Array<ResolversTypes['Contract']>, ParentType, ContextType>;
   angelStories?: Resolver<ResolversTypes['ContractBundleAngelStories'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ContractBundleAngelStoriesResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContractBundleAngelStories'] = ResolversParentTypes['ContractBundleAngelStories']> = {
+export type ContractBundleAngelStoriesResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ContractBundleAngelStories'] = ResolversParentTypes['ContractBundleAngelStories']> = {
   addressChange?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ContractStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ContractStatus'] = ResolversParentTypes['ContractStatus']> = {
+export type ContractStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ContractStatus'] = ResolversParentTypes['ContractStatus']> = {
   __resolveType: TypeResolveFn<'PendingStatus' | 'ActiveInFutureStatus' | 'ActiveStatus' | 'ActiveInFutureAndTerminatedInFutureStatus' | 'TerminatedInFutureStatus' | 'TerminatedTodayStatus' | 'TerminatedStatus', ParentType, ContextType>;
 };
 
-export type DanishAccidentAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['DanishAccidentAgreement'] = ResolversParentTypes['DanishAccidentAgreement']> = {
+export type DanishAccidentAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DanishAccidentAgreement'] = ResolversParentTypes['DanishAccidentAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -1728,12 +1716,12 @@ export type DanishAccidentAgreementResolvers<ContextType = any, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DanishBankIdAuthResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DanishBankIdAuthResponse'] = ResolversParentTypes['DanishBankIdAuthResponse']> = {
+export type DanishBankIdAuthResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DanishBankIdAuthResponse'] = ResolversParentTypes['DanishBankIdAuthResponse']> = {
   redirectUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DanishHomeContentAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['DanishHomeContentAgreement'] = ResolversParentTypes['DanishHomeContentAgreement']> = {
+export type DanishHomeContentAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DanishHomeContentAgreement'] = ResolversParentTypes['DanishHomeContentAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -1747,7 +1735,7 @@ export type DanishHomeContentAgreementResolvers<ContextType = any, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DanishTravelAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['DanishTravelAgreement'] = ResolversParentTypes['DanishTravelAgreement']> = {
+export type DanishTravelAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DanishTravelAgreement'] = ResolversParentTypes['DanishTravelAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -1760,11 +1748,11 @@ export type DanishTravelAgreementResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ExtraBuildingResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExtraBuilding'] = ResolversParentTypes['ExtraBuilding']> = {
+export type ExtraBuildingResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExtraBuilding'] = ResolversParentTypes['ExtraBuilding']> = {
   __resolveType: TypeResolveFn<'ExtraBuildingValue', ParentType, ContextType>;
 };
 
-export type ExtraBuildingCoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExtraBuildingCore'] = ResolversParentTypes['ExtraBuildingCore']> = {
+export type ExtraBuildingCoreResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExtraBuildingCore'] = ResolversParentTypes['ExtraBuildingCore']> = {
   __resolveType: TypeResolveFn<'ExtraBuildingValue', ParentType, ContextType>;
   type?: Resolver<ResolversTypes['ExtraBuildingType'], ParentType, ContextType>;
   area?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1772,7 +1760,7 @@ export type ExtraBuildingCoreResolvers<ContextType = any, ParentType extends Res
   hasWaterConnected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
 };
 
-export type ExtraBuildingValueResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExtraBuildingValue'] = ResolversParentTypes['ExtraBuildingValue']> = {
+export type ExtraBuildingValueResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExtraBuildingValue'] = ResolversParentTypes['ExtraBuildingValue']> = {
   type?: Resolver<ResolversTypes['ExtraBuildingType'], ParentType, ContextType>;
   area?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1780,19 +1768,19 @@ export type ExtraBuildingValueResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
+export type FileResolvers<ContextType = Context, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
   signedUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   bucket?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type GeoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Geo'] = ResolversParentTypes['Geo']> = {
+export type GeoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Geo'] = ResolversParentTypes['Geo']> = {
   countryISOCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type GifResolvers<ContextType = any, ParentType extends ResolversParentTypes['Gif'] = ResolversParentTypes['Gif']> = {
+export type GifResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Gif'] = ResolversParentTypes['Gif']> = {
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1801,7 +1789,7 @@ export interface InstantScalarConfig extends GraphQLScalarTypeConfig<ResolversTy
   name: 'Instant';
 }
 
-export type InsuranceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Insurance'] = ResolversParentTypes['Insurance']> = {
+export type InsuranceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Insurance'] = ResolversParentTypes['Insurance']> = {
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   postalNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   cost?: Resolver<Maybe<ResolversTypes['InsuranceCost']>, ParentType, ContextType>;
@@ -1829,7 +1817,7 @@ export type InsuranceResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type InsuranceCostResolvers<ContextType = any, ParentType extends ResolversParentTypes['InsuranceCost'] = ResolversParentTypes['InsuranceCost']> = {
+export type InsuranceCostResolvers<ContextType = Context, ParentType extends ResolversParentTypes['InsuranceCost'] = ResolversParentTypes['InsuranceCost']> = {
   monthlyGross?: Resolver<ResolversTypes['MonetaryAmountV2'], ParentType, ContextType>;
   monthlyDiscount?: Resolver<ResolversTypes['MonetaryAmountV2'], ParentType, ContextType>;
   monthlyNet?: Resolver<ResolversTypes['MonetaryAmountV2'], ParentType, ContextType>;
@@ -1845,7 +1833,7 @@ export interface LocalDateScalarConfig extends GraphQLScalarTypeConfig<Resolvers
   name: 'LocalDate';
 }
 
-export type MemberResolvers<ContextType = any, ParentType extends ResolversParentTypes['Member'] = ResolversParentTypes['Member']> = {
+export type MemberResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Member'] = ResolversParentTypes['Member']> = {
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1856,7 +1844,7 @@ export type MemberResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+export type MessageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
   globalId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['MessageBody'], ParentType, ContextType>;
@@ -1864,11 +1852,11 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBody'] = ResolversParentTypes['MessageBody']> = {
+export type MessageBodyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBody'] = ResolversParentTypes['MessageBody']> = {
   __resolveType: TypeResolveFn<'MessageBodySingleSelect' | 'MessageBodyMultipleSelect' | 'MessageBodyText' | 'MessageBodyNumber' | 'MessageBodyAudio' | 'MessageBodyBankIdCollect' | 'MessageBodyFile' | 'MessageBodyParagraph' | 'MessageBodyUndefined', ParentType, ContextType>;
 };
 
-export type MessageBodyAudioResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyAudio'] = ResolversParentTypes['MessageBodyAudio']> = {
+export type MessageBodyAudioResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyAudio'] = ResolversParentTypes['MessageBodyAudio']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1876,7 +1864,7 @@ export type MessageBodyAudioResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyBankIdCollectResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyBankIdCollect'] = ResolversParentTypes['MessageBodyBankIdCollect']> = {
+export type MessageBodyBankIdCollectResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyBankIdCollect'] = ResolversParentTypes['MessageBodyBankIdCollect']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1884,11 +1872,11 @@ export type MessageBodyBankIdCollectResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyChoicesResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyChoices'] = ResolversParentTypes['MessageBodyChoices']> = {
+export type MessageBodyChoicesResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyChoices'] = ResolversParentTypes['MessageBodyChoices']> = {
   __resolveType: TypeResolveFn<'MessageBodyChoicesUndefined' | 'MessageBodyChoicesSelection' | 'MessageBodyChoicesLink', ParentType, ContextType>;
 };
 
-export type MessageBodyChoicesCoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyChoicesCore'] = ResolversParentTypes['MessageBodyChoicesCore']> = {
+export type MessageBodyChoicesCoreResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyChoicesCore'] = ResolversParentTypes['MessageBodyChoicesCore']> = {
   __resolveType: TypeResolveFn<'MessageBodyChoicesUndefined' | 'MessageBodyChoicesSelection' | 'MessageBodyChoicesLink', ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1896,7 +1884,7 @@ export type MessageBodyChoicesCoreResolvers<ContextType = any, ParentType extend
   selected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
 };
 
-export type MessageBodyChoicesLinkResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyChoicesLink'] = ResolversParentTypes['MessageBodyChoicesLink']> = {
+export type MessageBodyChoicesLinkResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyChoicesLink'] = ResolversParentTypes['MessageBodyChoicesLink']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1907,7 +1895,7 @@ export type MessageBodyChoicesLinkResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyChoicesSelectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyChoicesSelection'] = ResolversParentTypes['MessageBodyChoicesSelection']> = {
+export type MessageBodyChoicesSelectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyChoicesSelection'] = ResolversParentTypes['MessageBodyChoicesSelection']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1916,7 +1904,7 @@ export type MessageBodyChoicesSelectionResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyChoicesUndefinedResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyChoicesUndefined'] = ResolversParentTypes['MessageBodyChoicesUndefined']> = {
+export type MessageBodyChoicesUndefinedResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyChoicesUndefined'] = ResolversParentTypes['MessageBodyChoicesUndefined']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1924,14 +1912,14 @@ export type MessageBodyChoicesUndefinedResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyCoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyCore'] = ResolversParentTypes['MessageBodyCore']> = {
+export type MessageBodyCoreResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyCore'] = ResolversParentTypes['MessageBodyCore']> = {
   __resolveType: TypeResolveFn<'MessageBodySingleSelect' | 'MessageBodyMultipleSelect' | 'MessageBodyText' | 'MessageBodyNumber' | 'MessageBodyAudio' | 'MessageBodyBankIdCollect' | 'MessageBodyFile' | 'MessageBodyParagraph' | 'MessageBodyUndefined', ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
-export type MessageBodyFileResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyFile'] = ResolversParentTypes['MessageBodyFile']> = {
+export type MessageBodyFileResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyFile'] = ResolversParentTypes['MessageBodyFile']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1941,7 +1929,7 @@ export type MessageBodyFileResolvers<ContextType = any, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyMultipleSelectResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyMultipleSelect'] = ResolversParentTypes['MessageBodyMultipleSelect']> = {
+export type MessageBodyMultipleSelectResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyMultipleSelect'] = ResolversParentTypes['MessageBodyMultipleSelect']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1949,7 +1937,7 @@ export type MessageBodyMultipleSelectResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyNumberResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyNumber'] = ResolversParentTypes['MessageBodyNumber']> = {
+export type MessageBodyNumberResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyNumber'] = ResolversParentTypes['MessageBodyNumber']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1959,14 +1947,14 @@ export type MessageBodyNumberResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyParagraphResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyParagraph'] = ResolversParentTypes['MessageBodyParagraph']> = {
+export type MessageBodyParagraphResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyParagraph'] = ResolversParentTypes['MessageBodyParagraph']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodySingleSelectResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodySingleSelect'] = ResolversParentTypes['MessageBodySingleSelect']> = {
+export type MessageBodySingleSelectResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodySingleSelect'] = ResolversParentTypes['MessageBodySingleSelect']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1974,7 +1962,7 @@ export type MessageBodySingleSelectResolvers<ContextType = any, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyTextResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyText'] = ResolversParentTypes['MessageBodyText']> = {
+export type MessageBodyTextResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyText'] = ResolversParentTypes['MessageBodyText']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1984,14 +1972,14 @@ export type MessageBodyTextResolvers<ContextType = any, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageBodyUndefinedResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageBodyUndefined'] = ResolversParentTypes['MessageBodyUndefined']> = {
+export type MessageBodyUndefinedResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageBodyUndefined'] = ResolversParentTypes['MessageBodyUndefined']> = {
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageHeaderResolvers<ContextType = any, ParentType extends ResolversParentTypes['MessageHeader'] = ResolversParentTypes['MessageHeader']> = {
+export type MessageHeaderResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MessageHeader'] = ResolversParentTypes['MessageHeader']> = {
   messageId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   fromMyself?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   timeStamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -2005,13 +1993,13 @@ export type MessageHeaderResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MonetaryAmountV2Resolvers<ContextType = any, ParentType extends ResolversParentTypes['MonetaryAmountV2'] = ResolversParentTypes['MonetaryAmountV2']> = {
+export type MonetaryAmountV2Resolvers<ContextType = Context, ParentType extends ResolversParentTypes['MonetaryAmountV2'] = ResolversParentTypes['MonetaryAmountV2']> = {
   amount?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   currency?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   createSession?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationCreateSessionArgs, never>>;
   createSessionV2?: Resolver<Maybe<ResolversTypes['SessionInformation']>, ParentType, ContextType>;
@@ -2048,12 +2036,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createAddressChangeQuotes?: Resolver<ResolversTypes['AddressChangeQuoteResult'], ParentType, ContextType, RequireFields<MutationCreateAddressChangeQuotesArgs, 'input'>>;
 };
 
-export type NorwegianBankIdAuthResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['NorwegianBankIdAuthResponse'] = ResolversParentTypes['NorwegianBankIdAuthResponse']> = {
+export type NorwegianBankIdAuthResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NorwegianBankIdAuthResponse'] = ResolversParentTypes['NorwegianBankIdAuthResponse']> = {
   redirectUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type NorwegianHomeContentAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['NorwegianHomeContentAgreement'] = ResolversParentTypes['NorwegianHomeContentAgreement']> = {
+export type NorwegianHomeContentAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NorwegianHomeContentAgreement'] = ResolversParentTypes['NorwegianHomeContentAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -2067,7 +2055,7 @@ export type NorwegianHomeContentAgreementResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type NorwegianTravelAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['NorwegianTravelAgreement'] = ResolversParentTypes['NorwegianTravelAgreement']> = {
+export type NorwegianTravelAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['NorwegianTravelAgreement'] = ResolversParentTypes['NorwegianTravelAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -2083,18 +2071,18 @@ export interface ObjectScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'Object';
 }
 
-export type OfferEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['OfferEvent'] = ResolversParentTypes['OfferEvent']> = {
+export type OfferEventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['OfferEvent'] = ResolversParentTypes['OfferEvent']> = {
   status?: Resolver<ResolversTypes['OfferStatus'], ParentType, ContextType>;
   insurance?: Resolver<Maybe<ResolversTypes['Insurance']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PendingStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['PendingStatus'] = ResolversParentTypes['PendingStatus']> = {
+export type PendingStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PendingStatus'] = ResolversParentTypes['PendingStatus']> = {
   pendingSince?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PerilResolvers<ContextType = any, ParentType extends ResolversParentTypes['Peril'] = ResolversParentTypes['Peril']> = {
+export type PerilResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Peril'] = ResolversParentTypes['Peril']> = {
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -2102,7 +2090,7 @@ export type PerilResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PerilCategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['PerilCategory'] = ResolversParentTypes['PerilCategory']> = {
+export type PerilCategoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PerilCategory'] = ResolversParentTypes['PerilCategory']> = {
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   iconUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -2110,14 +2098,14 @@ export type PerilCategoryResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PreviousInsurerResolvers<ContextType = any, ParentType extends ResolversParentTypes['PreviousInsurer'] = ResolversParentTypes['PreviousInsurer']> = {
+export type PreviousInsurerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PreviousInsurer'] = ResolversParentTypes['PreviousInsurer']> = {
   displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   switchable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   insurance?: Resolver<ResolversTypes['Insurance'], ParentType, ContextType>;
   cashback?: Resolver<Maybe<ResolversTypes['Cashback']>, ParentType, ContextType, RequireFields<QueryCashbackArgs, never>>;
   cashbackOptions?: Resolver<Array<Maybe<ResolversTypes['Cashback']>>, ParentType, ContextType, RequireFields<QueryCashbackOptionsArgs, never>>;
@@ -2139,37 +2127,37 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   availableLocales?: Resolver<Array<ResolversTypes['Locale']>, ParentType, ContextType>;
 };
 
-export type RenewalResolvers<ContextType = any, ParentType extends ResolversParentTypes['Renewal'] = ResolversParentTypes['Renewal']> = {
+export type RenewalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Renewal'] = ResolversParentTypes['Renewal']> = {
   certificateUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['LocalDate'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SelfChangeEligibilityResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelfChangeEligibility'] = ResolversParentTypes['SelfChangeEligibility']> = {
+export type SelfChangeEligibilityResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SelfChangeEligibility'] = ResolversParentTypes['SelfChangeEligibility']> = {
   blockers?: Resolver<Array<ResolversTypes['SelfChangeBlocker']>, ParentType, ContextType>;
   embarkStoryId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   addressChangeEmbarkStoryId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SessionInformationResolvers<ContextType = any, ParentType extends ResolversParentTypes['SessionInformation'] = ResolversParentTypes['SessionInformation']> = {
+export type SessionInformationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SessionInformation'] = ResolversParentTypes['SessionInformation']> = {
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   memberId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SignEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignEvent'] = ResolversParentTypes['SignEvent']> = {
+export type SignEventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SignEvent'] = ResolversParentTypes['SignEvent']> = {
   status?: Resolver<Maybe<ResolversTypes['SignStatus']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SignStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignStatus'] = ResolversParentTypes['SignStatus']> = {
+export type SignStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SignStatus'] = ResolversParentTypes['SignStatus']> = {
   collectStatus?: Resolver<Maybe<ResolversTypes['CollectStatus']>, ParentType, ContextType>;
   signState?: Resolver<Maybe<ResolversTypes['SignState']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+export type SubscriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   offer?: SubscriptionResolver<Maybe<ResolversTypes['OfferEvent']>, "offer", ParentType, ContextType>;
   signStatus?: SubscriptionResolver<Maybe<ResolversTypes['SignEvent']>, "signStatus", ParentType, ContextType>;
   message?: SubscriptionResolver<ResolversTypes['Message'], "message", ParentType, ContextType>;
@@ -2178,7 +2166,7 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
   authStatus?: SubscriptionResolver<Maybe<ResolversTypes['AuthEvent']>, "authStatus", ParentType, ContextType>;
 };
 
-export type SwedishApartmentAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['SwedishApartmentAgreement'] = ResolversParentTypes['SwedishApartmentAgreement']> = {
+export type SwedishApartmentAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SwedishApartmentAgreement'] = ResolversParentTypes['SwedishApartmentAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -2192,7 +2180,7 @@ export type SwedishApartmentAgreementResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SwedishHouseAgreementResolvers<ContextType = any, ParentType extends ResolversParentTypes['SwedishHouseAgreement'] = ResolversParentTypes['SwedishHouseAgreement']> = {
+export type SwedishHouseAgreementResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SwedishHouseAgreement'] = ResolversParentTypes['SwedishHouseAgreement']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   activeFrom?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   activeTo?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
@@ -2210,18 +2198,18 @@ export type SwedishHouseAgreementResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TerminatedInFutureStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['TerminatedInFutureStatus'] = ResolversParentTypes['TerminatedInFutureStatus']> = {
+export type TerminatedInFutureStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TerminatedInFutureStatus'] = ResolversParentTypes['TerminatedInFutureStatus']> = {
   futureTermination?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   upcomingAgreementChange?: Resolver<Maybe<ResolversTypes['UpcomingAgreementChange']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TerminatedStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['TerminatedStatus'] = ResolversParentTypes['TerminatedStatus']> = {
+export type TerminatedStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TerminatedStatus'] = ResolversParentTypes['TerminatedStatus']> = {
   termination?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TerminatedTodayStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['TerminatedTodayStatus'] = ResolversParentTypes['TerminatedTodayStatus']> = {
+export type TerminatedTodayStatusResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TerminatedTodayStatus'] = ResolversParentTypes['TerminatedTodayStatus']> = {
   today?: Resolver<Maybe<ResolversTypes['LocalDate']>, ParentType, ContextType>;
   upcomingAgreementChange?: Resolver<Maybe<ResolversTypes['UpcomingAgreementChange']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -2231,12 +2219,12 @@ export interface TimeStampScalarConfig extends GraphQLScalarTypeConfig<Resolvers
   name: 'TimeStamp';
 }
 
-export type UpcomingAgreementChangeResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpcomingAgreementChange'] = ResolversParentTypes['UpcomingAgreementChange']> = {
+export type UpcomingAgreementChangeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpcomingAgreementChange'] = ResolversParentTypes['UpcomingAgreementChange']> = {
   newAgreement?: Resolver<ResolversTypes['Agreement'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpcomingRenewalResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpcomingRenewal'] = ResolversParentTypes['UpcomingRenewal']> = {
+export type UpcomingRenewalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpcomingRenewal'] = ResolversParentTypes['UpcomingRenewal']> = {
   renewalDate?: Resolver<ResolversTypes['LocalDate'], ParentType, ContextType>;
   draftCertificateUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -2254,7 +2242,7 @@ export interface UuidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'UUID';
 }
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = Context> = {
   ActiveInFutureAndTerminatedInFutureStatus?: ActiveInFutureAndTerminatedInFutureStatusResolvers<ContextType>;
   ActiveInFutureStatus?: ActiveInFutureStatusResolvers<ContextType>;
   ActiveStatus?: ActiveStatusResolvers<ContextType>;
@@ -2349,4 +2337,4 @@ export type Resolvers<ContextType = any> = {
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
  */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
+export type IResolvers<ContextType = Context> = Resolvers<ContextType>;

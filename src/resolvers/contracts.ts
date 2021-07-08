@@ -18,15 +18,10 @@ import {
   ExtraBuildingType,
   NorwegianHomeContentLineOfBusiness,
   NorwegianTravelLineOfBusiness,
-  PossibleAgreementTypeNames,
-  PossibleContractStatusTypeNames,
-  QueryToActiveContractBundlesResolver,
-  QueryToContractsResolver,
-  QueryToHasContractResolver,
+  QueryResolvers,
   SwedishApartmentLineOfBusiness,
   TypeOfContract
-} from './../typings/generated-graphql-types';
-import { Typenamed } from './../utils/types';
+} from './../generated/graphql';
 import { format } from 'date-fns'
 
 
@@ -35,7 +30,7 @@ const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
   NORWAY: 'moving-flow-NO',
 }
 
-export const activeContractBundles: QueryToActiveContractBundlesResolver = async (
+export const activeContractBundles: QueryResolvers['activeContractBundles'] = async (
   _parent,
   _args,
   { upstream, strings },
@@ -58,7 +53,7 @@ export const activeContractBundles: QueryToActiveContractBundlesResolver = async
   return bundleContracts(strings, active, addressChangeAngelStoryId)
 }
 
-export const contracts: QueryToContractsResolver = async (
+export const contracts: QueryResolvers['contracts'] = async (
   _parent,
   _args,
   { upstream, strings },
@@ -73,7 +68,7 @@ export const contracts: QueryToContractsResolver = async (
   return mappedContracts.concat(fakeContracts)
 }
 
-export const hasContract: QueryToHasContractResolver = async (
+export const hasContract: QueryResolvers['hasContract'] = async (
   _parent,
   _args,
   { upstream },
@@ -172,7 +167,7 @@ const transformContract = (
 
 const transformContractStatus = (
   contract: ContractDto,
-): Typenamed<ContractStatus, PossibleContractStatusTypeNames> => {
+): ContractStatus => {
   const upcomingAgreementChange = contract.upcomingAgreement
     ? { newAgreement: transformAgreement(contract.upcomingAgreement) }
     : undefined
@@ -221,13 +216,13 @@ const transformContractStatus = (
 
 const transformAgreement = (
   agreement: AgreementDto,
-): Typenamed<Agreement, PossibleAgreementTypeNames> => {
+): Agreement => {
   const statusMap = {
-    [AgreementStatusDto.ACTIVE]: AgreementStatus.ACTIVE,
-    [AgreementStatusDto.ACTIVE_IN_FUTURE]: AgreementStatus.ACTIVE_IN_FUTURE,
-    [AgreementStatusDto.ACTIVE_IN_PAST]: AgreementStatus.ACTIVE,
-    [AgreementStatusDto.PENDING]: AgreementStatus.PENDING,
-    [AgreementStatusDto.TERMINATED]: AgreementStatus.TERMINATED,
+    [AgreementStatusDto.ACTIVE]: AgreementStatus.Active,
+    [AgreementStatusDto.ACTIVE_IN_FUTURE]: AgreementStatus.ActiveInFuture,
+    [AgreementStatusDto.ACTIVE_IN_PAST]: AgreementStatus.Active,
+    [AgreementStatusDto.PENDING]: AgreementStatus.Pending,
+    [AgreementStatusDto.TERMINATED]: AgreementStatus.Terminated,
   }
   const core = {
     id: agreement.id,
@@ -325,20 +320,20 @@ const moveHomeContentsToTop = (contracts: ContractDto[]) => {
 
 const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings): Contract => {
   const typeTransformation: Record<string, TypeOfContract> = {
-    'SE_APARTMENT_BRF': TypeOfContract.SE_APARTMENT_BRF,
-    'SE_APARTMENT_RENT': TypeOfContract.SE_APARTMENT_RENT,
+    'SE_APARTMENT_BRF': TypeOfContract.SeApartmentBrf,
+    'SE_APARTMENT_RENT': TypeOfContract.SeApartmentRent,
   }
   const lineOfBusinessTransformation: Record<string, SwedishApartmentLineOfBusiness> = {
-    'SE_APARTMENT_BRF': SwedishApartmentLineOfBusiness.BRF,
-    'SE_APARTMENT_RENT': SwedishApartmentLineOfBusiness.RENT,
+    'SE_APARTMENT_BRF': SwedishApartmentLineOfBusiness.Brf,
+    'SE_APARTMENT_RENT': SwedishApartmentLineOfBusiness.Rent,
   }
   const agreementStatusTransformation: Record<string, AgreementStatus> = {
-    'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': AgreementStatus.ACTIVE_IN_FUTURE,
-    'TERMINATED_IN_FUTURE': AgreementStatus.ACTIVE,
-    'TERMINATED_TODAY': AgreementStatus.ACTIVE,
-    'TERMINATED': AgreementStatus.TERMINATED,
+    'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': AgreementStatus.ActiveInFuture,
+    'TERMINATED_IN_FUTURE': AgreementStatus.Active,
+    'TERMINATED_TODAY': AgreementStatus.Active,
+    'TERMINATED': AgreementStatus.Terminated,
   }
-  const contractStatusTransformation: Record<string, Typenamed<ContractStatus, PossibleContractStatusTypeNames>> = {
+  const contractStatusTransformation: Record<string, ContractStatus> = {
     'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': {
         __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
         futureInception: trial.fromDate,

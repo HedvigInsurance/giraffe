@@ -39,7 +39,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles!({}, {}, context, info)
 
     expect(result).toEqual([])
   })
@@ -56,7 +56,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([apartment, house])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -94,7 +94,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -130,7 +130,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel, accident])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -168,7 +168,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -196,7 +196,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result[0].id).toBe('bundle-a,z')
   })
@@ -213,7 +213,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result[0].contracts[0].id).toBe('cid2')
     expect(result[0].contracts[1].id).toBe('cid1')
@@ -234,7 +234,7 @@ describe('Query.activeContractBundles', () => {
       preferredCurrency: 'SEK'
     })
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result[0].angelStories.addressChange).toBe('moving-flow-SE?contractBundleId=bundle-cid1')
   })
@@ -245,7 +245,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toEqual([])
   })
@@ -266,7 +266,7 @@ describe('Query.contracts', () => {
       Promise.resolve([{ ...contract, status: ContractStatusDto.ACTIVE }])
 
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveStatus>({
       pastInception: contract.masterInception,
       upcomingAgreementChange: {
@@ -283,7 +283,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([{ ...contract, status: ContractStatusDto.PENDING }])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<PendingStatus>({
       pendingSince: '2020-12-01',
     })
@@ -293,7 +293,7 @@ describe('Query.contracts', () => {
         { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveInFutureStatus>({
       futureInception: contract.masterInception,
     })
@@ -303,7 +303,7 @@ describe('Query.contracts', () => {
         { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveInFutureStatus>({
       futureInception: contract.masterInception,
     })
@@ -317,7 +317,7 @@ describe('Query.contracts', () => {
         },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<TerminatedInFutureStatus>({
       futureTermination: '2022-01-01',
     })
@@ -331,7 +331,7 @@ describe('Query.contracts', () => {
         },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<TerminatedStatus>({
       termination: '2022-01-01',
     })
@@ -345,7 +345,7 @@ describe('Query.contracts', () => {
         },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveInFutureAndTerminatedInFutureStatus>({
       futureInception: contract.masterInception,
       futureTermination: '2022-01-01',
@@ -356,7 +356,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([swedishApartmentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject([swedishApartmentOutput])
   })
@@ -365,7 +365,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([swedishHouseInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject([swedishHouseOutput])
   })
@@ -374,7 +374,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([norwegianHomeContentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([norwegianHomeContentOutput])
   })
@@ -383,7 +383,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([norwegianTravelInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([norwegianTravelOutput])
   })
@@ -392,7 +392,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([danishHomeContentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([danishHomeContentOutput])
   })
@@ -401,7 +401,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([danishTravelInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([danishTravelOutput])
   })
@@ -410,7 +410,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([danishAccidentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([danishAccidentOutput])
   })
@@ -421,7 +421,7 @@ describe('Query.contracts', () => {
       { ...norwegianHomeContentInput, id: 'cid-hc' }
     ])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([
       { ...norwegianHomeContentOutput, id: 'cid-hc' },
@@ -481,7 +481,7 @@ describe('Query.contracts', () => {
       } as Agreement
     }
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([fakeContract])
   })
@@ -527,6 +527,15 @@ const context: Context = ({
   strings: (key: string) => key,
 } as unknown) as Context
 const info: GraphQLResolveInfo = ({} as unknown) as GraphQLResolveInfo
+
+const CALLS = {
+  activeContractBundles: async () => {
+    return await Promise.all(await activeContractBundles!({}, {}, context, info))
+  },
+  contracts: async () => {
+    return await Promise.all(await contracts!({}, {}, context, info))
+  },
+}
 
 const baseContract = {
   id: 'cid',
