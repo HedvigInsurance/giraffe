@@ -1,4 +1,3 @@
-import {MutationResolvers} from './../generated/graphql';
 import {
   bankIdAuth,
   danishBankIdAuth,
@@ -53,13 +52,15 @@ import {uploadFile, uploadFiles} from './uploadFile'
 import {activeContractBundles, contracts, hasContract} from './contracts'
 import {createAddressChangeQuotes} from './addressChange'
 import {availableLocales} from './availableLocales'
-import {QueryResolvers} from '../generated/graphql'
+import {MutationResolvers, QueryResolvers} from '../generated/graphql'
 
 const newQueryResolvers: QueryResolvers = {
   activeContractBundles,
   contracts,
   hasContract,
-
+  geo,
+  gifs,
+  file,
 }
 
 const newMutationResolvers: MutationResolvers = {
@@ -71,7 +72,9 @@ const newMutationResolvers: MutationResolvers = {
   logout,
   registerPushToken,
   log,
-  createAddressChangeQuotes
+  createAddressChangeQuotes,
+  emailSign,
+
 }
 
 const resolvers: Resolver = {
@@ -81,14 +84,11 @@ const resolvers: Resolver = {
     member,
     cashback,
     signStatus: getSignStatus,
-    gifs,
-    file,
     cashbackOptions,
     chatState,
     currentChatResponse,
     avatars,
     chatActions,
-    geo,
     angelStory,
     messages,
     availableLocales
@@ -114,7 +114,6 @@ const resolvers: Resolver = {
     triggerClaimChat,
     triggerFreeTextChat,
     triggerCallMeChat,
-    emailSign,
 
     bankIdAuth,
     swedishBankIdAuth,

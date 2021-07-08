@@ -1,7 +1,7 @@
-import { QueryToGeoResolver } from '../typings/generated-graphql-types'
+import { QueryResolvers } from '../generated/graphql'
 import * as geoip from "geoip-lite"
 
-export const geo: QueryToGeoResolver = async (
+export const geo: QueryResolvers['geo'] = async (
   _root,
   {},
   { getToken, remoteIp },
@@ -15,6 +15,6 @@ export const geo: QueryToGeoResolver = async (
           countryISOCode: ipLookup.country
       }
   }
-  
+
   throw new Error("couldn't do a geo lookup")
 }

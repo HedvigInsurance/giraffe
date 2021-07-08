@@ -1,9 +1,9 @@
 import fetch from 'node-fetch'
 import { getUser } from '../api'
 import { GIPHY_API_KEY } from '../config'
-import { QueryToGifsResolver } from '../typings/generated-graphql-types'
+import { QueryResolvers } from '../generated/graphql'
 
-const gifs: QueryToGifsResolver = async (
+const gifs: QueryResolvers['gifs'] = async (
   _root,
   { query },
   { getToken, headers },

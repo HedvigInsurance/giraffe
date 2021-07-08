@@ -2,9 +2,9 @@ import { equals } from 'ramda'
 import { ChatDto, getChat, getUser } from '../api'
 import {
   ChatResponse,
-  QueryToCurrentChatResponseResolver,
-  SubscriptionToCurrentChatResponseResolver,
-} from '../typings/generated-graphql-types'
+  QueryResolvers,
+  SubscriptionResolvers
+} from '../generated/graphql'
 
 import { subscribeToChat } from '../features/chat/chatSubscription'
 import { transformMessage } from '../features/chat/transform'
@@ -19,7 +19,7 @@ export const currentChatResponse: QueryToCurrentChatResponseResolver = async (
   return transformMessage(chat.messages[0])
 }
 
-export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseResolver = {
+export const subscribeToCurrentChatResponse: SubscriptionResolvers['currentChatResponse'] = {
   subscribe: async (
     _parent,
     { mostRecentTimestamp },

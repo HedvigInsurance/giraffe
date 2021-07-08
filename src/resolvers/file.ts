@@ -1,7 +1,7 @@
 import { getUser } from '../api'
 import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
-import { File, QueryToFileResolver } from '../typings/generated-graphql-types'
+import { File, QueryResolvers } from '../generated/graphql'
 
 const THIRTY_MINUTES = 60 * 30
 
@@ -32,7 +32,7 @@ export const fileInner = async (
   throw new Error('You cant access this file')
 }
 
-export const file: QueryToFileResolver = async (
+export const file: QueryResolvers['file'] = async (
   _root,
   { key },
   { getToken, headers },
