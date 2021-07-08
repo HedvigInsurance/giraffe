@@ -52,7 +52,13 @@ import {uploadFile, uploadFiles} from './uploadFile'
 import {activeContractBundles, contracts, hasContract} from './contracts'
 import {createAddressChangeQuotes} from './addressChange'
 import {availableLocales} from './availableLocales'
-import {MutationResolvers, QueryResolvers, SubscriptionResolvers} from '../generated/graphql'
+import {
+  MutationResolvers,
+  OfferEventResolvers,
+  QueryResolvers,
+  SignEventResolvers,
+  SubscriptionResolvers
+} from '../generated/graphql'
 
 const newQueryResolvers: QueryResolvers = {
   angelStory,
@@ -70,6 +76,8 @@ const newQueryResolvers: QueryResolvers = {
   currentChatResponse,
   member,
   chatState,
+  insurance,
+  signStatus: getSignStatus,
 }
 
 const newMutationResolvers: MutationResolvers = {
@@ -97,48 +105,52 @@ const newMutationResolvers: MutationResolvers = {
   triggerCallMeChat,
   updateEmail,
   updatePhoneNumber,
+  signOffer,
+  signOfferV2,
+  createOffer,
+  bankIdAuth,
+  swedishBankIdAuth,
+  norwegianBankIdAuth,
+  danishBankIdAuth,
 }
 
 const newSubscriptionResolvers: SubscriptionResolvers = {
   chatState: subscribeToChatState,
-  currentChatResponse: subscribeToCurrentChatResponse
+  currentChatResponse: subscribeToCurrentChatResponse,
+  signStatus: subscribeToSignStatus,
+  offer: subscribeToOffer,
+}
+
+const newSignEventResolvers: SignEventResolvers = {
+  status: getSignStatusFromSignEvent
+}
+
+const newOfferEventResolvers: OfferEventResolvers = {
+  insurance: getInsuranceByOfferSuccessEvent
 }
 
 const resolvers: Resolver = {
   Query: {
     ...(newQueryResolvers as Resolver['Query']),
-    insurance,
-    signStatus: getSignStatus,
     messages,
   },
+
   Mutation: {
     ...(newMutationResolvers as Resolver['Mutation']),
     resetConversation,
     editLastResponse,
     markMessageAsRead,
-    createOffer,
-    signOffer,
-    signOfferV2,
-
-
-    bankIdAuth,
-    swedishBankIdAuth,
-    norwegianBankIdAuth,
-    danishBankIdAuth,
-
   },
   Subscription: {
     ...(newSubscriptionResolvers as Resolver['Subscription']),
-    offer: subscribeToOffer,
-    signStatus: subscribeToSignStatus,
     message: subscribeToMessage,
     authStatus: subscribeToAuthStatus,
   },
   OfferEvent: {
-    insurance: getInsuranceByOfferSuccessEvent,
+    ...(newOfferEventResolvers as Resolver['OfferEvent'])
   },
   SignEvent: {
-    status: getSignStatusFromSignEvent,
+    ...(newSignEventResolvers as Resolver['SignEvent'])
   },
   MessageBody: {
     __resolveType: __resolveMessageBodyType,
@@ -157,7 +169,7 @@ const resolvers: Resolver = {
   },
   Member: {
     features: memberFeatures
-  }
+  } as Resolver['Member']
 }
 
 export {resolvers}

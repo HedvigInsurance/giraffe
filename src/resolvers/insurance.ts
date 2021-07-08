@@ -1,7 +1,7 @@
 import { loadInsurance } from '../features/insurance'
-import { QueryToInsuranceResolver } from '../typings/generated-graphql-types'
+import { QueryResolvers } from '../generated/graphql'
 
-const insurance: QueryToInsuranceResolver = async (
+const insurance: QueryResolvers['insurance'] = async (
   _root,
   _args,
   { getToken, headers },
