@@ -1,3 +1,4 @@
+import { MutationResolvers } from './../generated/graphql';
 import { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth, danishBankIdAuth, subscribeToAuthStatus } from '../features/auth'
 import {
   createOffer,
@@ -70,9 +71,20 @@ import { uploadFile, uploadFiles } from './uploadFile'
 import { activeContractBundles, contracts, hasContract } from './contracts'
 import { createAddressChangeQuotes } from './addressChange'
 import { availableLocales } from './availableLocales'
+import { QueryResolvers } from '../generated/graphql'
+
+const newQueryResolvers: QueryResolvers = {
+  activeContractBundles,
+  contracts,
+  hasContract,
+}
+
+const newMutationResolvers: MutationResolvers = {
+}
 
 const resolvers: Resolver = {
   Query: {
+    ...(newQueryResolvers as Resolver['Query']),
     insurance,
     member,
     cashback,
@@ -87,12 +99,10 @@ const resolvers: Resolver = {
     chatActions,
     geo,
     angelStory,
-    activeContractBundles,
-    contracts,
-    hasContract,
     availableLocales
   },
   Mutation: {
+    ...(newMutationResolvers as Resolver['Mutation']),
     logout,
     createSession,
     createSessionV2,
