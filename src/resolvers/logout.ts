@@ -1,7 +1,8 @@
 import { logoutUser } from '../api'
-import { MutationToLogoutResolver } from '../typings/generated-graphql-types'
+import { MutationResolvers } from '../generated/graphql'
 
-const logout: MutationToLogoutResolver = async (
+
+const logout: MutationResolvers['logout'] = async (
   _root,
   _args,
   { getToken, headers },

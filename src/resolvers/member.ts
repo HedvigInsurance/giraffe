@@ -1,4 +1,5 @@
-import { Feature } from './../typings/generated-graphql-types';
+import { Feature } from '../generated/graphql'
+
 import { getUser, postEmail, postPhoneNumber, postLanguage, postPickedLocale, isEligibleForReferrals } from '../api'
 
 import {
