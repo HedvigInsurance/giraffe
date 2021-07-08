@@ -1,4 +1,4 @@
-import {MutationResolvers} from './../generated/graphql';
+import { MutationResolvers, SubscriptionResolvers } from './../generated/graphql';
 import {
   bankIdAuth,
   danishBankIdAuth,
@@ -65,6 +65,7 @@ const newQueryResolvers: QueryResolvers = {
   chatActions,
   contracts,
   hasContract,
+  chatState,
 }
 
 const newMutationResolvers: MutationResolvers = {
@@ -84,6 +85,10 @@ const newMutationResolvers: MutationResolvers = {
   sendChatAudioResponse,
 }
 
+const newSubscriptionResolvers: SubscriptionResolvers = {
+  chatState: subscribeToChatState,
+}
+
 const resolvers: Resolver = {
   Query: {
     ...(newQueryResolvers as Resolver['Query']),
@@ -93,7 +98,6 @@ const resolvers: Resolver = {
     gifs,
     file,
     messages,
-    chatState,
     currentChatResponse,
     geo,
   },
@@ -123,11 +127,11 @@ const resolvers: Resolver = {
     updatePickedLocale,
   },
   Subscription: {
+    ...(newSubscriptionResolvers as Resolver['Subscription']),
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
     message: subscribeToMessage,
     currentChatResponse: subscribeToCurrentChatResponse,
-    chatState: subscribeToChatState,
     authStatus: subscribeToAuthStatus,
   },
   OfferEvent: {

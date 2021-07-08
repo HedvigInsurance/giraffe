@@ -1,13 +1,9 @@
 import { equals } from 'ramda'
 import { ChatDto, getChat, getUser } from '../api'
-import {
-  ChatState,
-  QueryToChatStateResolver,
-} from '../typings/generated-graphql-types'
+import { SubscriptionResolvers, ChatState, QueryResolvers } from '../generated/graphql'
 import { subscribeToChat } from './../features/chat/chatSubscription'
-import { SubscriptionToChatStateResolver } from './../typings/generated-graphql-types'
 
-export const chatState: QueryToChatStateResolver = async (
+export const chatState: QueryResolvers['chatState'] = async (
   _root,
   _args,
   { getToken, headers },
@@ -17,12 +13,12 @@ export const chatState: QueryToChatStateResolver = async (
   return chat.state
 }
 
-export const subscribeToChatState: SubscriptionToChatStateResolver = {
+export const subscribeToChatState: SubscriptionResolvers['chatState'] = {
   subscribe: async (
     _parent,
     { mostRecentTimestamp },
     { getToken, headers, pubsub },
-  ) => {
+  ): Promise<AsyncIterator<{ 'chatState': ChatState }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
     const iteratorId = `CHAT_STATE.${user.memberId}`
@@ -43,7 +39,7 @@ export const subscribeToChatState: SubscriptionToChatStateResolver = {
       },
     )
 
-    const asyncIterator = pubsub.asyncIterator<ChatState>(iteratorId)
+    const asyncIterator = pubsub.asyncIterator<{ 'chatState': ChatState }>(iteratorId)
 
     asyncIterator.return = (value) => {
       unsubscribe()
