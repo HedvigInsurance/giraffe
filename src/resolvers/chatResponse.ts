@@ -1,21 +1,16 @@
+import { MutationResolvers } from './../generated/graphql';
 import * as uuid from 'uuid/v4'
 import { getUser, setChatResponse, setChatSingleSelectResponse } from '../api'
 import { s3 } from '../api/s3'
 import { AWS_CLAIMS_S3_BUCKET } from '../config'
 import { factory } from '../utils/log'
 import { setChatAudioResponse, setChatFileResponse } from './../api/index'
-import {
-  MutationToSendChatAudioResponseResolver,
-  MutationToSendChatFileResponseResolver,
-  MutationToSendChatSingleSelectResponseResolver,
-  MutationToSendChatTextResponseResolver,
-} from './../typings/generated-graphql-types'
 
 const logger = factory.getLogger('resolvers/chatResponse')
 
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
 
-export const sendChatTextResponse: MutationToSendChatTextResponseResolver = async (
+export const sendChatTextResponse: MutationResolvers['sendChatTextResponse'] = async (
   _root,
   { input },
   { getToken, headers },
@@ -24,7 +19,7 @@ export const sendChatTextResponse: MutationToSendChatTextResponseResolver = asyn
   return setChatResponse(token, headers, input)
 }
 
-export const sendChatSingleSelectResponse: MutationToSendChatSingleSelectResponseResolver = async (
+export const sendChatSingleSelectResponse: MutationResolvers['sendChatSingleSelectResponse'] = async (
   _root,
   { input },
   { getToken, headers },
@@ -33,7 +28,7 @@ export const sendChatSingleSelectResponse: MutationToSendChatSingleSelectRespons
   return setChatSingleSelectResponse(token, headers, input)
 }
 
-export const sendChatFileResponse: MutationToSendChatFileResponseResolver = async (
+export const sendChatFileResponse: MutationResolvers['sendChatFileResponse'] = async (
   _root,
   { input },
   { getToken, headers },
@@ -42,7 +37,7 @@ export const sendChatFileResponse: MutationToSendChatFileResponseResolver = asyn
   return setChatFileResponse(token, headers, input)
 }
 
-export const sendChatAudioResponse: MutationToSendChatAudioResponseResolver = async (
+export const sendChatAudioResponse: MutationResolvers['sendChatAudioResponse'] = async (
   _root,
   { input: { file, globalId } },
   { getToken, headers },

@@ -1,7 +1,7 @@
+import { MutationResolvers } from './../generated/graphql';
 import { registerCampaign } from '../api'
-import { MutationToRegisterBranchCampaignResolver } from '../typings/generated-graphql-types'
 
-const registerBranchCampaign: MutationToRegisterBranchCampaignResolver = async (
+const registerBranchCampaign: MutationResolvers['registerBranchCampaign'] = async (
   _parent,
   { campaign },
   { getToken, headers },

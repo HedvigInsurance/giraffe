@@ -7,7 +7,6 @@ export const emailSign: MutationResolvers['emailSign'] = async (
   { getToken, headers },
 ) => {
   const token = getToken()
-  const test = await performEmailSign(token, headers)
-  console.log(test)
+  await performEmailSign(token, headers)
   return true
 }

@@ -9,7 +9,7 @@ import {
 import { subscribeToChat } from '../features/chat/chatSubscription'
 import { transformMessage } from '../features/chat/transform'
 
-export const currentChatResponse: QueryToCurrentChatResponseResolver = async (
+export const currentChatResponse: QueryResolvers['currentChatResponse'] = async (
   _root,
   _args,
   { getToken, headers },
@@ -24,7 +24,7 @@ export const subscribeToCurrentChatResponse: SubscriptionResolvers['currentChatR
     _parent,
     { mostRecentTimestamp },
     { getToken, headers, pubsub },
-  ) => {
+  ): Promise<AsyncIterator<{ 'currentChatResponse': ChatResponse }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
     const iteratorId = `CURRENT_RESPONSE.${user.memberId}`
@@ -45,7 +45,7 @@ export const subscribeToCurrentChatResponse: SubscriptionResolvers['currentChatR
       },
     )
 
-    const asyncIterator = pubsub.asyncIterator<ChatResponse>(iteratorId)
+    const asyncIterator = pubsub.asyncIterator<{ 'currentChatResponse': ChatResponse }>(iteratorId)
 
     asyncIterator.return = (value) => {
       unsubscribe()

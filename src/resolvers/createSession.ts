@@ -1,37 +1,34 @@
-import { assignTrackingId, getUser, register, registerCampaign } from '../api'
-import {
-  MutationToCreateSessionResolver,
-  MutationToCreateSessionV2Resolver,
-} from '../typings/generated-graphql-types'
-import { awaitAll } from '../utils/async'
+import {assignTrackingId, getUser, register, registerCampaign} from '../api'
+import {MutationResolvers,} from '../generated/graphql'
+import {awaitAll} from '../utils/async'
 
-const createSession: MutationToCreateSessionResolver = async (
+const createSession: MutationResolvers['createSession'] = async (
   _parent,
-  { campaign, trackingId },
-  { headers },
+  {campaign, trackingId},
+  {headers},
 ) => {
   const token = await register(headers)
 
   await awaitAll(
     campaign
       ? registerCampaign(token, headers, {
-          utmSource: campaign.source,
-          utmMedium: campaign.medium,
-          utmContent: campaign.content ? [campaign.content] : undefined,
-          utmCampaign: campaign.name,
-          utmTerm: campaign.term ? [campaign.term] : undefined,
-        })
+        utmSource: campaign.source,
+        utmMedium: campaign.medium,
+        utmContent: campaign.content ? [campaign.content] : undefined,
+        utmCampaign: campaign.name,
+        utmTerm: campaign.term ? [campaign.term] : undefined,
+      })
       : undefined,
-    trackingId ? assignTrackingId(token, headers, { trackingId }) : undefined,
+    trackingId ? assignTrackingId(token, headers, {trackingId}) : undefined,
   )
 
   return token
 }
 
-const createSessionV2: MutationToCreateSessionV2Resolver = async (
+const createSessionV2: MutationResolvers['createSessionV2'] = async (
   _parent,
   _args,
-  { headers },
+  {headers},
 ) => {
   const token = await register(headers)
   const user = await getUser(token, headers)
@@ -41,4 +38,4 @@ const createSessionV2: MutationToCreateSessionV2Resolver = async (
   }
 }
 
-export { createSession, createSessionV2 }
+export {createSession, createSessionV2}

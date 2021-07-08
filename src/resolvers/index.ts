@@ -52,15 +52,24 @@ import {uploadFile, uploadFiles} from './uploadFile'
 import {activeContractBundles, contracts, hasContract} from './contracts'
 import {createAddressChangeQuotes} from './addressChange'
 import {availableLocales} from './availableLocales'
-import {MutationResolvers, QueryResolvers} from '../generated/graphql'
+import {MutationResolvers, QueryResolvers, SubscriptionResolvers} from '../generated/graphql'
 
 const newQueryResolvers: QueryResolvers = {
+  angelStory,
+  availableLocales,
+  avatars,
   activeContractBundles,
+  cashback,
+  cashbackOptions,
+  chatActions,
   contracts,
   hasContract,
   geo,
   gifs,
   file,
+  currentChatResponse,
+  member,
+  chatState,
 }
 
 const newMutationResolvers: MutationResolvers = {
@@ -74,61 +83,55 @@ const newMutationResolvers: MutationResolvers = {
   log,
   createAddressChangeQuotes,
   emailSign,
+  registerBranchCampaign,
+  sendChatTextResponse,
+  createSession,
+  createSessionV2,
+  sendChatSingleSelectResponse,
+  sendChatFileResponse,
+  sendChatAudioResponse,
+  triggerClaimChat,
+  triggerFreeTextChat,
+  updateLanguage,
+  updatePickedLocale,
+  triggerCallMeChat,
+  updateEmail,
+  updatePhoneNumber,
+}
 
+const newSubscriptionResolvers: SubscriptionResolvers = {
+  chatState: subscribeToChatState,
+  currentChatResponse: subscribeToCurrentChatResponse
 }
 
 const resolvers: Resolver = {
   Query: {
     ...(newQueryResolvers as Resolver['Query']),
     insurance,
-    member,
-    cashback,
     signStatus: getSignStatus,
-    cashbackOptions,
-    chatState,
-    currentChatResponse,
-    avatars,
-    chatActions,
-    angelStory,
     messages,
-    availableLocales
   },
   Mutation: {
     ...(newMutationResolvers as Resolver['Mutation']),
     resetConversation,
     editLastResponse,
     markMessageAsRead,
-    createSession,
-    createSessionV2,
     createOffer,
     signOffer,
     signOfferV2,
-    sendChatTextResponse,
-    sendChatSingleSelectResponse,
-    sendChatFileResponse,
-    sendChatAudioResponse,
 
-    updateEmail,
-    updatePhoneNumber,
-
-    triggerClaimChat,
-    triggerFreeTextChat,
-    triggerCallMeChat,
 
     bankIdAuth,
     swedishBankIdAuth,
     norwegianBankIdAuth,
     danishBankIdAuth,
-    registerBranchCampaign,
-    updateLanguage,
-    updatePickedLocale,
+
   },
   Subscription: {
+    ...(newSubscriptionResolvers as Resolver['Subscription']),
     offer: subscribeToOffer,
     signStatus: subscribeToSignStatus,
     message: subscribeToMessage,
-    currentChatResponse: subscribeToCurrentChatResponse,
-    chatState: subscribeToChatState,
     authStatus: subscribeToAuthStatus,
   },
   OfferEvent: {

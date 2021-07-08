@@ -19,7 +19,7 @@ const selectCashbackOption: MutationResolvers['selectCashbackOption'] = async (
 
   if (result === 204 || result === 200) {
     const cashback = await cashbackInner(token, headers)
-    if (cashback !== null) {
+    if (cashback) {
       return cashback
     }
   }

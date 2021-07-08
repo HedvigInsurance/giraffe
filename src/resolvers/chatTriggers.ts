@@ -1,8 +1,4 @@
-import {
-  MutationToTriggerCallMeChatResolver,
-  MutationToTriggerClaimChatResolver,
-  MutationToTriggerFreeTextChatResolver,
-} from '../typings/generated-graphql-types'
+import {MutationResolvers} from '../generated/graphql'
 
 import {
   triggerCallMeChat as triggerCallMeChatApi,
@@ -10,30 +6,30 @@ import {
   triggerFreeTextChat as triggerFreeTextChatApi,
 } from '../api'
 
-export const triggerFreeTextChat: MutationToTriggerFreeTextChatResolver = async (
+export const triggerFreeTextChat: MutationResolvers['triggerFreeTextChat'] = async (
   _parent,
   _args,
-  { getToken, headers },
+  {getToken, headers},
 ) => {
   const token = getToken()
   await triggerFreeTextChatApi(token, headers)
   return true
 }
 
-export const triggerClaimChat: MutationToTriggerClaimChatResolver = async (
+export const triggerClaimChat: MutationResolvers['triggerClaimChat'] = async (
   _parent,
   _args,
-  { getToken, headers },
+  {getToken, headers},
 ) => {
   const token = getToken()
   await triggerClaimChatApi(token, headers)
   return true
 }
 
-export const triggerCallMeChat: MutationToTriggerCallMeChatResolver = async (
+export const triggerCallMeChat: MutationResolvers['triggerCallMeChat'] = async (
   _parent,
   _args,
-  { getToken, headers },
+  {getToken, headers},
 ) => {
   const token = getToken()
   await triggerCallMeChatApi(token, headers)

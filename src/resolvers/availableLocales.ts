@@ -1,7 +1,7 @@
 import { AVAILABLE_LOCALES } from '../config'
-import { QueryToAvailableLocalesResolver, Locale } from '../typings/generated-graphql-types'
+import { Locale, QueryResolvers } from '../generated/graphql'
 
-export const availableLocales: QueryToAvailableLocalesResolver = (
-) => {
+export const availableLocales: QueryResolvers['availableLocales'] = (
+): Locale[] => {
   return AVAILABLE_LOCALES.split(",") as Locale[]
 }

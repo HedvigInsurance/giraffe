@@ -14,13 +14,13 @@ import {
   Renewal,
   SignState,
   Locale,
-} from '../typings/generated-graphql-types'
+} from '../generated/graphql'
 import {
   ChatResponseSingleSelectInput,
   ChatResponseTextInput,
   ChatState,
   MessageBody,
-} from './../typings/generated-graphql-types'
+} from '../generated/graphql'
 
 interface InsuranceDto {
   cost: InsuranceCost

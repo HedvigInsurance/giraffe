@@ -5,7 +5,7 @@ import {
   ContractStatusDto,
   TrialDto
 } from './../api/upstreams/productPricing';
-import { LocalizedStrings } from './../translations/LocalizedStrings';
+import {LocalizedStrings} from './../translations/LocalizedStrings';
 import {
   Agreement,
   AgreementStatus,
@@ -21,8 +21,8 @@ import {
   QueryResolvers,
   SwedishApartmentLineOfBusiness,
   TypeOfContract
-} from './../generated/graphql';
-import { format } from 'date-fns'
+} from '../generated/graphql'
+import {format} from 'date-fns'
 
 
 const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
@@ -33,7 +33,7 @@ const ADDRESS_CHANGE_STORIES_BY_MARKET: Record<string, string> = {
 export const activeContractBundles: QueryResolvers['activeContractBundles'] = async (
   _parent,
   _args,
-  { upstream, strings },
+  {upstream, strings},
 ): Promise<ContractBundle[]> => {
   const [
     contracts,
@@ -56,7 +56,7 @@ export const activeContractBundles: QueryResolvers['activeContractBundles'] = as
 export const contracts: QueryResolvers['contracts'] = async (
   _parent,
   _args,
-  { upstream, strings },
+  {upstream, strings},
 ): Promise<Contract[]> => {
   const [contracts, trials] = await Promise.all([
     upstream.productPricing.getMemberContracts(),
@@ -71,7 +71,7 @@ export const contracts: QueryResolvers['contracts'] = async (
 export const hasContract: QueryResolvers['hasContract'] = async (
   _parent,
   _args,
-  { upstream },
+  {upstream},
 ): Promise<boolean> => {
   const contracts = await upstream.productPricing.getMemberContracts()
   return contracts.length > 0
@@ -85,53 +85,53 @@ export const bundleContracts = (
   contracts: ContractDto[],
   addressChangeAngelStoryId?: string,
 ): ContractBundle[] => {
-    moveHomeContentsToTop(contracts)
+  moveHomeContentsToTop(contracts)
 
-    const norwegianBundle = [] as ContractDto[]
-    const danishBundle = [] as ContractDto[]
-    const individual = [] as ContractDto[]
-    contracts.forEach((contract) => {
-      const agreement = contract.agreements.find(
-        (ag) => ag.id === contract.currentAgreementId,
-      )!
-      switch (agreement.type) {
-        case 'NorwegianHomeContent':
-        case 'NorwegianTravel':
-          norwegianBundle.push(contract)
-          break
-        case 'DanishHomeContent':
-        case 'DanishTravel':
-        case 'DanishAccident':
-          danishBundle.push(contract)
-          break
-        default:
-          individual.push(contract)
+  const norwegianBundle = [] as ContractDto[]
+  const danishBundle = [] as ContractDto[]
+  const individual = [] as ContractDto[]
+  contracts.forEach((contract) => {
+    const agreement = contract.agreements.find(
+      (ag) => ag.id === contract.currentAgreementId,
+    )!
+    switch (agreement.type) {
+      case 'NorwegianHomeContent':
+      case 'NorwegianTravel':
+        norwegianBundle.push(contract)
+        break
+      case 'DanishHomeContent':
+      case 'DanishTravel':
+      case 'DanishAccident':
+        danishBundle.push(contract)
+        break
+      default:
+        individual.push(contract)
+    }
+  })
+
+  const bundle = (contracts: ContractDto[]): ContractBundle => {
+    const bundleId = `bundle-${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
+    return {
+      id: bundleId,
+      contracts: contracts.map((c) => transformContract(c, strings)),
+      angelStories: {
+        addressChange: addressChangeAngelStoryId && `${addressChangeAngelStoryId}?contractBundleId=${bundleId}`
       }
-    })
-
-    const bundle = (contracts: ContractDto[]): ContractBundle => {
-      const bundleId = `bundle-${contracts.map(c => c.id).sort((id1, id2) => id1 < id2 ? -1 : 1).join(',')}`
-      return {
-        id: bundleId,
-        contracts: contracts.map((c) => transformContract(c, strings)),
-        angelStories: {
-          addressChange: addressChangeAngelStoryId && `${addressChangeAngelStoryId}?contractBundleId=${bundleId}`
-        }
-      }
     }
+  }
 
-    const bundles = [] as ContractBundle[]
-    if (norwegianBundle.length) {
-      bundles.push(bundle(norwegianBundle))
-    }
-    if (danishBundle.length) {
-      bundles.push(bundle(danishBundle))
-    }
-    individual.forEach((contract) => {
-      bundles.push(bundle([contract]))
-    })
+  const bundles = [] as ContractBundle[]
+  if (norwegianBundle.length) {
+    bundles.push(bundle(norwegianBundle))
+  }
+  if (danishBundle.length) {
+    bundles.push(bundle(danishBundle))
+  }
+  individual.forEach((contract) => {
+    bundles.push(bundle([contract]))
+  })
 
-    return bundles
+  return bundles
 }
 
 const transformContract = (
@@ -155,10 +155,10 @@ const transformContract = (
     termination: contract.terminationDate,
     upcomingRenewal: hasUpcomingRenewal
       ? {
-          renewalDate: contract.renewal!.renewalDate,
-          draftCertificateUrl:
-            contract.renewal!.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
-        }
+        renewalDate: contract.renewal!.renewalDate,
+        draftCertificateUrl:
+          contract.renewal!.draftCertificateUrl || 'http://null', // this is nullable in the API but non-null in the Schema
+      }
       : undefined,
     typeOfContract: contract.typeOfContract as TypeOfContract,
     createdAt: contract.createdAt,
@@ -169,7 +169,7 @@ const transformContractStatus = (
   contract: ContractDto,
 ): ContractStatus => {
   const upcomingAgreementChange = contract.upcomingAgreement
-    ? { newAgreement: transformAgreement(contract.upcomingAgreement) }
+    ? {newAgreement: transformAgreement(contract.upcomingAgreement)}
     : undefined
   switch (contract.status) {
     case ContractStatusDto.PENDING:
@@ -335,22 +335,22 @@ const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings
   }
   const contractStatusTransformation: Record<string, ContractStatus> = {
     'ACTIVE_IN_FUTURE_AND_TERMINATED_IN_FUTURE': {
-        __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
-        futureInception: trial.fromDate,
-        futureTermination: trial.toDate
-      },
+      __typename: 'ActiveInFutureAndTerminatedInFutureStatus',
+      futureInception: trial.fromDate,
+      futureTermination: trial.toDate
+    },
     'TERMINATED_IN_FUTURE': {
-        __typename: 'TerminatedInFutureStatus',
-        futureTermination: trial.toDate
-      },
+      __typename: 'TerminatedInFutureStatus',
+      futureTermination: trial.toDate
+    },
     'TERMINATED_TODAY': {
-        __typename: 'TerminatedTodayStatus',
-        today: trial.toDate
-      },
+      __typename: 'TerminatedTodayStatus',
+      today: trial.toDate
+    },
     'TERMINATED': {
-        __typename: 'TerminatedStatus',
-        termination: trial.toDate
-      }
+      __typename: 'TerminatedStatus',
+      termination: trial.toDate
+    }
   }
 
   const typeOfContract = typeTransformation[trial.type]
