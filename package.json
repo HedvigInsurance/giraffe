@@ -8,7 +8,7 @@
     "build": "tsc && cp src/schema.graphqls dist/schema.graphqls && mkdir -p dist/translations && cp -r src/translations/*.json dist/translations",
     "watch": "concurrently -n \"ts-node,graphqls\" \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate:schema-types\"",
     "lint": "tslint **/*.ts",
-    "generate:schema-types": "ts-node scripts/generate-types.ts",
+    "generate": "graphql-codegen --config codegen.yml",
     "download-translations": "./bin/download-translations.sh"
   },
   "license": "AGPL-3.0-only",
@@ -48,6 +48,10 @@
     "ws": "^7.4.6"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.6",
+    "@graphql-codegen/introspection": "^1.18.2",
+    "@graphql-codegen/typescript": "1.22.4",
+    "@graphql-codegen/typescript-resolvers": "1.19.5",
     "@types/dotenv": "^6.1.1",
     "@types/graphql": "^14.2.3",
     "@types/ioredis": "^4.0.17",
@@ -61,7 +65,6 @@
     "apollo": "2.16.3",
     "apollo-server-testing": "2.21.0",
     "concurrently": "^4.1.1",
-    "graphql-schema-typescript": "^1.5.2",
     "jest": "^26.6.3",
     "jest-expo": "^41.0.0",
     "nodemon": "^1.19.1",
