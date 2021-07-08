@@ -56,10 +56,15 @@ import {availableLocales} from './availableLocales'
 import {QueryResolvers} from '../generated/graphql'
 
 const newQueryResolvers: QueryResolvers = {
+  angelStory,
+  availableLocales,
+  avatars,
   activeContractBundles,
+  cashback,
+  cashbackOptions,
+  chatActions,
   contracts,
   hasContract,
-
 }
 
 const newMutationResolvers: MutationResolvers = {
@@ -71,7 +76,12 @@ const newMutationResolvers: MutationResolvers = {
   logout,
   registerPushToken,
   log,
-  createAddressChangeQuotes
+  createAddressChangeQuotes,
+  registerBranchCampaign,
+  sendChatTextResponse,
+  sendChatSingleSelectResponse,
+  sendChatFileResponse,
+  sendChatAudioResponse,
 }
 
 const resolvers: Resolver = {
@@ -79,19 +89,13 @@ const resolvers: Resolver = {
     ...(newQueryResolvers as Resolver['Query']),
     insurance,
     member,
-    cashback,
     signStatus: getSignStatus,
     gifs,
     file,
-    cashbackOptions,
+    messages,
     chatState,
     currentChatResponse,
-    avatars,
-    chatActions,
     geo,
-    angelStory,
-    messages,
-    availableLocales
   },
   Mutation: {
     ...(newMutationResolvers as Resolver['Mutation']),
@@ -103,11 +107,6 @@ const resolvers: Resolver = {
     createOffer,
     signOffer,
     signOfferV2,
-    sendChatTextResponse,
-    sendChatSingleSelectResponse,
-    sendChatFileResponse,
-    sendChatAudioResponse,
-
     updateEmail,
     updatePhoneNumber,
 
@@ -120,7 +119,6 @@ const resolvers: Resolver = {
     swedishBankIdAuth,
     norwegianBankIdAuth,
     danishBankIdAuth,
-    registerBranchCampaign,
     updateLanguage,
     updatePickedLocale,
   },

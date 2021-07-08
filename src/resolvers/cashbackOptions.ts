@@ -1,7 +1,7 @@
 import { getCashbackOptions } from '../api'
-import { QueryToCashbackOptionsResolver } from './../typings/generated-graphql-types'
+import { QueryResolvers } from '../generated/graphql'
 
-export const cashbackOptions: QueryToCashbackOptionsResolver = async (
+export const cashbackOptions: QueryResolvers['cashbackOptions'] = async (
   _root,
   { locale },
   { getToken, headers },
