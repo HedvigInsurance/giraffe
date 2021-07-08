@@ -1,12 +1,12 @@
-import { registerPushToken as registerPushTokenApi } from '../api'
-import { MutationToRegisterPushTokenResolver } from '../typings/generated-graphql-types'
+import {registerPushToken as registerPushTokenApi} from '../api'
+import {MutationResolvers} from '../generated/graphql'
 
-export const registerPushToken: MutationToRegisterPushTokenResolver = async (
+export const registerPushToken: MutationResolvers['registerPushToken'] = async (
   _root,
-  { pushToken },
-  { getToken, headers },
+  {pushToken},
+  {getToken, headers},
 ) => {
   const token = getToken()
-  await registerPushTokenApi(token, headers, { token: pushToken })
+  await registerPushTokenApi(token, headers, {token: pushToken})
   return true
 }

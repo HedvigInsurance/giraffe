@@ -7,9 +7,8 @@ import { s3 } from '../api/s3'
 import { AWS_S3_BUCKET } from '../config'
 import {
   File,
-  MutationToUploadFileResolver,
-  MutationToUploadFilesResolver,
-} from '../typings/generated-graphql-types'
+  MutationResolvers
+} from '../generated/graphql'
 import { factory } from '../utils/log'
 
 const logger = factory.getLogger('resolvers/uploadFile')
@@ -17,7 +16,7 @@ const logger = factory.getLogger('resolvers/uploadFile')
 const UPLOAD_OPTIONS = { partSize: 10 * 1024 * 1024, queueSize: 1 }
 const THIRTY_MINUTES = 60 * 30
 
-export const uploadFile: MutationToUploadFileResolver = async (
+export const uploadFile: MutationResolvers['uploadFile'] = async (
   _root,
   { file },
   { getToken, headers },
@@ -35,7 +34,7 @@ export const uploadFile: MutationToUploadFileResolver = async (
   return finalFile
 }
 
-export const uploadFiles: MutationToUploadFilesResolver = async (
+export const uploadFiles: MutationResolvers['uploadFiles'] = async (
   _root,
   { files },
   { getToken, headers },

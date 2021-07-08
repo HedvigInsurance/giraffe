@@ -13,21 +13,22 @@ import {
   MessageBodyChoicesCoreTypeResolver,
   MessageBodyChoicesTypeResolver,
   MessageBodyCore,
-  MessageBodyCoreTypeResolver,
+  TypeResolveFn,
+  MessageBodyCoreResolvers,
   MessageBodyFileToFileResolver,
   MutationToEditLastResponseResolver,
   MutationToMarkMessageAsReadResolver,
-  MutationToResetConversationResolver,
-  QueryToMessagesResolver,
+  MutationResolvers,
+  QueryResolvers,
   SubscriptionToMessageResolver,
-} from '../typings/generated-graphql-types'
+} from '../generated/graphql'
 import { MessageDto } from './../api/index'
 import { MessageBodyTypeResolver } from './../typings/generated-graphql-types'
 
 import { transformMessage, transformMessages } from '../features/chat/transform'
 import { fileInner } from './file'
 
-export const messages: QueryToMessagesResolver = async (
+export const messages: QueryResolvers['messages'] = async (
   _root,
   _args,
   { getToken, headers },
@@ -37,7 +38,7 @@ export const messages: QueryToMessagesResolver = async (
   return transformMessages(chat.messages)
 }
 
-export const resetConversation: MutationToResetConversationResolver = async (
+export const resetConversation: MutationResolvers['resetConversation'] = async (
   _root,
   _args,
   { getToken, headers },
@@ -47,7 +48,7 @@ export const resetConversation: MutationToResetConversationResolver = async (
   return true
 }
 
-export const markMessageAsRead: MutationToMarkMessageAsReadResolver = async (
+export const markMessageAsRead: MutationResolvers['markMessageAsRead'] = async (
   _root,
   { globalId },
   { getToken, headers },
@@ -57,7 +58,7 @@ export const markMessageAsRead: MutationToMarkMessageAsReadResolver = async (
   return transformMessage(message)
 }
 
-export const editLastResponse: MutationToEditLastResponseResolver = async (
+export const editLastResponse: MutationResolvers['editLastResponse'] = async (
   _root,
   _args,
   { getToken, headers },
@@ -155,7 +156,7 @@ export const __resolveMessageBodyChoicesType: MessageBodyChoicesTypeResolver = (
   return 'MessageBodyChoicesUndefined'
 }
 
-export const __resolveMessageBodyCoreType: MessageBodyCoreTypeResolver = (
+export const __resolveMessageBodyCoreType: MessageBodyCoreResolvers = (
   obj: MessageBodyCore,
 ) => {
   if (obj.type === 'single_select') {

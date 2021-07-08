@@ -1,7 +1,8 @@
 import { getUser, registerDirectDebit } from '../api'
-import { MutationToStartDirectDebitRegistrationResolver } from '../typings/generated-graphql-types'
+import { MutationResolvers } from '../generated/graphql'
 
-const startDirectDebitRegistration: MutationToStartDirectDebitRegistrationResolver = async (
+
+const startDirectDebitRegistration: MutationResolvers['startDirectDebitRegistration'] = async (
   _parent,
   _args,
   { getToken, headers },

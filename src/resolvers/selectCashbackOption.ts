@@ -1,8 +1,9 @@
 import { setSelectedCashbackOption } from '../api'
-import { MutationToSelectCashbackOptionResolver } from '../typings/generated-graphql-types'
+import { MutationResolvers } from '../generated/graphql'
+
 import { cashbackInner } from './cashback'
 
-const selectCashbackOption: MutationToSelectCashbackOptionResolver = async (
+const selectCashbackOption: MutationResolvers['selectCashbackOption'] = async (
   _root,
   { id, locale },
   { getToken, headers },

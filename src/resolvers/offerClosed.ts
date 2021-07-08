@@ -1,7 +1,7 @@
 import { setOfferClosed } from '../api'
-import { MutationToOfferClosedResolver } from '../typings/generated-graphql-types'
+import { MutationResolvers } from '../generated/graphql'
 
-export const offerClosed: MutationToOfferClosedResolver = async (
+export const offerClosed: MutationResolvers['offerClosed'] = async (
   _root,
   _args,
   { getToken, headers },
