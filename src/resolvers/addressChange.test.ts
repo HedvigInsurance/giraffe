@@ -163,14 +163,14 @@ const seStudentRental: AddressChangeInput = {
 const seNonStudentOwned: AddressChangeInput = {
   ...baseInput,
   type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.OWN,
+  ownership: AddressOwnership.BRF,
   isStudent: false,
 }
 
 const seStudentOwned: AddressChangeInput = {
   ...baseInput,
   type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.OWN,
+  ownership: AddressOwnership.BRF,
   isStudent: true,
 }
 

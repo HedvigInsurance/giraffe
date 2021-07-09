@@ -410,6 +410,7 @@ enum AddressHomeType {
 
 enum AddressOwnership {
   OWN
+  BRF
   RENT
 }
 
