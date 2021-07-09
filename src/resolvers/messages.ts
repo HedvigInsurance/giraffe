@@ -71,7 +71,7 @@ export const subscribeToMessage: SubscriptionResolvers['message'] = {
     _parent,
     {},
     { getToken, headers, pubsub },
-  ): Promise<AsyncIterator<{ message: Message }>> => {
+  ): Promise<AsyncIterator<{ 'message': Message }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
     return withMessageTransform(
@@ -82,12 +82,12 @@ export const subscribeToMessage: SubscriptionResolvers['message'] = {
 
 export const withMessageTransform = (
   asyncIterator: AsyncIterator<MessageDto>,
-): AsyncIterator<{ message: Message }> => ({
+): AsyncIterator<{ 'message': Message }> => ({
   next() {
     return asyncIterator.next().then(({ value, done }) => {
       return {
         value: {
-          message: transformMessage(value),
+          'message': transformMessage(value),
         },
         done,
       }
