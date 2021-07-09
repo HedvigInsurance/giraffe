@@ -6,7 +6,7 @@
     "start": "node .",
     "dev": "ts-node --transpile-only src/index.ts",
     "build": "tsc && cp src/schema.graphqls dist/schema.graphqls && mkdir -p dist/translations && cp -r src/translations/*.json dist/translations",
-    "watch": "concurrently -n \"ts-node,graphqls\" \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate:schema-types\"",
+    "watch": "concurrently -n \"ts-node,graphqls\" \"nodemon -e ts -w ./src -x yarn dev\" \"nodemon -e graphqls -w ./src -x yarn generate\"",
     "lint": "tslint **/*.ts",
     "generate": "graphql-codegen --config codegen.yml",
     "download-translations": "./bin/download-translations.sh"
