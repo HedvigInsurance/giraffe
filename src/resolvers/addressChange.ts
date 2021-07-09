@@ -74,10 +74,12 @@ const toSwedishQuoteDto = (
     isStudent: boolean,
   ): string => {
     switch (ownership) {
-      case AddressOwnership.Own:
+      case AddressOwnership.Brf:
         return isStudent ? 'BRF_STUDENT' : 'BRF'
       case AddressOwnership.Rent:
         return isStudent ? 'RENT_STUDENT' : 'RENT'
+      case AddressOwnership.Own:
+        throw Error("OWN is illegal Ownership for Swedish Apartments")
     }
   }
 
@@ -118,8 +120,10 @@ const toNorwegianQuoteDto = (
 ): CreateQuoteDto => {
   const isHomeContent = contract.typeOfContract.startsWith('NO_HOME_CONTENT')
   const isTravel = contract.typeOfContract.startsWith('NO_TRAVEL')
-
   if (isHomeContent) {
+    if (input.ownership === AddressOwnership.Brf) {
+      throw Error("BRF is illegal Ownership for Norwegian Home Content")
+    }
     return {
       ...dto,
       norwegianHomeContentsData: {
@@ -155,6 +159,9 @@ const toDanishQuoteDto = (
   const isAccident = contract.typeOfContract.startsWith('DK_ACCIDENT')
 
   if (isHomeContent) {
+    if (input.ownership === AddressOwnership.Brf) {
+      throw Error("BRF is illegal Ownership for Danish Home Content")
+    }
     return {
       ...dto,
       danishHomeContentsData: {

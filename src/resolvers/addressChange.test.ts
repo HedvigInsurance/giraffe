@@ -158,14 +158,14 @@ const seStudentRental = {
 const seNonStudentOwned = {
   ...baseInput,
   type: 'APARTMENT',
-  ownership: 'OWN',
+  ownership: 'BRF',
   isStudent: false,
 }
 
 const seStudentOwned = {
   ...baseInput,
   type: 'APARTMENT',
-  ownership: 'OWN',
+  ownership: 'BRF',
   isStudent: true,
 }
 

@@ -111,6 +111,7 @@ export type AddressHouseExtraBuilding = {
 
 export enum AddressOwnership {
   Own = 'OWN',
+  Brf = 'BRF',
   Rent = 'RENT'
 }
 
