@@ -54,11 +54,13 @@ export const createQuoteBundleOrderedQuotesExtension = (): CrossSchemaExtension 
               }
             ]
           }).then((quoteBundle: QuoteBundle) => {
+            const priority = (quote: Quote): number =>
+              quote.typeOfContract.includes('HOME_CONTENT') ? 0
+              : quote.typeOfContract.includes('ACCIDENT') ? 1
+              : 2
             const sortedBundle = {
               ...quoteBundle, quotes: quoteBundle.quotes.sort((quoteA, quoteB) => {
-                if (quoteA.typeOfContract.includes('HOME_CONTENT')) return -1
-                if (quoteB.typeOfContract.includes('HOME_CONTENT')) return 1
-                return 0
+                return priority(quoteA) - priority(quoteB)
               })
             }
 
