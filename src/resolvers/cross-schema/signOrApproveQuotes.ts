@@ -66,10 +66,16 @@ export const createSignOrApproveQuotesExtension = (): CrossSchemaExtension => ({
                   context,
                   info,
                   transforms: [
-                    new ExtractField({
-                      from: ['approveQuotes', 'approved'],
-                      to: ['approveQuotes']
-                    })
+                    {
+                      transformRequest: (originalRequest: any) => {
+                        return {
+                          ...originalRequest, document: gql`
+                          mutation ($quoteIds: [ID!]!) {
+                            approveQuotes(quoteIds: $quoteIds)
+                          }
+                        ` }
+                      }
+                    }
                   ]
                 }).then((approved: boolean) => ({
                   __typename: "ApproveQuoteResponse",
