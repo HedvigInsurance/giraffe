@@ -1321,6 +1321,7 @@ export enum AddressHomeType {
 
 export enum AddressOwnership {
   OWN = 'OWN',
+  BRF = 'BRF',
   RENT = 'RENT'
 }
 
