@@ -117,16 +117,16 @@ describe('Query.activeContractBundles', () => {
       ...danishHomeContentInput,
       id: 'cid1',
     }
-    const travel = {
-      ...danishTravelInput,
-      id: 'cid2',
-    }
     const accident = {
       ...danishAccidentInput,
+      id: 'cid2',
+    }
+    const travel = {
+      ...danishTravelInput,
       id: 'cid3',
     }
     context.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([homeContent, travel, accident])
+      Promise.resolve([homeContent, accident, travel])
 
     const result = await CALLS.activeContractBundles()
 
@@ -139,11 +139,11 @@ describe('Query.activeContractBundles', () => {
             id: 'cid1',
           },
           {
-            ...danishTravelOutput,
+            ...danishAccidentOutput,
             id: 'cid2',
           },
           {
-            ...danishAccidentOutput,
+            ...danishTravelOutput,
             id: 'cid3',
           },
         ],
@@ -199,22 +199,27 @@ describe('Query.activeContractBundles', () => {
     expect(result[0].id).toBe('bundle-a,z')
   })
 
-  it('HomeContent contracts are moved to the top', async () => {
+  it('Contracts are sorted in natural order', async () => {
     const travel = {
-      ...norwegianTravelInput,
-      id: 'cid1',
+      ...danishTravelInput,
+      id: 'cid-travel',
     }
     const homeContent = {
-      ...norwegianHomeContentInput,
-      id: 'cid2',
+      ...danishHomeContentInput,
+      id: 'cid-hc',
+    }
+    const accident = {
+      ...danishAccidentInput,
+      id: 'cid-accident',
     }
     context.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([homeContent, travel])
+      Promise.resolve([travel, homeContent, accident])
 
     const result = await CALLS.activeContractBundles()
 
-    expect(result[0].contracts[0].id).toBe('cid2')
-    expect(result[0].contracts[1].id).toBe('cid1')
+    expect(result[0].contracts[0].id).toBe('cid-hc')
+    expect(result[0].contracts[1].id).toBe('cid-accident')
+    expect(result[0].contracts[2].id).toBe('cid-travel')
   })
 
   it('Moving flow story is visible if there are no blockers', async () => {
@@ -413,17 +418,19 @@ describe('Query.contracts', () => {
     expect(result).toMatchObject<Contract[]>([danishAccidentOutput])
   })
 
-  it('HomeContent contracts are moved to the top', async () => {
+  it('Contracts are sorted in natural order', async () => {
     context.upstream.productPricing.getMemberContracts = () => Promise.resolve([
-      { ...norwegianTravelInput, id: 'cid-travel' },
-      { ...norwegianHomeContentInput, id: 'cid-hc' }
+      { ...danishTravelInput, id: 'cid-travel' },
+      { ...danishHomeContentInput, id: 'cid-hc' },
+      { ...danishAccidentInput, id: 'cid-accident' }
     ])
 
     const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([
-      { ...norwegianHomeContentOutput, id: 'cid-hc' },
-      { ...norwegianTravelOutput, id: 'cid-travel' }
+      { ...danishHomeContentOutput, id: 'cid-hc' },
+      { ...danishAccidentOutput, id: 'cid-accident' },
+      { ...danishTravelOutput, id: 'cid-travel' },
     ])
   })
 
