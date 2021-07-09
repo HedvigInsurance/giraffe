@@ -80,7 +80,7 @@ export const createQuoteBundleAppConfigurationExtension = (): CrossSchemaExtensi
                 showCampaignManagement: true,
                 title: "LOGO",
                 startDateTerminology: "START_DATE",
-                showFAQ: false,
+                showFAQ: true,
                 gradientOption
             }
             }
