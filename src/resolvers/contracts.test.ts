@@ -15,8 +15,12 @@ import {
   ContractBundle,
   ExtraBuildingType,
   ContractStatus,
-  Agreement
-} from './../typings/generated-graphql-types'
+  Agreement,
+  AgreementStatus,
+  Contract,
+  SwedishApartmentLineOfBusiness,
+  TypeOfContract,
+} from './../generated/graphql'
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -25,12 +29,6 @@ import { GraphQLResolveInfo } from 'graphql'
 import { ContractDto } from '../api/upstreams/productPricing'
 import { Context } from '../context'
 import { activeContractBundles, contracts } from './contracts'
-import {
-  AgreementStatus,
-  Contract,
-  SwedishApartmentLineOfBusiness,
-  TypeOfContract,
-} from '../typings/generated-graphql-types'
 
 const apollo = startApolloTesting()
 
@@ -275,7 +273,7 @@ describe('Query.contracts', () => {
           address: address,
           numberCoInsured: 2,
           squareMeters: 66,
-          type: SwedishApartmentLineOfBusiness.BRF,
+          type: SwedishApartmentLineOfBusiness.Brf,
         },
       },
     })
@@ -453,7 +451,7 @@ describe('Query.contracts', () => {
     const fakeContract: Contract = {
       id: 'fakecontract:tid1',
       holderMember: 'mid1',
-      typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
+      typeOfContract: TypeOfContract.SeApartmentBrf,
       status: {
         __typename: 'TerminatedInFutureStatus',
         futureTermination: '2021-07-01'
@@ -470,14 +468,14 @@ describe('Query.contracts', () => {
           currency: 'SEK'
         },
         certificateUrl: 'https://hedvig.com/cert',
-        status: AgreementStatus.ACTIVE,
+        status: AgreementStatus.Active,
         address: {
           street: 'Fakestreet 123',
           postalCode: '12345'
         },
         numberCoInsured: 0,
         squareMeters: 44,
-        type: SwedishApartmentLineOfBusiness.BRF,
+        type: SwedishApartmentLineOfBusiness.Brf,
       } as Agreement
     }
 
@@ -581,7 +579,7 @@ const baseOutputAgreement = {
     amount: '120',
     currency: 'SEK',
   },
-  status: AgreementStatus.ACTIVE,
+  status: AgreementStatus.Active,
 }
 
 const swedishApartmentInput: ContractDto = {
@@ -600,14 +598,14 @@ const swedishApartmentInput: ContractDto = {
 }
 const swedishApartmentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
+  typeOfContract: TypeOfContract.SeApartmentBrf,
   displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 1,
     squareMeters: 44,
-    type: SwedishApartmentLineOfBusiness.BRF,
+    type: SwedishApartmentLineOfBusiness.Brf,
   },
 }
 
@@ -638,7 +636,7 @@ const swedishHouseInput: ContractDto = {
 }
 const swedishHouseOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.SE_HOUSE,
+  typeOfContract: TypeOfContract.SeHouse,
   displayName: 'CONTRACT_DISPLAY_NAME_SE_HOUSE',
   currentAgreement: {
     ...baseOutputAgreement,
@@ -651,7 +649,7 @@ const swedishHouseOutput: Contract = {
     isSubleted: true,
     extraBuildings: [
       {
-        type: ExtraBuildingType.GARAGE,
+        type: ExtraBuildingType.Garage,
         area: 14,
         displayName: 'Garage',
         hasWaterConnected: false,
@@ -676,14 +674,14 @@ const norwegianHomeContentInput: ContractDto = {
 }
 const norwegianHomeContentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.NO_HOME_CONTENT_OWN,
+  typeOfContract: TypeOfContract.NoHomeContentOwn,
   displayName: 'CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
     squareMeters: 77,
-    type: NorwegianHomeContentLineOfBusiness.RENT,
+    type: NorwegianHomeContentLineOfBusiness.Rent,
   },
 }
 
@@ -701,12 +699,12 @@ const norwegianTravelInput: ContractDto = {
 }
 const norwegianTravelOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.NO_TRAVEL,
+  typeOfContract: TypeOfContract.NoTravel,
   displayName: 'CONTRACT_DISPLAY_NAME_NO_TRAVEL',
   currentAgreement: {
     ...baseOutputAgreement,
     numberCoInsured: 2,
-    type: NorwegianTravelLineOfBusiness.REGULAR,
+    type: NorwegianTravelLineOfBusiness.Regular,
   },
 }
 
@@ -726,14 +724,14 @@ const danishHomeContentInput: ContractDto = {
 }
 const danishHomeContentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.DK_HOME_CONTENT_OWN,
+  typeOfContract: TypeOfContract.DkHomeContentOwn,
   displayName: 'CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
     squareMeters: 98,
-    type: DanishHomeContentLineOfBusiness.OWN,
+    type: DanishHomeContentLineOfBusiness.Own,
   },
 }
 
@@ -752,13 +750,13 @@ const danishTravelInput: ContractDto = {
 }
 const danishTravelOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.DK_TRAVEL,
+  typeOfContract: TypeOfContract.DkTravel,
   displayName: 'CONTRACT_DISPLAY_NAME_DK_TRAVEL',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
-    type: DanishTravelLineOfBusiness.REGULAR,
+    type: DanishTravelLineOfBusiness.Regular,
   },
 }
 
@@ -777,12 +775,12 @@ const danishAccidentInput: ContractDto = {
 }
 const danishAccidentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.DK_ACCIDENT,
+  typeOfContract: TypeOfContract.DkAccident,
   displayName: 'CONTRACT_DISPLAY_NAME_DK_ACCIDENT',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
-    type: DanishAccidentLineOfBusiness.REGULAR,
+    type: DanishAccidentLineOfBusiness.Regular,
   },
 }
