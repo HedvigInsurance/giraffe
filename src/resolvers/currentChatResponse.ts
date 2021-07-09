@@ -16,7 +16,9 @@ export const currentChatResponse: QueryResolvers['currentChatResponse'] = async 
 ) => {
   const token = getToken()
   const chat = await getChat(token, headers)
-  return transformMessage(chat.messages[0])
+
+  // fields identical for Message and ChatResponse, only need to set typename
+  return {...transformMessage(chat.messages[0]), __typename: "ChatResponse"}
 }
 
 export const subscribeToCurrentChatResponse: SubscriptionResolvers['currentChatResponse'] = {

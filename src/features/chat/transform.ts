@@ -33,7 +33,7 @@ const transformChoices = (choices: any) => {
 }
 
 export const transformMessage: (message: MessageDto) => Message = (message) => {
-  const getBody: (bodyInput: MessageBody ) => MessageBody = (bodyInput ) => {
+  const getBody: (bodyInput: MessageBody) => MessageBody = (bodyInput) => {
     if (bodyInput.type === 'single_select') {
       const body = bodyInput as MessageBodySingleSelect
       body.choices = transformChoices(body.choices)
@@ -73,7 +73,7 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
     return bodyInput as MessageBodyUndefined
   }
 
-  const messageBody = getBody(message.body as MessageBody)
+  const messageBody = getBody(message.body)
 
   return {
     id: message.id,
@@ -95,7 +95,7 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
   }
 }
 
-const transformTextOrNumberBody = <T extends MessageBodyText | MessageBodyNumber >(
+const transformTextOrNumberBody = <T extends MessageBodyText | MessageBodyNumber>(
   body: T & { keyboardType?: string, textContentType?: string },
 ): T => {
   const ret = Object.assign({}, body) // tslint:disable-line prefer-object-spread
