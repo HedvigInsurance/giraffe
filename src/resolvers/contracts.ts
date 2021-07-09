@@ -67,7 +67,7 @@ export const contracts: QueryToContractsResolver = async (
     upstream.productPricing.getMemberContracts(),
     upstream.productPricing.getTrials()
   ])
-  moveHomeContentsToTop(contracts)
+  sortContractsInNaturalOrder(contracts)
   const mappedContracts = contracts.map((c) => transformContract(c, strings))
   const fakeContracts = trials.map((t) => transformTrialToFakeContract(t, strings))
   return mappedContracts.concat(fakeContracts)
@@ -90,7 +90,7 @@ export const bundleContracts = (
   contracts: ContractDto[],
   addressChangeAngelStoryId?: string,
 ): ContractBundle[] => {
-    moveHomeContentsToTop(contracts)
+    sortContractsInNaturalOrder(contracts)
 
     const norwegianBundle = [] as ContractDto[]
     const danishBundle = [] as ContractDto[]
@@ -315,12 +315,13 @@ const transformAgreement = (
   }
 }
 
-const moveHomeContentsToTop = (contracts: ContractDto[]) => {
-  contracts.sort((c1, c2) => {
-    if (c1.typeOfContract.includes('HOME_CONTENT')) return -1
-    if (c2.typeOfContract.includes('HOME_CONTENT')) return 1
-    return 0
-  })
+const sortContractsInNaturalOrder = (contracts: ContractDto[]) => {
+  const priority = (contract: ContractDto): number => 
+    contract.typeOfContract.includes('HOME_CONTENT') ? 0
+    : contract.typeOfContract.includes('ACCIDENT') ? 1
+    : 2
+
+  contracts.sort((c1, c2) => priority(c1) - priority(c2))
 }
 
 const transformTrialToFakeContract = (trial: TrialDto, strings: LocalizedStrings): Contract => {
