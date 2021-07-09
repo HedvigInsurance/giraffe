@@ -24,8 +24,15 @@ export const createQuoteBundleAppConfigurationExtension = (): CrossSchemaExtensi
         GRADIENT_THREE
     }
 
+    enum QuoteBundleAppConfigurationStartDateTerminology {
+        START_DATE
+        ACCESS_DATE
+    }
+
     type QuoteBundleAppConfiguration {
         showCampaignManagement: Boolean!
+        showFAQ: Boolean!
+        startDateTerminology: QuoteBundleAppConfigurationStartDateTerminology!
         title: QuoteBundleAppConfigurationTitle!
         gradientOption: QuoteBundleAppConfigurationGradientOption!
     }
@@ -66,10 +73,14 @@ export const createQuoteBundleAppConfigurationExtension = (): CrossSchemaExtensi
             return isSelfChangeQuote ? {
                 showCampaignManagement: false,
                 title: "UPDATE_SUMMARY",
+                startDateTerminology: "ACCESS_DATE",
+                showFAQ: false,
                 gradientOption
             } : {
                 showCampaignManagement: true,
                 title: "LOGO",
+                startDateTerminology: "START_DATE",
+                showFAQ: false,
                 gradientOption
             }
             }
