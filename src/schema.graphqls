@@ -24,6 +24,9 @@ type Query {
   selfChangeEligibility: SelfChangeEligibility! @deprecated(reason: "Use angelStories in `activeContractBundles` instead")
   """All locales that are available and activated"""
   availableLocales: [Locale!]!
+
+  """Returns all claims the member currently holds with specified status """
+  claims(outcome: [ClaimOutcome], status: [ClaimStatus]): [Claim!]!
 }
 
 type Mutation {
@@ -697,7 +700,7 @@ scalar Instant
 
 type File {
   """
-  signedUrl is valid for 30 minutes after upload, don't hang on to this.
+  signedUrl is valid for 30 minutes after upload, don't hang on to this (24h if retrieved from claimService).
   """
   signedUrl: String!
   """
@@ -1018,4 +1021,30 @@ type Address {
     city: String
     apartment: String
     floor: String
+}
+
+
+type Claim {
+  id: String!
+  contractId: String
+  status: ClaimStatus!
+  type: String
+  outcome: ClaimOutcome
+  submittedAt: Instant!
+  closedAt: Instant
+  files: [File!]!
+  payout: MonetaryAmountV2
+}
+
+enum ClaimStatus {
+  SUBMITTED
+  BEING_HANDLED
+  CLOSED
+  REOPENED
+}
+
+enum ClaimOutcome {
+  PAID
+  NOT_COMPENSATED
+  NOT_COVERED
 }

@@ -54,6 +54,7 @@ import {availableLocales} from './availableLocales'
 import {
   Resolvers,
 } from '../generated/graphql'
+import {claims} from "./claims";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -66,6 +67,7 @@ export const resolvers: Resolvers = {
     chatActions,
     contracts,
     hasContract,
+    claims,
     geo,
     gifs,
     file,
