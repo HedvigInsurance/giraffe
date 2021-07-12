@@ -265,6 +265,32 @@ export type ChatState = {
   onboardingDone: Scalars['Boolean'];
 };
 
+export type Claim = {
+  __typename?: 'Claim';
+  id: Scalars['String'];
+  contractId?: Maybe<Scalars['String']>;
+  status: ClaimStatus;
+  type?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ClaimOutcome>;
+  submittedAt: Scalars['Instant'];
+  closedAt?: Maybe<Scalars['Instant']>;
+  files: Array<File>;
+  payout?: Maybe<MonetaryAmountV2>;
+};
+
+export enum ClaimOutcome {
+  Paid = 'PAID',
+  NotCompensated = 'NOT_COMPENSATED',
+  NotCovered = 'NOT_COVERED'
+}
+
+export enum ClaimStatus {
+  Submitted = 'SUBMITTED',
+  BeingHandled = 'BEING_HANDLED',
+  Closed = 'CLOSED',
+  Reopened = 'REOPENED'
+}
+
 export type CollectStatus = {
   __typename?: 'CollectStatus';
   status?: Maybe<BankIdStatus>;
@@ -410,7 +436,7 @@ export enum Feature {
 
 export type File = {
   __typename?: 'File';
-  /** signedUrl is valid for 30 minutes after upload, don't hang on to this. */
+  /** signedUrl is valid for 30 minutes after upload, don't hang on to this (24h if retrieved from claimService). */
   signedUrl: Scalars['String'];
   /** S3 key that can be used to retreive new signed urls in the future. */
   key: Scalars['String'];
@@ -983,6 +1009,8 @@ export type Query = {
   selfChangeEligibility: SelfChangeEligibility;
   /** All locales that are available and activated */
   availableLocales: Array<Locale>;
+  /** Returns all claims the member currently holds with specified status  */
+  claims: Array<Claim>;
 };
 
 
@@ -1009,6 +1037,12 @@ export type QueryFileArgs = {
 export type QueryAngelStoryArgs = {
   name: Scalars['String'];
   locale?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryClaimsArgs = {
+  outcome?: Maybe<Array<Maybe<ClaimOutcome>>>;
+  status?: Maybe<Array<Maybe<ClaimStatus>>>;
 };
 
 export type Renewal = {
@@ -1391,6 +1425,9 @@ export type ResolversTypes = {
   ContractBundleAngelStories: ResolverTypeWrapper<ContractBundleAngelStories>;
   SelfChangeEligibility: ResolverTypeWrapper<SelfChangeEligibility>;
   SelfChangeBlocker: SelfChangeBlocker;
+  ClaimOutcome: ClaimOutcome;
+  ClaimStatus: ClaimStatus;
+  Claim: ResolverTypeWrapper<Claim>;
   Mutation: ResolverTypeWrapper<{}>;
   CampaignInput: CampaignInput;
   UUID: ResolverTypeWrapper<Scalars['UUID']>;
@@ -1507,6 +1544,7 @@ export type ResolversParentTypes = {
   Instant: Scalars['Instant'];
   ContractBundleAngelStories: ContractBundleAngelStories;
   SelfChangeEligibility: SelfChangeEligibility;
+  Claim: Claim;
   Mutation: {};
   CampaignInput: CampaignInput;
   UUID: Scalars['UUID'];
@@ -1663,6 +1701,19 @@ export type ChatStateResolvers<ContextType = Context, ParentType extends Resolve
   ongoingClaim?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   showOfferScreen?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   onboardingDone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ClaimResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Claim'] = ResolversParentTypes['Claim']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  contractId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['ClaimStatus'], ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  outcome?: Resolver<Maybe<ResolversTypes['ClaimOutcome']>, ParentType, ContextType>;
+  submittedAt?: Resolver<ResolversTypes['Instant'], ParentType, ContextType>;
+  closedAt?: Resolver<Maybe<ResolversTypes['Instant']>, ParentType, ContextType>;
+  files?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType>;
+  payout?: Resolver<Maybe<ResolversTypes['MonetaryAmountV2']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -2125,6 +2176,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   hasContract?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   selfChangeEligibility?: Resolver<ResolversTypes['SelfChangeEligibility'], ParentType, ContextType>;
   availableLocales?: Resolver<Array<ResolversTypes['Locale']>, ParentType, ContextType>;
+  claims?: Resolver<Array<ResolversTypes['Claim']>, ParentType, ContextType, RequireFields<QueryClaimsArgs, never>>;
 };
 
 export type RenewalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Renewal'] = ResolversParentTypes['Renewal']> = {
@@ -2262,6 +2314,7 @@ export type Resolvers<ContextType = Context> = {
   ChatAction?: ChatActionResolvers<ContextType>;
   ChatResponse?: ChatResponseResolvers<ContextType>;
   ChatState?: ChatStateResolvers<ContextType>;
+  Claim?: ClaimResolvers<ContextType>;
   CollectStatus?: CollectStatusResolvers<ContextType>;
   Contract?: ContractResolvers<ContextType>;
   ContractBundle?: ContractBundleResolvers<ContextType>;

@@ -4,6 +4,7 @@ import {createContextfulHttpClient, HttpClient} from './httpClient';
 import {createUnderwriterClient, UnderwriterClient} from './upstreams/underwriter';
 import {createProductPricingClient, ProductPricingClient} from './upstreams/productPricing';
 import {createMemberServiceClient, MemberServiceClient} from './upstreams/memberService';
+import {ClaimServiceClient, createClaimServiceClient} from "./upstreams/claimService";
 
 /**
  * An umbrella type that groups different upstream services, making it
@@ -20,7 +21,7 @@ export interface Upstream {
   memberService: MemberServiceClient,
   productPricing: ProductPricingClient,
   underwriter: UnderwriterClient,
-  claimService: ClaimServiceClient
+  claimService: ClaimServiceClient,
 }
 
 export const createUpstream = (

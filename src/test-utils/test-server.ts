@@ -1,13 +1,12 @@
-
-import { Upstream } from './../api/upstream';
-import { resolve } from 'path';
-import { readFileSync } from 'fs'
-import { gql, GraphQLUpload, ApolloServer } from 'apollo-server-koa';
-import { IResolvers, makeExecutableSchema } from 'graphql-tools';
-import { Context } from '../context';
-import { resolvers } from '../resolvers'
-import { ApolloServerTestClient, createTestClient } from 'apollo-server-testing'
-import { RedisPubSub } from 'graphql-redis-subscriptions';
+import {Upstream} from '../api/upstream';
+import {resolve} from 'path';
+import {readFileSync} from 'fs'
+import {ApolloServer, gql, GraphQLUpload} from 'apollo-server-koa';
+import {IResolvers, makeExecutableSchema} from 'graphql-tools';
+import {Context} from '../context';
+import {resolvers} from '../resolvers'
+import {ApolloServerTestClient, createTestClient} from 'apollo-server-testing'
+import {RedisPubSub} from 'graphql-redis-subscriptions';
 
 const typeDefs = gql(
   readFileSync(resolve(__dirname, '../schema.graphqls'), 'utf8'),
@@ -26,24 +25,27 @@ const fakeUpstream = (): Upstream => ({
   },
   memberService: {
     getSelfMember: () => Promise.reject("getSelfMember Not implemented")
-  }
+  },
+  claimService: {
+    getMemberClaims: () => Promise.reject("getMemberClaims Not implemented")
+  },
 })
 
 const upstream = fakeUpstream()
 
 const context: Context = {
-    getToken: () => 'test-token',
-    headers: {
-      'User-Agent': 'Testing',
-      'X-Forwarded-For': 'Testing',
-      'X-Request-Id': 'Testing',
-      'Accept-Language': 'en',
-      'Enable-Simple-Sign': 'false',
-    },
-    remoteIp: '127.0.0.1',
-    upstream: upstream,
-    pubsub: {} as RedisPubSub, // fake this at some point
-    strings: (key) => key
+  getToken: () => 'test-token',
+  headers: {
+    'User-Agent': 'Testing',
+    'X-Forwarded-For': 'Testing',
+    'X-Request-Id': 'Testing',
+    'Accept-Language': 'en',
+    'Enable-Simple-Sign': 'false',
+  },
+  remoteIp: '127.0.0.1',
+  upstream: upstream,
+  pubsub: {} as RedisPubSub, // fake this at some point
+  strings: (key) => key
 }
 
 const localSchema = makeExecutableSchema<Context>({
@@ -62,6 +64,7 @@ export interface TestingContext {
   query: ApolloServerTestClient['query'],
   mutate: ApolloServerTestClient['mutate'],
   upstream: Upstream,
+
   stop(): Promise<void>
 }
 
@@ -75,7 +78,7 @@ export const startApolloTesting = (): TestingContext => {
     schema: localSchema,
     context: context
   })
-  const { query, mutate } = createTestClient(server)
+  const {query, mutate} = createTestClient(server)
   return {
     query,
     mutate,

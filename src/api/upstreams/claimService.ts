@@ -1,6 +1,5 @@
-
-import { HttpClient } from '../httpClient'
-import {ClaimFile, Instant} from "../../typings/generated-graphql-types";
+import {HttpClient} from '../httpClient'
+import {Scalars} from "../../generated/graphql";
 
 export interface ClaimServiceClient {
   getMemberClaims(): Promise<ClaimDto[]>
@@ -8,20 +7,26 @@ export interface ClaimServiceClient {
 
 export interface ClaimDto {
   id: string
-  status: ClaimtStatusDto
+  status: ClaimStatusDto
   contractId?: string
   type?: string
   outcome?: ClaimOutcomeDto
-  registrationDate: Instant
-  closedAt?: Instant
+  registrationDate: Scalars['Instant']
+  closedAt?: Scalars['Instant']
   payout?: {
     amount: string,
     currency: string
   }
-  files?: ClaimFile[]
+  files?: File[]
 }
 
-export enum ClaimtStatusDto {
+export type File = {
+  signedUrl: string
+  key: string
+  bucket: string
+};
+
+export enum ClaimStatusDto {
   CREATED = 'CREATED',
   IN_PROGRESS = 'IN_PROGRESS',
   CLOSED = 'CLOSED',
