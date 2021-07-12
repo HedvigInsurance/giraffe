@@ -1,9 +1,6 @@
 import * as Sentry from '@sentry/node'
 import { IMiddleware } from 'graphql-middleware'
 import { getInnerErrorsFromCombinedError } from '../utils/graphql-error'
-import { factory } from '../utils/log'
-
-const logger = factory.getLogger('SentryMiddleware')
 
 export const sentryMiddleware: IMiddleware = async (
   resolve,
@@ -24,7 +21,6 @@ export const sentryMiddleware: IMiddleware = async (
     const res = await resolve(parent, args, ctx, info)
     return res
   } catch (e) {
-    logger.error('Got error in resolver')
     getInnerErrorsFromCombinedError(e).forEach((err) =>
       sentry.captureException(err),
     )

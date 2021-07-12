@@ -19,7 +19,6 @@ import { makeSchema } from './schema'
 import { factory } from './utils/log'
 
 import * as Sentry from '@sentry/node'
-import { getInnerErrorsFromCombinedError } from './utils/graphql-error'
 Sentry.init({
   dsn: config.SENTRY_DSN,
   enabled: Boolean(config.SENTRY_DSN),
@@ -30,18 +29,14 @@ const logger = factory.getLogger('index')
 
 const handleError = (error: GraphQLError): void => {
   logger.error(
-    'Uncaught error in GraphQL. Original error: ',
+    'Uncaught error in GraphQL:',
     error.originalError,
-  )
-
-  getInnerErrorsFromCombinedError(error).forEach((err) =>
-    logger.error('Inner error: ', err),
   )
 }
 
 logger.info('Starting Giraffe 🦒')
-logger.info('Making schema')
 
+logger.info('Making schema')
 makeSchema()
   .then(({ schema, graphCMSSchema }) => {
     logger.info('Schema initialized')
