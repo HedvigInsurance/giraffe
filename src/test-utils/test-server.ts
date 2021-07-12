@@ -1,4 +1,3 @@
-
 import { Upstream } from './../api/upstream';
 import { resolve } from 'path';
 import { readFileSync } from 'fs'
@@ -6,8 +5,9 @@ import { gql, GraphQLUpload, ApolloServer } from 'apollo-server-koa';
 import { IResolvers, makeExecutableSchema } from 'graphql-tools';
 import { Context } from '../context';
 import { resolvers } from '../resolvers'
-import { ApolloServerTestClient, createTestClient } from 'apollo-server-testing'
+import { createTestClient } from 'apollo-server-testing'
 import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { DocumentNode } from 'graphql';
 
 const typeDefs = gql(
   readFileSync(resolve(__dirname, '../schema.graphqls'), 'utf8'),
@@ -58,9 +58,19 @@ const localSchema = makeExecutableSchema<Context>({
   },
 })
 
+interface TestingQuery {
+  query: DocumentNode,
+  variables?: Record<string, any>
+}
+
+interface TestingMutation {
+  mutation: DocumentNode,
+  variables?: Record<string, any>
+}
+
 export interface TestingContext {
-  query: ApolloServerTestClient['query'],
-  mutate: ApolloServerTestClient['mutate'],
+  query<TResult = any>(query: TestingQuery): Promise<TResult>,
+  mutate<TResult = any>(mutation: TestingMutation): Promise<TResult>,
   upstream: Upstream,
   stop(): Promise<void>
 }
@@ -77,8 +87,20 @@ export const startApolloTesting = (): TestingContext => {
   })
   const { query, mutate } = createTestClient(server)
   return {
-    query,
-    mutate,
+    query: async (q) => {
+      const result = await query(q)
+      if (result.errors) {
+        throw result.errors
+      }
+      return result.data!!
+    },
+    mutate: async (m) => {
+      const result = await mutate(m)
+      if (result.errors) {
+        throw result.errors
+      }
+      return result.data!!
+    },
     upstream,
     stop: server.stop
   }
