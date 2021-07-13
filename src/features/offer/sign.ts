@@ -99,7 +99,7 @@ const loadSignStatus = async (
   }
 }
 
-const subscribeToSignStatus: SubscriptionResolvers['signStatus'] = {
+const signStatusSubscription: SubscriptionResolvers['signStatus'] = {
   subscribe: async (_parent, _args, {
     getToken,
     headers,
@@ -117,5 +117,5 @@ export {
   signOfferV2,
   getSignStatus,
   getSignStatusFromSignEvent,
-  subscribeToSignStatus,
+  signStatusSubscription,
 }

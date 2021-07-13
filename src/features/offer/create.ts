@@ -25,7 +25,7 @@ const createOffer: MutationResolvers['createOffer'] = async (
   return true
 }
 
-const subscribeToOffer: SubscriptionResolvers['offer'] = {
+const offerSubscription: SubscriptionResolvers['offer'] = {
   subscribe: async (_parent, _args, {getToken, headers, pubsub}): Promise<AsyncIterator<{ 'offer': OfferEvent }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
@@ -34,4 +34,4 @@ const subscribeToOffer: SubscriptionResolvers['offer'] = {
   },
 }
 
-export {createOffer, subscribeToOffer}
+export {createOffer, offerSubscription}

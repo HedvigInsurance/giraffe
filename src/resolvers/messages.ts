@@ -66,7 +66,7 @@ export const editLastResponse: MutationResolvers['editLastResponse'] = async (
   return true
 }
 
-export const subscribeToMessage: SubscriptionResolvers['message'] = {
+export const messageSubscription: SubscriptionResolvers['message'] = {
   subscribe: async (
     _parent,
     {},

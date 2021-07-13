@@ -13,7 +13,7 @@ export const chatState: QueryResolvers['chatState'] = async (
   return chat.state
 }
 
-export const subscribeToChatState: SubscriptionResolvers['chatState'] = {
+export const chatStateSubscription: SubscriptionResolvers['chatState'] = {
   subscribe: async (
     _parent,
     { mostRecentTimestamp },

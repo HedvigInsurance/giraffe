@@ -21,7 +21,7 @@ export const currentChatResponse: QueryResolvers['currentChatResponse'] = async 
   return {...transformMessage(chat.messages[0]), __typename: "ChatResponse"}
 }
 
-export const subscribeToCurrentChatResponse: SubscriptionResolvers['currentChatResponse'] = {
+export const currentChatResponseSubscription: SubscriptionResolvers['currentChatResponse'] = {
   subscribe: async (
     _parent,
     { mostRecentTimestamp },

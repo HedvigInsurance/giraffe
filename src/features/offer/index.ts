@@ -1,3 +1,3 @@
-export { createOffer, subscribeToOffer } from './create'
+export { createOffer, offerSubscription } from './create'
 export { getInsuranceByOfferSuccessEvent } from './resolve'
 export { signOffer } from './sign'

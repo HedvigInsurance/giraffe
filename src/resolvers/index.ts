@@ -2,11 +2,11 @@ import {
   bankIdAuth,
   danishBankIdAuth,
   norwegianBankIdAuth,
-  subscribeToAuthStatus,
+  authStatusSubscription,
   swedishBankIdAuth
 } from '../features/auth'
-import {createOffer, getInsuranceByOfferSuccessEvent, signOffer, subscribeToOffer,} from '../features/offer'
-import {getSignStatus, getSignStatusFromSignEvent, signOfferV2, subscribeToSignStatus,} from '../features/offer/sign'
+import {createOffer, getInsuranceByOfferSuccessEvent, signOffer, offerSubscription,} from '../features/offer'
+import {getSignStatus, getSignStatusFromSignEvent, signOfferV2, signStatusSubscription,} from '../features/offer/sign'
 import {registerBranchCampaign} from './analytics'
 import {angelStory} from './angelStory'
 import {avatars} from './avatars'
@@ -19,10 +19,10 @@ import {
   sendChatSingleSelectResponse,
   sendChatTextResponse,
 } from './chatResponse'
-import {chatState, subscribeToChatState} from './chatState'
+import {chatState, chatStateSubscription} from './chatState'
 import {triggerCallMeChat, triggerClaimChat, triggerFreeTextChat,} from './chatTriggers'
 import {createSession, createSessionV2} from './createSession'
-import {currentChatResponse, subscribeToCurrentChatResponse,} from './currentChatResponse'
+import {currentChatResponse, currentChatResponseSubscription,} from './currentChatResponse'
 import {emailSign} from './emailSign'
 import {file} from './file'
 import {gifs} from './gifs'
@@ -40,7 +40,7 @@ import {
   markMessageAsRead,
   messages,
   resetConversation,
-  subscribeToMessage,
+  messageSubscription,
 } from './messages'
 import {offerClosed} from './offerClosed'
 import {registerPushToken} from './push-token'
@@ -113,12 +113,12 @@ export const resolvers: Resolvers = {
     danishBankIdAuth,
   },
   Subscription: {
-    chatState: subscribeToChatState,
-    currentChatResponse: subscribeToCurrentChatResponse,
-    signStatus: subscribeToSignStatus,
-    offer: subscribeToOffer,
-    message: subscribeToMessage,
-    authStatus: subscribeToAuthStatus,
+    chatState: chatStateSubscription,
+    currentChatResponse: currentChatResponseSubscription,
+    signStatus: signStatusSubscription,
+    offer: offerSubscription,
+    message: messageSubscription,
+    authStatus: authStatusSubscription,
   },
   OfferEvent: {
     insurance: getInsuranceByOfferSuccessEvent

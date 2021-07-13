@@ -92,7 +92,7 @@ export const bundleContracts = (
   const individual = [] as ContractDto[]
   contracts.forEach((contract) => {
     const agreement = contract.agreements.find(
-      (ag) => ag.id === contract.currentAgreementId,
+      (agreement) => agreement.id === contract.currentAgreementId,
     )!
     switch (agreement.type) {
       case 'NorwegianHomeContent':
@@ -149,7 +149,7 @@ const transformContract = (
     status: transformContractStatus(contract),
     displayName: strings(`CONTRACT_DISPLAY_NAME_${contract.typeOfContract}`),
     currentAgreement: transformAgreement(
-      contract.agreements.find((ag) => ag.id === contract.currentAgreementId)!,
+      contract.agreements.find((agreement) => agreement.id === contract.currentAgreementId)!,
     ),
     inception: contract.masterInception,
     termination: contract.terminationDate,

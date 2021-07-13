@@ -1,7 +1,7 @@
 import { AuthEvent, SubscriptionResolvers } from './../../generated/graphql';
 import { getUser } from '../../api'
 
-const subscribeToAuthStatus: SubscriptionResolvers['authStatus'] = {
+const authStatusSubscription: SubscriptionResolvers['authStatus'] = {
   subscribe: async (_parent, _args, { getToken, headers, pubsub }) => {
     const token = getToken()
     const user = await getUser(token, headers)
@@ -11,4 +11,4 @@ const subscribeToAuthStatus: SubscriptionResolvers['authStatus'] = {
   resolve: (payload: AuthEvent) => payload
 }
 
-export { subscribeToAuthStatus }
+export { authStatusSubscription }
