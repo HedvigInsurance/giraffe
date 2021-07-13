@@ -1,7 +1,6 @@
-import { getInsurance, getUser } from '../../api'
-import { ForwardHeaders } from '../../context'
-import { ExtraBuildingType, Insurance } from '../../typings/generated-graphql-types'
-import { PreviousInsurer } from './../../typings/generated-graphql-types'
+import {getInsurance, getUser} from '../../api'
+import {ForwardHeaders} from '../../context'
+import {ExtraBuilding, ExtraBuildingType, Insurance, Maybe, PreviousInsurer} from '../../generated/graphql'
 
 const switchableInsuranceProviders = [
   'ICA',
@@ -34,17 +33,17 @@ const loadInsurance = async (
 
   const previousInsurer = insuranceResponse.insuredAtOtherCompany
     ? ({
-        id: insuranceResponse.currentInsurerName,
-        displayName: previousInsurerMap.get(
-          insuranceResponse.currentInsurerName,
-        ),
-        switchable: switchableInsuranceProviders.includes(
-          insuranceResponse.currentInsurerName,
-        ),
-      } as PreviousInsurer)
+      id: insuranceResponse.currentInsurerName,
+      displayName: previousInsurerMap.get(
+        insuranceResponse.currentInsurerName,
+      ),
+      switchable: switchableInsuranceProviders.includes(
+        insuranceResponse.currentInsurerName,
+      ),
+    } as PreviousInsurer)
     : undefined
 
-  const extraBuildings = insuranceResponse.extraBuildings?.map(building => ({
+  const extraBuildings : Maybe<ExtraBuilding[]> = insuranceResponse.extraBuildings?.map(building => ({
     ...building,
     type: building.type as ExtraBuildingType,
     __typename: 'ExtraBuildingValue'
@@ -82,4 +81,4 @@ const loadInsurance = async (
   }
 }
 
-export { loadInsurance }
+export {loadInsurance}

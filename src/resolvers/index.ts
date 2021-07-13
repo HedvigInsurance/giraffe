@@ -1,146 +1,130 @@
-import { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth, danishBankIdAuth, subscribeToAuthStatus } from '../features/auth'
 import {
-  createOffer,
-  getInsuranceByOfferSuccessEvent,
-  signOffer,
-  subscribeToOffer,
-} from '../features/offer'
-import {
-  getSignStatus,
-  getSignStatusFromSignEvent,
-  signOfferV2,
-  subscribeToSignStatus,
-} from '../features/offer/sign'
-import { Resolver } from '../typings/generated-graphql-types'
-import { registerBranchCampaign } from './analytics'
-import { angelStory } from './angelStory'
-import { avatars } from './avatars'
-import { cashback } from './cashback'
-import { cashbackOptions } from './cashbackOptions'
-import { chatActions } from './chatActions'
+  bankIdAuth,
+  danishBankIdAuth,
+  norwegianBankIdAuth,
+  authStatusSubscription,
+  swedishBankIdAuth
+} from '../features/auth'
+import {createOffer, getInsuranceByOfferSuccessEvent, signOffer, offerSubscription,} from '../features/offer'
+import {getSignStatus, getSignStatusFromSignEvent, signOfferV2, signStatusSubscription,} from '../features/offer/sign'
+import {registerBranchCampaign} from './analytics'
+import {angelStory} from './angelStory'
+import {avatars} from './avatars'
+import {cashback} from './cashback'
+import {cashbackOptions} from './cashbackOptions'
+import {chatActions} from './chatActions'
 import {
   sendChatAudioResponse,
   sendChatFileResponse,
   sendChatSingleSelectResponse,
   sendChatTextResponse,
 } from './chatResponse'
-import { chatState, subscribeToChatState } from './chatState'
-import {
-  triggerCallMeChat,
-  triggerClaimChat,
-  triggerFreeTextChat,
-} from './chatTriggers'
-import { createSession, createSessionV2 } from './createSession'
-import {
-  currentChatResponse,
-  subscribeToCurrentChatResponse,
-} from './currentChatResponse'
-import { emailSign } from './emailSign'
-import { file } from './file'
-import { gifs } from './gifs'
-import { insurance } from './insurance'
-import { log } from './logging'
-import { logout } from './logout'
-import {
-  member,
-  memberFeatures,
-  updateEmail,
-  updateLanguage,
-  updatePickedLocale,
-  updatePhoneNumber,
-} from './member'
+import {chatState, chatStateSubscription} from './chatState'
+import {triggerCallMeChat, triggerClaimChat, triggerFreeTextChat,} from './chatTriggers'
+import {createSession, createSessionV2} from './createSession'
+import {currentChatResponse, currentChatResponseSubscription,} from './currentChatResponse'
+import {emailSign} from './emailSign'
+import {file} from './file'
+import {gifs} from './gifs'
+import {insurance} from './insurance'
+import {log} from './logging'
+import {logout} from './logout'
+import {member, memberFeatures, updateEmail, updateLanguage, updatePhoneNumber, updatePickedLocale,} from './member'
 import {
   __resolveMessageBodyChoicesCoreType,
   __resolveMessageBodyChoicesType,
   __resolveMessageBodyCoreType,
-  __resolveType as __resolveMessageBodyType,
+  __resolveMessageBodyType,
   editLastResponse,
   getFileByMessageBody,
   markMessageAsRead,
   messages,
   resetConversation,
-  subscribeToMessage,
+  messageSubscription,
 } from './messages'
-import { offerClosed } from './offerClosed'
-import { registerPushToken } from './push-token'
-import { selectCashbackOption } from './selectCashbackOption'
-import { geo } from './geo'
-import { startDirectDebitRegistration } from './trustly'
-import { uploadFile, uploadFiles } from './uploadFile'
-import { activeContractBundles, contracts, hasContract } from './contracts'
-import { createAddressChangeQuotes } from './addressChange'
-import { availableLocales } from './availableLocales'
+import {offerClosed} from './offerClosed'
+import {registerPushToken} from './push-token'
+import {selectCashbackOption} from './selectCashbackOption'
+import {geo} from './geo'
+import {startDirectDebitRegistration} from './trustly'
+import {uploadFile, uploadFiles} from './uploadFile'
+import {activeContractBundles, contracts, hasContract} from './contracts'
+import {createAddressChangeQuotes} from './addressChange'
+import {availableLocales} from './availableLocales'
+import {
+  Resolvers,
+} from '../generated/graphql'
 
-const resolvers: Resolver = {
+export const resolvers: Resolvers = {
   Query: {
-    insurance,
-    member,
-    cashback,
-    signStatus: getSignStatus,
-    gifs,
-    file,
-    cashbackOptions,
-    messages,
-    chatState,
-    currentChatResponse,
-    avatars,
-    chatActions,
-    geo,
     angelStory,
+    availableLocales,
+    avatars,
     activeContractBundles,
+    cashback,
+    cashbackOptions,
+    chatActions,
     contracts,
     hasContract,
-    availableLocales
+    geo,
+    gifs,
+    file,
+    currentChatResponse,
+    member,
+    messages,
+    chatState,
+    insurance,
+    signStatus: getSignStatus,
   },
   Mutation: {
-    logout,
-    createSession,
-    createSessionV2,
-    createOffer,
-    signOffer,
-    signOfferV2,
     uploadFile,
     uploadFiles,
     selectCashbackOption,
     offerClosed,
     startDirectDebitRegistration,
+    logout,
+    registerPushToken,
+    log,
+    createAddressChangeQuotes,
+    emailSign,
+    registerBranchCampaign,
     sendChatTextResponse,
+    createSession,
+    createSessionV2,
     sendChatSingleSelectResponse,
     sendChatFileResponse,
     sendChatAudioResponse,
-    resetConversation,
-    editLastResponse,
-    updateEmail,
-    updatePhoneNumber,
-    registerPushToken,
     triggerClaimChat,
     triggerFreeTextChat,
+    updateLanguage,
+    updatePickedLocale,
     triggerCallMeChat,
-    emailSign,
+    updateEmail,
+    updatePhoneNumber,
+    resetConversation,
+    editLastResponse,
     markMessageAsRead,
-    log,
+    signOffer,
+    signOfferV2,
+    createOffer,
     bankIdAuth,
     swedishBankIdAuth,
     norwegianBankIdAuth,
     danishBankIdAuth,
-    registerBranchCampaign,
-    updateLanguage,
-    updatePickedLocale,
-    createAddressChangeQuotes
   },
   Subscription: {
-    offer: subscribeToOffer,
-    signStatus: subscribeToSignStatus,
-    message: subscribeToMessage,
-    currentChatResponse: subscribeToCurrentChatResponse,
-    chatState: subscribeToChatState,
-    authStatus: subscribeToAuthStatus,
+    chatState: chatStateSubscription,
+    currentChatResponse: currentChatResponseSubscription,
+    signStatus: signStatusSubscription,
+    offer: offerSubscription,
+    message: messageSubscription,
+    authStatus: authStatusSubscription,
   },
   OfferEvent: {
-    insurance: getInsuranceByOfferSuccessEvent,
+    insurance: getInsuranceByOfferSuccessEvent
   },
   SignEvent: {
-    status: getSignStatusFromSignEvent,
+    status: getSignStatusFromSignEvent
   },
   MessageBody: {
     __resolveType: __resolveMessageBodyType,
@@ -161,5 +145,3 @@ const resolvers: Resolver = {
     features: memberFeatures
   }
 }
-
-export { resolvers }

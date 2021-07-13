@@ -1,11 +1,6 @@
 import { ContractStatusDto } from '../api/upstreams/productPricing'
 import gql from 'graphql-tag'
 import { ContractMarketInfoDto } from '../api/upstreams/productPricing'
-import {
-  AddressChangeInput,
-  AddressHomeType,
-  AddressOwnership,
-} from '../typings/generated-graphql-types'
 import { MemberDto } from '../api/upstreams/memberService'
 import { startApolloTesting } from '../test-utils/test-server'
 
@@ -85,7 +80,7 @@ describe('createAddressChangeQuotes - Denmark', () => {
 // Helpers
 
 const MUTATIONS = {
-  createAddressChangeQuotes: async (input: AddressChangeInput) =>
+  createAddressChangeQuotes: async (input: any) =>
     await mutate({
       mutation: gql`
         mutation($input: AddressChangeInput!) {
@@ -146,37 +141,37 @@ const baseInput = {
   livingSpace: 44,
 }
 
-const seNonStudentRental: AddressChangeInput = {
+const seNonStudentRental = {
   ...baseInput,
-  type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.RENT,
+  type: 'APARTMENT',
+  ownership: 'RENT',
   isStudent: false,
 }
 
-const seStudentRental: AddressChangeInput = {
+const seStudentRental = {
   ...baseInput,
-  type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.RENT,
+  type: 'APARTMENT',
+  ownership: 'RENT',
   isStudent: true,
 }
 
-const seNonStudentOwned: AddressChangeInput = {
+const seNonStudentOwned = {
   ...baseInput,
-  type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.BRF,
+  type: 'APARTMENT',
+  ownership: 'BRF',
   isStudent: false,
 }
 
-const seStudentOwned: AddressChangeInput = {
+const seStudentOwned = {
   ...baseInput,
-  type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.BRF,
+  type: 'APARTMENT',
+  ownership: 'BRF',
   isStudent: true,
 }
 
-const seHouse: AddressChangeInput = {
+const seHouse = {
   ...baseInput,
-  type: AddressHomeType.HOUSE,
+  type: 'HOUSE',
   ancillaryArea: 28,
   yearOfConstruction: 1912,
   numberOfBathrooms: 3,
@@ -188,22 +183,22 @@ const seHouse: AddressChangeInput = {
       hasWaterConnected: false,
     },
   ],
-  ownership: AddressOwnership.OWN,
+  ownership: 'OWN',
   isStudent: false,
 }
 
-const noHomeContent: AddressChangeInput = {
+const noHomeContent = {
   ...baseInput,
   contractBundleId: 'bundle-abc,def', // two contracts
-  type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.OWN,
+  type: 'APARTMENT',
+  ownership: 'OWN',
   isYouth: true,
 }
 
-const dkHomeContent: AddressChangeInput = {
+const dkHomeContent = {
   ...baseInput,
   contractBundleId: 'bundle-abc,def,ghi', // three contracts
-  type: AddressHomeType.APARTMENT,
-  ownership: AddressOwnership.OWN,
+  type: 'APARTMENT',
+  ownership: 'OWN',
   isStudent: false,
 }

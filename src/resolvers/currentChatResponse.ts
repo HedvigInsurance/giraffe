@@ -2,29 +2,31 @@ import { equals } from 'ramda'
 import { ChatDto, getChat, getUser } from '../api'
 import {
   ChatResponse,
-  QueryToCurrentChatResponseResolver,
-  SubscriptionToCurrentChatResponseResolver,
-} from '../typings/generated-graphql-types'
+  QueryResolvers,
+  SubscriptionResolvers
+} from '../generated/graphql'
 
 import { subscribeToChat } from '../features/chat/chatSubscription'
 import { transformMessage } from '../features/chat/transform'
 
-export const currentChatResponse: QueryToCurrentChatResponseResolver = async (
+export const currentChatResponse: QueryResolvers['currentChatResponse'] = async (
   _root,
   _args,
   { getToken, headers },
 ) => {
   const token = getToken()
   const chat = await getChat(token, headers)
-  return transformMessage(chat.messages[0])
+
+  // fields identical for Message and ChatResponse, only need to set typename
+  return {...transformMessage(chat.messages[0]), __typename: "ChatResponse"}
 }
 
-export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseResolver = {
+export const currentChatResponseSubscription: SubscriptionResolvers['currentChatResponse'] = {
   subscribe: async (
     _parent,
     { mostRecentTimestamp },
     { getToken, headers, pubsub },
-  ) => {
+  ): Promise<AsyncIterator<{ 'currentChatResponse': ChatResponse }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
     const iteratorId = `CURRENT_RESPONSE.${user.memberId}`
@@ -45,7 +47,7 @@ export const subscribeToCurrentChatResponse: SubscriptionToCurrentChatResponseRe
       },
     )
 
-    const asyncIterator = pubsub.asyncIterator<ChatResponse>(iteratorId)
+    const asyncIterator = pubsub.asyncIterator<{ 'currentChatResponse': ChatResponse }>(iteratorId)
 
     asyncIterator.return = (value) => {
       unsubscribe()

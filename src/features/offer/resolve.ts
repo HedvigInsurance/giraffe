@@ -1,8 +1,8 @@
 import { ApolloError } from 'apollo-server-core'
-import { OfferEventToInsuranceResolver } from '../../typings/generated-graphql-types'
+import { OfferEventResolvers } from '../../generated/graphql'
 import { loadInsurance } from '../insurance'
 
-const getInsuranceByOfferSuccessEvent: OfferEventToInsuranceResolver = async (
+const getInsuranceByOfferSuccessEvent: OfferEventResolvers['insurance'] = async (
   parent,
   _args,
   { getToken, headers },

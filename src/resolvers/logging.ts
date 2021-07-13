@@ -1,11 +1,12 @@
 import { Logging } from '@google-cloud/logging'
 import { parse } from 'date-fns'
 import { getUser } from '../api'
-import { MutationToLogResolver } from './../typings/generated-graphql-types'
+import { MutationResolvers } from '../generated/graphql'
+
 
 const logging = new Logging()
 
-export const log: MutationToLogResolver = async (
+export const log: MutationResolvers['log'] = async (
   _root,
   { input },
   { getToken, headers },

@@ -1,10 +1,10 @@
-import { swedishAuthMember, norwegianAuthMember, danishAuthMember } from '../../api'
-import { MutationToBankIdAuthResolver, MutationToSwedishBankIdAuthResolver, MutationToNorwegianBankIdAuthResolver, MutationToDanishBankIdAuthResolver } from '../../typings/generated-graphql-types'
+import {danishAuthMember, norwegianAuthMember, swedishAuthMember} from '../../api'
+import {MutationResolvers} from '../../generated/graphql'
 
-const bankIdAuth: MutationToBankIdAuthResolver = async (
+const bankIdAuth: MutationResolvers['bankIdAuth'] = async (
   _parent,
   _args,
-  { headers, getToken },
+  {headers, getToken},
 ) => {
   const token = getToken()
   const autoStartTokenResult = await swedishAuthMember(token, headers)
@@ -15,10 +15,10 @@ const bankIdAuth: MutationToBankIdAuthResolver = async (
   }
 }
 
-const swedishBankIdAuth: MutationToSwedishBankIdAuthResolver = async (
+const swedishBankIdAuth: MutationResolvers['swedishBankIdAuth'] = async (
   _parent,
   _args,
-  { headers, getToken },
+  {headers, getToken},
 ) => {
   const token = getToken()
   const autoStartTokenResult = await swedishAuthMember(token, headers)
@@ -29,13 +29,13 @@ const swedishBankIdAuth: MutationToSwedishBankIdAuthResolver = async (
   }
 }
 
-const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async (
+const norwegianBankIdAuth: MutationResolvers['norwegianBankIdAuth'] = async (
   _parent,
-  { personalNumber },
-  { headers, getToken },
+  {personalNumber},
+  {headers, getToken},
 ) => {
   const token = getToken()
-  const norwegianAuthResult = await norwegianAuthMember(token, headers, { personalNumber: personalNumber ? personalNumber : null })
+  const norwegianAuthResult = await norwegianAuthMember(token, headers, {personalNumber: personalNumber ? personalNumber : null})
   const redirectUrl = norwegianAuthResult.redirectUrl
 
   return {
@@ -43,13 +43,13 @@ const norwegianBankIdAuth: MutationToNorwegianBankIdAuthResolver = async (
   }
 }
 
-const danishBankIdAuth: MutationToDanishBankIdAuthResolver = async (
+const danishBankIdAuth: MutationResolvers['danishBankIdAuth'] = async (
   _parent,
-  { personalNumber },
-  { headers, getToken },
+  {personalNumber},
+  {headers, getToken},
 ) => {
   const token = getToken()
-  const danishAuthResult = await danishAuthMember(token, headers, { personalNumber: personalNumber })
+  const danishAuthResult = await danishAuthMember(token, headers, {personalNumber: personalNumber})
   const redirectUrl = danishAuthResult.redirectUrl
 
   return {
@@ -57,4 +57,4 @@ const danishBankIdAuth: MutationToDanishBankIdAuthResolver = async (
   }
 }
 
-export { bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth, danishBankIdAuth }
+export {bankIdAuth, swedishBankIdAuth, norwegianBankIdAuth, danishBankIdAuth}

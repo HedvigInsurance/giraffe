@@ -15,8 +15,12 @@ import {
   ContractBundle,
   ExtraBuildingType,
   ContractStatus,
-  Agreement
-} from './../typings/generated-graphql-types'
+  Agreement,
+  AgreementStatus,
+  Contract,
+  SwedishApartmentLineOfBusiness,
+  TypeOfContract,
+} from './../generated/graphql'
 import {
   AgreementStatusDto,
   ContractStatusDto,
@@ -25,12 +29,6 @@ import { GraphQLResolveInfo } from 'graphql'
 import { ContractDto } from '../api/upstreams/productPricing'
 import { Context } from '../context'
 import { activeContractBundles, contracts } from './contracts'
-import {
-  AgreementStatus,
-  Contract,
-  SwedishApartmentLineOfBusiness,
-  TypeOfContract,
-} from '../typings/generated-graphql-types'
 
 const apollo = startApolloTesting()
 
@@ -39,7 +37,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await activeContractBundles!({}, {}, context, info)
 
     expect(result).toEqual([])
   })
@@ -56,7 +54,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([apartment, house])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -94,7 +92,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -130,7 +128,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, accident, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -168,7 +166,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result).toMatchObject<ContractBundle[]>([
       {
@@ -196,7 +194,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([homeContent, travel])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result[0].id).toBe('bundle-a,z')
   })
@@ -217,7 +215,7 @@ describe('Query.activeContractBundles', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([travel, homeContent, accident])
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result[0].contracts[0].id).toBe('cid-hc')
     expect(result[0].contracts[1].id).toBe('cid-accident')
@@ -239,7 +237,7 @@ describe('Query.activeContractBundles', () => {
       preferredCurrency: 'SEK'
     })
 
-    const result = await activeContractBundles(undefined, {}, context, info)
+    const result = await CALLS.activeContractBundles()
 
     expect(result[0].angelStories.addressChange).toBe('moving-flow-SE?contractBundleId=bundle-cid1')
   })
@@ -250,7 +248,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toEqual([])
   })
@@ -271,7 +269,7 @@ describe('Query.contracts', () => {
       Promise.resolve([{ ...contract, status: ContractStatusDto.ACTIVE }])
 
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveStatus>({
       pastInception: contract.masterInception,
       upcomingAgreementChange: {
@@ -280,7 +278,7 @@ describe('Query.contracts', () => {
           address: address,
           numberCoInsured: 2,
           squareMeters: 66,
-          type: SwedishApartmentLineOfBusiness.BRF,
+          type: SwedishApartmentLineOfBusiness.Brf,
         },
       },
     })
@@ -288,7 +286,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([{ ...contract, status: ContractStatusDto.PENDING }])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<PendingStatus>({
       pendingSince: '2020-12-01',
     })
@@ -298,7 +296,7 @@ describe('Query.contracts', () => {
         { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveInFutureStatus>({
       futureInception: contract.masterInception,
     })
@@ -308,7 +306,7 @@ describe('Query.contracts', () => {
         { ...contract, status: ContractStatusDto.ACTIVE_IN_FUTURE },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveInFutureStatus>({
       futureInception: contract.masterInception,
     })
@@ -322,7 +320,7 @@ describe('Query.contracts', () => {
         },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<TerminatedInFutureStatus>({
       futureTermination: '2022-01-01',
     })
@@ -336,7 +334,7 @@ describe('Query.contracts', () => {
         },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<TerminatedStatus>({
       termination: '2022-01-01',
     })
@@ -350,7 +348,7 @@ describe('Query.contracts', () => {
         },
       ])
     expect(
-      (await contracts(undefined, {}, context, info))[0].status,
+      (await CALLS.contracts())[0].status,
     ).toMatchObject<ActiveInFutureAndTerminatedInFutureStatus>({
       futureInception: contract.masterInception,
       futureTermination: '2022-01-01',
@@ -361,7 +359,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([swedishApartmentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject([swedishApartmentOutput])
   })
@@ -370,7 +368,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([swedishHouseInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject([swedishHouseOutput])
   })
@@ -379,7 +377,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([norwegianHomeContentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([norwegianHomeContentOutput])
   })
@@ -388,7 +386,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([norwegianTravelInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([norwegianTravelOutput])
   })
@@ -397,7 +395,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([danishHomeContentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([danishHomeContentOutput])
   })
@@ -406,7 +404,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([danishTravelInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([danishTravelOutput])
   })
@@ -415,7 +413,7 @@ describe('Query.contracts', () => {
     context.upstream.productPricing.getMemberContracts = () =>
       Promise.resolve([danishAccidentInput])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([danishAccidentOutput])
   })
@@ -427,7 +425,7 @@ describe('Query.contracts', () => {
       { ...danishAccidentInput, id: 'cid-accident' }
     ])
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([
       { ...danishHomeContentOutput, id: 'cid-hc' },
@@ -460,7 +458,7 @@ describe('Query.contracts', () => {
     const fakeContract: Contract = {
       id: 'fakecontract:tid1',
       holderMember: 'mid1',
-      typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
+      typeOfContract: TypeOfContract.SeApartmentBrf,
       status: {
         __typename: 'TerminatedInFutureStatus',
         futureTermination: '2021-07-01'
@@ -477,18 +475,18 @@ describe('Query.contracts', () => {
           currency: 'SEK'
         },
         certificateUrl: 'https://hedvig.com/cert',
-        status: AgreementStatus.ACTIVE,
+        status: AgreementStatus.Active,
         address: {
           street: 'Fakestreet 123',
           postalCode: '12345'
         },
         numberCoInsured: 0,
         squareMeters: 44,
-        type: SwedishApartmentLineOfBusiness.BRF,
+        type: SwedishApartmentLineOfBusiness.Brf,
       } as Agreement
     }
 
-    const result = await contracts(undefined, {}, context, info)
+    const result = await CALLS.contracts()
 
     expect(result).toMatchObject<Contract[]>([fakeContract])
   })
@@ -535,6 +533,15 @@ const context: Context = ({
 } as unknown) as Context
 const info: GraphQLResolveInfo = ({} as unknown) as GraphQLResolveInfo
 
+const CALLS = {
+  activeContractBundles: async () => {
+    return await Promise.all(await activeContractBundles!({}, {}, context, info))
+  },
+  contracts: async () => {
+    return await Promise.all(await contracts!({}, {}, context, info))
+  },
+}
+
 const baseContract = {
   id: 'cid',
   holderMemberId: 'mid',
@@ -579,7 +586,7 @@ const baseOutputAgreement = {
     amount: '120',
     currency: 'SEK',
   },
-  status: AgreementStatus.ACTIVE,
+  status: AgreementStatus.Active,
 }
 
 const swedishApartmentInput: ContractDto = {
@@ -598,14 +605,14 @@ const swedishApartmentInput: ContractDto = {
 }
 const swedishApartmentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.SE_APARTMENT_BRF,
+  typeOfContract: TypeOfContract.SeApartmentBrf,
   displayName: 'CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 1,
     squareMeters: 44,
-    type: SwedishApartmentLineOfBusiness.BRF,
+    type: SwedishApartmentLineOfBusiness.Brf,
   },
 }
 
@@ -636,7 +643,7 @@ const swedishHouseInput: ContractDto = {
 }
 const swedishHouseOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.SE_HOUSE,
+  typeOfContract: TypeOfContract.SeHouse,
   displayName: 'CONTRACT_DISPLAY_NAME_SE_HOUSE',
   currentAgreement: {
     ...baseOutputAgreement,
@@ -649,7 +656,7 @@ const swedishHouseOutput: Contract = {
     isSubleted: true,
     extraBuildings: [
       {
-        type: ExtraBuildingType.GARAGE,
+        type: ExtraBuildingType.Garage,
         area: 14,
         displayName: 'Garage',
         hasWaterConnected: false,
@@ -674,14 +681,14 @@ const norwegianHomeContentInput: ContractDto = {
 }
 const norwegianHomeContentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.NO_HOME_CONTENT_OWN,
+  typeOfContract: TypeOfContract.NoHomeContentOwn,
   displayName: 'CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
     squareMeters: 77,
-    type: NorwegianHomeContentLineOfBusiness.RENT,
+    type: NorwegianHomeContentLineOfBusiness.Rent,
   },
 }
 
@@ -699,12 +706,12 @@ const norwegianTravelInput: ContractDto = {
 }
 const norwegianTravelOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.NO_TRAVEL,
+  typeOfContract: TypeOfContract.NoTravel,
   displayName: 'CONTRACT_DISPLAY_NAME_NO_TRAVEL',
   currentAgreement: {
     ...baseOutputAgreement,
     numberCoInsured: 2,
-    type: NorwegianTravelLineOfBusiness.REGULAR,
+    type: NorwegianTravelLineOfBusiness.Regular,
   },
 }
 
@@ -724,14 +731,14 @@ const danishHomeContentInput: ContractDto = {
 }
 const danishHomeContentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.DK_HOME_CONTENT_OWN,
+  typeOfContract: TypeOfContract.DkHomeContentOwn,
   displayName: 'CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
     squareMeters: 98,
-    type: DanishHomeContentLineOfBusiness.OWN,
+    type: DanishHomeContentLineOfBusiness.Own,
   },
 }
 
@@ -750,13 +757,13 @@ const danishTravelInput: ContractDto = {
 }
 const danishTravelOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.DK_TRAVEL,
+  typeOfContract: TypeOfContract.DkTravel,
   displayName: 'CONTRACT_DISPLAY_NAME_DK_TRAVEL',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
-    type: DanishTravelLineOfBusiness.REGULAR,
+    type: DanishTravelLineOfBusiness.Regular,
   },
 }
 
@@ -775,12 +782,12 @@ const danishAccidentInput: ContractDto = {
 }
 const danishAccidentOutput: Contract = {
   ...baseOutput,
-  typeOfContract: TypeOfContract.DK_ACCIDENT,
+  typeOfContract: TypeOfContract.DkAccident,
   displayName: 'CONTRACT_DISPLAY_NAME_DK_ACCIDENT',
   currentAgreement: {
     ...baseOutputAgreement,
     address: address,
     numberCoInsured: 2,
-    type: DanishAccidentLineOfBusiness.REGULAR,
+    type: DanishAccidentLineOfBusiness.Regular,
   },
 }

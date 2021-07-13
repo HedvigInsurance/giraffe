@@ -1,19 +1,17 @@
-import { getUser, signStatus, websign, signDetails } from '../../api'
-import { ForwardHeaders } from '../../context'
+import {getUser, signDetails, signStatus, websign} from '../../api'
+import {ForwardHeaders} from '../../context'
 import {
-  MutationToSignOfferResolver,
-  MutationToSignOfferV2Resolver,
-  QueryToSignStatusResolver,
-  SignEvent,
-  SignEventToStatusResolver,
+  MutationResolvers,
+  QueryResolvers, SignEvent,
+  SignEventResolvers,
   SignStatus,
-  SubscriptionToSignStatusResolver,
-} from '../../typings/generated-graphql-types'
+  SubscriptionResolvers,
+} from '../../generated/graphql'
 
-const signOffer: MutationToSignOfferResolver = async (
+const signOffer: MutationResolvers['signOffer'] = async (
   _parent,
-  { details },
-  { getToken, headers, remoteIp },
+  {details},
+  {getToken, headers, remoteIp},
 ) => {
   const token = getToken()
   if (!remoteIp) {
@@ -28,10 +26,10 @@ const signOffer: MutationToSignOfferResolver = async (
   return true
 }
 
-const signOfferV2: MutationToSignOfferV2Resolver = async (
+const signOfferV2: MutationResolvers['signOfferV2'] = async (
   _parent,
-  { details },
-  { getToken, headers, remoteIp },
+  {details},
+  {getToken, headers, remoteIp},
 ) => {
   const token = getToken()
   if (!remoteIp) {
@@ -47,7 +45,7 @@ const signOfferV2: MutationToSignOfferV2Resolver = async (
     })
 
     return {
-      autoStartToken: websignResult.bankIdOrderResponse ? (websignResult.bankIdOrderResponse.autoStartToken as string): undefined,
+      autoStartToken: websignResult.bankIdOrderResponse ? (websignResult.bankIdOrderResponse.autoStartToken as string) : undefined,
       redirectUrl: websignResult.redirectUrl
     }
   }
@@ -59,24 +57,24 @@ const signOfferV2: MutationToSignOfferV2Resolver = async (
   })
 
   return {
-    autoStartToken: websignResult.bankIdOrderResponse ? (websignResult.bankIdOrderResponse.autoStartToken as string): undefined,
+    autoStartToken: websignResult.bankIdOrderResponse ? (websignResult.bankIdOrderResponse.autoStartToken as string) : undefined,
     redirectUrl: websignResult.redirectUrl
   }
 }
 
-const getSignStatus: QueryToSignStatusResolver = async (
+const getSignStatus: QueryResolvers['signStatus'] = async (
   _parent,
   _args,
-  { getToken, headers },
+  {getToken, headers},
 ) => {
   const token = getToken()
   return loadSignStatus(token, headers)
 }
 
-const getSignStatusFromSignEvent: SignEventToStatusResolver = async (
+const getSignStatusFromSignEvent: SignEventResolvers['status'] = async (
   _parent,
   _args,
-  { getToken, headers },
+  {getToken, headers},
 ) => {
   const token = getToken()
   return loadSignStatus(token, headers)
@@ -85,11 +83,11 @@ const getSignStatusFromSignEvent: SignEventToStatusResolver = async (
 const loadSignStatus = async (
   token: string,
   headers: ForwardHeaders,
-): Promise<SignStatus | null> => {
+): Promise<SignStatus | undefined> => {
   const status = await signStatus(token, headers)
 
   if (!status) {
-    return null
+    return undefined
   }
 
   return {
@@ -101,12 +99,16 @@ const loadSignStatus = async (
   }
 }
 
-const subscribeToSignStatus: SubscriptionToSignStatusResolver = {
-  subscribe: async (_parent, _args, { getToken, headers, pubsub }) => {
+const signStatusSubscription: SubscriptionResolvers['signStatus'] = {
+  subscribe: async (_parent, _args, {
+    getToken,
+    headers,
+    pubsub
+  }): Promise<AsyncIterator<{ 'signStatus': SignEvent }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
 
-    return pubsub.asyncIterator<SignEvent>(`SIGN_EVENTS.${user.memberId}`)
+    return pubsub.asyncIterator<{ 'signStatus': SignEvent }>(`SIGN_EVENTS.${user.memberId}`)
   },
 }
 
@@ -115,5 +117,5 @@ export {
   signOfferV2,
   getSignStatus,
   getSignStatusFromSignEvent,
-  subscribeToSignStatus,
+  signStatusSubscription,
 }

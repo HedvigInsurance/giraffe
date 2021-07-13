@@ -1,8 +1,8 @@
 import fetch from 'node-fetch'
 import { getAvatars, getUser } from '../api'
-import { QueryToAvatarsResolver } from '../typings/generated-graphql-types'
+import { QueryResolvers } from '../generated/graphql'
 
-const avatars: QueryToAvatarsResolver = async (
+export const avatars: QueryResolvers['avatars'] = async (
   _root,
   _args,
   { getToken, headers },
@@ -21,5 +21,3 @@ const avatars: QueryToAvatarsResolver = async (
 
   return res
 }
-
-export { avatars }

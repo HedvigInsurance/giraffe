@@ -1,26 +1,24 @@
-import { format } from 'date-fns'
-import fetch, { RequestInit, Response } from 'node-fetch'
+import {format} from 'date-fns'
+import fetch, {RequestInit, Response} from 'node-fetch'
 import * as config from '../config'
-import { ForwardHeaders } from '../context'
+import {ForwardHeaders} from '../context'
 import {
   BankIdStatus,
   ChatResponseFileInput,
+  ChatResponseSingleSelectInput,
+  ChatResponseTextInput,
+  ChatState,
   InsuranceCost,
   InsuranceStatus,
   InsuranceType,
+  Locale,
+  MessageBody,
   MessageBodyChoicesCore,
   MessageBodySingleSelect,
   PerilCategory,
   Renewal,
   SignState,
-  Locale,
-} from '../typings/generated-graphql-types'
-import {
-  ChatResponseSingleSelectInput,
-  ChatResponseTextInput,
-  ChatState,
-  MessageBody,
-} from './../typings/generated-graphql-types'
+} from '../generated/graphql'
 
 interface InsuranceDto {
   cost: InsuranceCost

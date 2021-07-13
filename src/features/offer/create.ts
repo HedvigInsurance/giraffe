@@ -1,14 +1,10 @@
-import { createProduct, getUser } from '../../api'
-import {
-  MutationToCreateOfferResolver,
-  OfferEvent,
-  SubscriptionToOfferResolver,
-} from '../../typings/generated-graphql-types'
+import {createProduct, getUser} from '../../api'
+import {MutationResolvers, OfferEvent, SubscriptionResolvers} from '../../generated/graphql'
 
-const createOffer: MutationToCreateOfferResolver = async (
+const createOffer: MutationResolvers['createOffer'] = async (
   _parent,
-  { details },
-  { getToken, headers },
+  {details},
+  {getToken, headers},
 ) => {
   const token = getToken()
   await createProduct(token, headers, {
@@ -29,13 +25,13 @@ const createOffer: MutationToCreateOfferResolver = async (
   return true
 }
 
-const subscribeToOffer: SubscriptionToOfferResolver = {
-  subscribe: async (_parent, _args, { getToken, headers, pubsub }) => {
+const offerSubscription: SubscriptionResolvers['offer'] = {
+  subscribe: async (_parent, _args, {getToken, headers, pubsub}): Promise<AsyncIterator<{ 'offer': OfferEvent }>> => {
     const token = getToken()
     const user = await getUser(token, headers)
 
-    return pubsub.asyncIterator<OfferEvent>(`OFFER_CREATED.${user.memberId}`)
+    return pubsub.asyncIterator<{ 'offer': OfferEvent }>(`OFFER_CREATED.${user.memberId}`)
   },
 }
 
-export { createOffer, subscribeToOffer }
+export {createOffer, offerSubscription}

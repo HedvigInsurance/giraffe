@@ -1,6 +1,3 @@
-import { TextContentType } from './../../typings/generated-graphql-types';
-import { MessageDto } from '../../api'
-
 import {
   KeyboardType,
   Message,
@@ -14,7 +11,9 @@ import {
   MessageBodySingleSelect,
   MessageBodyText,
   MessageBodyUndefined,
-} from '../../typings/generated-graphql-types'
+  TextContentType
+} from '../../generated/graphql'
+import {MessageDto} from '../../api'
 
 const transformChoices = (choices: any) => {
   if (!choices) {
@@ -48,11 +47,11 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
     }
 
     if (bodyInput.type === 'text') {
-      return transformTextOrNumberBody<MessageBodyText>(bodyInput)
+      return transformTextOrNumberBody<MessageBodyText>(bodyInput as MessageBodyText)
     }
 
     if (bodyInput.type === 'number') {
-      return transformTextOrNumberBody<MessageBodyNumber>(bodyInput)
+      return transformTextOrNumberBody<MessageBodyNumber>(bodyInput as MessageBodyNumber)
     }
 
     if (bodyInput.type === 'audio') {
@@ -74,7 +73,7 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
     return bodyInput as MessageBodyUndefined
   }
 
-  const messageBody = getBody(message.body as MessageBody)
+  const messageBody = getBody(message.body)
 
   return {
     id: message.id,
@@ -96,10 +95,8 @@ export const transformMessage: (message: MessageDto) => Message = (message) => {
   }
 }
 
-const transformTextOrNumberBody = <
-  T extends MessageBodyText | MessageBodyNumber
-  >(
-    body: T & { keyboardType?: string, textContentType?: string },
+const transformTextOrNumberBody = <T extends MessageBodyText | MessageBodyNumber>(
+  body: T & { keyboardType?: string, textContentType?: string },
 ): T => {
   const ret = Object.assign({}, body) // tslint:disable-line prefer-object-spread
   if (ret.keyboardType) {
@@ -116,82 +113,82 @@ const transformTextOrNumberBody = <
 const mapTextContentType = (unmapped: string): TextContentType => {
   switch (unmapped) {
     case 'none': {
-      return TextContentType.NONE
+      return TextContentType.None
     }
     case 'URL': {
-      return TextContentType.URL
+      return TextContentType.Url
     }
     case 'addressCity': {
-      return TextContentType.ADDRESS_CITY
+      return TextContentType.AddressCity
     }
     case 'addressCityAndState': {
-      return TextContentType.ADDRESS_CITY_STATE
+      return TextContentType.AddressCityState
     }
     case 'addressState': {
-      return TextContentType.ADDRESS_STATE
+      return TextContentType.AddressState
     }
     case 'countryName': {
-      return TextContentType.COUNTRY_NAME
+      return TextContentType.CountryName
     }
     case 'creditCardNumber': {
-      return TextContentType.CREDIT_CARD_NUMBER
+      return TextContentType.CreditCardNumber
     }
     case 'emailAddress': {
-      return TextContentType.EMAIL_ADDRESS
+      return TextContentType.EmailAddress
     }
     case 'familyName': {
-      return TextContentType.FAMILY_NAME
+      return TextContentType.FamilyName
     }
     case 'fullStreetAddress': {
-      return TextContentType.FULL_STREET_ADDRESS
+      return TextContentType.FullStreetAddress
     }
     case 'givenName': {
-      return TextContentType.GIVEN_NAME
+      return TextContentType.GivenName
     }
     case 'jobTitle': {
-      return TextContentType.JOB_TITLE
+      return TextContentType.JobTitle
     }
     case 'location': {
-      return TextContentType.LOCATION
+      return TextContentType.Location
     }
     case 'middleName': {
-      return TextContentType.MIDDLE_NAME
+      return TextContentType.MiddleName
     }
     case 'name': {
-      return TextContentType.NAME
+      return TextContentType.Name
     }
     case 'namePrefix': {
-      return TextContentType.NAME_PREFIX
+      return TextContentType.NamePrefix
     }
     case 'nameSuffix': {
-      return TextContentType.NAME_SUFFIX
+      return TextContentType.NameSuffix
     }
     case 'nickname': {
-      return TextContentType.NICK_NAME
+      return TextContentType.NickName
     }
     case 'organizationName': {
-      return TextContentType.ORGANIZATION_NAME
+      return TextContentType.OrganizationName
     }
     case 'postalCode': {
-      return TextContentType.POSTAL_CODE
+      return TextContentType.PostalCode
     }
     case 'streetAddressLine1': {
-      return TextContentType.STREET_ADDRESS_LINE1
+      return TextContentType.StreetAddressLine1
     }
     case 'streetAddressLine2': {
-      return TextContentType.STREET_ADDRESS_LINE2
+      return TextContentType.StreetAddressLine2
     }
     case 'sublocality': {
-      return TextContentType.SUBLOCALITY
+      return TextContentType.Sublocality
     }
     case 'telephoneNumber': {
-      return TextContentType.TELEPHONE_NUMBER
+      return TextContentType.TelephoneNumber
     }
     case 'username': {
-      return TextContentType.USERNAME
+      return TextContentType.Username
     }
     case 'password': {
-      return TextContentType.PASSWORD
+      return TextContentType.Password
     }
     default:
       throw Error(`unknown keyboard type: ${unmapped}`)
@@ -201,22 +198,22 @@ const mapTextContentType = (unmapped: string): TextContentType => {
 const mapKeyboard = (unmapped: string): KeyboardType => {
   switch (unmapped) {
     case 'default': {
-      return KeyboardType.DEFAULT
+      return KeyboardType.Default
     }
     case 'number-pad': {
-      return KeyboardType.NUMBERPAD
+      return KeyboardType.Numberpad
     }
     case 'decimal-pad': {
-      return KeyboardType.DECIMALPAD
+      return KeyboardType.Decimalpad
     }
     case 'numeric': {
-      return KeyboardType.NUMERIC
+      return KeyboardType.Numeric
     }
     case 'email-address': {
-      return KeyboardType.EMAIL
+      return KeyboardType.Email
     }
     case 'phone-pad': {
-      return KeyboardType.PHONE
+      return KeyboardType.Phone
     }
     default:
       throw Error(`unknown keyboard type: ${unmapped}`)

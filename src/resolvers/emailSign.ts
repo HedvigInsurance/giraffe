@@ -1,13 +1,12 @@
 import { performEmailSign } from '../api'
-import { MutationToEmailSignResolver } from '../typings/generated-graphql-types'
+import { MutationResolvers } from '../generated/graphql'
 
-export const emailSign: MutationToEmailSignResolver = async (
+export const emailSign: MutationResolvers['emailSign'] = async (
   _root,
   {},
   { getToken, headers },
 ) => {
   const token = getToken()
-  const test = await performEmailSign(token, headers)
-  console.log(test)
+  await performEmailSign(token, headers)
   return true
 }

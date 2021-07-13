@@ -1,14 +1,15 @@
 import fetch from 'node-fetch'
 import * as config from '../config'
-import { QueryToAngelStoryResolver } from '../typings/generated-graphql-types'
+import { AngelStory, QueryResolvers, Maybe } from '../generated/graphql'
 import { factory } from '../utils/log'
 
 const logger = factory.getLogger('angelStory')
 
-export const angelStory: QueryToAngelStoryResolver = async (
+export const angelStory: QueryResolvers['angelStory'] = async (
   _parent,
   { name, locale },
-) => {
+  _context
+): Promise<Maybe<AngelStory>> => {
   try {
     const story = await fetch(
       `${config.ANGEL_URL}angel-data?name=${encodeURIComponent(
@@ -20,6 +21,6 @@ export const angelStory: QueryToAngelStoryResolver = async (
     }
   } catch (e) {
     logger.error('error when fetching angel story', e)
-    return null
+    return undefined
   }
 }

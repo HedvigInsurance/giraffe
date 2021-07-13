@@ -1,17 +1,15 @@
-import { Feature } from './../typings/generated-graphql-types';
+import { Feature } from '../generated/graphql'
+
 import { getUser, postEmail, postPhoneNumber, postLanguage, postPickedLocale, isEligibleForReferrals } from '../api'
 
 import {
-  MutationToUpdateEmailResolver,
-  MutationToUpdatePhoneNumberResolver,
-  MutationToUpdateLanguageResolver,
-  MutationToUpdatePickedLocaleResolver,
-  QueryToMemberResolver,
-  MemberToFeaturesResolver
-} from '../typings/generated-graphql-types'
+  MutationResolvers,
+  QueryResolvers,
+  MemberResolvers
+} from '../generated/graphql'
 import { graphql } from "graphql"
 
-const member: QueryToMemberResolver = async (
+const member: QueryResolvers['member'] = async (
   _parent,
   _args,
   { getToken, headers },
@@ -29,7 +27,7 @@ const member: QueryToMemberResolver = async (
   }
 }
 
-export const memberFeatures: MemberToFeaturesResolver = async (
+export const memberFeatures: MemberResolvers['features'] = async (
   _parent,
   _args,
   { getToken, headers, graphCMSSchema },
@@ -64,7 +62,7 @@ export const memberFeatures: MemberToFeaturesResolver = async (
   return features
 }
 
-const updateEmail: MutationToUpdateEmailResolver = async (
+const updateEmail: MutationResolvers['updateEmail'] = async (
   _root,
   { input },
   { getToken, headers, ...rest },
@@ -77,7 +75,7 @@ const updateEmail: MutationToUpdateEmailResolver = async (
   return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
-const updatePhoneNumber: MutationToUpdatePhoneNumberResolver = async (
+const updatePhoneNumber: MutationResolvers['updatePhoneNumber'] = async (
   _root,
   { input },
   { getToken, headers, ...rest },
@@ -90,7 +88,7 @@ const updatePhoneNumber: MutationToUpdatePhoneNumberResolver = async (
   return member(_root, {}, { getToken, headers, ...rest }, info)
 }
 
-const updateLanguage: MutationToUpdateLanguageResolver = async (
+const updateLanguage: MutationResolvers['updateLanguage'] = async (
   _root,
   { input },
   { getToken, headers },
@@ -102,7 +100,7 @@ const updateLanguage: MutationToUpdateLanguageResolver = async (
   return true
 }
 
-const updatePickedLocale: MutationToUpdatePickedLocaleResolver = async (
+const updatePickedLocale: MutationResolvers['updatePickedLocale'] = async (
   _root,
   { pickedLocale },
   { getToken, headers, ...rest},

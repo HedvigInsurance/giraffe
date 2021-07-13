@@ -1,30 +1,12 @@
 import { getCashbackOptions } from '../api'
 import { ForwardHeaders } from '../context'
-import {
-  Cashback,
-  QueryToCashbackResolver,
-} from '../typings/generated-graphql-types'
+import { Maybe, Cashback, QueryResolvers } from '../generated/graphql'
 
-const cashbackInner = async (
-  token: string,
-  headers: ForwardHeaders,
-): Promise<Cashback | null> => {
-  const options = await getCashbackOptions(token, headers)
-
-  const cashback = options.find((c) => c.selected)
-
-  if (!cashback) {
-    return null
-  }
-
-  return cashback
-}
-
-const resolveCashback: QueryToCashbackResolver = async (
+export const cashback: QueryResolvers['cashback'] = async (
   _root,
   { locale },
   { getToken, headers },
-) => {
+): Promise<Maybe<Cashback>>  => {
   const token = getToken()
 
   const headersAndLocale = {
@@ -35,4 +17,17 @@ const resolveCashback: QueryToCashbackResolver = async (
   return cashbackInner(token, headersAndLocale)
 }
 
-export { resolveCashback as cashback, cashbackInner }
+export const cashbackInner = async (
+  token: string,
+  headers: ForwardHeaders,
+): Promise<Maybe<Cashback>> => {
+  const options = await getCashbackOptions(token, headers)
+
+  const cashback = options.find((c) => c.selected)
+
+  if (!cashback) {
+    return undefined
+  }
+
+  return cashback
+}
