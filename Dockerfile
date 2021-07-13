@@ -1,4 +1,4 @@
-FROM node:16.4.0-alpine AS dependencies
+FROM node:12.22.3-alpine AS dependencies
 WORKDIR /usr/src/app
 
 ADD package.json .
@@ -17,7 +17,7 @@ FROM build AS test
 
 RUN yarn test
 
-FROM node:16.4.0-alpine AS assemble
+FROM node:12.22.3-alpine AS assemble
 WORKDIR /usr/src/app
 
 COPY package.json .
