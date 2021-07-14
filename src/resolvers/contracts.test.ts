@@ -80,19 +80,24 @@ describe('Query.activeContractBundles', () => {
     expect(result).toMatchSnapshot()
   })
 
-  it('non-active contracts are ignored', async () => {
+  it('Include ACTIVE and ACTIVE-ish contracts', async () => {
     const homeContent = {
-      ...norwegianHomeContentInput,
+      ...danishHomeContentInput,
       id: 'cid1',
       status: ContractStatusDto.ACTIVE
     }
-    const travel = {
-      ...norwegianTravelInput,
+    const accident = {
+      ...danishAccidentInput,
       id: 'cid2',
+      status: ContractStatusDto.TERMINATED_IN_FUTURE
+    }
+    const travel = {
+      ...danishTravelInput,
+      id: 'cid3',
       status: ContractStatusDto.TERMINATED
     }
     apollo.upstream.productPricing.getMemberContracts = () =>
-      Promise.resolve([homeContent, travel])
+      Promise.resolve([homeContent, accident, travel])
 
     const result = await CALLS.activeContractBundles()
 
