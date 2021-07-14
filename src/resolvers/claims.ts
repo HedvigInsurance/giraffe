@@ -21,22 +21,31 @@ export const claims: QueryResolvers['claims'] = async (
   _args,
   {upstream, strings},
 ): Promise<Claim[]> => {
-  let claims : ClaimDto[] = await upstream.claimService.getMemberClaims()
 
-  claims = claims.filter(o => (!_args.status || _args.status.includes(statusMap[o.status])) && // TODO refine?
-    (!_args.outcome || _args.outcome?.includes(outcomeMap[o.outcome as ClaimOutcomeDto])));
-
-  return claims.map((c) => transformClaim(c, strings))
+  const claims = await upstream.claimService.getMemberClaims()
+  const filteredClaims = claims.filter(c => {
+    if (_args.status) {
+      if (!_args.status.includes(statusMap[c.status])) {
+        return false
+      }
+    }
+    if (_args.outcome) {
+      if (!c.outcome || !_args.outcome?.includes(outcomeMap[c.outcome])) {
+        return false
+      }
+    }
+    return true
+  })
+  return filteredClaims.map((c) => transformClaim(c, strings))
 }
 
 const transformClaim = (
-  claim: ClaimDto, strings: LocalizedStrings
+  claim: ClaimDto, _strings: LocalizedStrings
 ): Claim => {
-  return <Claim>{
+  return {
     id: claim.id,
     status: statusMap[claim.status],
     outcome: claim.outcome ? outcomeMap[claim.outcome] : undefined,
-    outcomeText: claim.outcome ? strings(outcomeMap[claim.outcome]) : undefined,
     _contractId: claim.contractId,
     payout: claim.payout,
     submittedAt: claim.registrationDate,

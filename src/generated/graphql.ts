@@ -270,12 +270,12 @@ export type Claim = {
   id: Scalars['String'];
   contract?: Maybe<Contract>;
   status: ClaimStatus;
-  type?: Maybe<Scalars['String']>;
   outcome?: Maybe<ClaimOutcome>;
   submittedAt: Scalars['Instant'];
   closedAt?: Maybe<Scalars['Instant']>;
   files: Array<File>;
   payout?: Maybe<MonetaryAmountV2>;
+  _contractId?: Maybe<Scalars['ID']>;
 };
 
 export enum ClaimOutcome {
@@ -1708,12 +1708,12 @@ export type ClaimResolvers<ContextType = Context, ParentType extends ResolversPa
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contract?: Resolver<Maybe<ResolversTypes['Contract']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['ClaimStatus'], ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ClaimOutcome']>, ParentType, ContextType>;
   submittedAt?: Resolver<ResolversTypes['Instant'], ParentType, ContextType>;
   closedAt?: Resolver<Maybe<ResolversTypes['Instant']>, ParentType, ContextType>;
   files?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType>;
   payout?: Resolver<Maybe<ResolversTypes['MonetaryAmountV2']>, ParentType, ContextType>;
+  _contractId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

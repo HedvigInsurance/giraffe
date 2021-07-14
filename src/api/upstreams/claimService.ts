@@ -1,5 +1,4 @@
 import {HttpClient} from '../httpClient'
-import {Scalars} from "../../generated/graphql";
 
 export interface ClaimServiceClient {
   getMemberClaims(): Promise<ClaimDto[]>
@@ -11,13 +10,13 @@ export interface ClaimDto {
   contractId?: string
   type?: string
   outcome?: ClaimOutcomeDto
-  registrationDate: Scalars['Instant']
-  closedAt?: Scalars['Instant']
+  registrationDate: String
+  closedAt?: String
   payout?: {
     amount: string,
     currency: string
   }
-  files?: File[]
+  files: File[]
 }
 
 export type File = {

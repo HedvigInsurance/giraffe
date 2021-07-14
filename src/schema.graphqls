@@ -1032,6 +1032,7 @@ type Claim {
   closedAt: Instant
   files: [File!]!
   payout: MonetaryAmountV2
+  _contractId: ID
 }
 
 enum ClaimStatus {
