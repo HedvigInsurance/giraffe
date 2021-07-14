@@ -49,8 +49,13 @@ export const activeContractBundles: QueryResolvers['activeContractBundles'] = as
     addressChangeAngelStoryId = ADDRESS_CHANGE_STORIES_BY_MARKET[marketInfo.market.toUpperCase()]
   }
 
-  const active = contracts.filter(c => c.status == ContractStatusDto.ACTIVE)
-  return bundleContracts(strings, active, addressChangeAngelStoryId)
+  const activeishStatuses = [
+    ContractStatusDto.ACTIVE,
+    ContractStatusDto.TERMINATED_IN_FUTURE,
+    ContractStatusDto.TERMINATED_TODAY
+  ]
+  const activeish = contracts.filter(c => activeishStatuses.includes(c.status))
+  return bundleContracts(strings, activeish, addressChangeAngelStoryId)
 }
 
 export const contracts: QueryResolvers['contracts'] = async (
