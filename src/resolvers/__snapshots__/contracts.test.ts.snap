@@ -1,0 +1,631 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Query.activeContractBundles becomes a single bundle for danish contracts 1`] = `
+Array [
+  Object {
+    "angelStories": Object {
+      "addressChange": null,
+    },
+    "contracts": Array [
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "DanishHomeContentAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 2,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN",
+        "holderMember": "mid",
+        "id": "cid1",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "DK_HOME_CONTENT_OWN",
+      },
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "DanishAccidentAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 2,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_DK_ACCIDENT",
+        "holderMember": "mid",
+        "id": "cid2",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "DK_ACCIDENT",
+      },
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "DanishTravelAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 2,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_DK_TRAVEL",
+        "holderMember": "mid",
+        "id": "cid3",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "DK_TRAVEL",
+      },
+    ],
+    "id": "bundle-cid1,cid2,cid3",
+  },
+]
+`;
+
+exports[`Query.activeContractBundles becomes a single bundle for norwegian contracts 1`] = `
+Array [
+  Object {
+    "angelStories": Object {
+      "addressChange": null,
+    },
+    "contracts": Array [
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "NorwegianHomeContentAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 2,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "squareMeters": 77,
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN",
+        "holderMember": "mid",
+        "id": "cid1",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "NO_HOME_CONTENT_OWN",
+      },
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "NorwegianTravelAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 2,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_NO_TRAVEL",
+        "holderMember": "mid",
+        "id": "cid2",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "NO_TRAVEL",
+      },
+    ],
+    "id": "bundle-cid1,cid2",
+  },
+]
+`;
+
+exports[`Query.activeContractBundles becomes two bundles for two swedish contracts 1`] = `
+Array [
+  Object {
+    "angelStories": Object {
+      "addressChange": null,
+    },
+    "contracts": Array [
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "SwedishApartmentAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 1,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "squareMeters": 44,
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF",
+        "holderMember": "mid",
+        "id": "cid1",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "SE_APARTMENT_BRF",
+      },
+    ],
+    "id": "bundle-cid1",
+  },
+  Object {
+    "angelStories": Object {
+      "addressChange": null,
+    },
+    "contracts": Array [
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "SwedishHouseAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 1,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "squareMeters": 44,
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_SE_HOUSE",
+        "holderMember": "mid",
+        "id": "cid2",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "SE_HOUSE",
+      },
+    ],
+    "id": "bundle-cid2",
+  },
+]
+`;
+
+exports[`Query.activeContractBundles non-active contracts are ignored 1`] = `
+Array [
+  Object {
+    "angelStories": Object {
+      "addressChange": null,
+    },
+    "contracts": Array [
+      Object {
+        "createdAt": "2020-12-01T10:00:00Z",
+        "currentAgreement": Object {
+          "__typename": "NorwegianHomeContentAgreement",
+          "activeFrom": "2020-12-01",
+          "activeTo": null,
+          "address": Object {
+            "postalCode": "12345",
+            "street": "Fakestreet 123",
+          },
+          "certificateUrl": null,
+          "id": "aid1",
+          "numberCoInsured": 2,
+          "premium": Object {
+            "amount": "120",
+            "currency": "SEK",
+          },
+          "squareMeters": 77,
+          "status": "ACTIVE",
+        },
+        "displayName": "CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN",
+        "holderMember": "mid",
+        "id": "cid1",
+        "inception": "2021-03-01",
+        "status": Object {
+          "__typename": "ActiveStatus",
+          "pastInception": "2021-03-01",
+        },
+        "switchedFromInsuranceProvider": "IF",
+        "typeOfContract": "NO_HOME_CONTENT_OWN",
+      },
+    ],
+    "id": "bundle-cid1",
+  },
+]
+`;
+
+exports[`Query.contracts DanishAccident 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "DanishAccidentAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 2,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_DK_ACCIDENT",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "DK_ACCIDENT",
+  },
+]
+`;
+
+exports[`Query.contracts DanishHomeContent 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "DanishHomeContentAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 2,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_DK_HOME_CONTENT_OWN",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "DK_HOME_CONTENT_OWN",
+  },
+]
+`;
+
+exports[`Query.contracts DanishTravel 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "DanishTravelAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 2,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_DK_TRAVEL",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "DK_TRAVEL",
+  },
+]
+`;
+
+exports[`Query.contracts NorwegianHomeContent 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "NorwegianHomeContentAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 2,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "squareMeters": 77,
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_NO_HOME_CONTENT_OWN",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "NO_HOME_CONTENT_OWN",
+  },
+]
+`;
+
+exports[`Query.contracts NorwegianTravel 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "NorwegianTravelAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 2,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_NO_TRAVEL",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "NO_TRAVEL",
+  },
+]
+`;
+
+exports[`Query.contracts SwedishApartment 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "SwedishApartmentAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 1,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "squareMeters": 44,
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "SE_APARTMENT_BRF",
+  },
+]
+`;
+
+exports[`Query.contracts SwedishHouse 1`] = `
+Array [
+  Object {
+    "createdAt": "2020-12-01T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "SwedishHouseAgreement",
+      "activeFrom": "2020-12-01",
+      "activeTo": null,
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": null,
+      "id": "aid1",
+      "numberCoInsured": 1,
+      "premium": Object {
+        "amount": "120",
+        "currency": "SEK",
+      },
+      "squareMeters": 44,
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_SE_HOUSE",
+    "holderMember": "mid",
+    "id": "cid",
+    "inception": "2021-03-01",
+    "status": Object {
+      "__typename": "ActiveStatus",
+      "pastInception": "2021-03-01",
+    },
+    "switchedFromInsuranceProvider": "IF",
+    "typeOfContract": "SE_HOUSE",
+  },
+]
+`;
+
+exports[`Query.contracts Trial is turned into a fake swedish apartment contract 1`] = `
+Array [
+  Object {
+    "createdAt": "2021-05-31T10:00:00Z",
+    "currentAgreement": Object {
+      "__typename": "SwedishApartmentAgreement",
+      "activeFrom": "2021-06-01",
+      "activeTo": "2021-07-01",
+      "address": Object {
+        "postalCode": "12345",
+        "street": "Fakestreet 123",
+      },
+      "certificateUrl": "https://hedvig.com/cert",
+      "id": "fakeagreement:tid1",
+      "numberCoInsured": 0,
+      "premium": Object {
+        "amount": "0",
+        "currency": "SEK",
+      },
+      "squareMeters": 44,
+      "status": "ACTIVE",
+    },
+    "displayName": "CONTRACT_DISPLAY_NAME_SE_APARTMENT_BRF",
+    "holderMember": "mid1",
+    "id": "fakecontract:tid1",
+    "inception": null,
+    "status": Object {
+      "__typename": "TerminatedInFutureStatus",
+      "futureTermination": "2021-07-01",
+    },
+    "switchedFromInsuranceProvider": null,
+    "typeOfContract": "SE_APARTMENT_BRF",
+  },
+]
+`;
+
+exports[`Query.contracts works for different statuses 1`] = `
+Object {
+  "__typename": "ActiveStatus",
+  "pastInception": "2021-03-01",
+}
+`;
+
+exports[`Query.contracts works for different statuses 2`] = `
+Object {
+  "__typename": "PendingStatus",
+  "pendingSince": "2020-12-01",
+}
+`;
+
+exports[`Query.contracts works for different statuses 3`] = `
+Object {
+  "__typename": "ActiveInFutureStatus",
+  "futureInception": "2021-03-01",
+}
+`;
+
+exports[`Query.contracts works for different statuses 4`] = `
+Object {
+  "__typename": "ActiveInFutureStatus",
+  "futureInception": "2021-03-01",
+}
+`;
+
+exports[`Query.contracts works for different statuses 5`] = `
+Object {
+  "__typename": "TerminatedInFutureStatus",
+  "futureTermination": "2022-01-01",
+}
+`;
+
+exports[`Query.contracts works for different statuses 6`] = `
+Object {
+  "__typename": "TerminatedStatus",
+  "termination": "2022-01-01",
+}
+`;
+
+exports[`Query.contracts works for different statuses 7`] = `
+Object {
+  "__typename": "ActiveInFutureAndTerminatedInFutureStatus",
+  "futureInception": "2021-03-01",
+  "futureTermination": "2022-01-01",
+}
+`;
