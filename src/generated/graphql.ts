@@ -268,7 +268,7 @@ export type ChatState = {
 export type Claim = {
   __typename?: 'Claim';
   id: Scalars['String'];
-  contractId?: Maybe<Scalars['String']>;
+  contract?: Maybe<Contract>;
   status: ClaimStatus;
   type?: Maybe<Scalars['String']>;
   outcome?: Maybe<ClaimOutcome>;
@@ -1009,7 +1009,7 @@ export type Query = {
   selfChangeEligibility: SelfChangeEligibility;
   /** All locales that are available and activated */
   availableLocales: Array<Locale>;
-  /** Returns all claims the member currently holds with specified status  */
+  /** Returns all claims the member currently holds with specified status and / or outcome  */
   claims: Array<Claim>;
 };
 
@@ -1706,7 +1706,7 @@ export type ChatStateResolvers<ContextType = Context, ParentType extends Resolve
 
 export type ClaimResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Claim'] = ResolversParentTypes['Claim']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  contractId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  contract?: Resolver<Maybe<ResolversTypes['Contract']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['ClaimStatus'], ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ClaimOutcome']>, ParentType, ContextType>;

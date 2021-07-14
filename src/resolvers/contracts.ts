@@ -53,6 +53,7 @@ export const activeContractBundles: QueryResolvers['activeContractBundles'] = as
   return bundleContracts(strings, active, addressChangeAngelStoryId)
 }
 
+
 export const contracts: QueryResolvers['contracts'] = async (
   _parent,
   _args,
@@ -134,7 +135,7 @@ export const bundleContracts = (
   return bundles
 }
 
-const transformContract = (
+export const transformContract = (
   contract: ContractDto,
   strings: LocalizedStrings,
 ): Contract => {

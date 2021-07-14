@@ -25,7 +25,7 @@ type Query {
   """All locales that are available and activated"""
   availableLocales: [Locale!]!
 
-  """Returns all claims the member currently holds with specified status """
+  """Returns all claims the member currently holds with specified status and / or outcome """
   claims(outcome: [ClaimOutcome], status: [ClaimStatus]): [Claim!]!
 }
 
@@ -1025,9 +1025,8 @@ type Address {
 
 type Claim {
   id: String!
-  contractId: String
+  contract: Contract
   status: ClaimStatus!
-  type: String
   outcome: ClaimOutcome
   submittedAt: Instant!
   closedAt: Instant

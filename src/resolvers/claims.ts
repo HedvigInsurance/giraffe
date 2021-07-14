@@ -1,6 +1,7 @@
-import {Claim, ClaimOutcome, ClaimStatus, QueryResolvers} from "../generated/graphql";
+import {Claim, ClaimOutcome, ClaimResolvers, ClaimStatus, QueryResolvers} from "../generated/graphql";
 import {ClaimDto, ClaimOutcomeDto, ClaimStatusDto} from "../api/upstreams/claimService";
 import {LocalizedStrings} from "../translations/LocalizedStrings";
+import {transformContract} from "./contracts";
 
 const statusMap = {
   [ClaimStatusDto.CREATED]: ClaimStatus.Submitted,
@@ -36,11 +37,23 @@ const transformClaim = (
     status: statusMap[claim.status],
     outcome: claim.outcome ? outcomeMap[claim.outcome] : undefined,
     outcomeText: claim.outcome ? strings(outcomeMap[claim.outcome]) : undefined,
-    contractId: claim.contractId,
-    type: claim.type,
+    _contractId: claim.contractId,
     payout: claim.payout,
     submittedAt: claim.registrationDate,
     closedAt: claim.closedAt,
     files: claim.files
   }
+}
+
+interface ClaimPrivate {
+  _contractId?: string
+}
+
+export const getContractByClaim: ClaimResolvers['contract'] = async (parent, _args, context) => {
+  const asPrivate = (parent as ClaimPrivate)
+  if (!asPrivate._contractId) {
+    return undefined
+  }
+  const contractDto = await context.upstream.productPricing.getContract(asPrivate._contractId)
+  return transformContract(contractDto, context.strings)
 }

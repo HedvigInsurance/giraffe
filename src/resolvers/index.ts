@@ -51,10 +51,8 @@ import {uploadFile, uploadFiles} from './uploadFile'
 import {activeContractBundles, contracts, hasContract} from './contracts'
 import {createAddressChangeQuotes} from './addressChange'
 import {availableLocales} from './availableLocales'
-import {
-  Resolvers,
-} from '../generated/graphql'
-import {claims} from "./claims";
+import {Resolvers,} from '../generated/graphql'
+import {claims, getContractByClaim} from "./claims";
 
 export const resolvers: Resolvers = {
   Query: {
@@ -145,5 +143,8 @@ export const resolvers: Resolvers = {
   },
   Member: {
     features: memberFeatures
-  }
+  },
+  Claim: {
+    contract: getContractByClaim
+  },
 }
