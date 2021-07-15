@@ -1,7 +1,9 @@
-import { ContractStatusDto } from '../api/upstreams/productPricing'
 import gql from 'graphql-tag'
-import { ContractMarketInfoDto } from '../api/upstreams/productPricing'
 import { MemberDto } from '../api/upstreams/memberService'
+import {
+  ContractMarketInfoDto,
+  ContractStatusDto,
+} from '../api/upstreams/productPricing'
 import { startApolloTesting } from '../test-utils/test-server'
 
 const { mutate, upstream } = startApolloTesting()
@@ -81,7 +83,7 @@ describe('createAddressChangeQuotes - Denmark', () => {
 
 const MUTATIONS = {
   createAddressChangeQuotes: async (input: any) =>
-    await mutate({
+    mutate({
       mutation: gql`
         mutation($input: AddressChangeInput!) {
           createAddressChangeQuotes(input: $input) {
@@ -99,12 +101,13 @@ const MUTATIONS = {
 }
 
 const mockMarket = (market: string) => {
-  upstream.productPricing.getContractMarketInfo = () => Promise.resolve({
-    ...marketInfo,
-    market,
-  })
+  upstream.productPricing.getContractMarketInfo = () =>
+    Promise.resolve({
+      ...marketInfo,
+      market,
+    })
 }
-  
+
 const mockContracts = (typesOfContract: string[]) => {
   const mock = jest.fn()
   typesOfContract.forEach((typeOfContract, index) =>
@@ -112,7 +115,7 @@ const mockContracts = (typesOfContract: string[]) => {
       id: `cid${index}`,
       status: ContractStatusDto.ACTIVE,
       typeOfContract,
-    })
+    }),
   )
   upstream.productPricing.getContract = mock
 }
