@@ -1,35 +1,46 @@
-import { MemberDto } from './../api/upstreams/memberService';
-import { QuoteCreationResult, CreateQuoteDto, QuoteInitiatedFromDto } from './../api/upstreams/underwriter';
+import { MemberDto } from './../api/upstreams/memberService'
 import {
-  MutationResolvers,
-  AddressChangeQuoteResult,
+  CreateQuoteDto,
+  QuoteCreationResult,
+  QuoteInitiatedFromDto,
+} from './../api/upstreams/underwriter'
+import {
   AddressChangeInput,
+  AddressChangeQuoteResult,
+  AddressHomeType,
   AddressOwnership,
-  AddressHomeType
+  MutationResolvers,
 } from './../generated/graphql'
 
-import { ContractDto, ContractMarketInfoDto, ContractStatusDto } from '../api/upstreams/productPricing'
+import {
+  ContractDto,
+  ContractMarketInfoDto,
+  ContractStatusDto,
+} from '../api/upstreams/productPricing'
 
 export const createAddressChangeQuotes: MutationResolvers['createAddressChangeQuotes'] = async (
   _parent,
   args,
   { upstream },
 ): Promise<AddressChangeQuoteResult> => {
-  const contractIds = args.input.contractBundleId.replace('bundle-', '').split(',')
-  const [
-    member,
-    contracts,
-    marketInfo
-  ] = await Promise.all([
+  const contractIds = args.input.contractBundleId
+    .replace('bundle-', '')
+    .split(',')
+  const [member, contracts, marketInfo] = await Promise.all([
     upstream.memberService.getSelfMember(),
     Promise.all(contractIds.map(upstream.productPricing.getContract)),
-    upstream.productPricing.getContractMarketInfo()
+    upstream.productPricing.getContractMarketInfo(),
   ])
 
   const tasks = contracts
-    .filter((c) => c.status == ContractStatusDto.ACTIVE)
+    .filter((c) => c.status === ContractStatusDto.ACTIVE)
     .map((contract) => {
-      const body = convertAddressChangeToSelfChangeBody(args.input, member, contract, marketInfo)
+      const body = convertAddressChangeToSelfChangeBody(
+        args.input,
+        member,
+        contract,
+        marketInfo,
+      )
       return upstream.underwriter.createQuote(body)
     })
 
@@ -41,7 +52,7 @@ const convertAddressChangeToSelfChangeBody = (
   input: AddressChangeInput,
   member: MemberDto,
   contract: ContractDto,
-  marketInfo: ContractMarketInfoDto
+  marketInfo: ContractMarketInfoDto,
 ): CreateQuoteDto => {
   const dtoBase: CreateQuoteDto = {
     memberId: member.memberId,
@@ -50,7 +61,7 @@ const convertAddressChangeToSelfChangeBody = (
     ssn: member.ssn,
     birthDate: member.birthDate,
     startDate: input.startDate,
-    initiatedFrom: QuoteInitiatedFromDto.SelfChange
+    initiatedFrom: QuoteInitiatedFromDto.SelfChange,
   }
 
   switch (marketInfo.market) {
@@ -62,7 +73,7 @@ const convertAddressChangeToSelfChangeBody = (
       return toDanishQuoteDto(input, dtoBase, contract)
   }
 
-  throw `Unhandled market: ${marketInfo.market}`
+  throw new Error(`Unhandled market: ${marketInfo.market}`)
 }
 
 const toSwedishQuoteDto = (
@@ -79,7 +90,7 @@ const toSwedishQuoteDto = (
       case AddressOwnership.Rent:
         return isStudent ? 'RENT_STUDENT' : 'RENT'
       case AddressOwnership.Own:
-        throw Error("OWN is illegal Ownership for Swedish Apartments")
+        throw Error('OWN is illegal Ownership for Swedish Apartments')
     }
   }
 
@@ -122,7 +133,7 @@ const toNorwegianQuoteDto = (
   const isTravel = contract.typeOfContract.startsWith('NO_TRAVEL')
   if (isHomeContent) {
     if (input.ownership === AddressOwnership.Brf) {
-      throw Error("BRF is illegal Ownership for Norwegian Home Content")
+      throw Error('BRF is illegal Ownership for Norwegian Home Content')
     }
     return {
       ...dto,
@@ -146,7 +157,7 @@ const toNorwegianQuoteDto = (
     }
   }
 
-  throw `Unhandled type of contract: ${contract.typeOfContract}`
+  throw new Error(`Unhandled type of contract: ${contract.typeOfContract}`)
 }
 
 const toDanishQuoteDto = (
@@ -160,7 +171,7 @@ const toDanishQuoteDto = (
 
   if (isHomeContent) {
     if (input.ownership === AddressOwnership.Brf) {
-      throw Error("BRF is illegal Ownership for Danish Home Content")
+      throw Error('BRF is illegal Ownership for Danish Home Content')
     }
     return {
       ...dto,
@@ -197,32 +208,34 @@ const toDanishQuoteDto = (
     }
   }
 
-  throw `Unhandled type of contract: ${contract.typeOfContract}`
+  throw new Error(`Unhandled type of contract: ${contract.typeOfContract}`)
 }
 
 const transformResult = (
-  responses: QuoteCreationResult[]
+  responses: QuoteCreationResult[],
 ): AddressChangeQuoteResult => {
   const quoteIds: string[] = []
   const breachedUnderwritingGuidelines: string[] = []
-  responses.forEach(response => {
+  responses.forEach((response) => {
     switch (response.status) {
       case 'success':
         quoteIds.push(response.id)
         break
       case 'failure':
-        response.breachedUnderwritingGuidelines.forEach(g => breachedUnderwritingGuidelines.push(g.code))
+        response.breachedUnderwritingGuidelines.forEach((g) =>
+          breachedUnderwritingGuidelines.push(g.code),
+        )
         break
     }
   })
   if (breachedUnderwritingGuidelines.length > 0) {
     return {
       __typename: 'AddressChangeQuoteFailure',
-      breachedUnderwritingGuidelines: breachedUnderwritingGuidelines
+      breachedUnderwritingGuidelines,
     }
   }
   return {
     __typename: 'AddressChangeQuoteSuccess',
-    quoteIds: quoteIds
+    quoteIds,
   }
 }
