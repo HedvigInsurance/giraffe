@@ -26,7 +26,7 @@ type Query {
   availableLocales: [Locale!]!
 
   """Returns all claims the member currently holds with specified status and / or outcome """
-  claims(outcome: [ClaimOutcome], status: [ClaimStatus]): [Claim!]!
+  claims(onlyRecent: Boolean = false, outcome: [ClaimOutcome], status: [ClaimStatus]): [Claim!]!
 }
 
 type Mutation {
@@ -1031,6 +1031,7 @@ type Claim {
   submittedAt: Instant!
   closedAt: Instant
   files: [File!]!
+  audioURL: String
   payout: MonetaryAmountV2
   _contractId: ID
 }

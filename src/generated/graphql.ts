@@ -274,6 +274,7 @@ export type Claim = {
   submittedAt: Scalars['Instant'];
   closedAt?: Maybe<Scalars['Instant']>;
   files: Array<File>;
+  audioURL?: Maybe<Scalars['String']>;
   payout?: Maybe<MonetaryAmountV2>;
   _contractId?: Maybe<Scalars['ID']>;
 };
@@ -1041,6 +1042,7 @@ export type QueryAngelStoryArgs = {
 
 
 export type QueryClaimsArgs = {
+  onlyRecent?: Maybe<Scalars['Boolean']>;
   outcome?: Maybe<Array<Maybe<ClaimOutcome>>>;
   status?: Maybe<Array<Maybe<ClaimStatus>>>;
 };
@@ -1712,6 +1714,7 @@ export type ClaimResolvers<ContextType = Context, ParentType extends ResolversPa
   submittedAt?: Resolver<ResolversTypes['Instant'], ParentType, ContextType>;
   closedAt?: Resolver<Maybe<ResolversTypes['Instant']>, ParentType, ContextType>;
   files?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType>;
+  audioURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   payout?: Resolver<Maybe<ResolversTypes['MonetaryAmountV2']>, ParentType, ContextType>;
   _contractId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -2176,7 +2179,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   hasContract?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   selfChangeEligibility?: Resolver<ResolversTypes['SelfChangeEligibility'], ParentType, ContextType>;
   availableLocales?: Resolver<Array<ResolversTypes['Locale']>, ParentType, ContextType>;
-  claims?: Resolver<Array<ResolversTypes['Claim']>, ParentType, ContextType, RequireFields<QueryClaimsArgs, never>>;
+  claims?: Resolver<Array<ResolversTypes['Claim']>, ParentType, ContextType, RequireFields<QueryClaimsArgs, 'onlyRecent'>>;
 };
 
 export type RenewalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Renewal'] = ResolversParentTypes['Renewal']> = {

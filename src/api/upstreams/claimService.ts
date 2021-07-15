@@ -1,7 +1,7 @@
 import {HttpClient} from '../httpClient'
 
 export interface ClaimServiceClient {
-  getMemberClaims(): Promise<ClaimDto[]>
+  getMemberClaims(onlyRecent: Boolean): Promise<ClaimDto[]>
 }
 
 export interface ClaimDto {
@@ -10,13 +10,14 @@ export interface ClaimDto {
   contractId?: string
   type?: string
   outcome?: ClaimOutcomeDto
-  registrationDate: String
-  closedAt?: String
+  registrationDate: string
+  closedAt?: string
   payout?: {
     amount: string,
     currency: string
   }
   files: File[]
+  audioURL?: string
 }
 
 export type File = {
@@ -42,8 +43,8 @@ export enum ClaimOutcomeDto {
 
 export const createClaimServiceClient = (client: HttpClient): ClaimServiceClient => {
   return {
-    getMemberClaims: async () => {
-      const res = await client.get(`/claims`)
+    getMemberClaims: async (onlyRecent: Boolean) => {
+      const res = await client.get(`/claims?onlyRecent=${onlyRecent}`)
       return res.json()
     }
   }

@@ -18,19 +18,19 @@ const outcomeMap = {
 
 export const claims: QueryResolvers['claims'] = async (
   _parent,
-  _args,
+  args,
   {upstream, strings},
 ): Promise<Claim[]> => {
 
-  const claims = await upstream.claimService.getMemberClaims()
+  const claims = await upstream.claimService.getMemberClaims(args.onlyRecent)
   const filteredClaims = claims.filter(c => {
-    if (_args.status) {
-      if (!_args.status.includes(statusMap[c.status])) {
+    if (args.status) {
+      if (!args.status.includes(statusMap[c.status])) {
         return false
       }
     }
-    if (_args.outcome) {
-      if (!c.outcome || !_args.outcome?.includes(outcomeMap[c.outcome])) {
+    if (args.outcome) {
+      if (!c.outcome || !args.outcome?.includes(outcomeMap[c.outcome])) {
         return false
       }
     }
@@ -50,7 +50,8 @@ const transformClaim = (
     payout: claim.payout,
     submittedAt: claim.registrationDate,
     closedAt: claim.closedAt,
-    files: claim.files
+    files: claim.files,
+    audioURL: claim.audioURL,
   }
 }
 
