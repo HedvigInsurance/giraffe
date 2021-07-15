@@ -103,7 +103,7 @@ const toSwedishQuoteDto = (
           zipCode: input.zip,
           householdSize: input.numberCoInsured + 1,
           livingSpace: input.livingSpace,
-          subType: subtypeMapper(input.ownership, input.isStudent!!),
+          subType: subtypeMapper(input.ownership, input.isStudent!),
         },
       }
     case AddressHomeType.House:
@@ -114,11 +114,11 @@ const toSwedishQuoteDto = (
           zipCode: input.zip,
           householdSize: input.numberCoInsured + 1,
           livingSpace: input.livingSpace,
-          ancillaryArea: input.ancillaryArea!!,
-          yearOfConstruction: input.yearOfConstruction!!,
-          numberOfBathrooms: input.numberOfBathrooms!!,
-          subleted: input.isSubleted!!,
-          extraBuildings: input.extraBuildings!!,
+          ancillaryArea: input.ancillaryArea!,
+          yearOfConstruction: input.yearOfConstruction!,
+          numberOfBathrooms: input.numberOfBathrooms!,
+          subleted: input.isSubleted!,
+          extraBuildings: input.extraBuildings!,
         },
       }
   }
