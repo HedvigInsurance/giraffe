@@ -399,7 +399,7 @@ input AddressChangeInput {
   numberOfBathrooms: Int
   """Is this property subleted? Required if type == HOUSE."""
   isSubleted: Boolean
-  """A list of extra buildings outside of the main property. Required if type == HOUSE."""
+  """A list of extra buildings outside of the main property."""
   extraBuildings: [AddressHouseExtraBuilding!]
 }
 

@@ -118,7 +118,7 @@ const toSwedishQuoteDto = (
           yearOfConstruction: input.yearOfConstruction!,
           numberOfBathrooms: input.numberOfBathrooms!,
           subleted: input.isSubleted!,
-          extraBuildings: input.extraBuildings!,
+          extraBuildings: input.extraBuildings ?? [],
         },
       }
   }

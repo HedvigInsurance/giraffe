@@ -53,6 +53,11 @@ describe('createAddressChangeQuotes - SE_HOUSE', () => {
     await MUTATIONS.createAddressChangeQuotes(seHouse)
     expect(createQuote.mock.calls).toMatchSnapshot()
   })
+
+  it('accepts undefined for `extraBuildings`', async () => {
+    await MUTATIONS.createAddressChangeQuotes(seHouseNoExtraBuildings)
+    expect(createQuote.mock.calls).toMatchSnapshot()
+  })
 })
 
 describe('createAddressChangeQuotes - Norway', () => {
@@ -186,6 +191,17 @@ const seHouse = {
       hasWaterConnected: false,
     },
   ],
+  ownership: 'OWN',
+  isStudent: false,
+}
+
+const seHouseNoExtraBuildings = {
+  ...baseInput,
+  type: 'HOUSE',
+  ancillaryArea: 28,
+  yearOfConstruction: 1912,
+  numberOfBathrooms: 3,
+  isSubleted: true,
   ownership: 'OWN',
   isStudent: false,
 }
