@@ -189,6 +189,33 @@ Array [
 ]
 `;
 
+exports[`createAddressChangeQuotes - SE_HOUSE accepts undefined for \`extraBuildings\` 1`] = `
+Array [
+  Array [
+    Object {
+      "birthDate": "1991-07-27",
+      "firstName": "Test",
+      "initiatedFrom": "SELF_CHANGE",
+      "lastName": "Testsson",
+      "memberId": "123",
+      "ssn": "201212121212",
+      "startDate": "2021-06-01",
+      "swedishHouseData": Object {
+        "ancillaryArea": 28,
+        "extraBuildings": Array [],
+        "householdSize": 3,
+        "livingSpace": 44,
+        "numberOfBathrooms": 3,
+        "street": "Fakestreet 123",
+        "subleted": true,
+        "yearOfConstruction": 1912,
+        "zipCode": "12345",
+      },
+    },
+  ],
+]
+`;
+
 exports[`createAddressChangeQuotes - SE_HOUSE works 1`] = `
 Array [
   Array [

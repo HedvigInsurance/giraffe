@@ -1,7 +1,9 @@
-import { ContractStatusDto } from '../api/upstreams/productPricing'
 import gql from 'graphql-tag'
-import { ContractMarketInfoDto } from '../api/upstreams/productPricing'
 import { MemberDto } from '../api/upstreams/memberService'
+import {
+  ContractMarketInfoDto,
+  ContractStatusDto,
+} from '../api/upstreams/productPricing'
 import { startApolloTesting } from '../test-utils/test-server'
 
 const { mutate, upstream } = startApolloTesting()
@@ -51,6 +53,11 @@ describe('createAddressChangeQuotes - SE_HOUSE', () => {
     await MUTATIONS.createAddressChangeQuotes(seHouse)
     expect(createQuote.mock.calls).toMatchSnapshot()
   })
+
+  it('accepts undefined for `extraBuildings`', async () => {
+    await MUTATIONS.createAddressChangeQuotes(seHouseNoExtraBuildings)
+    expect(createQuote.mock.calls).toMatchSnapshot()
+  })
 })
 
 describe('createAddressChangeQuotes - Norway', () => {
@@ -81,7 +88,7 @@ describe('createAddressChangeQuotes - Denmark', () => {
 
 const MUTATIONS = {
   createAddressChangeQuotes: async (input: any) =>
-    await mutate({
+    mutate({
       mutation: gql`
         mutation($input: AddressChangeInput!) {
           createAddressChangeQuotes(input: $input) {
@@ -99,12 +106,13 @@ const MUTATIONS = {
 }
 
 const mockMarket = (market: string) => {
-  upstream.productPricing.getContractMarketInfo = () => Promise.resolve({
-    ...marketInfo,
-    market,
-  })
+  upstream.productPricing.getContractMarketInfo = () =>
+    Promise.resolve({
+      ...marketInfo,
+      market,
+    })
 }
-  
+
 const mockContracts = (typesOfContract: string[]) => {
   const mock = jest.fn()
   typesOfContract.forEach((typeOfContract, index) =>
@@ -112,7 +120,7 @@ const mockContracts = (typesOfContract: string[]) => {
       id: `cid${index}`,
       status: ContractStatusDto.ACTIVE,
       typeOfContract,
-    })
+    }),
   )
   upstream.productPricing.getContract = mock
 }
@@ -183,6 +191,17 @@ const seHouse = {
       hasWaterConnected: false,
     },
   ],
+  ownership: 'OWN',
+  isStudent: false,
+}
+
+const seHouseNoExtraBuildings = {
+  ...baseInput,
+  type: 'HOUSE',
+  ancillaryArea: 28,
+  yearOfConstruction: 1912,
+  numberOfBathrooms: 3,
+  isSubleted: true,
   ownership: 'OWN',
   isStudent: false,
 }
